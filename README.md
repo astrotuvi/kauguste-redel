@@ -23,7 +23,11 @@ Open `index.html` in a browser. Nothing needs to be built or installed. The
 page needs an internet connection, because it loads Plotly from a CDN and
 queries the data services directly from the browser.
 
-The page opens on the introduction and a table of contents. Clicking a part
+The page opens on the introduction and a table of contents. The table of
+contents has two groups: **Meetodid lähemalt**, one card for each rung of the
+ladder (parallax, Cepheids, type Ia supernovae) that leads to a page explaining
+the method, and **Ülesanne**, the four parts of the exercise. So far only the
+parallax page exists; the other two cards are marked *tulekul* (coming). Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
 contents and to the other parts, and below the title are its tabs. The
@@ -143,7 +147,7 @@ parameter q₀ = −0.55 as in SH0ES. Without it, H₀ comes out about 3 % low.
 
 ### Parallax demonstration
 
-`parallaks.html`, linked at the top of the table of contents, shows the parallax method with
+`parallaks.html`, linked from the table of contents, from the part 1 card and from the parallax rung of the ladder picture, shows the parallax method with
 an interactive schematic. The left view shows the Sun, the Earth's orbit, the
 star and a plane of distant quasars in 3D; the line from the Earth through the
 star meets the quasar plane at a point that traces an ellipse during the year.

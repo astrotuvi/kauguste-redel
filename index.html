@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kosmiliste kauguste redel</title>
-<meta name="description" content="Kosmiliste kauguste redel: mõõda hajusparvede kaugused Gaia DR3 parallaksidest, kalibreeri nende abil tsefeiidide periood-heledus sõltuvus ja leia galaktikate kaugustest Hubble'i konstant.">
+<meta name="description" content="Kosmiliste kauguste redel: mõõda hajusparvede kaugused Gaia DR3 parallaksidest, kalibreeri nende abil tsefeiidide perioodi-heleduse seos ja leia galaktikate kaugustest Hubble'i konstant.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.1.0/plotly.min.js"></script>
 <style>
 :root {
@@ -108,37 +108,15 @@ h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; le
 .ladder-art .ring { fill: none; stroke: var(--cep); stroke-width: 1.3; opacity: 0.5; }
 .ladder-art .name { fill: var(--text-1); font-size: 18px; font-weight: 650; }
 .ladder-art .sub { fill: var(--text-2); font-size: 14px; }
+.ladder-art .hit { fill: transparent; }
+.ladder-art .rung-link:hover .name, .ladder-art .rung-link:focus-visible .name { fill: var(--sel); text-decoration: underline; }
+.ladder-art .rung-link:focus-visible { outline: none; }
+.ladder-art .rung-link:focus-visible .hit { stroke: var(--sel); stroke-width: 2; }
 h2.rung { font-size: 1.3rem; margin: 0 0 4px; color: var(--text-2); }
 .lede { color: var(--text-2); margin: 0 0 20px; max-width: 70ch; }
 h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
 .hint { color: var(--text-3); font-size: 0.82rem; margin: 2px 0 0; }
 
-/* Distance ladder schematic */
-.ladder { margin: 0 0 28px; }
-.parallax-link { margin: 0 0 12px; font-size: 0.92rem; }
-.parallax-link a { color: var(--sel); text-decoration: none; }
-.parallax-link a:hover { text-decoration: underline; }
-.ladder-toggle { margin: 16px 0 0; font-size: 0.92rem; }
-.ladder-toggle a { color: var(--sel); text-decoration: none; }
-.ladder-toggle a:hover { text-decoration: underline; }
-.ladder-wrap { overflow-x: auto; }
-.ladder svg { display: block; width: 100%; min-width: 720px; height: auto; font-family: inherit; }
-.ladder figcaption { margin-top: 8px; }
-.ladder .grid { stroke: var(--grid); }
-.ladder .ax { stroke: var(--axis); }
-.ladder .tick { fill: var(--text-2); font-size: 13px; text-anchor: middle; }
-.ladder .bar { stroke-width: 1.5; }
-.ladder .bar.far { fill: none; stroke-dasharray: 4 3; }
-.ladder .r1 { fill: color-mix(in srgb, var(--sel) 22%, transparent); stroke: var(--sel); }
-.ladder .r2 { fill: color-mix(in srgb, var(--cep) 20%, transparent); stroke: var(--cep); }
-.ladder .r3 { fill: color-mix(in srgb, var(--accent) 22%, transparent); stroke: var(--accent); }
-.ladder .lbl { fill: var(--text-1); font-size: 14px; font-weight: 600; }
-.ladder .note { fill: var(--text-2); font-size: 12.5px; }
-.ladder .arr, .ladder .brk { stroke: var(--text-2); stroke-width: 1.5; fill: none; }
-.ladder .arrhead { fill: var(--text-2); }
-.ladder .lm { fill: var(--text-2); }
-.ladder .lead { stroke: var(--axis); stroke-dasharray: 2 2; }
-.ladder .lmt { fill: var(--text-3); font-size: 12.5px; text-anchor: middle; }
 
 .card {
   background: var(--surface);
@@ -326,6 +304,25 @@ body.in-part main { padding-top: 10px; padding-bottom: 0; }
 .toc .toc-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .toc .toc-tabs a { font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; background: var(--chip); color: var(--text-2); text-decoration: none; }
 .toc .toc-tabs a:hover { color: var(--text-1); }
+.toc h3 { font-size: 0.8rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); margin: 0 0 8px; }
+.toc .rel { font-size: 0.82rem; color: var(--text-3); }
+.toc .rel a { color: var(--sel); text-decoration: none; }
+.toc .rel a:hover { text-decoration: underline; }
+/* the explanations of the three rungs, in the colours of the ladder picture; pages still to come are muted */
+.methods { list-style: none; padding: 0; margin: 0 0 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.methods li { display: flex; gap: 12px; align-items: flex-start; border-left: 4px solid var(--m); }
+.methods li p { margin: 4px 0 8px; }
+.methods .m1 { --m: var(--sel); }
+.methods .m2 { --m: var(--cep); }
+.methods .m3 { --m: var(--accent); }
+.methods svg { flex: none; width: 34px; height: 34px; margin-top: 2px; }
+.methods .fill { fill: var(--m); }
+.methods .ring { fill: none; stroke: var(--m); stroke-width: 1.3; opacity: 0.5; }
+.methods .orbit, .methods .sight { fill: none; stroke: var(--text-3); stroke-width: 1.2; }
+.methods .sight { stroke-dasharray: 3 2; }
+.methods .earth { fill: var(--text-2); }
+.methods .soon svg, .methods .soon .toc-part, .methods .soon p { opacity: 0.55; }
+.methods .badge { font-size: 0.72rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--text-2); vertical-align: 2px; margin-left: 4px; }
 table.data-table td.act { white-space: nowrap; }
 table.data-table td.act button { padding: 3px 10px; font-size: 0.8rem; margin-left: 4px; }
 table.data-table td.muted { color: var(--text-3); }
@@ -370,7 +367,7 @@ footer a { color: inherit; }
   .plot-side { grid-template-columns: minmax(0, 1fr); }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
   .tiles { grid-template-columns: 1fr; }
-  .toc ol { grid-template-columns: 1fr; }
+  .toc ol, .methods { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
   .tiles.four { grid-template-columns: 1fr; }
@@ -389,75 +386,68 @@ footer a { color: inherit; }
     mis tekib Maa liikumisest ümber Päikese. Kaugemal on parallaks liiga väike ja appi tulevad <i><a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder#Standard_candles" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">standardküünlad</a></i>: objektid, mille
     tegelikku heledust me teame, nii et nende näiv heledus annab kauguse. Iga uus meetod kalibreeritakse eelmise abil, nii et meetodid
     moodustavad <a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">redeli</a>, mille iga pulk ulatub kaugemale. Sellel lehel ronid redelil neli pulka: <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">hajusparvede</a> kaugustest <a href="https://et.wikipedia.org/wiki/Gaia_(kosmoseteleskoop)" target="_blank" rel="noopener">Gaia</a> parallaksidega
-    (1. osa) <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">tsefeiidide</a> <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">periood-heledus sõltuvuseni</a> (2. osa), sealt tsefeiididega <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> kaugusteni ja <a href="https://et.wikipedia.org/wiki/Hubble'i_seadus" target="_blank" rel="noopener">Hubble'i seaduseni</a> (3. osa)
+    (1. osa) <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">tsefeiidide</a> <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seoseni</a> (2. osa), sealt tsefeiididega <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> kaugusteni ja <a href="https://et.wikipedia.org/wiki/Hubble'i_seadus" target="_blank" rel="noopener">Hubble'i seaduseni</a> (3. osa)
     ning lõpuks Ia tüüpi <a href="https://et.wikipedia.org/wiki/Supernoova" target="_blank" rel="noopener">supernoovadeni</a>, mis näitavad <a href="https://et.wikipedia.org/wiki/Universumi_paisumine" target="_blank" rel="noopener">Universumi paisumist</a> sadade <a href="https://et.wikipedia.org/wiki/Parsek" target="_blank" rel="noopener">megaparsekite</a> kaugusel (4. osa).</p>
-    <p class="ladder-toggle"><a href="#ladder" id="ladderToggle" role="button" aria-controls="ladder" aria-expanded="false">▸ Näita kauguste redeli skeemi</a></p>
   </div>
     <figure class="ladder-art" aria-labelledby="artTitle">
-      <svg viewBox="0 0 345 274" role="img" aria-labelledby="artTitle artDesc">
+      <svg viewBox="0 0 345 274" role="group" aria-labelledby="artTitle artDesc">
       <title id="artTitle">Kauguste redeli kolm pulka</title>
       <desc id="artDesc">Redel, mille alumine pulk on parallaks, keskmine tsefeiidid ja ülemine Ia tüüpi supernoovad; iga pulk ulatub kaugemale.</desc>
       <line class="rail" x1="52.0" y1="262" x2="74.0" y2="12"/>
       <line class="rail" x1="152.0" y1="262" x2="130.0" y2="12"/>
-      <line class="rung r1" x1="56.4" y1="212" x2="147.6" y2="212"/>
-      <text class="name" x="172" y="210">Parallaks</text><text class="sub" x="172" y="229">1. osa · kuni ~5 kpc</text>
+      <a class="rung-link" href="parallaks.html" aria-label="Parallaks: interaktiivne joonis parallaksi meetodist">
+        <rect class="hit" x="0" y="184" width="345" height="52"/>
+        <line class="rung r1" x1="56.4" y1="212" x2="147.6" y2="212"/>
+        <text class="name" x="172" y="210">Parallaks</text><text class="sub" x="172" y="229">1. osa · kuni ~5 kpc</text>
+        <g class="icon r1"><ellipse class="orbit" cx="22" cy="224" rx="14" ry="5"/><circle class="fill" cx="22" cy="224" r="3.5"/>
+          <path class="sight" d="M8 224 L22 194 L36 224"/><circle class="fill" cx="22" cy="194" r="3"/><circle class="earth" cx="8" cy="224" r="2.5"/><circle class="earth" cx="36" cy="224" r="2.5"/></g>
+      </a>
       <line class="rung r2" x1="63.0" y1="137" x2="141.0" y2="137"/>
       <text class="name" x="172" y="135">Tsefeiidid</text><text class="sub" x="172" y="154">2.–3. osa · kuni ~40 Mpc</text>
       <line class="rung r3" x1="69.6" y1="62" x2="134.4" y2="62"/>
       <text class="name" x="172" y="60">Ia supernoovad</text><text class="sub" x="172" y="79">4. osa · üle 1 Gpc</text>
-      <g class="icon r1"><ellipse class="orbit" cx="22" cy="224" rx="14" ry="5"/><circle class="fill" cx="22" cy="224" r="3.5"/>
-        <path class="sight" d="M8 224 L22 194 L36 224"/><circle class="fill" cx="22" cy="194" r="3"/><circle class="earth" cx="8" cy="224" r="2.5"/><circle class="earth" cx="36" cy="224" r="2.5"/></g>
       <g class="icon r2"><circle class="ring" cx="22" cy="137" r="13"/><circle class="ring" cx="22" cy="137" r="9"/><circle class="fill" cx="22" cy="137" r="5"/></g>
       <g class="icon r3"><polygon class="fill" points="22.0,49.0 23.9,57.4 31.2,52.8 26.6,60.1 35.0,62.0 26.6,63.9 31.2,71.2 23.9,66.6 22.0,75.0 20.1,66.6 12.8,71.2 17.4,63.9 9.0,62.0 17.4,60.1 12.8,52.8 20.1,57.4"/></g>
       </svg>
     </figure>
   </div>
-  <figure class="card ladder" id="ladder" hidden>
-    <div class="ladder-wrap">
-      <svg viewBox="0 52 1000 310" role="img" aria-labelledby="ladderTitle ladderDesc">
-      <title id="ladderTitle">Kosmiliste kauguste redel</title>
-      <desc id="ladderDesc">Logaritmiline kauguste skaala 10 parsekist 1 gigaparsekini. Gaia parallaksid ulatuvad umbes 50 pc kuni 5 kpc, tsefeiidid 300 pc kuni 40 Mpc ja Ia tüüpi supernoovad 7 Mpc kuni üle 1 Gpc. Iga meetod kalibreeritakse eelmise abil seal, kus nende ulatused kattuvad.</desc>
-      <defs><marker id="ladderArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arrhead"/></marker></defs>
-      <line class="ax" x1="60" y1="290" x2="940.0" y2="290"/>
-      <line class="grid" x1="60.0" y1="62" x2="60.0" y2="290"/><line class="ax" x1="60.0" y1="290" x2="60.0" y2="295"/><text class="tick" x="60.0" y="310">10 pc</text>
-      <line class="grid" x1="170.0" y1="62" x2="170.0" y2="290"/><line class="ax" x1="170.0" y1="290" x2="170.0" y2="295"/><text class="tick" x="170.0" y="310">100 pc</text>
-      <line class="grid" x1="280.0" y1="62" x2="280.0" y2="290"/><line class="ax" x1="280.0" y1="290" x2="280.0" y2="295"/><text class="tick" x="280.0" y="310">1 kpc</text>
-      <line class="grid" x1="390.0" y1="62" x2="390.0" y2="290"/><line class="ax" x1="390.0" y1="290" x2="390.0" y2="295"/><text class="tick" x="390.0" y="310">10 kpc</text>
-      <line class="grid" x1="500.0" y1="62" x2="500.0" y2="290"/><line class="ax" x1="500.0" y1="290" x2="500.0" y2="295"/><text class="tick" x="500.0" y="310">100 kpc</text>
-      <line class="grid" x1="610.0" y1="62" x2="610.0" y2="290"/><line class="ax" x1="610.0" y1="290" x2="610.0" y2="295"/><text class="tick" x="610.0" y="310">1 Mpc</text>
-      <line class="grid" x1="720.0" y1="62" x2="720.0" y2="290"/><line class="ax" x1="720.0" y1="290" x2="720.0" y2="295"/><text class="tick" x="720.0" y="310">10 Mpc</text>
-      <line class="grid" x1="830.0" y1="62" x2="830.0" y2="290"/><line class="ax" x1="830.0" y1="290" x2="830.0" y2="295"/><text class="tick" x="830.0" y="310">100 Mpc</text>
-      <line class="grid" x1="940.0" y1="62" x2="940.0" y2="290"/><line class="ax" x1="940.0" y1="290" x2="940.0" y2="295"/><text class="tick" x="940.0" y="310">1 Gpc</text>
-      <rect class="bar r1" x="136.9" y="226" width="220.0" height="34" rx="5"/>
-      <text class="lbl" x="146.9" y="248">1. osa · Gaia parallaksid</text>
-      <rect class="bar r2" x="222.5" y="162" width="563.7" height="34" rx="5"/>
-      <text class="lbl" x="232.5" y="184">2.–3. osa · Tsefeiidid: periood-heledus seos</text>
-      <rect class="bar r3 far" x="703.0" y="98" width="237.0" height="34" rx="5"/>
-      <rect class="bar r3" x="703.0" y="98" width="170.8" height="34" rx="5"/>
-      <text class="lbl" x="713.0" y="120">4. osa · Ia supernoovad</text>
-      <line class="arr" x1="289.7" y1="224" x2="289.7" y2="200" marker-end="url(#ladderArrow)"/><text class="note" x="297.7" y="215.0">kalibreerib</text>
-      <line class="arr" x1="744.6" y1="160" x2="744.6" y2="136" marker-end="url(#ladderArrow)"/><text class="note" x="752.6" y="151.0">kalibreerib</text>
-      <path class="brk" d="M703.0 88 V80 H940.0 V88"/><text class="note" x="821.5" y="72" text-anchor="middle">Hubble'i seadus v = H₀d</text>
-      <circle class="lm" cx="184.7" cy="290" r="3.5"/><line class="lead" x1="184.7" y1="316" x2="184.7" y2="322"/><text class="lmt" x="184.7" y="334">Plejaadid</text>
-      <circle class="lm" cx="380.5" cy="290" r="3.5"/><line class="lead" x1="380.5" y1="316" x2="380.5" y2="340"/><text class="lmt" x="380.5" y="352">Galaktika kese</text>
-      <circle class="lm" cx="466.9" cy="290" r="3.5"/><line class="lead" x1="466.9" y1="316" x2="466.9" y2="322"/><text class="lmt" x="466.9" y="334">Suur Magalhãesi pilv</text>
-      <circle class="lm" cx="597.5" cy="290" r="3.5"/><line class="lead" x1="597.5" y1="316" x2="597.5" y2="340"/><text class="lmt" x="597.5" y="352">Andromeeda galaktika</text>
-      <circle class="lm" cx="743.9" cy="290" r="3.5"/><line class="lead" x1="743.9" y1="316" x2="743.9" y2="322"/><text class="lmt" x="743.9" y="334">Neitsi parv</text>
-      <circle class="lm" cx="830.0" cy="290" r="3.5"/><line class="lead" x1="830.0" y1="316" x2="830.0" y2="340"/><text class="lmt" x="830.0" y="352">Coma parv</text>
-      </svg>
-    </div>
-    <figcaption class="hint">Iga meetod ulatub kaugemale kui eelmine ja kalibreeritakse eelmise abil seal, kus nende ulatused kattuvad. Kauguste skaala on logaritmiline:
-      iga jaotis on eelmisest kümme korda kaugemal. Supernoovade riba kriipsjoonega osa jääb väljapoole selle lehe andmeid (kuni ~250 Mpc).</figcaption>
-  </figure>
   <nav class="toc" aria-labelledby="tocTitle">
     <h2 id="tocTitle">Sisukord</h2>
-    <p class="parallax-link"><a href="parallaks.html">Parallaksi meetodi interaktiivne joonis →</a></p>
+    <h3>Meetodid lähemalt</h3>
+    <ul class="methods">
+      <li class="m1">
+        <svg viewBox="-17 -17 34 34" aria-hidden="true"><ellipse class="orbit" cx="0" cy="8" rx="14" ry="5"/><circle class="fill" cx="0" cy="8" r="3.5"/>
+          <path class="sight" d="M-14 8 L0 -14 L14 8"/><circle class="fill" cx="0" cy="-14" r="3"/><circle class="earth" cx="-14" cy="8" r="2.5"/><circle class="earth" cx="14" cy="8" r="2.5"/></svg>
+        <div>
+          <a class="toc-part" href="parallaks.html">Parallaks</a>
+          <p>Interaktiivne joonis: Maa liikumine ümber Päikese paneb lähedase tähe kaugete kvasarite taustal ellipsit joonistama.</p>
+          <span class="rel">Seotud: <a href="#osa-1">1. osa</a></span>
+        </div>
+      </li>
+      <li class="m2 soon">
+        <svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="ring" r="13"/><circle class="ring" r="9"/><circle class="fill" r="5"/></svg>
+        <div>
+          <span class="toc-part">Tsefeiidid <span class="badge">tulekul</span></span>
+          <p>Miks tsefeiidid pulseerivad ja miks nende periood näitab, kui heledad nad on.</p>
+          <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a></span>
+        </div>
+      </li>
+      <li class="m3 soon">
+        <svg viewBox="-17 -17 34 34" aria-hidden="true"><polygon class="fill" points="0.0,-13.0 1.9,-4.6 9.2,-9.2 4.6,-1.9 13.0,-0.0 4.6,1.9 9.2,9.2 1.9,4.6 0.0,13.0 -1.9,4.6 -9.2,9.2 -4.6,1.9 -13.0,0.0 -4.6,-1.9 -9.2,-9.2 -1.9,-4.6"/></svg>
+        <div>
+          <span class="toc-part">Ia supernoovad <span class="badge">tulekul</span></span>
+          <p>Miks plahvatav valge kääbus on maksimumis alati peaaegu ühesuguse heledusega.</p>
+          <span class="rel">Seotud: <a href="#osa-4">4. osa</a></span>
+        </div>
+      </li>
+    </ul>
+    <h3>Ülesanne</h3>
     <ol>
       <li><a class="toc-part" href="#osa-1">1. osa: Hajusparvede kaugused Gaia parallaksidest</a>
-        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest.</p>
+        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest. <span class="rel">Taust: <a href="parallaks.html">Parallaks</a></span></p>
         <div class="toc-tabs"><a href="#intro">Sissejuhatus</a><a href="#query">Päring</a><a href="#table">Tabel</a><a href="#plots">Joonised</a><a href="#dist">Kaugus</a></div></li>
-      <li><a class="toc-part" href="#osa-2">2. osa: Tsefeiidide periood-heledus sõltuvus</a>
-        <p>Parvede kaugustest leia tsefeiidide heledus ja periood-heledus seos.</p>
+      <li><a class="toc-part" href="#osa-2">2. osa: Tsefeiidide perioodi-heleduse seos</a>
+        <p>Parvede kaugustest leia tsefeiidide heledus ja perioodi-heleduse seos.</p>
         <div class="toc-tabs"><a href="#cepIntro">Sissejuhatus</a><a href="#cepCluster">Parvede tsefeiidid</a><a href="#cepField">Väljatsefeiidid</a><a href="#cepPL">Periood-heledus</a></div></li>
       <li><a class="toc-part" href="#osa-3">3. osa: Hubble'i seadus</a>
         <p>Tsefeiididest leia galaktikate kaugused ja Hubble'i konstant.</p>
@@ -631,7 +621,7 @@ footer a { color: inherit; }
 
   <div class="part" id="part2" data-short="Tsefeiidid" hidden>
     <div class="part-head" id="p2Head">
-      <h2 class="rung">2. osa: Tsefeiidide periood-heledus sõltuvus</h2>
+      <h2 class="rung">2. osa: Tsefeiidide perioodi-heleduse seos</h2>
       <div class="tabs" role="tablist" id="p2Tabs" aria-label="2. osa">
         <button type="button" role="tab" id="tabCepIntro" data-tab="cepIntro" aria-controls="paneCepIntro" aria-selected="true">Sissejuhatus</button>
         <button type="button" role="tab" id="tabCepCluster" data-tab="cepCluster" aria-controls="paneCepCluster" aria-selected="false" tabindex="-1">Parvede tsefeiidid</button>
@@ -642,13 +632,13 @@ footer a { color: inherit; }
 
     <div role="tabpanel" class="pane" id="paneCepIntro" aria-labelledby="tabCepIntro">
     <p class="lede">Need <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">hajusparved</a> sisaldavad <a class="en" href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">klassikalisi tsefeiide</a>. Mõõda iga parve kaugus 1. osas (nupp „Mõõda“ täidab päringu vormi) ja salvesta see.
-      Parve kaugusest saab tsefeiidi <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse heleduse</a> ning mitme parve põhjal tekib <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">periood-heledus sõltuvus</a>.</p>
+      Parve kaugusest saab tsefeiidi <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse heleduse</a> ning mitme parve põhjal tekib <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seos</a>.</p>
 
     <ol class="steps">
       <li><span>Vali parv ja vajuta „Mõõda“: see täidab 1. osa päringu vormi. <a class="go" href="#cepCluster" data-go="cepCluster">Parvede tsefeiidid →</a></span></li>
       <li><span>Mõõda 1. osas parve kaugus ja salvesta see vahelehel „Kaugus“. Iga salvestatud parv lisab oma tsefeiidid seosesse. <a class="go" href="#dist" data-go="dist">1. osa: Kaugus →</a></span></li>
       <li><span>Parvedes on pikaperioodilisi tsefeiide vähe. Soovi korral lisa seosesse väljatsefeiide, mille kauguse annab nende enda Gaia parallaks. <a class="go" href="#cepField" data-go="cepField">Väljatsefeiidid →</a></span></li>
-      <li><span>Vaata periood-heledus sõltuvust ja sinu sobitatud sirget. <a class="go" href="#cepPL" data-go="cepPL">Periood-heledus →</a></span></li>
+      <li><span>Vaata perioodi-heleduse seost ja sinu sobitatud sirget. <a class="go" href="#cepPL" data-go="cepPL">Periood-heledus →</a></span></li>
     </ol>
     <p class="hint">Periood: Gaia DR3. W<sub>H</sub> = F160W − 0,386 (F555W − F814W) on Hubble'i kosmoseteleskoobi mõõtmistest leitud Wesenheiti tähesuurus,
       mis ei sõltu tähtedevahelisest tolmust. M<sub>H</sub><sup>W</sup> on sama suurus absoluutsena.</p>
@@ -700,7 +690,7 @@ footer a { color: inherit; }
     <section class="card fill">
       <div class="card-head">
         <div>
-          <h2>Periood-heledus sõltuvus</h2>
+          <h2>Perioodi-heleduse seos</h2>
           <p class="hint">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud; rombid on seosesse lisatud väljatsefeiidid. Katkendjoon: sinu kaalutud vähimruutude sirge; punktiir: avaldatud seos.</p>
         </div>
       </div>
@@ -721,11 +711,11 @@ footer a { color: inherit; }
     </div>
 
     <div role="tabpanel" class="pane" id="paneHubIntro" aria-labelledby="tabHubIntro">
-    <p class="lede">Nende <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> tsefeiide on mõõtnud <a href="https://et.wikipedia.org/wiki/Hubble'i_kosmoseteleskoop" target="_blank" rel="noopener">Hubble'i kosmoseteleskoop</a>. <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidi</a> periood annab <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">periood-heledus seosest</a> tema <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse
+    <p class="lede">Nende <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> tsefeiide on mõõtnud <a href="https://et.wikipedia.org/wiki/Hubble'i_kosmoseteleskoop" target="_blank" rel="noopener">Hubble'i kosmoseteleskoop</a>. <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidi</a> periood annab <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seosest</a> tema <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse
       tähesuuruse</a> ning võrdlus <a href="https://et.wikipedia.org/wiki/T%C3%A4hesuurus" target="_blank" rel="noopener">näiva tähesuurusega</a> galaktika kauguse. Koos galaktika eemaldumiskiirusega (<a href="https://et.wikipedia.org/wiki/Punanihe" target="_blank" rel="noopener">punanihkest</a>) annab see <a href="https://et.wikipedia.org/wiki/Hubble'i_konstant" target="_blank" rel="noopener">Hubble'i konstandi</a>.</p>
 
     <ol class="steps">
-      <li><span>Vali periood-heledus seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
+      <li><span>Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
       <li><span>Vaata galaktikate kaugusi tabelis. Klõps galaktika real näitab selle tsefeiide. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
       <li><span>Vali, millised galaktikad lähevad Hubble'i seaduse sobitusse. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
       <li><span>Loe kiiruse ja kauguse seosest Hubble'i konstant H<sub>0</sub>. <a class="go" href="#hubble" data-go="hubble">Hubble'i seadus →</a></span></li>
@@ -738,12 +728,12 @@ footer a { color: inherit; }
       <div class="card-head">
         <div>
           <h2>Tsefeiididega galaktikad</h2>
-          <p class="hint">Rakenda galaktikate tsefeiididele oma periood-heledus seos, et leida galaktikate kaugused.</p>
+          <p class="hint">Rakenda galaktikate tsefeiididele oma perioodi-heleduse seos, et leida galaktikate kaugused.</p>
         </div>
       </div>
-      <p class="hint calib-prompt" id="calibPrompt">Vali periood-heledus seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused.</p>
+      <p class="hint calib-prompt" id="calibPrompt">Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused.</p>
       <div class="calib-row" id="calibRow">
-        <select id="calib" class="calib-menu" aria-label="Periood-heledus seos">
+        <select id="calib" class="calib-menu" aria-label="Perioodi-heleduse seos">
           <option value="own">Minu seos (2. osa)</option>
           <option value="pub">Avaldatud seos</option>
         </select>
@@ -784,7 +774,7 @@ footer a { color: inherit; }
         <div class="plot" id="hub"></div>
         <div class="side">
           <div class="side-choice">
-            <label for="calibHub">Periood-heledus seos</label>
+            <label for="calibHub">Perioodi-heleduse seos</label>
             <div class="calib-row">
               <select id="calibHub" class="calib-menu">
                 <option value="own">Minu seos (2. osa)</option>
@@ -798,7 +788,7 @@ footer a { color: inherit; }
         </div>
       </div>
     </section>
-    <section class="card" id="hubEmpty"><p class="empty">Hubble'i seadus ilmub, kui vahelehel „Galaktikad“ on periood-heledus seos rakendatud.</p></section>
+    <section class="card" id="hubEmpty"><p class="empty">Hubble'i seadus ilmub, kui vahelehel „Galaktikad“ on perioodi-heleduse seos rakendatud.</p></section>
     </div>
   </div>
 
@@ -1995,7 +1985,7 @@ function drawHubble() {
     S.calibUsed = null;
     S.calib = "own";
     syncMenus("calib-menu", "own");
-    $("calibInfo").innerHTML = `Hubble'i seaduse jaoks on vaja sinu enda periood-heledus seost. Salvesta 2. osas vähemalt kahe parve kaugus. Väljatsefeiidid ainult täiendavad seost.`;
+    $("calibInfo").innerHTML = `Hubble'i seaduse jaoks on vaja sinu enda perioodi-heleduse seost. Salvesta 2. osas vähemalt kahe parve kaugus. Väljatsefeiidid ainult täiendavad seost.`;
     return;
   }
   const cal = calibration();
@@ -2014,7 +2004,7 @@ function drawHubble() {
       `<td>${fmtN(g.mu, 2)} ± ${fmtN(g.eMu, 2)}</td><td>${dV} ± ${dE}</td><td>${fmtN(g.v, 0)}</td><td>${fmtN(g.v / g.d, 0)}</td>` +
       `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} sobitusse"></td></tr>` +
       (open ? `<tr class="gal-detail"><td colspan="8"><p class="hint">Galaktika ${esc(g.name)} tsefeiidid. Iga punkt on üks tsefeiid;
-        joon on periood-heledus seos, mida on nihutatud galaktika kauguse mooduli võrra.</p><div class="plot small" id="gpl"></div></td></tr>` : "");
+        joon on perioodi-heleduse seos, mida on nihutatud galaktika kauguse mooduli võrra.</p><div class="plot small" id="gpl"></div></td></tr>` : "");
   }).join("");
 
   const cur = gals.find((g) => g.name === S.gal);
@@ -2055,7 +2045,7 @@ function drawHubble() {
       <div class="tile"><div class="label">Hubble'i aeg 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">miljardit aastat</div></div>
     </div>
     <p class="formula">${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
-    (fit.eCal ? `, periood-heledus seose nullpunkt ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, liidetud ruutudena.
+    (fit.eCal ? `, perioodi-heleduse seose nullpunkt ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, liidetud ruutudena.
     Lähedaste galaktikate omaliikumised (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus.</p>`;
 }
 
@@ -2748,20 +2738,6 @@ for (const ex of EXAMPLES) {
 }
 
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", redrawAll);
-
-const LADDER_KEY = "kauguste-redel:redeli-skeem";
-function showLadder(show) {
-  $("ladder").hidden = !show;
-  $("ladderToggle").setAttribute("aria-expanded", show);
-  $("ladderToggle").textContent = show ? "▾ Peida kauguste redeli skeem" : "▸ Näita kauguste redeli skeemi";
-}
-$("ladderToggle").addEventListener("click", e => {
-  e.preventDefault();
-  const show = $("ladder").hidden;
-  showLadder(show);
-  try { localStorage.setItem(LADDER_KEY, show ? "1" : "0"); } catch { /* kept for this visit */ }
-});
-try { showLadder(localStorage.getItem(LADDER_KEY) === "1"); } catch { /* hidden */ }
 
 S.stored = loadStored();
 try { S.fieldOn = new Set(JSON.parse(localStorage.getItem(FIELD_KEY)) || []); } catch { /* none added */ }
