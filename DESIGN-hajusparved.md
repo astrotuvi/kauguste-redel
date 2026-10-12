@@ -86,10 +86,10 @@ between tabs.
 The idea behind the lasso step. The scene has two panels side by side.
 
 - **Taevas** (the sky): a field about 30′ across with all the stars, their
-  size set by G as on star charts. Under the **Aeg** slider (0–100 000 a)
-  and its play button, the stars drift with their proper motions. The time
-  scale is real: at 6 mas/a a star moves 10′ in 100 000 years, so no
-  exaggeration is needed. The parallax ellipses are far too small to see at
+  size set by G as on star charts. Under the **Aeg** slider and its play
+  button, the stars drift with their proper motions. The time scale is real:
+  the slider runs to the time in which the cluster crosses a quarter of the
+  field, a few hundred thousand years, so no exaggeration is needed. The parallax ellipses are far too small to see at
   this scale, and the hint says so, with a link to `parallaks.html`. With
   **Jäljed** (tracks) on, each star leaves a line. The cluster's lines are
   parallel and of equal length, while the field's point in every direction.
@@ -106,8 +106,10 @@ stars are members, the panel shows two readouts:
   members (completeness);
 - **võõraid** (contaminants): field stars inside the lasso (contamination).
 
-**Näita tõde** (show the truth) colours the true members, so the user can
-see what a tight lasso misses and what a loose one takes in.
+**Näita tõde** (show the truth) marks the true members, so the user can
+see what a tight lasso misses and what a loose one takes in. The toggle is
+shared with tab 2. A third readout gives the distance 1000/⟨p⟩ of the
+selection, so that the effect of field stars on the result shows at once.
 
 The shared sliders matter here:
 
@@ -197,18 +199,18 @@ Two stacked histograms of the cluster's members:
   is skewed with a long tail, and negative parallaxes have no distance at
   all. They are counted in a note under it.
 
-The readouts in the panel are a small table: the true distance, 1000/⟨p⟩,
-the mean of 1000/p_i, and the median of 1000/p_i, each with its difference
-from the truth in %.
+The readouts in the panel are a small table: the true distance, 1000/⟨p⟩
+and the mean of 1000/p_i, each with its difference from the truth in %,
+and the medians of both over the 200 repeats below.
 
 Controls:
 
 - **Tähtede arv N** (5–150);
 - **Kaalutud**: weights 1/σ_i², as in part 1. Without weights, the faint
   stars spoil even ⟨p⟩;
-- **Korda 200 korda** (repeat 200 times): draws 200 new samples of the
-  cluster and shows the 200 results of both methods as two strips of dots
-  around the true distance. The 1/⟨p⟩ strip is centred on the truth, and the
+- **200 repeats**, always shown below the histograms: 200 new samples of
+  the cluster's errors, with the results of both methods as two strips of
+  dots around the true distance. The 1/⟨p⟩ strip is centred on the truth, and the
   ⟨1/p⟩ strip is shifted to larger distances. This shows that the problem
   is a bias, not bad luck.
 
@@ -238,8 +240,8 @@ Toggles:
 - **Nullpunkti parandus** (+0.017 mas), which part 1 always applies.
 - **Korreleeritud vead**: gives all stars of the cluster one common
   random error of about 0.010 mas, as for stars close together on the sky.
-  **Korda 200 korda** then shows that the spread of the results no longer
-  shrinks with N.
+  A strip of 200 repeats of 1000/⟨p⟩ below the plot shows that the spread of
+  the results no longer shrinks with N.
 
 Mida joonis näitab:
 

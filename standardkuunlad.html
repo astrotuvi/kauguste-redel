@@ -164,6 +164,7 @@ select { width: 100%; }
 .inrow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.85rem; color: var(--text-2); }
 .readout { margin: 0; font-size: 0.85rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
 .readout b { color: var(--text-1); font-weight: 600; }
+.readout a { color: var(--sel); text-decoration: underline dotted; text-underline-offset: 2px; }
 .readout + .readout { margin-top: -2px; }
 .formula { font-size: 0.82rem; color: var(--text-2); background: var(--chip); border-radius: 6px; padding: 6px 8px; margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .formula:empty { display: none; }
@@ -276,7 +277,7 @@ select { width: 100%; }
 </head>
 <body>
 <main>
-  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span>Standardküünlad</p>
+  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span>Standardküünlad</p>
   <h1>Standardküünlad</h1>
   <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
   <p class="intro">Kui valgusallika tegelik heledus on teada, annab selle näiv heledus kauguse: mida kaugemal on allikas, seda nõrgemana see paistab.
@@ -1370,7 +1371,8 @@ select { width: 100%; }
     $('calcM').textContent = calcName;
     const Ec = lux(SRC.lamp.cal), Eh = lux(C.hid), mh = mag(s, C.hid), n = nOf(s), N = n * n, dmeas = measure(s, C.hid);
     $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtU(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. ` +
-      (isLamp ? `Luksmeeter näitab seal valgustatust <b>E = ${fmtLux(Ec)} lx</b>.` : `Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`);
+      (isLamp ? `Luksmeeter näitab seal valgustatust <b>E = ${fmtLux(Ec)} lx</b>.` : `Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`) +
+      (s === 'cep' ? ' <a href="hajusparved.html#keskmine">Kuidas parve kaugus leitakse?</a>' : '');
     $('calFormula').textContent = !C.done ? ''
       : isLamp ? `Valgustugevus I = E d² = ${fmtLux(Ec)} lx × (${fmtU(s, da)})² = ${sig(Iest())} cd. Valgusvoog Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`
       : `M = m − 5 log₁₀(d / 1 pc) + 5 = ${fmt(mc, 2)} − 5 log₁₀(${fmtPc(da / PC)}) + 5 = ${fmtMag(Mest(s), 2)}`;

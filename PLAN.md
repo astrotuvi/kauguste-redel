@@ -2,36 +2,38 @@
 
 The table of contents of `index.html` has a row of **Uuri lähemalt** cards
 that lead to background pages. Each page gives the wider picture behind a
-rung of the distance ladder or behind the result of the exercise. So far only
-the parallax page (`parallaks.html`) and the standard candles page
-(`standardkuunlad.html`) exist; the other cards are marked *tulekul* (coming).
+rung of the distance ladder or behind the result of the exercise. So far the
+parallax page (`parallaks.html`), the open clusters page (`hajusparved.html`)
+and the standard candles page (`standardkuunlad.html`) exist; the other cards
+are marked *tulekul* (coming).
 
 The cards, in reading order:
 
 1. Parallaks
-2. Standardküünlad
-3. Tsefeiidid
-4. Ia supernoovad
-5. Hubble'i seadus
+2. Hajusparved
+3. Standardküünlad
+4. Tsefeiidid
+5. Ia supernoovad
+6. Hubble'i seadus
 
 ## 1. Parallaks (exists, `parallaks.html`)
 
-Already covers the geometry of parallax in 3D and on the sky, the parallax
-angle, proper motion, Gaia observations and a puzzle.
+Covers the geometry of parallax in 3D and on the sky, the parallax angle,
+proper motion, Gaia observations and a puzzle. The page is complete: it is
+about one star. The cluster items that part 1 relies on are on a page of
+their own, `hajusparved.html`.
 
-Still to add, because part 1 of the exercise relies on it:
+Related part: 1.
 
-- **Finding cluster members by proper motion.** Stars in a cluster move
-  together, so they form a dense clump in the proper-motion diagram while
-  field stars are spread out. This is the idea behind the lasso step.
-  Interactive idea: cluster and field stars drifting across the sky, with the
-  clump forming in the proper-motion diagram.
-- **The colour–magnitude diagram.** What the main sequence is, why a cluster
-  forms a narrow sequence and the field does not, and what absolute magnitude
-  does to it.
-- **Averaging parallaxes.** Why 1/⟨p⟩ is used rather than ⟨1/p⟩, and Gaia's
-  zero-point and correlated systematic errors. This could be a section of
-  this page rather than a page of its own.
+## 1b. Hajusparved (exists, `hajusparved.html`)
+
+- **Finding cluster members by proper motion**, the idea behind the lasso
+  step.
+- **The colour–magnitude diagram**, the check after the lasso.
+- **Averaging parallaxes**: why 1/⟨p⟩ is used rather than ⟨1/p⟩, and Gaia's
+  zero-point and correlated systematic errors.
+
+The design of the page is in `DESIGN-hajusparved.md`.
 
 Related part: 1.
 
@@ -108,8 +110,7 @@ the parts could cover these better than a separate page.
 2. **Tsefeiidid**, with dust and W_H. Parts 2 and 3.
 3. **Hubble'i seadus.** Parts 3 and 4.
 4. **Ia supernoovad.** Part 4.
-5. **Extend Parallaks** with cluster membership and the colour–magnitude
-   diagram. Part 1.
+5. **Hajusparved.** Done. Part 1.
 
 ## When a page is ready
 

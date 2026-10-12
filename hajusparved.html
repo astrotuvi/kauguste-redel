@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hajusparvede kaugused</title>
+<meta name="description" content="Interaktiivsed joonised hajusparvedest: parve liikmete leidmine omaliikumiste järgi, värvus-heledusdiagramm ja parallakside keskmistamine.">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4;
+  --surface: #fcfcfb;
+  --border: #e3e2dd;
+  --text-1: #0b0b0b;
+  --text-2: #52514e;
+  --text-3: #75746e;
+  --grid: #ecebe7;
+  --axis: #c4c3bd;
+  --sel: #2a78d6;
+  --accent: #eb6834;
+  --btn: #2a78d6;
+  --btn-text: #ffffff;
+  --chip: #eeede9;
+  --good: #1f8a4c;
+  --bad: #c62828;
+  --night: #070912;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1a1a19;
+    --border: #2f2f2c;
+    --text-1: #ffffff;
+    --text-2: #c3c2b7;
+    --text-3: #959489;
+    --grid: #282826;
+    --axis: #4a4a46;
+    --sel: #3987e5;
+    --accent: #d95926;
+    --btn: #3987e5;
+    --btn-text: #ffffff;
+    --chip: #262624;
+    --good: #4cc27a;
+    --bad: #f06a6a;
+    --night: #05060c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211;
+  --surface: #1a1a19;
+  --border: #2f2f2c;
+  --text-1: #ffffff;
+  --text-2: #c3c2b7;
+  --text-3: #959489;
+  --grid: #282826;
+  --axis: #4a4a46;
+  --sel: #3987e5;
+  --accent: #d95926;
+  --btn: #3987e5;
+  --btn-text: #ffffff;
+  --chip: #262624;
+  --good: #4cc27a;
+  --bad: #f06a6a;
+  --night: #05060c;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.back a { color: var(--text-2); text-decoration: none; }
+.back a:hover { color: var(--sel); }
+.back .sep { margin: 0 6px; }
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+.byline { color: var(--text-2); font-size: 0.9rem; margin: -4px 0 16px; }
+.intro a, .explain a, .links a, .hint a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+.intro a:hover, .explain a:hover, .links a:hover, .hint a:hover { color: var(--sel); text-decoration-style: solid; }
+.intro { margin: 0 0 24px; max-width: 75ch; }
+h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+.hint { color: var(--text-3); font-size: 0.82rem; margin: 2px 0 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; align-items: start; }
+.tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; border-bottom: 1px solid var(--border); margin: -4px 0 10px; }
+.tabs button {
+  border: none; border-radius: 0; background: none; padding: 8px 14px; margin-bottom: -1px;
+  color: var(--text-2); font-weight: 550; border-bottom: 2px solid transparent;
+}
+.tabs button:hover { color: var(--text-1); }
+.tabs button[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--btn); }
+
+svg.scene { display: block; width: 100%; height: auto; margin-top: 8px; user-select: none; -webkit-user-select: none; font-family: inherit; }
+#pm { touch-action: none; cursor: crosshair; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.duo > div { min-width: 0; }
+.sub { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 10px 0 0; }
+.badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0 6px; border-radius: 999px; background: var(--chip); color: var(--text-3); }
+
+/* Controls */
+.controls { display: flex; flex-direction: column; gap: 12px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.controls .group:not([hidden]) ~ .group:not([hidden]) { border-top: 1px solid var(--border); padding-top: 12px; }
+.group h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 0; }
+.slider { display: grid; grid-template-columns: 1fr 5.5em; align-items: center; gap: 2px 10px; font-size: 0.85rem; color: var(--text-2); }
+.slider label { grid-column: 1 / -1; }
+.slider output { font-variant-numeric: tabular-nums; text-align: right; color: var(--text-1); }
+input[type="range"] { accent-color: var(--btn); width: 100%; min-width: 0; }
+.toggle { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; color: var(--text-1); font-weight: 550; }
+.toggle.dis { color: var(--text-3); }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.toggles.col { flex-direction: column; }
+.toggle input { accent-color: var(--btn); width: 16px; height: 16px; margin: 0; }
+button {
+  font: inherit; cursor: pointer; border-radius: 7px; padding: 7px 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text-1);
+}
+button:disabled { cursor: default; opacity: 0.5; }
+button.primary { background: var(--btn); color: var(--btn-text); border-color: transparent; font-weight: 600; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { flex: 1; border: none; border-radius: 0; padding: 6px 4px; font-size: 0.86rem; white-space: nowrap; color: var(--text-2); background: var(--surface); }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-checked="true"] { background: var(--btn); color: var(--btn-text); font-weight: 600; }
+.views-btns { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 8px; font-size: 0.82rem; color: var(--text-3); }
+.views-btns button { font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.views-btns button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); }
+.readout { margin: 0; font-size: 0.85rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.readout b { color: var(--text-1); font-weight: 600; }
+.readout:empty { display: none; }
+#hoverRead { min-height: 1.5em; margin-top: 6px; }
+#hoverRead:empty { display: block; }
+.formula { font-size: 0.82rem; color: var(--text-2); background: var(--chip); border-radius: 6px; padding: 6px 8px; margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.formula:empty { display: none; }
+.ok { color: var(--good); }
+.off { color: var(--bad); }
+table.res { border-collapse: collapse; font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--text-2); }
+table.res td { padding: 2px 10px 2px 0; }
+table.res td.n { text-align: right; color: var(--text-1); }
+
+/* Scenes and plots */
+.night { fill: var(--night); }
+.nl { fill: #e8ecf5; font-size: 12px; font-weight: 600; paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.nl2 { fill: #9aa3b5; font-size: 11px; paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.skystar { fill: #ffffff; }
+.skysel { fill: #8fbcff; }
+.skymem { fill: none; stroke: #ffa060; stroke-width: 1.3; }
+.skyhov { fill: none; stroke: #ffe066; stroke-width: 1.5; }
+.skytrack { stroke: #9aa3b5; stroke-width: 0.8; opacity: 0.5; }
+.skytrack.sel { stroke: #8fbcff; opacity: 0.8; }
+.tlbl { fill: var(--text-2); font-size: 11px; }
+.lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl2 { fill: var(--text-2); font-size: 12px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl3 { fill: var(--text-3); font-size: 11px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.axisline { stroke: var(--axis); stroke-width: 1; fill: none; }
+.fpt { fill: var(--text-3); opacity: 0.5; }
+.fpt.dark { fill: var(--text-2); opacity: 0.75; }
+.spt { fill: var(--sel); }
+.mpt { fill: var(--accent); }
+.sring { fill: none; stroke: var(--sel); stroke-width: 1.4; }
+.mring { fill: none; stroke: var(--accent); stroke-width: 1.3; }
+.hov { fill: none; stroke: var(--text-1); stroke-width: 1.5; }
+.lasso { fill: color-mix(in srgb, var(--sel) 10%, transparent); stroke: var(--sel); stroke-width: 1.5; stroke-dasharray: 5 3; stroke-linejoin: round; }
+.msline { stroke: var(--text-3); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+.arrow { stroke: var(--text-2); stroke-width: 1.5; fill: none; }
+.arrowhead { fill: var(--text-2); }
+.hist { fill: color-mix(in srgb, var(--sel) 40%, transparent); stroke: var(--sel); stroke-width: 0.8; }
+.neg { fill: color-mix(in srgb, var(--bad) 9%, transparent); }
+.truth { stroke: var(--text-1); stroke-width: 2; }
+.meanline { stroke: var(--sel); stroke-width: 2; stroke-dasharray: 6 4; }
+.invline { stroke: var(--bad); stroke-width: 2; stroke-dasharray: 2 3; }
+.dot1 { fill: var(--sel); opacity: 0.6; }
+.dot2 { fill: var(--bad); opacity: 0.6; }
+.statl { stroke: var(--sel); stroke-width: 2; fill: none; }
+.sysl { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 4; fill: none; }
+.zpl { stroke: var(--bad); stroke-width: 1.5; stroke-dasharray: 2 3; fill: none; }
+.totl { stroke: var(--text-1); stroke-width: 2; fill: none; }
+.extr { stroke-dasharray: 3 4; }
+.curpt { fill: var(--text-1); stroke: var(--surface); stroke-width: 2; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+.legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
+.legend i.ring { width: 8px; height: 8px; border: 1.5px solid; border-radius: 50%; }
+
+.explain { margin-top: 14px; }
+.explain ul { margin: 8px 0 0; padding-left: 20px; max-width: 80ch; }
+.explain li { margin: 4px 0; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .duo { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span>Hajusparved<span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a></p>
+  <h1>Hajusparvede kaugused</h1>
+  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
+  <p class="intro"><a href="parallaks.html">Parallaks</a> annab otse ühe tähe kauguse, kuid juba mõnesaja parseki kaugusel on ühe tähe parallaksi viga suur.
+    <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">Hajusparves</a> on sadu tähti peaaegu ühel kaugusel, nii et nende parallaksid saab keskmistada.
+    Kõigepealt tuleb aga parve tähed eraldada nende ees ja taga olevatest väljatähtedest. Siin on üks simuleeritud parv koos väljatähtedega: leia selle liikmed
+    <a class="en" href="https://en.wikipedia.org/wiki/Proper_motion" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">omaliikumiste</a> järgi, kontrolli neid värvus-heledusdiagrammil
+    ja keskmista nende parallaksid. Need on samad sammud nagu harjutuse <a href="index.html#osa-1">1. osas</a>.</p>
+
+  <div class="layout">
+    <section class="card">
+      <div class="tabs" role="tablist" aria-label="Teema">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Parve liikmed</button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Värvus-heledusdiagramm</button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Parallakside keskmine</button>
+      </div>
+
+      <div id="pane1" role="tabpanel" aria-labelledby="tab1">
+        <p class="hint">Vasakul on päringu ala taevas, paremal tähtede omaliikumised. Käivita aeg ja vaata, kuidas tähed liiguvad. Lohista omaliikumiste joonisel, et märkida lassoga tihe kogum.</p>
+        <div class="duo">
+          <div>
+            <p class="sub">Taevas</p>
+            <svg id="sky" class="scene" viewBox="0 0 370 370" role="img" aria-label="Päringu ala taevas, tähed liiguvad oma omaliikumisega"></svg>
+          </div>
+          <div>
+            <p class="sub">Omaliikumised</p>
+            <svg id="pm" class="scene" viewBox="0 0 370 370" role="img" aria-label="Tähtede omaliikumised; lohista, et märkida lassoga"></svg>
+          </div>
+        </div>
+        <p class="readout" id="hoverRead" aria-live="polite"></p>
+        <div class="legend">
+          <span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>
+          <span id="lgMem1" hidden><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>
+        </div>
+      </div>
+
+      <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
+        <p class="hint" id="cmdHint">Iga punkt on üks täht: paremal punasemad, üleval heledamad. Vali paremal, milliseid tähti esile tõsta.</p>
+        <svg id="cmd" class="scene" viewBox="0 0 760 500" role="img" aria-label="Värvus-heledusdiagramm"></svg>
+        <div class="legend" id="cmdLegend"></div>
+      </div>
+
+      <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
+        <div class="views-btns" role="group" aria-label="Vaade">
+          <span>Vaade:</span>
+          <button type="button" data-view3="bias">Nihe</button>
+          <button type="button" data-view3="sys">Süstemaatika</button>
+        </div>
+        <div id="view3bias">
+          <p class="hint">Parve N liikme mõõdetud parallaksid (üleval) ja neist ühekaupa arvutatud kaugused 1000/p (keskel). All on sama arvutus 200 korda uute mõõtmisvigadega.
+            Nihe on suur, kui vead on suured: vii parv kaugemale, luba nõrgemaid tähti või lülita kaalud välja.</p>
+          <svg id="bias" class="scene" viewBox="0 0 760 530" role="img" aria-label="Parallakside ja kauguste histogrammid ning korduste tulemused"></svg>
+          <div class="legend">
+            <span><i style="border-color: var(--text-1)"></i>tegelik väärtus</span>
+            <span><i style="border-color: var(--sel); border-top-style: dashed"></i>1000 / ⟨p⟩</span>
+            <span><i style="border-color: var(--bad); border-top-style: dotted"></i>⟨1000 / p⟩</span>
+          </div>
+        </div>
+        <div id="view3sys" hidden>
+          <p class="hint">Parve keskmise parallaksi viga tähtede arvu N järgi, logaritmteljed. Paremal on sama viga kauguse protsentides. All on 1000/⟨p⟩ 200 korda uute mõõtmisvigadega.</p>
+          <svg id="sys" class="scene" viewBox="0 0 760 450" role="img" aria-label="Keskmise parallaksi viga tähtede arvu järgi"></svg>
+          <div class="legend">
+            <span><i style="border-color: var(--sel)"></i>statistiline viga</span>
+            <span id="lgSys"><i style="border-color: var(--accent); border-top-style: dashed"></i>korreleeritud viga</span>
+            <span><i style="border-color: var(--text-1)"></i>kokku</span>
+            <span id="lgZp"><i style="border-color: var(--bad); border-top-style: dotted"></i>parandamata nullpunkt</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card controls" aria-label="Seaded">
+      <div class="group" data-tabs="tab1 tab2 tab3">
+        <div class="slider"><label for="dist">Parve kaugus</label><input type="range" id="dist" min="0" max="1000" step="1"><output for="dist" id="distOut"></output></div>
+        <div class="slider"><label for="glim">Nõrgimad tähed (tähesuurus G)</label><input type="range" id="glim" min="15" max="21" step="0.5" value="19"><output for="glim" id="glimOut"></output></div>
+        <div class="btnrow"><button type="button" id="newCl">Uus parv</button></div>
+        <p class="readout" id="clRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab1">
+        <div class="slider"><label for="time">Aeg</label><input type="range" id="time" min="0" max="1000" step="1" value="0"><output for="time" id="timeOut"></output></div>
+        <div class="btnrow"><button type="button" class="primary" id="play">▶ Käivita</button></div>
+        <label class="toggle"><input type="checkbox" id="tracks"> Jäljed</label>
+      </div>
+      <div class="group" data-tabs="tab1">
+        <h3>Lasso</h3>
+        <p class="readout" id="lassoRead"></p>
+        <div class="btnrow"><button type="button" id="clear">Tühjenda</button></div>
+      </div>
+
+      <div class="group" data-tabs="tab2">
+        <h3 id="valikLbl">Valik</h3>
+        <div class="seg" role="radiogroup" aria-labelledby="valikLbl">
+          <button type="button" role="radio" data-valik="all">Kõik tähed</button>
+          <button type="button" role="radio" data-valik="lasso">Lasso valik</button>
+          <button type="button" role="radio" data-valik="members">Liikmed</button>
+        </div>
+        <div class="toggles col">
+          <label class="toggle"><input type="checkbox" id="abs"> <span>Absoluutne M<sub>G</sub></span></label>
+          <label class="toggle" id="ownLbl"><input type="checkbox" id="own"> Iga täht oma kaugusega</label>
+          <label class="toggle"><input type="checkbox" id="bin" checked> Kaksiktähed</label>
+        </div>
+        <div class="slider"><label for="ebv">Tolm: punanemine E(BP−RP)</label><input type="range" id="ebv" min="0" max="1" step="0.05" value="0"><output for="ebv" id="ebvOut"></output></div>
+        <p class="readout" id="cmdRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab1 tab2">
+        <label class="toggle"><input type="checkbox" id="truth"> Näita tõde</label>
+      </div>
+
+      <div class="group" data-tabs="tab3">
+        <div class="slider"><label for="nst">Tähtede arv N</label><input type="range" id="nst" min="5" max="150" step="1" value="50"><output for="nst" id="nstOut"></output></div>
+        <label class="toggle"><input type="checkbox" id="weighted" checked> Kaalutud (kaal 1/σ²)</label>
+        <div id="biasRead"></div>
+      </div>
+      <div class="group" data-tabs="tab3">
+        <h3>Süstemaatilised vead</h3>
+        <div class="toggles col">
+          <label class="toggle"><input type="checkbox" id="zp" checked> Gaia nullpunkt (−0.017 mas)</label>
+          <label class="toggle"><input type="checkbox" id="zpcorr" checked> Nullpunkti parandus (+0.017 mas)</label>
+          <label class="toggle"><input type="checkbox" id="corr" checked> Korreleeritud vead (0.010 mas)</label>
+        </div>
+        <p class="readout" id="sysRead"></p>
+      </div>
+    </section>
+  </div>
+
+  <section class="card explain">
+    <h2>Mida joonis näitab</h2>
+    <ul data-tab="tab1">
+      <li>Parve tähed tekkisid koos ühest gaasipilvest ja liiguvad läbi ruumi ühise kiirusega. Päikeselt vaadates on neil seepärast peaaegu ühesugune omaliikumine ja omaliikumiste joonisel moodustavad nad tiheda kogumi,
+        isegi kui taevas on nad väljatähtede vahel laiali.</li>
+      <li>Väljatähed on igal kaugusel ja liiguvad eri suundades, nii et nende omaliikumised on laiali. Lähedased väljatähed liiguvad taevas kiiresti, kauged aeglaselt.</li>
+      <li>Omaliikumine sõltub kiirusest ja kaugusest: μ [mas/a] = v<sub>t</sub> [km/s] / (4.74 · d [kpc]), kus v<sub>t</sub> on kiiruse taevatasandiline komponent. Sama kiirus annab kaugemal väiksema omaliikumise,
+        mis jääb väljatähtede tiheda keskosa lähedale. Kaugemad tähed on ka nõrgemad ja nende omaliikumiste vead on suuremad. Seepärast on kauget parve raskem eraldada ja parallaksi redelipulk lõpeb mõne kiloparseki juures.</li>
+      <li>Lähedane parv võib katta kogu vaatevälja, nii et taevas pole seda tähtede tiheduse järgi näha, omaliikumiste joonisel aga küll.</li>
+      <li>Aeg on joonisel päris: nii palju liiguvad tähed alles kümnete või sadade tuhandete aastatega. <a href="parallaks.html">Parallaksi</a> ellipsid on selles mõõtkavas liiga väikesed, et neid näha.</li>
+      <li>Kui <b>Näita tõde</b> on sees, on tegelikud parve liikmed rõngaga. Kitsas lasso jätab osa liikmeid välja, lai lasso võtab kaasa väljatähti, mis nihutavad keskmist parallaksi.</li>
+      <li>Harjutuse 1. osas teed sama päris Gaia andmetega: <a href="index.html#plots">märgi lassoga omaliikumiste joonisel tihe kogum</a>.</li>
+    </ul>
+    <ul data-tab="tab2" hidden>
+      <li><a href="https://et.wikipedia.org/wiki/Peajada" target="_blank" rel="noopener">Peajada</a>: tähed, mille tuumas põleb vesinik. Kuumemad (sinised, vasakul) on heledamad kui jahedamad (punased, paremal).
+        Värvusindeks BP−RP on tähe sinise ja punase riba tähesuuruste vahe.</li>
+      <li>Parve tähed on ühel kaugusel, ühevanused ja sama keemilise koostisega, seepärast moodustavad nad kitsa jada. Väljatähed on eri kaugustel: iga väljatäht on nihutatud oma kaugusmooduli võrra,
+        nii et jada laguneb laiaks laiguks. Paremal üleval on kaugete punaste hiidude haru.</li>
+      <li>Absoluutne tähesuurus M<sub>G</sub> = G − 5 log₁₀ d + 5 eemaldab kauguse. Kui parve jada langeb pärast seda võrdlusjoonele, on parve kaugus usutav.
+        Sama mõte on <a href="standardkuunlad.html#tahesuurused">standardküünalde lehel</a>.</li>
+      <li><b>Iga täht oma kaugusega</b> kasutab iga tähe tegelikku kaugust. Siis langevad ka väljatähed peajadale ja hiiud moodustavad selle kohale oma haru: laik tuleb kaugustest, mitte erinevatest tähtedest.</li>
+      <li>Kaks ühesugust tähte, mida ei saa eristada, on koos 0.75 tähesuurust heledamad kui üks. Seepärast on päris parvedes jada kohal teine, nõrgem riba kaksiktähtedest.</li>
+      <li>Tolm neelab ja punastab valgust: täht paistab nõrgem ja punasem, A<sub>G</sub> ≈ 2 E(BP−RP). Harjutuse 1. osa absoluutse tähesuurusega diagramm tolmu ei arvesta, seepärast võib parve jada jääda võrdlusjoonest allapoole.
+        Tolmust ja Wesenheiti tähesuurusest räägib tsefeiidide leht <span class="badge">tulekul</span>.</li>
+      <li>Harjutuse 1. osas kontrollid diagrammiga <a href="index.html#plots">lasso valikut</a>: jadast kaugel olevad tähed ei ole tõenäoliselt parve liikmed.</li>
+    </ul>
+    <ul data-tab="tab3" hidden>
+      <li>Parallaksi mõõtmisviga on sümmeetriline: mõni täht saab liiga suure, mõni liiga väikese, nõrk täht isegi negatiivse parallaksi. Kaugus 1/p on aga kõver funktsioon: väike p annab väga suure kauguse,
+        nii et kauguste jaotus on viltune ja pika sabaga.</li>
+      <li>Seepärast tuleb kõigepealt keskmistada parallaksid ja alles siis pöörata: d = 1000 / ⟨p⟩. Üksikute kauguste keskmine ⟨1/p⟩ on nihkes suuremate kauguste poole, iga tähe kohta umbes (σ/p)² võrra.
+        Näiteks 2 kpc kaugusel (p = 0.5 mas) on tähel, mille σ<sub>p</sub> = 0.25 mas, nihe juba umbes 25 %. 100 sellise tähe ⟨p⟩ viga on aga 0.025 mas ehk 5 % ja 1000/⟨p⟩ on peaaegu nihketa.</li>
+      <li>Kaalud 1/σ² annavad heledatele, täpsetele tähtedele suurema kaalu. Ilma kaaludeta rikuvad nõrgad tähed ka ⟨p⟩.</li>
+      <li>Statistiline viga väheneb tähtede arvuga kui 1/√N, kuid taevas lähestikku olevate tähtede Gaia parallaksivead on osaliselt ühised. Neid keskmistamine ei vähenda,
+        seepärast liidab harjutuse 1. osa veale ruutudena 0.010 mas.</li>
+      <li>Gaia DR3 parallaksid on keskmiselt umbes 0.017 mas liiga väikesed (nullpunkt, Lindegren jt 2021). Harjutuse 1. osa parandab selle alati. Parandamata jääks 2 kpc kaugune parv 3.5 % liiga kaugele.
+        Selline viga nihutab kõiki kaugusi korraga ja kandub <a href="standardkuunlad.html#kalibreerimine">redelil edasi</a>.</li>
+      <li>Harjutuse 1. osa vahelehel <a href="index.html#dist">Kaugus</a> on samad valemid: kaalutud keskmine parallaks nullpunkti parandusega, statistiline ja süstemaatiline viga ning d = 1000 / ⟨p⟩.</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, typeof attrs[k] === 'number' ? +attrs[k].toFixed(2) : attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, s, cls, anchor) {
+    const e = el('text', { x, y, class: cls || 'lbl', 'text-anchor': anchor || 'start' }, parent);
+    e.textContent = s;
+    return e;
+  }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const minus = s => s.replace(/-/g, '−');
+  const fmt = (v, d) => minus(v.toFixed(d));
+  const fmtPct = v => { if (Math.abs(v) < 0.05) v = 0; return (v > 0 ? '+' : '') + fmt(v, Math.abs(v) < 10 ? 1 : 0) + ' %'; };
+  const round2 = v => { const e = 10 ** (Math.floor(Math.log10(v)) - 1); return Math.round(v / e) * e; };
+  // Three significant digits, with the thousands grouped in numbers of five digits or more.
+  function sig(v, n = 3) {
+    if (!isFinite(v) || v === 0) return '0';
+    let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    return minus(s);
+  }
+  const fmtPc = d => (d < 1000 ? sig(d) + ' pc' : sig(d / 1000) + ' kpc');
+  function seeded(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+  function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : NaN; };
+  const quantile = (a, q) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[clamp(Math.round(q * (s.length - 1)), 0, s.length - 1)] : NaN; };
+  function mkScale(lo, hi, p0, p1, log) {
+    const f = log ? v => (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)) : v => (v - lo) / (hi - lo);
+    return v => p0 + f(v) * (p1 - p0);
+  }
+  function svgPoint(svg, e) {
+    const p = svg.createSVGPoint();
+    p.x = e.clientX; p.y = e.clientY;
+    return p.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), f = x / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
+  const decs = step => Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+  function ticks(lo, hi, step) {
+    const a = [], d = decs(step);
+    for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + 1e-9; k++) a.push([k * step, fmt(k * step, d)]);
+    return a;
+  }
+  // Plot frame with grid lines and tick labels; ticks are [value, label] pairs.
+  function frame(g, B, X, Y, xt, yt, xtitle, ytitle, yOff = 40) {
+    for (const [v, L] of xt) { const x = X(v); el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'gridline' }, g); if (L !== null) text(g, x, B.y1 + 15, L, 'tlbl', 'middle'); }
+    for (const [v, L] of yt) { const y = Y(v); el('line', { x1: B.x0, y1: y, x2: B.x1, y2: y, class: 'gridline' }, g); if (L !== null) text(g, B.x0 - 6, y + 4, L, 'tlbl', 'end'); }
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: 'axisline' }, g);
+    if (xtitle) text(g, (B.x0 + B.x1) / 2, B.y1 + 32, xtitle, 'lbl2', 'middle');
+    if (ytitle) text(g, 0, 0, ytitle, 'lbl2', 'middle').setAttribute('transform', `translate(${B.x0 - yOff} ${(B.y0 + B.y1) / 2}) rotate(-90)`);
+  }
+  function clipRect(svg, id, B) {
+    const cp = el('clipPath', { id }, svg);
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0 }, cp);
+    return `url(#${id})`;
+  }
+  function arrow(g, x1, y1, x2, y2) {
+    el('line', { x1, y1, x2, y2, class: 'arrow' }, g);
+    const a = Math.atan2(y2 - y1, x2 - x1), L = 8, W = 4, bx = x2 - L * Math.cos(a), by = y2 - L * Math.sin(a);
+    el('polygon', { points: `${x2},${y2} ${bx - W * Math.sin(a)},${by + W * Math.cos(a)} ${bx + W * Math.sin(a)},${by - W * Math.cos(a)}`, class: 'arrowhead' }, g);
+  }
+  function inPoly(x, y, P) {
+    let c = false;
+    for (let i = 0, j = P.length - 1; i < P.length; j = i++) {
+      const [xi, yi] = P[i], [xj, yj] = P[j];
+      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+
+  /* ---------- The simulated cluster ---------- */
+  const ZP = -0.017, SYS = 0.010;   // mas: Gaia DR3 parallax zero-point and the correlated error floor, as in part 1
+  const K = 4.74;                   // km/s for 1 au/a: μ [mas/a] = v [km/s] / (4.74 d [kpc])
+  const ARCMIN = 10800 / Math.PI;   // arcminutes in a radian
+  const VREF = [-12, -8];           // km/s, the mean motion of the field stars relative to the Sun (α*, δ)
+  const SIGV = 25, VREL = 25;       // km/s, the field's velocity scatter and the cluster's offset from the field mean
+  const RC = 2;                     // pc, the cluster's radius (Gaussian σ per axis)
+  const N_MEM = 220, N_FIELD = 2000;
+  const DMIN = 20, DMAX = 8000;     // pc, the field stars' distance range
+
+  // Gaia DR3 parallax and proper-motion errors by G magnitude, interpolated in log σ.
+  const ERR = [[13, 0.015], [15, 0.02], [17, 0.07], [20, 0.5], [21, 1.3]];
+  function gaiaErr(G) {
+    if (G <= ERR[0][0]) return ERR[0][1];
+    for (let i = 1; i < ERR.length; i++) {
+      const [g0, e0] = ERR[i - 1], [g1, e1] = ERR[i];
+      if (G <= g1) return 10 ** (Math.log10(e0) + (G - g0) / (g1 - g0) * (Math.log10(e1) - Math.log10(e0)));
+    }
+    return ERR[ERR.length - 1][1];
+  }
+  // The main sequence in the Gaia bands, after Pecaut & Mamajek: [BP−RP, M_G], from B5 V to M5 V.
+  const MS = [[-0.17, -0.6], [0.0, 1.4], [0.6, 3.4], [0.82, 4.7], [0.98, 5.6], [1.4, 7.0], [1.85, 8.2], [2.6, 10.3], [3.2, 12.0]];
+  function msColour(M) {
+    if (M <= MS[0][1]) return MS[0][0];
+    for (let i = 1; i < MS.length; i++) {
+      const [c0, m0] = MS[i - 1], [c1, m1] = MS[i];
+      if (M <= m1) return c0 + (M - m0) / (m1 - m0) * (c1 - c0);
+    }
+    return MS[MS.length - 1][0];
+  }
+  // Absolute magnitudes from about B8 V to M5 V, with more faint stars than bright ones.
+  const lumFn = r => -0.3 + 12.3 * r() ** 0.6;
+  // An unresolved companion adds a fraction f of the light, up to 0.75 mag for an equal twin.
+  const binary = r => -2.5 * Math.log10(1 + r() ** 2);
+
+  // The intrinsic properties of the stars, which do not depend on the cluster's distance; the error draws are kept,
+  // so that the same star has the same measurement every time it is shown.
+  function makeCluster(seed) {
+    const r = seeded(seed * 7919 + 13);
+    const th = 2 * Math.PI * r();
+    const vc = [VREF[0] + VREL * Math.cos(th), VREF[1] + VREL * Math.sin(th)];
+    const errs = () => ({ za: gauss(r), zd: gauss(r), zp: gauss(r) });
+    const mem = [], fld = [];
+    for (let i = 0; i < N_MEM; i++) {
+      const M = lumFn(r), bin = r() < 0.3 ? binary(r) : 0;
+      mem.push({ M, bin, col: msColour(M) + 0.015 * gauss(r), ox: RC * gauss(r), oy: RC * gauss(r), dz: RC * gauss(r),
+        v: [vc[0] + gauss(r), vc[1] + gauss(r)], rank: r(), ...errs() });
+    }
+    for (let i = 0; i < N_FIELD; i++) {
+      const d = Math.cbrt(DMIN ** 3 + r() * (DMAX ** 3 - DMIN ** 3));
+      let M, col;
+      if (r() < 0.06) {  // giants: the red clump and the red giant branch
+        if (r() < 0.4) { col = 1.2 + 0.05 * gauss(r); M = 0.45 + 0.15 * gauss(r); }
+        else { col = 1.0 + 0.8 * r(); M = 1.0 - 4.5 * (col - 1.0) + 0.2 * gauss(r); }
+      } else { M = lumFn(r); col = msColour(M) + 0.05 * gauss(r); }
+      fld.push({ d, M, col, bin: r() < 0.3 ? binary(r) : 0, fx: r() - 0.5, fy: r() - 0.5,
+        v: [VREF[0] + SIGV * gauss(r), VREF[1] + SIGV * gauss(r)], ...errs() });
+    }
+    return { seed, vc, corr: gauss(r), mem, fld };
+  }
+
+  const st = {
+    tab: 'tab1', d: 1000, glim: 19, seed: 1,
+    t: 0, playing: false, tracks: false, truth: false, poly: null, drawing: null, hover: -1,
+    valik: 'all', abs: false, own: false, bin: true, ebv: 0,
+    N: 50, weighted: true, zp: true, zpcorr: true, corr: true, view3: 'bias',
+  };
+  let cl = makeCluster(st.seed);
+  let S = [], W = 60, tmax = 1e5, pmR = null, mems = [];
+
+  // The stars of the query: inside the field of view at the start and brighter than the faint limit.
+  function derive() {
+    const d = st.d;
+    W = clamp(8 * RC / d * ARCMIN, 8, 90);
+    S = [];
+    const add = (o, mem, dist, x, y, G, col) => {
+      const sig = gaiaErr(G), pa = o.v[0] / (K * dist / 1000), pd = o.v[1] / (K * dist / 1000);
+      S.push({ mem, dist, x, y, G, col, bin: o.bin, sig, pa, pd, ma: pa + o.za * sig, md: pd + o.zd * sig,
+        p: 1000 / dist, pm: 1000 / dist + o.zp * sig, rank: o.rank || 0 });
+    };
+    for (const m of cl.mem) {
+      const dist = d + m.dz, x = m.ox / dist * ARCMIN, y = m.oy / dist * ARCMIN;
+      if (Math.abs(x) > W / 2 || Math.abs(y) > W / 2) continue;
+      const G = m.M + m.bin + 5 * Math.log10(dist) - 5 + 2 * st.ebv;
+      if (G <= st.glim) add(m, true, dist, x, y, G, m.col + st.ebv);
+    }
+    for (const f of cl.fld) {
+      const G = f.M + f.bin + 5 * Math.log10(f.d) - 5;
+      if (G <= st.glim && G > 4) add(f, false, f.d, f.fx * W, f.fy * W, G, f.col);
+    }
+    mems = S.map((s, i) => i).filter(i => S[i].mem).sort((a, b) => S[a].rank - S[b].rank);
+    // The proper-motion plot shows the crowded part of the field and always the cluster.
+    const cx = median(S.map(s => s.ma)), cy = median(S.map(s => s.md));
+    const far = S.map(s => Math.max(Math.abs(s.ma - cx), Math.abs(s.md - cy)));
+    const mc = cl.vc.map(v => v / (K * d / 1000));
+    let h = Math.max(quantile(far, 0.85) * 1.1, 1.6 * Math.max(Math.abs(mc[0] - cx), Math.abs(mc[1] - cy)), 0.5);
+    pmR = { cx, cy, h };
+    // Over the whole time span the cluster moves about a quarter of the field.
+    const mu = Math.hypot(...mc);
+    tmax = round2(W / 4 * 60000 / mu);
+  }
+
+  // The parallax that is averaged: the measurement, the zero-point and the correlated error, and the correction.
+  const plx = s => s.pm + (st.zp ? ZP : 0) + (st.corr ? cl.corr * SYS : 0) - (st.zpcorr ? ZP : 0);
+  function wmean(list, pf = plx) {
+    let sw = 0, swp = 0, n = 0;
+    for (const s of list) { const w = st.weighted ? 1 / s.sig ** 2 : 1; sw += w; swp += w * pf(s); n++; }
+    return { p: swp / sw, e: st.weighted ? 1 / Math.sqrt(sw) : Math.sqrt(list.reduce((a, s) => a + s.sig ** 2, 0)) / n, n };
+  }
+  let selCache = null;
+  function selected() {
+    if (!st.poly) return [];
+    if (selCache) return selCache;
+    selCache = [];
+    S.forEach((s, i) => { if (inPoly(s.ma, s.md, st.poly)) selCache.push(i); });
+    return selCache;
+  }
+  function changed() { selCache = null; derive(); }
+
+  /* ---------- Tab 1: the sky and the proper motions ---------- */
+  const sky = $('sky'), pmSvg = $('pm');
+  const SB = { x0: 8, x1: 362, y0: 8, y1: 362 };
+  const skyX = x => (SB.x0 + SB.x1) / 2 - x / W * (SB.x1 - SB.x0);   // east to the left
+  const skyY = y => (SB.y0 + SB.y1) / 2 - y / W * (SB.y1 - SB.y0);
+  const posAt = (s, t) => [s.x + s.pa * t / 60000, s.y + s.pd * t / 60000];
+  const starR = G => clamp(3.4 - 0.32 * (G - 10), 0.6, 3.4);
+  const tYears = () => st.t * tmax;
+
+  function renderSky() {
+    sky.textContent = '';
+    const clip = clipRect(sky, 'skyclip', SB);
+    el('rect', { x: 0, y: 0, width: 370, height: 370, rx: 6, class: 'night' }, sky);
+    const g = el('g', { 'clip-path': clip }, sky);
+    const t = tYears(), sel = new Set(selected());
+    if (st.tracks && t > 0) {
+      S.forEach((s, i) => {
+        const [x, y] = posAt(s, t);
+        el('line', { x1: skyX(s.x), y1: skyY(s.y), x2: skyX(x), y2: skyY(y), class: 'skytrack' + (sel.has(i) ? ' sel' : '') }, g);
+      });
+    }
+    S.forEach((s, i) => {
+      const [x, y] = posAt(s, t), cx = skyX(x), cy = skyY(y), r = starR(s.G);
+      el('circle', { cx, cy, r: sel.has(i) ? r + 0.4 : r, class: sel.has(i) ? 'skysel' : 'skystar', opacity: sel.has(i) ? 1 : 0.85 }, g);
+      if (st.truth && s.mem) el('circle', { cx, cy, r: r + 2.2, class: 'skymem' }, g);
+    });
+    if (st.hover >= 0 && S[st.hover]) {
+      const [x, y] = posAt(S[st.hover], t);
+      el('circle', { cx: skyX(x), cy: skyY(y), r: starR(S[st.hover].G) + 4.5, class: 'skyhov' }, g);
+    }
+    text(sky, 185, 24, 'P', 'nl', 'middle');
+    text(sky, 20, 190, 'I', 'nl', 'middle');
+    text(sky, 354, 356, `${sig(W, 2)}′ × ${sig(W, 2)}′`, 'nl2', 'end');
+    text(sky, 16, 356, `t = ${sig(Math.round(t / 100) * 100 || 0, 3)} a`, 'nl2');
+  }
+
+  const PB = { x0: 52, x1: 360, y0: 10, y1: 318 };
+  let pmX = null, pmY = null;
+  function pmScales() {
+    const { cx, cy, h } = pmR;
+    pmX = mkScale(cx - h, cx + h, PB.x0, PB.x1);
+    pmY = mkScale(cy - h, cy + h, PB.y1, PB.y0);
+  }
+  const pmInv = p => [pmR.cx - pmR.h + (p.x - PB.x0) / (PB.x1 - PB.x0) * 2 * pmR.h, pmR.cy - pmR.h + (PB.y1 - p.y) / (PB.y1 - PB.y0) * 2 * pmR.h];
+  let lassoPath = null;
+  function renderPM() {
+    pmSvg.textContent = '';
+    pmScales();
+    const { cx, cy, h } = pmR, step = niceStep(2 * h / 5);
+    const g = el('g', {}, pmSvg);
+    frame(g, PB, pmX, pmY, ticks(cx - h, cx + h, step), ticks(cy - h, cy + h, step), 'μα* (mas/a)', 'μδ (mas/a)', 38);
+    const inner = el('g', { 'clip-path': clipRect(pmSvg, 'pmclip', PB) }, g);
+    const sel = new Set(selected());
+    S.forEach((s, i) => { if (!sel.has(i)) el('circle', { cx: pmX(s.ma), cy: pmY(s.md), r: 1.8, class: 'fpt' }, inner); });
+    for (const i of sel) el('circle', { cx: pmX(S[i].ma), cy: pmY(S[i].md), r: 2.2, class: 'spt' }, inner);
+    if (st.truth) S.forEach(s => { if (s.mem) el('circle', { cx: pmX(s.ma), cy: pmY(s.md), r: 3.6, class: 'mring' }, inner); });
+    const poly = st.drawing || st.poly;
+    lassoPath = el('path', { d: poly ? polyPath(poly, !st.drawing) : '', class: 'lasso' }, inner);
+    if (st.hover >= 0 && S[st.hover]) el('circle', { cx: pmX(S[st.hover].ma), cy: pmY(S[st.hover].md), r: 5.5, class: 'hov' }, inner);
+    if (!st.poly && !st.drawing) text(g, PB.x1 - 6, PB.y0 + 16, 'lohista, et märkida lassoga', 'lbl3', 'end');
+  }
+  const polyPath = (P, closed) => P.map((p, i) => (i ? 'L' : 'M') + pmX(p[0]).toFixed(1) + ' ' + pmY(p[1]).toFixed(1)).join('') + (closed ? 'Z' : '');
+
+  function hoverText() {
+    const s = S[st.hover];
+    if (!s) return '';
+    let t = `G = <b>${fmt(s.G, 2)}</b>, BP−RP = ${fmt(s.col, 2)}, μα* = ${fmt(s.ma, 2)}, μδ = ${fmt(s.md, 2)} mas/a, p = ${fmt(plx(s), 3)} ± ${fmt(s.sig, 3)} mas`;
+    if (st.truth) t += s.mem ? ' · <b>parve liige</b>' : ` · väljatäht ${fmtPc(s.dist)} kaugusel`;
+    return t;
+  }
+  function nearest(px, py, pos, maxd = 8) {
+    let best = -1, bd = maxd * maxd;
+    S.forEach((s, i) => { const [x, y] = pos(s), d2 = (x - px) ** 2 + (y - py) ** 2; if (d2 < bd) { bd = d2; best = i; } });
+    return best;
+  }
+  function setHover(i) {
+    if (i === st.hover) return;
+    st.hover = i;
+    renderSky(); renderPM();
+    $('hoverRead').innerHTML = hoverText();
+  }
+
+  pmSvg.addEventListener('pointerdown', e => {
+    const p = svgPoint(pmSvg, e);
+    if (p.x < PB.x0 || p.x > PB.x1 || p.y < PB.y0 || p.y > PB.y1) return;
+    pmSvg.setPointerCapture(e.pointerId);
+    st.drawing = [pmInv(p)];
+    st.hover = -1;
+    e.preventDefault();
+  });
+  pmSvg.addEventListener('pointermove', e => {
+    const p = svgPoint(pmSvg, e);
+    if (st.drawing) {
+      const q = pmInv(p), l = st.drawing[st.drawing.length - 1];
+      if (Math.hypot(pmX(q[0]) - pmX(l[0]), pmY(q[1]) - pmY(l[1])) > 2) {
+        st.drawing.push(q);
+        lassoPath.setAttribute('d', polyPath(st.drawing, false));
+      }
+      return;
+    }
+    setHover(nearest(p.x, p.y, s => [pmX(s.ma), pmY(s.md)]));
+  });
+  function endLasso() {
+    if (!st.drawing) return;
+    // A click or a very short drag leaves the previous lasso as it was.
+    if (st.drawing.length >= 4) { st.poly = st.drawing; selCache = null; }
+    st.drawing = null;
+    render();
+  }
+  pmSvg.addEventListener('pointerup', endLasso);
+  pmSvg.addEventListener('pointercancel', endLasso);
+  pmSvg.addEventListener('pointerleave', () => { if (!st.drawing) setHover(-1); });
+  sky.addEventListener('pointermove', e => {
+    const p = svgPoint(sky, e), t = tYears();
+    setHover(nearest(p.x, p.y, s => { const [x, y] = posAt(s, t); return [skyX(x), skyY(y)]; }));
+  });
+  sky.addEventListener('pointerleave', () => setHover(-1));
+
+  /* ---------- Tab 2: the colour–magnitude diagram ---------- */
+  const CB = { x0: 64, x1: 740, y0: 12, y1: 448 };
+  function distEstimate() {
+    const sel = selected(), fromSel = sel.length >= 3;
+    const list = (fromSel ? sel : mems).map(i => S[i]);
+    if (!list.length) return null;
+    const m = wmean(list);
+    return m.p > 0 ? { d: 1000 / m.p, fromSel } : null;
+  }
+  function renderCMD() {
+    const svg = $('cmd');
+    svg.textContent = '';
+    const g = el('g', {}, svg);
+    const absMode = st.abs, own = st.abs && st.own, est = absMode ? distEstimate() : null;
+    const mu = est ? 5 * Math.log10(est.d) - 5 : 0;
+    const yOf = s => {
+      const G = s.G - (s.mem && !st.bin ? s.bin : 0);
+      return own ? G - 5 * Math.log10(s.dist) + 5 : G - mu;
+    };
+    let ylo, yhi;
+    if (absMode) { ylo = -3; yhi = 14; }
+    else { ylo = Math.floor(Math.min(...S.map(s => s.G), st.glim - 6)) - 0.5; yhi = st.glim + 0.5; }
+    const X = mkScale(-0.5, 3.5, CB.x0, CB.x1), Y = mkScale(ylo, yhi, CB.y0, CB.y1);
+    const ystep = yhi - ylo > 12 ? 2 : 1;
+    frame(g, CB, X, Y, ticks(-0.5, 3.5, 0.5), ticks(Math.ceil(ylo), yhi, ystep), 'värvusindeks BP − RP (mag)', null);
+    const yt = text(g, 0, 0, '', 'lbl2', 'middle');
+    yt.setAttribute('transform', `translate(${CB.x0 - 44} ${(CB.y0 + CB.y1) / 2}) rotate(-90)`);
+    yt.innerHTML = own ? 'M<tspan baseline-shift="sub" font-size="9">G</tspan> tähe enda kaugusega (mag)'
+      : absMode ? 'absoluutne tähesuurus M<tspan baseline-shift="sub" font-size="9">G</tspan> (mag)' : 'näiv tähesuurus G (mag)';
+    const inner = el('g', { 'clip-path': clipRect(svg, 'cmdclip', CB) }, g);
+    if (absMode) {
+      el('polyline', { points: MS.map(([c, M]) => `${X(c).toFixed(1)},${Y(M).toFixed(1)}`).join(' '), class: 'msline' }, inner);
+      text(inner, X(2.75) + 6, Y(10.6), 'peajada', 'lbl3');
+    }
+    // The highlighted set depends on the selection; with the truth on, members are marked and selected field stars are rings.
+    const sel = new Set(selected());
+    const hl = st.valik === 'lasso' ? sel : st.valik === 'members' ? new Set(mems) : null;
+    S.forEach((s, i) => {
+      if (hl && hl.has(i)) return;
+      el('circle', { cx: X(s.col), cy: Y(yOf(s)), r: hl ? 1.6 : 2, class: hl ? 'fpt' : 'fpt dark' }, inner);
+    });
+    if (hl) for (const i of hl) {
+      const s = S[i], cx = X(s.col), cy = Y(yOf(s));
+      if (st.valik === 'lasso' && st.truth && !s.mem) el('circle', { cx, cy, r: 2.8, class: 'sring' }, inner);
+      else el('circle', { cx, cy, r: 2.4, class: st.valik === 'members' ? 'mpt' : 'spt' }, inner);
+    }
+    if (st.truth && st.valik === 'all') S.forEach(s => { if (s.mem) el('circle', { cx: X(s.col), cy: Y(yOf(s)), r: 3.6, class: 'mring' }, inner); });
+    // The reddening vector for E(BP−RP) = 0.5 mag.
+    const ax = X(2.6), ay = Y(ylo + 1.5);
+    arrow(g, ax, ay, X(3.1), Y(ylo + 2.5));
+    text(g, ax - 6, ay - 4, 'tolm: E(BP−RP) = 0.5', 'lbl3', 'end');
+    if (st.valik === 'lasso' && !sel.size) text(g, (CB.x0 + CB.x1) / 2, CB.y0 + 24, 'Lasso valik on tühi: märgi tähed vahelehel „Parve liikmed“.', 'lbl2', 'middle');
+
+    $('cmdRead').innerHTML = !absMode ? '' : own ? 'Iga tähe absoluutne tähesuurus on arvutatud tema tegelikust kaugusest: M<sub>G</sub> = G − 5 log₁₀ d + 5.'
+      : est ? `M<sub>G</sub> = G − μ, kus μ = 5 log₁₀ d − 5 = <b>${fmt(mu, 2)}</b> ja d = 1000/⟨p⟩ = <b>${fmtPc(est.d)}</b> ${est.fromSel ? 'lassoga valitud tähtede' : 'parve liikmete'} keskmisest parallaksist.`
+      : 'Keskmine parallaks ei ole positiivne, kaugust ei saa arvutada.';
+    const lg = [];
+    if (st.valik === 'lasso') lg.push('<span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>');
+    if (st.valik === 'lasso' && st.truth) lg.push('<span><i class="ring" style="border-color: var(--sel)"></i>valitud väljatäht</span>');
+    if (st.valik === 'members') lg.push('<span><i class="dot" style="background: var(--accent)"></i>parve liige</span>');
+    if (st.valik === 'all' && st.truth) lg.push('<span><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>');
+    if (absMode) lg.push('<span><i style="border-color: var(--text-3); border-top-style: dashed"></i>peajada</span>');
+    $('cmdLegend').innerHTML = lg.join('');
+  }
+
+  /* ---------- Tab 3: averaging parallaxes ---------- */
+  const used = () => mems.slice(0, st.N).map(i => S[i]);
+  // 200 repeats of the measurement with new errors; the draws depend only on the cluster, so that switching a toggle
+  // compares the same repeats.
+  function repeats(list) {
+    const r = seeded(cl.seed * 104729 + list.length * 31 + 7), A = [], B = [];
+    for (let k = 0; k < 200; k++) {
+      const c = gauss(r) * SYS;
+      let sw = 0, swp = 0, swd = 0, sd = 0;
+      for (const s of list) {
+        const p = s.p + gauss(r) * s.sig + (st.zp ? ZP : 0) + (st.corr ? c : 0) - (st.zpcorr ? ZP : 0);
+        const w = st.weighted ? 1 / s.sig ** 2 : 1;
+        sw += w; swp += w * p;
+        if (p > 0) { swd += w; sd += w * 1000 / p; }
+      }
+      A.push(swp > 0 ? 1000 * sw / swp : Infinity);
+      B.push(swd ? sd / swd : Infinity);
+    }
+    return { A, B };
+  }
+  // Counts the values in bins and returns the y scale; with a group given, also draws the bars.
+  function histogram(g, vals, X, B, lo, hi, nb) {
+    const w = (hi - lo) / nb, c = new Array(nb).fill(0);
+    let under = 0, over = 0;
+    for (const v of vals) { const i = Math.floor((v - lo) / w); if (i < 0) under++; else if (i >= nb) over++; else c[i]++; }
+    const cmax = Math.max(3, ...c), Y = mkScale(0, cmax * 1.12, B.y1, B.y0);
+    if (g) c.forEach((k, i) => { if (k) el('rect', { x: X(lo + i * w) + 0.5, y: Y(k), width: X(lo + w) - X(lo) - 1, height: B.y1 - Y(k), class: 'hist' }, g); });
+    return { Y, cmax, under, over };
+  }
+  // Distance ticks in one unit for the whole axis, with as many decimals as the step needs.
+  function distTicks(lo, hi, step) {
+    const kpc = hi >= 1500;
+    return ticks(lo, hi, step).map(([v]) => [v, kpc ? fmt(v / 1000, decs(step / 1000)) + ' kpc' : fmt(v, decs(step)) + ' pc']);
+  }
+  function vline(g, x, B, cls) { el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: cls }, g); }
+  function strip(g, rows, X, y0, lo, hi) {
+    const r = seeded(99);
+    rows.forEach(([vals, cls, label], k) => {
+      const y = y0 + k * 26;
+      text(g, 62, y + 4, label, 'lbl3', 'end');
+      for (const v of vals) if (v >= lo && v <= hi) el('circle', { cx: X(v), cy: y + (r() - 0.5) * 12, r: 2, class: cls }, g);
+    });
+  }
+
+  function renderBias() {
+    const svg = $('bias');
+    svg.textContent = '';
+    const list = used(), g = el('g', {}, svg);
+    if (list.length < 2) { text(g, 380, 200, 'Liiga vähe parve liikmeid: tõsta nõrgimate tähtede piiri.', 'lbl2', 'middle'); return; }
+    const p0 = 1000 / st.d, d0 = st.d, ps = list.map(plx), m = wmean(list);
+    // Parallaxes, spanning the measured values and the true one.
+    const B1 = { x0: 70, x1: 740, y0: 10, y1: 140 };
+    let lo = Math.min(quantile(ps, 0.02), p0 * 0.5), hi = Math.max(quantile(ps, 0.98), p0 * 1.5);
+    const pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    const X1 = mkScale(lo, hi, B1.x0, B1.x1);
+    if (lo < 0) el('rect', { x: B1.x0, y: B1.y0, width: X1(0) - B1.x0, height: B1.y1 - B1.y0, class: 'neg' }, g);
+    const h1 = histogram(null, ps, X1, B1, lo, hi, 36);
+    const st1 = niceStep(h1.cmax / 3);
+    frame(g, B1, X1, h1.Y, ticks(lo, hi, niceStep((hi - lo) / 7)), ticks(0, h1.cmax * 1.1, st1), 'parallaks p (mas)', 'tähti', 40);
+    histogram(g, ps, X1, B1, lo, hi, 36);
+    vline(g, X1(p0), B1, 'truth');
+    if (m.p > lo && m.p < hi) vline(g, X1(m.p), B1, 'meanline');
+    const neg = ps.filter(p => p <= 0).length;
+    if (neg) text(g, B1.x0 + 6, B1.y0 + 16, `${neg} negatiivset parallaksi`, 'lbl3');
+
+    // Distances 1000/p of the single stars, from 0 to three times the true distance.
+    const B2 = { x0: 70, x1: 740, y0: 196, y1: 326 }, dhi = 3 * d0, ds = ps.filter(p => p > 0).map(p => 1000 / p);
+    const X2 = mkScale(0, dhi, B2.x0, B2.x1);
+    const h2 = histogram(null, ds, X2, B2, 0, dhi, 36);
+    const dstep = niceStep(dhi / 7);
+    frame(g, B2, X2, h2.Y, distTicks(0, dhi, dstep), ticks(0, h2.cmax * 1.1, niceStep(h2.cmax / 3)), 'kaugus 1000 / p', 'tähti', 40);
+    histogram(g, ds, X2, B2, 0, dhi, 36);
+    vline(g, X2(d0), B2, 'truth');
+    const dA = m.p > 0 ? 1000 / m.p : Infinity, dB = wmeanD(list, ps);
+    if (dA < dhi) vline(g, X2(dA), B2, 'meanline');
+    if (dB < dhi) vline(g, X2(dB), B2, 'invline');
+    const notes = [];
+    if (h2.over) notes.push(`${h2.over} kaugemal kui ${fmtPc(dhi)}`);
+    if (neg) notes.push(`${neg} negatiivse parallaksiga tähel kaugust pole`);
+    if (notes.length) text(g, B2.x1 - 6, B2.y0 + 16, notes.join(' · '), 'lbl3', 'end');
+
+    // The repeats as two strips of dots.
+    const R = repeats(list), all = [...R.A, ...R.B].filter(isFinite);
+    let slo = Math.min(quantile(all, 0.01), d0), shi = Math.max(quantile(all, 0.99), d0);
+    const sp = (shi - slo) * 0.1 || d0 * 0.05; slo -= sp; shi += sp;
+    const B3 = { x0: 70, x1: 740, y0: 384, y1: 478 }, X3 = mkScale(slo, shi, B3.x0, B3.x1);
+    const xt = distTicks(slo, shi, niceStep((shi - slo) / 7));
+    for (const [v, L] of xt) { el('line', { x1: X3(v), y1: B3.y0, x2: X3(v), y2: B3.y1, class: 'gridline' }, g); text(g, X3(v), B3.y1 + 15, L, 'tlbl', 'middle'); }
+    el('rect', { x: B3.x0, y: B3.y0, width: B3.x1 - B3.x0, height: B3.y1 - B3.y0, class: 'axisline' }, g);
+    text(g, (B3.x0 + B3.x1) / 2, B3.y1 + 32, '200 kordust: parve kaugus kahel viisil', 'lbl2', 'middle');
+    vline(g, X3(d0), B3, 'truth');
+    strip(g, [[R.A, 'dot1', '1000/⟨p⟩'], [R.B, 'dot2', '⟨1000/p⟩']], X3, B3.y0 + 34, slo, shi);
+    const mA = median(R.A), mB = median(R.B);
+    if (mA > slo && mA < shi) el('line', { x1: X3(mA), y1: B3.y0 + 22, x2: X3(mA), y2: B3.y0 + 46, class: 'meanline' }, g);
+    if (mB > slo && mB < shi) el('line', { x1: X3(mB), y1: B3.y0 + 48, x2: X3(mB), y2: B3.y0 + 72, class: 'invline' }, g);
+
+    const row = (label, v) => `<tr><td>${label}</td><td class="n">${isFinite(v) ? fmtPc(v) : '—'}</td><td class="n">${isFinite(v) && v !== d0 ? fmtPct((v / d0 - 1) * 100) : ''}</td></tr>`;
+    $('biasRead').innerHTML = `<table class="res">${row('Tegelik kaugus', d0)}${row('1000 / ⟨p⟩', dA)}${row('⟨1000 / p⟩', dB)}` +
+      `<tr><td colspan="3" style="padding-top: 6px">200 korduse mediaan:</td></tr>${row('1000 / ⟨p⟩', mA)}${row('⟨1000 / p⟩', mB)}</table>` +
+      (neg ? `<p class="hint">⟨1000/p⟩ jätab ${neg} negatiivse parallaksiga tähte välja.</p>` : '');
+  }
+  function wmeanD(list, ps) {
+    let sw = 0, sd = 0;
+    list.forEach((s, i) => { if (ps[i] > 0) { const w = st.weighted ? 1 / s.sig ** 2 : 1; sw += w; sd += w * 1000 / ps[i]; } });
+    return sw ? sd / sw : Infinity;
+  }
+
+  function renderSys() {
+    const svg = $('sys');
+    svg.textContent = '';
+    const g = el('g', {}, svg), all = mems.map(i => S[i]);
+    if (all.length < 2) { text(g, 380, 200, 'Liiga vähe parve liikmeid: tõsta nõrgimate tähtede piiri.', 'lbl2', 'middle'); return; }
+    const p0 = 1000 / st.d;
+    const B = { x0: 70, x1: 680, y0: 10, y1: 290 }, NMAX = 1000, ELO = 0.001, EHI = 3;
+    const X = mkScale(1, NMAX, B.x0, B.x1, true), Y = mkScale(ELO, EHI, B.y1, B.y0, true);
+    const yt = [0.001, 0.01, 0.1, 1].map(v => [v, String(v)]);
+    frame(g, B, X, Y, [1, 10, 100, 1000].map(v => [v, String(v)]), yt, 'tähtede arv N', 'keskmise parallaksi viga (mas)', 48);
+    for (const [v] of yt) text(g, B.x1 + 6, Y(v) + 4, fmtPctPlain(v / p0 * 100), 'tlbl');
+    text(g, 0, 0, 'kauguse viga', 'lbl2', 'middle').setAttribute('transform', `translate(${B.x1 + 62} ${(B.y0 + B.y1) / 2}) rotate(90)`);
+    // The statistical error of the first N members, extrapolated past the members there are.
+    const sw = [], s2 = [];
+    all.forEach((s, i) => { sw.push((sw[i - 1] || 0) + 1 / s.sig ** 2); s2.push((s2[i - 1] || 0) + s.sig ** 2); });
+    const n = all.length;
+    const stat = N => st.weighted ? 1 / Math.sqrt(N <= n ? sw[N - 1] : sw[n - 1] * N / n) : Math.sqrt(N <= n ? s2[N - 1] : s2[n - 1] * N / n) / N;
+    const tot = N => Math.hypot(stat(N), st.corr ? SYS : 0);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'sysclip', B) }, g);
+    const line = (f, N0, N1, cls) => {
+      const P = [];
+      for (let k = 0; k <= 80; k++) { const N = Math.round(N0 * (N1 / N0) ** (k / 80)); P.push(`${X(N).toFixed(1)},${Y(clamp(f(N), ELO / 2, EHI * 2)).toFixed(1)}`); }
+      el('polyline', { points: P.join(' '), class: cls }, inner);
+    };
+    line(stat, 1, n, 'statl'); if (n < NMAX) line(stat, n, NMAX, 'statl extr');
+    if (st.corr) { el('line', { x1: B.x0, y1: Y(SYS), x2: B.x1, y2: Y(SYS), class: 'sysl' }, inner); text(g, B.x1 - 6, Y(SYS) + 15, 'korreleeritud viga 0.010 mas', 'lbl3', 'end'); }
+    if (st.zp && !st.zpcorr) { el('line', { x1: B.x0, y1: Y(-ZP), x2: B.x1, y2: Y(-ZP), class: 'zpl' }, inner); text(g, B.x1 - 6, Y(-ZP) - 6, 'nullpunkti nihe 0.017 mas', 'lbl3', 'end'); }
+    line(tot, 1, n, 'totl'); if (n < NMAX) line(tot, n, NMAX, 'totl extr');
+    const N = Math.min(st.N, n);
+    el('circle', { cx: X(N), cy: Y(tot(N)), r: 5, class: 'curpt' }, g);
+    text(g, X(N) + 8, Y(tot(N)) - 8, `N = ${N}`, 'lbl');
+    if (n < NMAX) { el('line', { x1: X(n), y1: B.y1 - 6, x2: X(n), y2: B.y1, class: 'axisline' }, g); text(g, X(n) - 4, B.y1 - 10, `kõik ${n} liiget`, 'lbl3', 'end'); }
+
+    // The repeats of 1000/⟨p⟩ with the current toggles.
+    const R = repeats(used()).A.filter(isFinite), d0 = st.d;
+    let slo = Math.min(quantile(R, 0.01), d0 * 0.97), shi = Math.max(quantile(R, 0.99), d0 * 1.03);
+    const sp = (shi - slo) * 0.1; slo -= sp; shi += sp;
+    const B3 = { x0: 70, x1: 680, y0: 350, y1: 400 }, X3 = mkScale(slo, shi, B3.x0, B3.x1);
+    for (const [v, L] of distTicks(slo, shi, niceStep((shi - slo) / 6))) { el('line', { x1: X3(v), y1: B3.y0, x2: X3(v), y2: B3.y1, class: 'gridline' }, g); text(g, X3(v), B3.y1 + 15, L, 'tlbl', 'middle'); }
+    el('rect', { x: B3.x0, y: B3.y0, width: B3.x1 - B3.x0, height: B3.y1 - B3.y0, class: 'axisline' }, g);
+    text(g, (B3.x0 + B3.x1) / 2, B3.y1 + 32, `200 kordust: 1000/⟨p⟩ ${N} tähest`, 'lbl2', 'middle');
+    vline(g, X3(d0), B3, 'truth');
+    strip(g, [[R, 'dot1', '']], X3, B3.y0 + 25, slo, shi);
+
+    const e = tot(N), m = wmean(used()), dA = 1000 / m.p;
+    let t = `${N} tähest: statistiline viga <b>${fmt(stat(N), 4)} mas</b>` + (st.corr ? `, korreleeritud ${fmt(SYS, 3)} mas` : '') +
+      `, kokku <b>${fmt(e, 4)} mas</b>, mis on kauguses <b>±${fmtPctPlain(e / p0 * 100)}</b>.`;
+    if (st.zp && !st.zpcorr) t += ` Nullpunkt on parandamata: kõik parallaksid on 0.017 mas liiga väikesed ja kaugus tuleb umbes <b>${fmtPct((p0 / (p0 + ZP) - 1) * 100)}</b> liiga suur.`;
+    if (!st.zp && st.zpcorr) t += ' Parandus ilma nullpunktita teeb parallaksid 0.017 mas liiga suureks.';
+    t += ` Selle mõõtmise kaugus: ${fmtPc(dA)} (tegelik ${fmtPc(d0)}).`;
+    $('sysRead').innerHTML = t;
+  }
+  function fmtPctPlain(v) { return (v < 1 ? sig(v, 2) : v < 10 ? fmt(v, 1) : sig(v, 2)) + ' %'; }
+
+  /* ---------- Readouts and rendering ---------- */
+  const SL = 1000, DLO = 100, DHI = 5000;
+  const sliderD = v => DLO * (DHI / DLO) ** (v / SL);
+  function readouts() {
+    $('distOut').textContent = fmtPc(st.d);
+    $('glimOut').textContent = fmt(st.glim, 1);
+    $('ebvOut').textContent = fmt(st.ebv, 2);
+    $('timeOut').textContent = sig(Math.round(tYears() / 100) * 100 || 0, 3) + ' a';
+    const nm = mems.length, nf = S.length - nm;
+    $('clRead').innerHTML = `Parve parallaks <b>${fmt(1000 / st.d, 3)} mas</b>. Päringus on ${S.length} tähte, neist ${nm} parve liiget ja ${nf} väljatähte.`;
+    const sel = selected(), found = sel.filter(i => S[i].mem).length, foreign = sel.length - found;
+    if (!st.poly) $('lassoRead').innerHTML = 'Lasso on tühi. Lohista omaliikumiste joonisel ümber tiheda kogumi.';
+    else {
+      const m = sel.length ? wmean(sel.map(i => S[i])) : null;
+      $('lassoRead').innerHTML = `Valitud <b>${sel.length}</b> tähte: leitud liikmeid <b>${found}</b> / ${nm}` +
+        (nm ? ` (${Math.round(100 * found / nm)} %)` : '') + `, võõraid <b>${foreign}</b>.` +
+        (m && m.p > 0 ? `<br>Valiku kaugus 1000/⟨p⟩ = <b>${fmtPc(1000 / m.p)}</b> (tegelik ${fmtPc(st.d)}).` : '');
+    }
+    $('clear').disabled = !st.poly;
+    const label = st.playing ? '❚❚ Peata' : '▶ Käivita';
+    if ($('play').textContent !== label) $('play').textContent = label;
+    $('lgMem1').hidden = !st.truth;
+    document.querySelectorAll('[data-valik]').forEach(b => b.setAttribute('aria-checked', b.dataset.valik === st.valik));
+    $('own').disabled = !st.abs;
+    $('ownLbl').classList.toggle('dis', !st.abs);
+    document.querySelectorAll('[data-view3]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view3 === st.view3));
+    $('view3bias').hidden = st.view3 !== 'bias';
+    $('view3sys').hidden = st.view3 !== 'sys';
+    $('nst').max = Math.max(5, mems.length);
+    $('nst').value = st.N;
+    $('nstOut').textContent = Math.min(st.N, mems.length);
+    $('lgSys').hidden = !st.corr;
+    $('lgZp').hidden = !(st.zp && !st.zpcorr);
+    $('hoverRead').innerHTML = hoverText();
+  }
+  function render() {
+    readouts();
+    if (st.tab === 'tab1') { renderSky(); renderPM(); }
+    if (st.tab === 'tab2') renderCMD();
+    if (st.tab === 'tab3') { if (st.view3 === 'bias') renderBias(); else renderSys(); }
+  }
+
+  /* ---------- Controls ---------- */
+  $('dist').value = Math.round(SL * Math.log(st.d / DLO) / Math.log(DHI / DLO));
+  // A new distance moves the clump in the proper-motion plot, so the lasso is cleared.
+  $('dist').addEventListener('input', e => { st.d = round2(sliderD(+e.target.value)); st.poly = null; st.hover = -1; changed(); render(); });
+  $('glim').addEventListener('input', e => { st.glim = +e.target.value; st.hover = -1; changed(); render(); });
+  $('newCl').addEventListener('click', () => { st.seed++; cl = makeCluster(st.seed); st.poly = null; st.hover = -1; st.t = 0; $('time').value = 0; changed(); render(); });
+  $('time').addEventListener('input', e => { st.t = e.target.value / SL; stop(); render(); });
+  $('tracks').addEventListener('change', e => { st.tracks = e.target.checked; render(); });
+  $('truth').addEventListener('change', e => { st.truth = e.target.checked; render(); });
+  $('clear').addEventListener('click', () => { st.poly = null; selCache = null; render(); });
+  document.querySelectorAll('[data-valik]').forEach(b => b.addEventListener('click', () => { st.valik = b.dataset.valik; render(); }));
+  $('abs').addEventListener('change', e => { st.abs = e.target.checked; render(); });
+  $('own').addEventListener('change', e => { st.own = e.target.checked; render(); });
+  $('bin').addEventListener('change', e => { st.bin = e.target.checked; render(); });
+  // Dust changes the members' magnitudes and so which of them are bright enough to be in the query.
+  $('ebv').addEventListener('input', e => { st.ebv = +e.target.value; changed(); render(); });
+  $('nst').addEventListener('input', e => { st.N = +e.target.value; render(); });
+  for (const k of ['weighted', 'zp', 'zpcorr', 'corr']) $(k).addEventListener('change', e => { st[k] = e.target.checked; render(); });
+  document.querySelectorAll('[data-view3]').forEach(b => b.addEventListener('click', () => { st.view3 = b.dataset.view3; render(); }));
+
+  // Playing runs the whole time span in about 8 seconds and stops at the end; pressing play at the end starts over.
+  let last = 0, raf = 0;
+  function frameTick(ts) {
+    if (!st.playing) return;
+    if (last) st.t = Math.min(1, st.t + (ts - last) / 8000);
+    last = ts;
+    $('time').value = Math.round(st.t * SL);
+    if (st.t >= 1) st.playing = false;
+    readouts();
+    renderSky();
+    if (st.playing) raf = requestAnimationFrame(frameTick);
+  }
+  function stop() { st.playing = false; cancelAnimationFrame(raf); }
+  $('play').addEventListener('click', () => {
+    if (st.playing) { stop(); readouts(); return; }
+    if (st.t >= 1) st.t = 0;
+    st.playing = true; last = 0;
+    raf = requestAnimationFrame(frameTick);
+  });
+
+  /* ---------- Tabs ---------- */
+  // Each tab has its own address, so that other pages can link to it.
+  const HASH = { tab1: 'liikmed', tab2: 'varvus-heledus', tab3: 'keskmine' };
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function selectTab(id, fromHash) {
+    st.tab = id;
+    if (id !== 'tab1') stop();
+    for (const b of tabs) {
+      const on = b.id === id;
+      b.setAttribute('aria-selected', on);
+      b.tabIndex = on ? 0 : -1;
+      $(b.getAttribute('aria-controls')).hidden = !on;
+    }
+    document.querySelectorAll('.controls .group').forEach(g => { g.hidden = !g.dataset.tabs.split(' ').includes(id); });
+    document.querySelectorAll('.explain [data-tab]').forEach(u => { u.hidden = u.dataset.tab !== id; });
+    if (!fromHash && location.hash.slice(1) !== HASH[id]) history.replaceState(null, '', '#' + HASH[id]);
+    render();
+  }
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => selectTab(b.id));
+    b.addEventListener('keydown', e => {
+      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!k) return;
+      const next = tabs[(i + k + tabs.length) % tabs.length];
+      selectTab(next.id);
+      next.focus();
+    });
+  });
+  const fromHash = () => {
+    const id = Object.keys(HASH).find(k => HASH[k] === decodeURIComponent(location.hash.slice(1)));
+    selectTab(id || 'tab1', true);
+  };
+  window.addEventListener('hashchange', fromHash);
+
+  derive();
+  fromHash();
+})();
+</script>
+</body>
+</html>

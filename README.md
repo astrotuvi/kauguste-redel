@@ -198,6 +198,33 @@ on, the parallax angle is marked as a wedge at the star in the 3D view and as
 the semi-major axis of the ellipse in the sky view; a readout gives the angle
 in the drawing, arcsin(1/d), and for a real star as many parsecs away. The drawing is not to scale.
 
+### Open clusters page
+
+`hajusparved.html` is linked from the table of contents, from the word
+"hajusparvede" in the introduction, from the **selgitus** texts of the proper
+motion, colour–magnitude and parallax plots of part 1 and from the note in its
+**Kaugus** tab. It explains the steps of part 1 on one simulated cluster with
+field stars. The stars have real distances, velocities, main-sequence colours
+and magnitudes, and Gaia DR3-like errors that grow with G. Shared controls set
+the cluster's distance (100 pc – 5 kpc), the faint limit and a new random
+cluster. The address keeps the tab (`#liikmed`, `#varvus-heledus`,
+`#keskmine`).
+
+1. **Parve liikmed**: the query field on the sky, where the stars drift with
+   their real proper motions over a few hundred thousand years (with optional
+   tracks), and the proper-motion diagram, where a lasso selects stars. The
+   readout gives the members found, the field stars taken in and the distance
+   of the selection. **Näita tõde** marks the true members.
+2. **Värvus-heledusdiagramm**: all stars, the lasso selection or the true
+   members; **Absoluutne M_G** with the distance from the mean parallax,
+   **Iga täht oma kaugusega** (each star at its true distance), binaries and
+   a dust slider.
+3. **Parallakside keskmine**: two views. **Nihe** shows the histograms of the
+   parallaxes and of 1000/p and 200 repeats of 1000/⟨p⟩ and ⟨1000/p⟩, with
+   or without weights. **Süstemaatika** shows the error of the mean against
+   N with the 0.010 mas floor of correlated errors, and the effect of the
+   −0.017 mas zero-point with and without its correction.
+
 ### Standard candles page
 
 `standardkuunlad.html` is linked from the table of contents, from the
@@ -350,9 +377,9 @@ service uses only that one. The choice is remembered in the browser.
 ## Code
 
 Everything is in `index.html`: the HTML, the CSS and the JavaScript. The
-parallax demonstration (`parallaks.html`) and the standard candles page
-(`standardkuunlad.html`) are separate self-contained pages with no external
-dependencies. The only
+parallax demonstration (`parallaks.html`), the open clusters page
+(`hajusparved.html`) and the standard candles page (`standardkuunlad.html`)
+are separate self-contained pages with no external dependencies. The only
 external dependency is [Plotly.js](https://plotly.com/javascript/), loaded
 from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 
