@@ -226,9 +226,13 @@ naked-eye, large-telescope and *Hubble* limits (m = 6, 24 and 29).
    distance (a tape measure, a cluster parallax or the Cepheids of a host
    galaxy). The user then measures a source at a hidden distance, either by
    entering a distance and pressing **Kontrolli** or with **Arvuta kaugus**;
-   **Uus allikas** hides a new one. A slider puts a −20 … +20 % error into the
-   known distance, which shifts every measured distance in the plot of
-   measured against true distance by the same fraction.
+   **Uus allikas** hides a new one. The lamp is calibrated in lighting units
+   rather than magnitudes: a lux meter gives the illuminance E, **Arvuta
+   valgustugevus** gives the luminous intensity I = E d² (cd) and the luminous
+   flux Φ = 4π I (lm), and the hidden distance is d = √(I / E). A slider puts a
+   −20 … +20 % error into the known distance, which shifts every measured
+   distance in the plot of measured against true distance by the same
+   fraction.
 4. **Hea küünal**: N candles of one type in a simulated galaxy at 10 Mpc, with
    a histogram of the distances they give, for a chosen type and scatter σ_M;
    the readouts give 0.46 σ_M for one candle and that over √N for the mean.

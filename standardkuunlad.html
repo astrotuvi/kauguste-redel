@@ -205,6 +205,8 @@ select { width: 100%; }
 .gbase { fill: var(--text-3); }
 .gline { stroke: var(--surface); stroke-width: 1; }
 .ghost { opacity: 0.35; }
+.lcd { fill: var(--chip); stroke: var(--text-3); stroke-width: 1; }
+.sensor { fill: #ffffff; stroke: var(--text-2); stroke-width: 1.5; }
 .qbox { fill: none; stroke: var(--text-3); stroke-dasharray: 4 3; }
 .qmark { fill: var(--text-2); font-size: 22px; font-weight: 700; }
 .bar-bg { fill: var(--chip); stroke: var(--border); }
@@ -316,7 +318,7 @@ select { width: 100%; }
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <p class="hint">Ülemise allika kaugus on teada, alumise kaugus on peidetud. Mõlema näiv tähesuurus on mõõdetud. Tee paremal läbi kaks sammu.</p>
+        <p class="hint">Ülemise allika kaugus on teada, alumise kaugus on peidetud. Mõlema heledus on mõõdetud: lambil luksmeetriga, tsefeiidil ja supernooval teleskoobiga. Tee paremal läbi kaks sammu.</p>
         <svg id="cal" class="scene" viewBox="0 0 760 290" role="img" aria-label="Kaks ühesugust allikat: üks tuntud, teine tundmatu kaugusel"></svg>
         <div class="row-cal">
           <div>
@@ -426,7 +428,7 @@ select { width: 100%; }
       </div>
       <div class="group" data-tabs="tab3" id="measGroup">
         <h3>2. Mõõda</h3>
-        <p class="lockmsg" id="measLock">Kalibreeri enne küünal: vajuta <b>Arvuta M</b>.</p>
+        <p class="lockmsg" id="measLock"></p>
         <p class="readout" id="measText"></p>
         <div class="inrow">
           <label for="guess">Sinu kaugus</label><input type="text" inputmode="decimal" class="numin" id="guess" autocomplete="off"><span id="guessUnit"></span>
@@ -496,6 +498,8 @@ select { width: 100%; }
     <ul data-tab="tab3" hidden>
       <li>Standardküünla tegelik heledus tuleb kõigepealt mõõta lähedaste näidete abil, mille kaugus on teada eelmisest redelipulgast. Seda nimetatakse kalibreerimiseks: M = m − 5 log₁₀ d + 5.</li>
       <li>Kalibreeritud küünlaga saab mõõta kaugusi, kuhu eelmine meetod ei ulatu: d = 10<sup>(m − M)/5 + 1</sup> pc.</li>
+      <li>Lambi heledust mõõdetakse valgustehnika ühikutes. Luksmeeter näitab valgustatust E luksides, lambi valgustugevus on I = E d² kandelates ja valgusvoog Φ = 4π I luumenites.
+        Tundmatu kaugus on siis d = √(I / E). Tähesuurustega on arvutus sama, ainult logaritmilises skaalas: absoluutne tähesuurus M vastab valgustugevusele I ja näiv tähesuurus m valgustatusele E.</li>
       <li>Harjutuses käib see samamoodi: 2. osas kalibreerid tsefeiidid parvede parallaksidega, 3. osas mõõdad nendega galaktikate kaugused ja 4. osas kalibreerid samades galaktikates Ia supernoovad.</li>
       <li>Kui kalibreerimiskaugus on vale, on vale ka M ja kõik sellega mõõdetud kaugused on sama palju nihkes. Selline süstemaatiline viga ei vähene, kui mõõta rohkem allikaid, ja kandub redelil edasi järgmistele pulkadele.
         Seepärast liidetakse harjutuses H₀ veale perioodi-heleduse seose nullpunkti viga.</li>
@@ -957,7 +961,26 @@ select { width: 100%; }
   const assumed = k => SRC[k].cal * (1 + st.err / 100);
   const mCal = k => mag(k, SRC[k].cal);
   const Mest = k => mCal(k) - 5 * Math.log10(assumed(k) / PC) + 5;
-  const measure = (k, d) => PC * 10 ** ((mag(k, d) - Mest(k)) / 5 + 1);
+  // The lamp is calibrated in lighting units instead: a lux meter gives the illuminance E = I / d² (lx) of a lamp of
+  // luminous intensity I (cd), and its luminous flux is Φ = 4π I (lm).
+  const LAMP_I = 1700 / (4 * Math.PI);
+  const lux = d => LAMP_I / (d * d);
+  const Iest = () => lux(SRC.lamp.cal) * assumed('lamp') ** 2;
+  const measure = (k, d) => (k === 'lamp' ? Math.sqrt(Iest() / lux(d)) : PC * 10 ** ((mag(k, d) - Mest(k)) / 5 + 1));
+  function fmtSci(v) {
+    if (v >= 0.01) return sig(v);
+    let e = Math.floor(Math.log10(v)), a = +(v / 10 ** e).toFixed(2);
+    if (a >= 10) { a /= 10; e++; }
+    return a.toFixed(2) + '·10' + sup(e);
+  }
+  const reading = (k, d) => (k === 'lamp' ? `E = ${fmtSci(lux(d))} lx` : `m = ${fmt(mag(k, d), 2)}`);
+  function luxmeter(g, y) {
+    el('rect', { x: 44, y: y - 18, width: 40, height: 36, rx: 5, class: 'tube' }, g);
+    el('rect', { x: 50, y: y - 10, width: 22, height: 12, rx: 2, class: 'lcd' }, g);
+    el('path', { d: `M84 ${y - 9} a 9 9 0 0 1 0 18 z`, class: 'sensor' }, g);
+    text(g, 64, y + 34, 'Luksmeeter', 'lbl3', 'middle');
+  }
+  const meter = (g, s, y) => (s === 'lamp' ? luxmeter(g, y) : telescope(g, y));
 
   function renderCal() {
     const s = st.src, S = SRC[s], C = cal[s];
@@ -967,7 +990,7 @@ select { width: 100%; }
     // Upper track: the calibrator at its true distance, and the assumed one when the calibration distance is off.
     text(g, 20, 18, '1. Tuntud kaugusega allikas', 'lbl');
     drawTrack(g, s, 118, {});
-    telescope(g, 72);
+    meter(g, s, 72);
     const xc = trackX(s, S.cal);
     if (st.err !== 0) {
       const xa = trackX(s, assumed(s));
@@ -976,18 +999,17 @@ select { width: 100%; }
     }
     sourceGlyph(g, s, xc, 72);
     const L1 = xc > 480;  // labels go left of the source when it is far to the right
-    text(g, L1 ? xc - 22 : xc + 20, 68, `m = ${fmt(mCal(s), 2)}`, 'srclbl', L1 ? 'end' : 'start');
+    text(g, L1 ? xc - 22 : xc + 20, 68, reading(s, S.cal), 'srclbl', L1 ? 'end' : 'start');
     text(g, L1 ? xc - 22 : xc + 20, 84, `d = ${fmtD(s, assumed(s))} (${S.calHow})`, 'lbl3', L1 ? 'end' : 'start');
     // Lower track: the source at a hidden distance, shown once it has been measured.
     text(g, 20, 160, '2. Tundmatu kaugusega allikas', 'lbl');
     drawTrack(g, s, 258, {});
-    telescope(g, 212);
-    const mh = mag(s, C.hid);
+    meter(g, s, 212);
     if (!C.shown) {
       el('rect', { x: 400, y: 190, width: 46, height: 44, rx: 6, class: 'qbox' }, g);
       sourceGlyph(g, s, 423, 212, 'ghost');
       text(g, 423, 220, '?', 'qmark', 'middle');
-      text(g, 456, 208, `m = ${fmt(mh, 2)}`, 'srclbl');
+      text(g, 456, 208, reading(s, C.hid), 'srclbl');
       text(g, 456, 224, 'kaugus teadmata', 'lbl3');
     } else {
       const xt = trackX(s, C.hid);
@@ -1002,7 +1024,7 @@ select { width: 100%; }
       });
       sourceGlyph(g, s, xt, 212);
       const L2 = xt > 480;
-      text(g, L2 ? xt - 22 : xt + 20, 206, `m = ${fmt(mh, 2)}`, 'srclbl', L2 ? 'end' : 'start');
+      text(g, L2 ? xt - 22 : xt + 20, 206, reading(s, C.hid), 'srclbl', L2 ? 'end' : 'start');
       text(g, L2 ? xt - 22 : xt + 20, 222, `tegelik d = ${fmtD(s, C.hid)}`, 'lbl3', L2 ? 'end' : 'start');
     }
   }
@@ -1286,7 +1308,8 @@ select { width: 100%; }
   function readouts() {
     const s = st.src, S = SRC[s], d = st.d[s], m = mag(s, d);
     document.querySelectorAll('[data-src]').forEach(b => b.setAttribute('aria-checked', b.dataset.src === s));
-    $('srcInfo').innerHTML = `${S.what[0].toUpperCase() + S.what.slice(1)}: ${S.lum}, absoluutne tähesuurus <b>M = ${fmtMag(S.M)}</b>.`;
+    $('srcInfo').innerHTML = `${S.what[0].toUpperCase() + S.what.slice(1)}: ${S.lum}, ` + (s === 'lamp' && st.tab === 'tab3'
+      ? `valgustugevus umbes <b>${sig(LAMP_I)} kandelat</b>.` : `absoluutne tähesuurus <b>M = ${fmtMag(S.M)}</b>.`);
     $('distOut').textContent = fmtD(s, d);
     $('distRead').innerHTML = (s === 'lamp' ? '' : `${fmtLy(d)}.<br>`) + `Näiv tähesuurus <b>m = ${fmt(m, 2)}</b>. ${visibility(m)}`;
     // Tab 1
@@ -1306,26 +1329,38 @@ select { width: 100%; }
     $('ratioRead').innerHTML = Math.abs(dm) < 0.05 ? 'Tähed on ühesuguse heledusega.'
       : `Δm = ${fmt(Math.abs(dm), 1)}, seega on täht ${dm > 0 ? 1 : 2} <b>${sig(q)} korda heledam</b>: 10^(0.4 · ${fmt(Math.abs(dm), 1)}) = 100^(${fmt(Math.abs(dm), 1)}/5).`;
     // Tab 3
-    const C = cal[s], mc = mCal(s), da = assumed(s), u = S.unit;
-    $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtD(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`;
-    $('calFormula').textContent = C.done ? `M = m − 5 log₁₀(d / 1 pc) + 5 = ${fmt(mc, 2)} − 5 log₁₀(${fmtPc(da / PC)}) + 5 = ${fmtMag(Mest(s), 2)}` : '';
+    const C = cal[s], mc = mCal(s), da = assumed(s), u = S.unit, isLamp = s === 'lamp';
+    const calcName = isLamp ? 'Arvuta valgustugevus' : 'Arvuta M', calibrated = isLamp ? 'valgustugevusega' : 'M-iga';
+    $('calcM').textContent = calcName;
+    $('measLock').innerHTML = `Kalibreeri enne ${isLamp ? 'lamp' : 'küünal'}: vajuta <b>${calcName}</b>.`;
+    const Ec = lux(SRC.lamp.cal), Eh = lux(C.hid), mh = mag(s, C.hid);
+    $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtD(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. ` +
+      (isLamp ? `Luksmeeter näitab seal valgustatust <b>E = ${fmtSci(Ec)} lx</b>.` : `Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`);
+    $('calFormula').textContent = !C.done ? ''
+      : isLamp ? `I = E d² = ${fmtSci(Ec)} lx × (${sig(da)} m)² = ${sig(Iest())} cd. Valgusvoog Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`
+      : `M = m − 5 log₁₀(d / 1 pc) + 5 = ${fmt(mc, 2)} − 5 log₁₀(${fmtPc(da / PC)}) + 5 = ${fmtMag(Mest(s), 2)}`;
     $('measGroup').classList.toggle('locked', !C.done);
     $('measLock').hidden = C.done;
-    const mh = mag(s, C.hid);
-    $('measText').innerHTML = `Alumise allika näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>. Leia selle kaugus.`;
+    $('measText').innerHTML = isLamp ? `Alumise lambi valgust mõõtev luksmeeter näitab <b>E = ${fmtSci(Eh)} lx</b>. Leia lambi kaugus.`
+      : `Alumise allika näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>. Leia selle kaugus.`;
     $('guessUnit').textContent = u[0];
-    $('measFormula').textContent = C.computed ? `d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtD(s, measure(s, C.hid))}` : '';
+    $('measFormula').textContent = !C.computed ? ''
+      : isLamp ? `d = √(I / E) = √(${sig(Iest())} cd / ${fmtSci(Eh)} lx) = ${fmtD(s, measure(s, C.hid))}`
+      : `d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtD(s, measure(s, C.hid))}`;
     let res = '';
     if (C.shown) {
       const dmeas = C.guess || measure(s, C.hid), diff = (dmeas / C.hid - 1) * 100;
       res = `${C.guess ? 'Sinu kaugus' : 'Mõõdetud kaugus'} <b>${fmtD(s, dmeas)}</b>, tegelik <b>${fmtD(s, C.hid)}</b>: erinevus <b class="${Math.abs(diff) < 2 ? 'ok' : 'off'}">${fmtPct(diff)}</b>.`;
-      if (C.guess && Math.abs(C.guess / measure(s, C.hid) - 1) > 0.02) res += ` Kalibreeritud M-iga tuleks ${fmtD(s, measure(s, C.hid))}.`;
+      if (C.guess && Math.abs(C.guess / measure(s, C.hid) - 1) > 0.02) res += ` Kalibreeritud ${calibrated} tuleks ${fmtD(s, measure(s, C.hid))}.`;
       if (st.err !== 0) res += ` Kalibreerimiskaugus on ${fmtPct(st.err)} vale, nii et sama palju on nihkes ka iga mõõdetud kaugus.`;
     }
     $('measResult').innerHTML = res;
     $('errOut').textContent = fmtPct(st.err);
     $('errRead').innerHTML = st.err === 0 ? 'Tuntud kaugus on õige.'
-      : `Eeldatud kaugus on ${fmtPct(st.err)} vale, seega on M viga ${fmt(5 * Math.log10(1 + st.err / 100), 3)} mag ja kõik mõõdetud kaugused on <b>${fmtPct(st.err)}</b> nihkes. Rohkem allikaid seda ei paranda.`;
+      : `Eeldatud kaugus on ${fmtPct(st.err)} vale, seega ` + (isLamp
+        ? `on valgustugevus I = E d² ${fmtPct(((1 + st.err / 100) ** 2 - 1) * 100)} vale`
+        : `on M viga ${fmt(5 * Math.log10(1 + st.err / 100), 3)} mag`) +
+        ` ja kõik mõõdetud kaugused on <b>${fmtPct(st.err)}</b> nihkes. Rohkem ${isLamp ? 'lampe' : 'allikaid'} seda ei paranda.`;
     // Tab 4
     const T = type4();
     $('sigmaOut').textContent = T4.sigma.toFixed(2);
