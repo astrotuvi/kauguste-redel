@@ -114,6 +114,10 @@ h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
 .tabs button[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--btn); }
 
 svg.scene { display: block; width: 100%; height: auto; max-height: calc(100vh - 240px); min-height: 280px; margin-top: 8px; touch-action: none; user-select: none; -webkit-user-select: none; font-family: inherit; }
+/* The square sky views are no taller than the 3D view (760 × 520) at the same width, so the tabs keep about the
+   same height; cqw is the width of the tabbed card. On a narrow screen they may still be 360 px high. */
+.layout > .card:first-child { container-type: inline-size; }
+#sky, #quiz { max-height: min(calc(100vh - 240px), max(calc(100cqw * 520 / 760), 360px)); }
 #space { cursor: grab; }
 #space.dragging { cursor: grabbing; }
 
