@@ -55,6 +55,16 @@ button and reloading work.
    the dense clump of stars that move together. Each lasso adds stars to the
    selection, and **Tühista valik** clears it. The selected stars are
    highlighted in the sky view, the colour–magnitude diagram and the table.
+   Every plot has a **Kõik tähed** checkbox. In the sky view, the
+   proper-motion plot and the colour–magnitude diagram it is on by default and
+   shows all queried stars; unchecked, only the selected stars are drawn (the
+   lasso picks stars only while all stars are shown). In the parallax
+   histogram it is off by default, and checked it adds all stars in grey.
+   Clicking a star marks it with a crosshair in the other plots and in the
+   table. Its parallax is also shown on the parallax histogram: as a line when
+   it lies within the range shown, and otherwise as an arrow at the left or
+   right edge with the value beside it. The range of the histogram does not
+   change.
    **selgitus** after a plot title opens its explanation. **Suurenda**
    enlarges a plot to the full window, with the explanation shown; **Sulge**
    or Esc closes it.
@@ -63,8 +73,19 @@ button and reloading work.
    **Taasta valik** brings all removed stars back. Any change to the lasso selection discards these removals.
 5. On the **Kaugus** tab, read the mean parallax, press **Arvuta kaugus** and
    read the number of selected stars and the distance in parsecs, light
-   years, astronomical units and kilometres. The parallax histogram marks the
-   mean parallax. You can download the selected stars as a CSV file.
+   years, astronomical units and kilometres. The parallax histogram on the
+   **Joonised** tab marks the mean parallax, the outlier limits (dotted) and, as short dark lines above
+   the x-axis, the parallax of every outlier beyond them, so that single
+   outliers stand out. With **Kõik tähed** it also shows all queried stars in
+   grey. The very large
+   parallaxes (above the 99th percentile of all stars, but never cutting a
+   selected star) and the very negative ones (below Q1 − 3 × IQR) are left
+   out, and the x-axis title says how many stars. The bins then come from the
+   distribution of the remaining stars (Scott's rule, 3.49 σ / n^(1/3), at
+   most about 400 bins over their parallax range), and the selected stars use
+   the same bins; without it the bins follow the selected stars
+   (Freedman–Diaconis). You can download the selected stars as
+   a CSV file.
 
 ### Cepheids
 
