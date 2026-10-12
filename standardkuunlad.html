@@ -1,0 +1,1510 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standardküünlad</title>
+<meta name="description" content="Interaktiivsed joonised standardküünaldest: pöördruutude seadus, tähesuurused, kalibreerimine, hea küünla omadused, tsefeiidid ja Ia tüüpi supernoovad.">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4;
+  --surface: #fcfcfb;
+  --border: #e3e2dd;
+  --text-1: #0b0b0b;
+  --text-2: #52514e;
+  --text-3: #75746e;
+  --grid: #ecebe7;
+  --axis: #c4c3bd;
+  --sel: #2a78d6;
+  --accent: #eb6834;
+  --btn: #2a78d6;
+  --btn-text: #ffffff;
+  --chip: #eeede9;
+  --lamp: #d99a00;
+  --cep: #d32f2f;
+  --sn: #eb6834;
+  --rr: #2a78d6;
+  --trgb: #7b5cc4;
+  --good: #1f8a4c;
+  --bad: #c62828;
+  --night: #070912;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1a1a19;
+    --border: #2f2f2c;
+    --text-1: #ffffff;
+    --text-2: #c3c2b7;
+    --text-3: #959489;
+    --grid: #282826;
+    --axis: #4a4a46;
+    --sel: #3987e5;
+    --accent: #d95926;
+    --btn: #3987e5;
+    --btn-text: #ffffff;
+    --chip: #262624;
+    --lamp: #f5c04a;
+    --cep: #f05454;
+    --sn: #f07a45;
+    --rr: #4f9cf0;
+    --trgb: #a99cf2;
+    --good: #4cc27a;
+    --bad: #f06a6a;
+    --night: #05060c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211;
+  --surface: #1a1a19;
+  --border: #2f2f2c;
+  --text-1: #ffffff;
+  --text-2: #c3c2b7;
+  --text-3: #959489;
+  --grid: #282826;
+  --axis: #4a4a46;
+  --sel: #3987e5;
+  --accent: #d95926;
+  --btn: #3987e5;
+  --btn-text: #ffffff;
+  --chip: #262624;
+  --lamp: #f5c04a;
+  --cep: #f05454;
+  --sn: #f07a45;
+  --rr: #4f9cf0;
+  --trgb: #a99cf2;
+  --good: #4cc27a;
+  --bad: #f06a6a;
+  --night: #05060c;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.back a { color: var(--text-2); text-decoration: none; }
+.back a:hover { color: var(--sel); }
+.back .sep { margin: 0 6px; }
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+.byline { color: var(--text-2); font-size: 0.9rem; margin: -4px 0 16px; }
+.intro a, .explain a, .links a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+.intro a:hover, .explain a:hover, .links a:hover { color: var(--sel); text-decoration-style: solid; }
+.intro { margin: 0 0 24px; max-width: 75ch; }
+h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+.hint { color: var(--text-3); font-size: 0.82rem; margin: 2px 0 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; align-items: start; }
+.tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; border-bottom: 1px solid var(--border); margin: -4px 0 10px; }
+.tabs button {
+  border: none; border-radius: 0; background: none; padding: 8px 14px; margin-bottom: -1px;
+  color: var(--text-2); font-weight: 550; border-bottom: 2px solid transparent;
+}
+.tabs button:hover { color: var(--text-1); }
+.tabs button[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--btn); }
+
+svg.scene { display: block; width: 100%; height: auto; margin-top: 8px; user-select: none; -webkit-user-select: none; font-family: inherit; }
+#side { touch-action: none; cursor: ew-resize; }
+.row2 { display: grid; grid-template-columns: minmax(0, 240fr) minmax(0, 500fr); gap: 14px; align-items: start; }
+.row-cal { display: grid; grid-template-columns: minmax(0, 460fr) minmax(0, 280fr); gap: 14px; align-items: start; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.duo > div { min-width: 0; }
+.sub { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 10px 0 0; }
+.links { font-size: 0.82rem; color: var(--text-2); margin: 4px 0 0; }
+.badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0 6px; border-radius: 999px; background: var(--chip); color: var(--text-3); }
+
+/* Controls */
+.controls { display: flex; flex-direction: column; gap: 12px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.controls .group:not([hidden]) ~ .group:not([hidden]) { border-top: 1px solid var(--border); padding-top: 12px; }
+.group h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 0; }
+.slider { display: grid; grid-template-columns: 1fr 4.5em; align-items: center; gap: 2px 10px; font-size: 0.85rem; color: var(--text-2); }
+.slider.wide { grid-template-columns: 1fr 7.5em; }
+.slider label { grid-column: 1 / -1; }
+.slider output { font-variant-numeric: tabular-nums; text-align: right; color: var(--text-1); }
+input[type="range"] { accent-color: var(--btn); width: 100%; min-width: 0; }
+.limits { position: relative; height: 34px; margin: -6px 7.5em 0 0; font-size: 0.7rem; color: var(--text-3); }
+.limits span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; padding-top: 6px; border-left: 1px dashed var(--text-3); line-height: 1; }
+.toggle { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; color: var(--text-1); font-weight: 550; }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.toggle input { accent-color: var(--btn); width: 16px; height: 16px; margin: 0; }
+button {
+  font: inherit; cursor: pointer; border-radius: 7px; padding: 7px 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text-1);
+}
+button:disabled { cursor: default; opacity: 0.5; }
+button.primary { background: var(--btn); color: var(--btn-text); border-color: transparent; font-weight: 600; }
+button[aria-pressed="true"]:not(.chip) { background: var(--chip); border-color: var(--btn); }
+button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { flex: 1; border: none; border-radius: 0; padding: 6px 4px; font-size: 0.86rem; white-space: nowrap; color: var(--text-2); background: var(--surface); }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-checked="true"] { background: var(--btn); color: var(--btn-text); font-weight: 600; }
+.views-btns { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 8px; font-size: 0.82rem; color: var(--text-3); }
+.views-btns button { font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.views-btns button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); }
+select, .numin { font: inherit; font-size: 0.88rem; padding: 5px 8px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text-1); }
+select { width: 100%; }
+.numin { width: 8em; font-variant-numeric: tabular-nums; }
+.inrow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.85rem; color: var(--text-2); }
+.readout { margin: 0; font-size: 0.85rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.readout b { color: var(--text-1); font-weight: 600; }
+.readout + .readout { margin-top: -2px; }
+.formula { font-size: 0.82rem; color: var(--text-2); background: var(--chip); border-radius: 6px; padding: 6px 8px; margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.formula:empty { display: none; }
+.ok { color: var(--good); }
+.off { color: var(--bad); }
+.group.locked > :not(h3):not(.lockmsg) { opacity: 0.45; pointer-events: none; }
+.lockmsg { font-size: 0.82rem; color: var(--text-3); margin: 0; }
+.checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; }
+.checklist li { display: grid; grid-template-columns: 1.4em 1fr; gap: 2px 6px; }
+.checklist .mk { font-weight: 700; text-align: center; }
+.checklist .yes { color: var(--good); }
+.checklist .no { color: var(--bad); }
+.checklist .part { color: var(--text-3); }
+.checklist small { grid-column: 2; color: var(--text-3); font-size: 0.78rem; margin-top: -3px; }
+.typecard { margin: 0; font-size: 0.85rem; color: var(--text-2); }
+.typecard b { color: var(--text-1); }
+
+/* Scene */
+.track { stroke: var(--axis); stroke-width: 2; }
+.tick { stroke: var(--text-3); stroke-width: 1; }
+.tlbl { fill: var(--text-2); font-size: 11px; }
+.lim { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 3 4; }
+.limlbl { fill: var(--text-3); font-size: 11px; }
+.lmk { fill: var(--text-3); }
+.lmklbl { fill: var(--text-3); font-size: 11px; font-style: italic; }
+.tube { fill: var(--surface); stroke: var(--text-2); stroke-width: 1.5; }
+.leg { stroke: var(--text-3); stroke-width: 1.5; }
+.mirror { stroke: var(--sel); stroke-width: 3; stroke-linecap: round; }
+.mirror-glow { stroke: var(--src); stroke-width: 9; stroke-linecap: round; }
+.fan { fill: color-mix(in srgb, var(--src) 13%, transparent); }
+.photon { fill: var(--src); }
+.cone { stroke: var(--src); stroke-width: 1; opacity: 0.6; }
+.sq { fill: color-mix(in srgb, var(--src) 10%, transparent); stroke: var(--src); stroke-width: 1.3; }
+.sqgrid { stroke: var(--src); stroke-width: 0.8; opacity: 0.7; }
+.gfill.lamp { fill: var(--lamp); }
+.gfill.cep { fill: var(--cep); }
+.gring.cep { fill: none; stroke: var(--cep); stroke-width: 1.6; }
+.gfill.sn { fill: var(--sn); }
+.gbase { fill: var(--text-3); }
+.gline { stroke: var(--surface); stroke-width: 1; }
+.ghost { opacity: 0.35; }
+.qbox { fill: none; stroke: var(--text-3); stroke-dasharray: 4 3; }
+.qmark { fill: var(--text-2); font-size: 22px; font-weight: 700; }
+.bar-bg { fill: var(--chip); stroke: var(--border); }
+.bar { fill: var(--src); }
+.lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl2 { fill: var(--text-2); font-size: 12px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl3 { fill: var(--text-3); font-size: 11px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.srclbl { fill: var(--src); font-size: 13px; font-weight: 650; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.night { fill: var(--night); }
+.nl { fill: #e8ecf5; font-size: 12px; font-weight: 600; }
+.nl2 { fill: #9aa3b5; font-size: 11px; }
+.bgstar { fill: #ffffff; }
+
+/* Plots */
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.axisline { stroke: var(--axis); stroke-width: 1; fill: none; }
+.curve { stroke: var(--sel); stroke-width: 2; fill: none; }
+.curve.src { stroke: var(--src); }
+.curve.ref { stroke: var(--text-3); stroke-width: 1.3; stroke-dasharray: 5 4; }
+.guide { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.pt { fill: var(--src); stroke: var(--surface); stroke-width: 1.5; }
+.pt.hollow { fill: var(--surface); stroke: var(--src); stroke-width: 2; }
+.one2one { stroke: var(--text-3); stroke-width: 1.2; }
+.shifted { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.mline { stroke: var(--src); stroke-width: 2; }
+.Mline { stroke: var(--src); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.arrow { stroke: var(--text-1); stroke-width: 1.5; fill: none; }
+.arrowhead { fill: var(--text-1); }
+.rangeseg { stroke: var(--src); stroke-width: 6; stroke-linecap: round; opacity: 0.35; }
+.band { fill: color-mix(in srgb, var(--sel) 14%, transparent); }
+.hist { fill: color-mix(in srgb, var(--src) 55%, transparent); stroke: var(--src); stroke-width: 0.8; }
+.truth { stroke: var(--text-1); stroke-width: 2; }
+.meanline { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 4; }
+.cand { fill: var(--src); }
+.gxdot { fill: #c9d0e6; }
+.reachpt { cursor: pointer; }
+.reachpt circle { stroke: var(--surface); stroke-width: 1.5; }
+.reachpt.sel circle { stroke: var(--text-1); stroke-width: 2.5; }
+.reachpt:hover circle { stroke: var(--text-2); stroke-width: 2.5; }
+.reachpt:focus-visible { outline: none; }
+.reachpt:focus-visible circle { stroke: var(--sel); stroke-width: 3; }
+.rung { stroke-width: 6; stroke-linecap: round; }
+.rail { stroke: var(--axis); stroke-width: 4; stroke-linecap: round; }
+.errband { opacity: 0.18; }
+.rung-hi { stroke: var(--text-1); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+.range-link { cursor: pointer; }
+.range-link rect.bar2 { opacity: 0.75; }
+.range-link:hover rect.bar2, .range-link:focus-visible rect.bar2 { opacity: 1; }
+.range-link:hover .lbl, .range-link:focus-visible .lbl { text-decoration: underline; }
+.range-link:focus-visible { outline: none; }
+.overlap { fill: color-mix(in srgb, var(--text-3) 16%, transparent); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+
+.explain { margin-top: 14px; }
+.explain ul { margin: 8px 0 0; padding-left: 20px; max-width: 80ch; }
+.explain li { margin: 4px 0; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .row2, .row-cal, .duo { grid-template-columns: 1fr; }
+  .row2 #eye { max-width: 280px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span>Standardküünlad</p>
+  <h1>Standardküünlad</h1>
+  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
+  <p class="intro">Kui valgusallika tegelik heledus on teada, annab selle näiv heledus kauguse: mida kaugemal on allikas, seda nõrgemana see paistab.
+    Selliseid allikaid nimetatakse <a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder#Standard_candles" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">standardküünaldeks</a>.
+    Vali valgusallikas (lamp, <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">tsefeiid</a> või Ia tüüpi <a href="https://et.wikipedia.org/wiki/Supernoova" target="_blank" rel="noopener">supernoova</a>),
+    vii see kaugemale ja vaata, kuidas muutuvad selle näiv heledus ja <a href="https://et.wikipedia.org/wiki/Tähesuurus" target="_blank" rel="noopener">tähesuurus</a>. Seejärel kalibreeri küünal tuntud kaugusel
+    ja mõõda sellega tundmatu kaugus.</p>
+
+  <div class="layout">
+    <section class="card">
+      <div class="tabs" role="tablist" aria-label="Teema">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Pöördruutude seadus</button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Magnituudid</button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Kalibreerimine</button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Hea küünal</button>
+        <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1">Tsefeiidid ja supernoovad</button>
+      </div>
+
+      <div id="pane1" role="tabpanel" aria-labelledby="tab1">
+        <p class="hint">Valgusallikas eemaldub teleskoobist. Lohista allikat või kasuta paremal liugurit. Rada on logaritmilises skaalas: iga jaotis on eelmisest 10 korda kaugemal.</p>
+        <svg id="side" class="scene" viewBox="0 0 760 230" role="img" aria-label="Kõrvalvaade: teleskoop ja valgusallikas logaritmilisel kaugusteljel"></svg>
+        <div class="row2">
+          <div>
+            <p class="sub">Vaatleja vaade</p>
+            <svg id="eye" class="scene" viewBox="0 0 240 240" role="img" aria-label="Allikas taevas koos võrdlustähtedega"></svg>
+          </div>
+          <div>
+            <p class="sub">Voog ja kaugus</p>
+            <svg id="flux" class="scene" viewBox="0 0 500 240" role="img" aria-label="Voo sõltuvus kaugusest"></svg>
+          </div>
+        </div>
+      </div>
+
+      <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
+        <p class="hint">Vasakul on tähesuuruste skaala: ülal heledad, all nõrgad objektid. Paremal olev kauguste skaala on nihutatud nii, et allika kaugus on samal kõrgusel kui selle näiv tähesuurus m.</p>
+        <svg id="mag" class="scene" viewBox="0 0 760 540" role="img" aria-label="Tähesuuruste ja kauguste skaala"></svg>
+      </div>
+
+      <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
+        <p class="hint">Ülemise allika kaugus on teada, alumise kaugus on peidetud. Mõlema näiv tähesuurus on mõõdetud. Tee paremal läbi kaks sammu.</p>
+        <svg id="cal" class="scene" viewBox="0 0 760 290" role="img" aria-label="Kaks ühesugust allikat: üks tuntud, teine tundmatu kaugusel"></svg>
+        <div class="row-cal">
+          <div>
+            <p class="sub">Mõõdetud ja tegelik kaugus</p>
+            <svg id="calplot" class="scene" viewBox="0 0 460 280" role="img" aria-label="Mõõdetud kaugus tegeliku kauguse vastu"></svg>
+            <div class="legend">
+              <span><i style="border-color: var(--text-3)"></i>mõõdetud = tegelik</span>
+              <span><i style="border-color: var(--accent); border-top-style: dashed"></i>kalibreerimisviga</span>
+            </div>
+          </div>
+          <div>
+            <p class="sub">Vead kanduvad redelil edasi</p>
+            <svg id="ladder" class="scene" viewBox="0 0 280 280" role="img" aria-label="Kauguste redeli kolm pulka ja nende vead"></svg>
+          </div>
+        </div>
+      </div>
+
+      <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
+        <div class="views-btns" role="group" aria-label="Vaade">
+          <span>Vaade:</span>
+          <button type="button" class="chip" data-view4="galaxy">Ühe galaktika küünlad</button>
+          <button type="button" class="chip" data-view4="reach">Ulatus ja täpsus</button>
+        </div>
+        <div id="view4galaxy">
+          <p class="hint">Kujutle galaktikat 10 Mpc kaugusel, milles on N sama tüüpi küünalt. Iga küünla heledus erineb veidi keskmisest, nii et igaüks annab veidi erineva kauguse.</p>
+          <svg id="galaxy" class="scene" viewBox="0 0 760 300" role="img" aria-label="Galaktika küünaldega ja nende kauguste histogramm"></svg>
+          <div class="legend">
+            <span><i style="border-color: var(--text-1)"></i>tegelik kaugus</span>
+            <span><i style="border-color: var(--accent); border-top-style: dashed"></i>valimi keskmine</span>
+            <span><i style="border-color: color-mix(in srgb, var(--sel) 30%, transparent); border-top-width: 8px"></i>keskmise oodatav viga</span>
+          </div>
+        </div>
+        <div id="view4reach" hidden>
+          <p class="hint">Iga punkt on üks küünla tüüp: paremal ulatub kaugemale, all on täpsem. Hea küünal on all paremal. Klõpsa punktil, et selle kohta lugeda.</p>
+          <svg id="reach" class="scene" viewBox="0 0 760 340" role="img" aria-label="Küünalde ulatus ja hajuvus"></svg>
+        </div>
+      </div>
+
+      <div id="pane5" role="tabpanel" aria-labelledby="tab5" hidden>
+        <p class="hint">Tsefeiidid ja Ia supernoovad ei ole kõik ühesuguse heledusega, kuid nende heledust saab ennustada millestki, mida saab mõõta. Lülita paremal sisse <b>Kasuta seost</b> ja vaata, kuidas hajuvus väheneb. Andmed on simuleeritud.</p>
+        <div class="duo">
+          <div>
+            <p class="sub">Tsefeiidid: periood annab heleduse</p>
+            <svg id="cepfig" class="scene" viewBox="0 0 370 430" role="img" aria-label="Pulseeriv tsefeiid, valguskõver ja perioodi-heleduse seos"></svg>
+            <p class="links">Tsefeiidide leht <span class="badge">tulekul</span> · Harjutus: <a href="index.html#osa-2">2. osa</a>, <a href="index.html#osa-3">3. osa</a></p>
+          </div>
+          <div>
+            <p class="sub">Ia supernoovad: tuhmumise kiirus annab heleduse</p>
+            <svg id="snfig" class="scene" viewBox="0 0 370 430" role="img" aria-label="Supernoova valguskõver ja Phillipsi seos"></svg>
+            <p class="links">Ia supernoovade leht <span class="badge">tulekul</span> · Harjutus: <a href="index.html#osa-4">4. osa</a></p>
+          </div>
+        </div>
+        <p class="sub">Meetodite ulatus</p>
+        <svg id="ranges" class="scene" viewBox="0 0 760 160" role="img" aria-label="Parallaksi, tsefeiidide ja Ia supernoovade ulatus kaugusteljel"></svg>
+      </div>
+    </section>
+
+    <section class="card controls" aria-label="Seaded">
+      <div class="group" data-tabs="tab1 tab2 tab3">
+        <h3 id="srcLbl">Valgusallikas</h3>
+        <div class="seg" role="radiogroup" aria-labelledby="srcLbl">
+          <button type="button" role="radio" data-src="lamp">Lamp</button>
+          <button type="button" role="radio" data-src="cep">Tsefeiid</button>
+          <button type="button" role="radio" data-src="sn">Ia supernoova</button>
+        </div>
+        <p class="readout" id="srcInfo"></p>
+      </div>
+
+      <div class="group" data-tabs="tab1 tab2">
+        <div class="slider wide"><label for="dist">Kaugus</label><input type="range" id="dist" min="0" max="1000" step="1"><output for="dist" id="distOut"></output></div>
+        <div class="limits" id="limits" aria-hidden="true"></div>
+        <p class="readout" id="distRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab1">
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" id="squares"> Näita ruute</label>
+          <label class="toggle"><input type="checkbox" id="logAxes"> Logaritmteljed</label>
+        </div>
+        <p class="readout" id="fluxRead"></p>
+        <p class="formula" id="fluxFormula"></p>
+        <div class="btnrow">
+          <button type="button" id="setD0">Määra lähtekohaks d₀</button>
+          <button type="button" id="same" aria-pressed="false">Sama heledus, eri kaugus</button>
+        </div>
+        <p class="readout" id="sameRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab2">
+        <h3>Kaugusmoodul</h3>
+        <p class="readout" id="magRead"></p>
+        <p class="formula" id="magFormula"></p>
+      </div>
+      <div class="group" data-tabs="tab2">
+        <h3>Heleduste suhe</h3>
+        <div class="slider"><label for="m1">Täht 1: tähesuurus m₁</label><input type="range" id="m1" min="-2" max="20" step="0.1" value="1"><output for="m1" id="m1Out"></output></div>
+        <div class="slider"><label for="m2">Täht 2: tähesuurus m₂</label><input type="range" id="m2" min="-2" max="20" step="0.1" value="6"><output for="m2" id="m2Out"></output></div>
+        <svg id="ratio" class="scene" viewBox="0 0 300 80" role="img" aria-label="Kaks tähte valitud tähesuurustega"></svg>
+        <p class="readout" id="ratioRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab3">
+        <h3>1. Kalibreeri</h3>
+        <p class="readout" id="calText"></p>
+        <div class="btnrow"><button type="button" class="primary" id="calcM">Arvuta M</button></div>
+        <p class="formula" id="calFormula"></p>
+      </div>
+      <div class="group" data-tabs="tab3" id="measGroup">
+        <h3>2. Mõõda</h3>
+        <p class="lockmsg" id="measLock">Kalibreeri enne küünal: vajuta <b>Arvuta M</b>.</p>
+        <p class="readout" id="measText"></p>
+        <div class="inrow">
+          <label for="guess">Sinu kaugus</label><input type="text" inputmode="decimal" class="numin" id="guess" autocomplete="off"><span id="guessUnit"></span>
+          <button type="button" id="check">Kontrolli</button>
+        </div>
+        <div class="btnrow">
+          <button type="button" id="calcD">Arvuta kaugus</button>
+          <button type="button" id="newHid">Uus allikas</button>
+        </div>
+        <p class="formula" id="measFormula"></p>
+        <p class="readout" id="measResult" aria-live="polite"></p>
+      </div>
+      <div class="group" data-tabs="tab3">
+        <div class="slider"><label for="err">Kalibreerimise viga (tuntud kauguse viga)</label><input type="range" id="err" min="-20" max="20" step="1" value="0"><output for="err" id="errOut"></output></div>
+        <p class="readout" id="errRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab4">
+        <label class="sub" for="ctype" style="margin: 0">Küünla tüüp</label>
+        <select id="ctype"></select>
+        <div class="slider"><label for="sigma">Hajuvus σ<sub>M</sub> (tähesuurustes)</label><input type="range" id="sigma" min="0" max="1.5" step="0.01"><output for="sigma" id="sigmaOut"></output></div>
+        <div class="slider"><label for="nc">Küünalde arv N</label><input type="range" id="nc" min="1" max="100" step="1" value="20"><output for="nc" id="ncOut"></output></div>
+        <div class="btnrow"><button type="button" id="resample">Uus valim</button></div>
+        <p class="readout" id="goodRead"></p>
+      </div>
+      <div class="group" data-tabs="tab4">
+        <h3 id="checkTitle">Omadused</h3>
+        <ul class="checklist" id="checklist"></ul>
+        <p class="typecard" id="typecard"></p>
+      </div>
+
+      <div class="group" data-tabs="tab5">
+        <h3>Tsefeiidid</h3>
+        <div class="slider"><label for="period">Periood P (päevades)</label><input type="range" id="period" min="0" max="1000" step="1"><output for="period" id="periodOut"></output></div>
+        <label class="toggle"><input type="checkbox" id="usePL"> Kasuta seost</label>
+        <p class="readout" id="cepRead"></p>
+      </div>
+      <div class="group" data-tabs="tab5">
+        <h3>Ia supernoovad</h3>
+        <div class="slider"><label for="dm15">Tuhmumine 15 päevaga Δm₁₅</label><input type="range" id="dm15" min="0.8" max="1.8" step="0.01" value="1.1"><output for="dm15" id="dm15Out"></output></div>
+        <label class="toggle"><input type="checkbox" id="usePh"> Kasuta seost</label>
+        <p class="readout" id="snRead"></p>
+      </div>
+    </section>
+  </div>
+
+  <section class="card explain">
+    <h2>Mida joonis näitab</h2>
+    <ul data-tab="tab1">
+      <li>Allikas kiirgab valgust kõigis suundades. Kaugusel d jaotub sama valgus sfäärile, mille pindala on 4πd², seega jõuab pinnaühikule voog F = L / (4πd²), kus L on allika tegelik heledus.
+        Kaks korda kaugemal on allikas 4 korda nõrgem, kümme korda kaugemal 100 korda nõrgem. Ruudud näitavad sama: valgus, mis läbib kaugusel d ühe ruudu, katab kaugusel 2d neli ja kaugusel 3d üheksa ruutu.</li>
+      <li>Teleskoobi peegli pindala ei muutu, nii et kaugemalt allikalt püüab see vähem footoneid. Footonite arvust saab mõõta allika näiva heleduse.</li>
+      <li>100 W hõõglamp paistab 1 km kauguselt sama heledana kui Veenus (m ≈ −4) ja 100 km kauguselt on see palja silmaga vaevu nähtav (m ≈ 6). Kuu kauguselt oleks see umbes 24. tähesuurusest, nii et suur teleskoop näeks seda veel.
+        Ia supernoova paistaks 10 parseki kauguselt täpselt sama heledana kui lamp 1 meetri kauguselt (m ≈ −19.3).</li>
+      <li>Nupp <b>Sama heledus, eri kaugus</b> näitab, et näiv heledus üksi kaugust ei anna: lähedal olev lamp ja kaugel olev supernoova võivad paista ühtemoodi. Kauguse leidmiseks peab allika tegelik heledus olema teada, ja just seda standardküünal annab.</li>
+      <li>Ekraan ei suuda näidata 10²⁰-kordseid heleduse erinevusi, seepärast on allika suurus ja helendus joonisel seotud tähesuurusega nagu tähekaartidel.</li>
+    </ul>
+    <ul data-tab="tab2" hidden>
+      <li>Tähesuurus on logaritmiline heleduse mõõt: 5 tähesuurust vastab täpselt 100-kordsele heleduste suhtele ja 1 tähesuurus umbes 2.5-kordsele. Mida suurem on tähesuurus, seda nõrgem on objekt.
+        Skaala pärineb Vana-Kreekast, kus kõige heledamaid tähti nimetati esimese suurusjärgu tähtedeks. Ka silm tajub heledust ligikaudu logaritmiliselt.</li>
+      <li>Näiv tähesuurus m näitab, kui heledana objekt meile paistab. Absoluutne tähesuurus M näitab, kui heledana paistaks objekt 10 parseki kauguselt, nii et see sõltub ainult objekti enda heledusest.</li>
+      <li>Nende vahe on kaugusmoodul μ = m − M = 5 log₁₀ d − 5, kus d on parsekites. Sellest d = 10<sup>μ/5+1</sup> pc: μ = 0 on 10 pc, μ = 5 on 100 pc, μ = 10 on 1 kpc ja μ = 30 on 10 Mpc.
+        Iga 5 tähesuurust kaugusmoodulis tähendab 10 korda suuremat kaugust, seepärast on joonise kaugustelje jaotised 5 tähesuuruse kaugusel.</li>
+      <li>Lambi absoluutne tähesuurus on umbes +68: 10 parseki kauguselt ei näeks seda ükski teleskoop.</li>
+      <li>Harjutuse 2.–4. osa kasutab just neid valemeid: 2. osas leiad tsefeiidide M parvede kaugustest, 3. osas galaktikate kaugusmoodulid μ ja 4. osas supernoovade M.</li>
+    </ul>
+    <ul data-tab="tab3" hidden>
+      <li>Standardküünla tegelik heledus tuleb kõigepealt mõõta lähedaste näidete abil, mille kaugus on teada eelmisest redelipulgast. Seda nimetatakse kalibreerimiseks: M = m − 5 log₁₀ d + 5.</li>
+      <li>Kalibreeritud küünlaga saab mõõta kaugusi, kuhu eelmine meetod ei ulatu: d = 10<sup>(m − M)/5 + 1</sup> pc.</li>
+      <li>Harjutuses käib see samamoodi: 2. osas kalibreerid tsefeiidid parvede parallaksidega, 3. osas mõõdad nendega galaktikate kaugused ja 4. osas kalibreerid samades galaktikates Ia supernoovad.</li>
+      <li>Kui kalibreerimiskaugus on vale, on vale ka M ja kõik sellega mõõdetud kaugused on sama palju nihkes. Selline süstemaatiline viga ei vähene, kui mõõta rohkem allikaid, ja kandub redelil edasi järgmistele pulkadele.
+        Seepärast liidetakse harjutuses H₀ veale perioodi-heleduse seose nullpunkti viga.</li>
+    </ul>
+    <ul data-tab="tab4" hidden>
+      <li>Hea standardküünal on <b>hele</b>, et seda kaugelt näha; <b>äratuntav</b>, et seda teistest objektidest eristada; <b>väikese hajuvusega</b>, et iga küünal annaks täpse kauguse; ja <b>kalibreeritav</b>, see tähendab, et leidub piisavalt lähedasi näiteid tuntud kaugusel.</li>
+      <li>Tähesuuruse hajuvus σ<sub>M</sub> annab kauguse suhtelise vea σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub>: 0.2 tähesuurust tähendab umbes 10 % viga kauguses. N küünla keskmine on √N korda täpsem, kui küünlad on üksteisest sõltumatud.</li>
+      <li>Ükski küünal pole ideaalne. Heledamad ulatuvad kaugemale, kuid neid on vähem ja neid on raskem kalibreerida. Seepärast koosneb kauguste redel mitmest pulgast.</li>
+    </ul>
+    <ul data-tab="tab5" hidden>
+      <li>Tsefeiidid on pulseerivad hiidtähed. Mida heledam on tsefeiid, seda pikem on tema pulsatsiooniperiood. Selle perioodi-heleduse seose avastas <a class="en" href="https://en.wikipedia.org/wiki/Henrietta_Swan_Leavitt" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Henrietta Leavitt</a> 1912. aastal.
+        Periood annab tsefeiidi absoluutse tähesuuruse ja seega kauguse. Harjutuse 2. osas kalibreerid seose ise ja 3. osas mõõdad sellega galaktikate kaugusi.</li>
+      <li>Ia tüüpi supernoova on valge kääbuse termotuumaplahvatus. Heledamad supernoovad tuhmuvad aeglasemalt (<a class="en" href="https://en.wikipedia.org/wiki/Phillips_relationship" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Phillipsi seos</a>): Δm₁₅ on tähesuuruse muutus 15 päeva jooksul pärast maksimumi.
+        Päris standardiseerimisel arvestatakse ka supernoova värvi, mis näitab tolmu mõju. Harjutuse 4. osa kasutab juba standardiseeritud tähesuurusi.</li>
+      <li>Mõlemal juhul ei ole küünal iseenesest ühesugune, kuid seos mõõdetava suurusega (periood või tuhmumise kiirus) teeb selle <i>standardiseeritavaks</i>.</li>
+      <li>Alumine telg näitab, kuidas meetodid kattuvad: parallaks ulatub lähimate tsefeiidideni, tsefeiidid lähimate Ia supernoovade galaktikateni. Kattuvates piirkondades kalibreeritakse iga järgmine pulk.
+        Klõpsa ribal, et minna harjutuse vastavasse ossa.</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+  const PC = 3.0857e16, LY = 3.2616, AU = 206265;  // metres in a parsec, light years in a parsec, au in a parsec
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, typeof attrs[k] === 'number' ? +attrs[k].toFixed(2) : attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, s, cls, anchor) {
+    const e = el('text', { x, y, class: cls || 'lbl', 'text-anchor': anchor || 'start' }, parent);
+    e.textContent = s;
+    return e;
+  }
+  const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const minus = s => s.replace(/-/g, '−');
+  const fmt = (v, d) => minus(v.toFixed(d));
+  const fmtMag = (v, d = 1) => (v > 0 ? '+' : '') + fmt(v, d);
+  // Three significant digits, with the thousands grouped in numbers of five digits or more.
+  function sig(v, n = 3) {
+    if (!isFinite(v) || v === 0) return '0';
+    let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    return minus(s);
+  }
+  const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const sup = n => (n < 0 ? '⁻' : '') + String(Math.abs(n)).split('').map(c => SUP[c]).join('');
+  function fmtExp(v) {
+    if (v >= 0.01 && v < 1e4) return sig(v, 2);
+    let e = Math.floor(Math.log10(v)), a = +(v / 10 ** e).toFixed(1);
+    if (a >= 10) { a /= 10; e++; }
+    return a.toFixed(1) + '·10' + sup(e);
+  }
+  const fmtPct = v => { if (Math.abs(v) < 0.05) v = 0; return (v > 0 ? '+' : '') + fmt(v, Math.abs(v) < 10 ? 1 : 0) + ' %'; };
+  function seeded(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+  function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+  const std = a => { const m = mean(a); return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / (a.length - 1)); };
+  function mkScale(lo, hi, p0, p1, log) {
+    const f = log ? v => (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)) : v => (v - lo) / (hi - lo);
+    return v => p0 + f(v) * (p1 - p0);
+  }
+  function svgPoint(svg, e) {
+    const p = svg.createSVGPoint();
+    p.x = e.clientX; p.y = e.clientY;
+    return p.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function arrow(g, x1, y1, x2, y2, both) {
+    el('line', { x1, y1, x2, y2, class: 'arrow' }, g);
+    const head = (xa, ya, xb, yb) => {
+      const a = Math.atan2(yb - ya, xb - xa), L = 8, W = 4;
+      const bx = xb - L * Math.cos(a), by = yb - L * Math.sin(a);
+      el('polygon', { points: pts([[xb, yb], [bx - W * Math.sin(a), by + W * Math.cos(a)], [bx + W * Math.sin(a), by - W * Math.cos(a)]]), class: 'arrowhead' }, g);
+    };
+    head(x1, y1, x2, y2);
+    if (both) head(x2, y2, x1, y1);
+  }
+
+  /* ---------- Light sources ---------- */
+  // Distances are kept in metres. The lamp is a 100 W incandescent bulb of about 1700 lm, which is m = −4.3 at 1 km,
+  // so M = +68.1 at 10 pc. The Cepheid has P = 10 d (M_V ≈ −4.0), the supernova is a type Ia at its peak (M_B ≈ −19.3).
+  const SRC = {
+    lamp: { name: 'Lamp', short: 'Lamp', what: '100 W hõõglamp', lum: 'valgusvoog umbes 1700 luumenit', M: 68.1, lo: 1, hi: 1e9, d: 10,
+      marks: [['Tallinn–Tartu', 1.6e5], ['Kuu', 3.844e8]], cal: 10, calHow: 'mõõdulindiga', hid: [50, 5e4], unit: ['m', 1] },
+    cep: { name: 'Tsefeiid', short: 'Tsefeiid', what: 'tsefeiid perioodiga 10 päeva', lum: 'umbes 3000 korda heledam kui Päike', M: -4.0, lo: 10 * PC, hi: 1e8 * PC, d: 1e3 * PC,
+      marks: [['Linnutee kese', 8.2e3 * PC], ['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', hid: [5e4 * PC, 4e7 * PC], unit: ['kpc', 1e3 * PC] },
+    sn: { name: 'Ia supernoova', short: 'Supernoova', what: 'Ia tüüpi supernoova heleduse maksimumis', lum: 'umbes 5 miljardit korda heledam kui Päike', M: -19.3, lo: 10 * PC, hi: 5e9 * PC, d: 1e6 * PC,
+      marks: [['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e7 * PC, calHow: 'peregalaktika tsefeiididest (3. osa)', hid: [3e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC] },
+  };
+  const KEYS = ['lamp', 'cep', 'sn'];
+  const LIMITS = [{ m: 6, short: 'silm', slider: 'silm' }, { m: 24, short: 'suur teleskoop', slider: 'teleskoop' }, { m: 29, short: 'Hubble', slider: 'Hubble' }];
+  const mag = (s, d) => SRC[s].M + 5 * Math.log10(d / PC) - 5;
+  const distFor = (s, m) => PC * 10 ** ((m - SRC[s].M) / 5 + 1);
+  // Photons per second on a 1 m² mirror in the V band: about 10¹⁰ × 10^(−0.4 m).
+  const photons = m => 1e10 * 10 ** (-0.4 * m);
+  // Decades of the distance axes are counted in metres for the lamp and in parsecs for the others.
+  const logU = (s, d) => Math.log10(s === 'lamp' ? d : d / PC);
+  const fromU = (s, k) => (s === 'lamp' ? 1 : PC) * 10 ** k;
+  function decadeLabel(s, k) {
+    if (k < 0) return null;
+    if (s === 'lamp') return k < 3 ? 10 ** k + ' m' : k < 6 ? 10 ** (k - 3) + ' km' : '10' + sup(k - 3) + ' km';
+    if (k > 10) return null;
+    const i = Math.floor(k / 3);
+    return 10 ** (k - 3 * i) + ' ' + ['pc', 'kpc', 'Mpc', 'Gpc'][i];
+  }
+  function fmtD(s, d) {
+    if (s === 'lamp') return d < 1000 ? sig(d) + ' m' : sig(d / 1000) + ' km';
+    const pc = d / PC;
+    if (pc < 0.1) return sig(pc * AU) + ' aü';
+    if (pc < 1e3) return sig(pc) + ' pc';
+    if (pc < 1e6) return sig(pc / 1e3) + ' kpc';
+    if (pc < 1e9) return sig(pc / 1e6) + ' Mpc';
+    return sig(pc / 1e9) + ' Gpc';
+  }
+  function fmtLy(d) {
+    const ly = d / PC * LY;
+    return ly < 1e6 ? sig(ly) + ' valgusaastat' : ly < 1e9 ? sig(ly / 1e6) + ' mln valgusaastat' : sig(ly / 1e9) + ' mld valgusaastat';
+  }
+  const fmtPc = v => (v < 0.01 ? fmtExp(v) : sig(v, 4));
+  function visibility(m) {
+    if (m <= 6) return 'Paistab <b>palja silmaga</b>.';
+    if (m <= 24) return 'Palja silmaga enam ei paista, <b>suure teleskoobiga</b> on näha.';
+    if (m <= 29) return "Näha ainult <b>Hubble'i</b> teleskoobiga.";
+    return "Liiga nõrk ka <b>Hubble'ile</b>.";
+  }
+
+  const st = { tab: 'tab1', src: 'lamp', d: {}, d0: {}, squares: false, logAxes: false, same: false, m1: 1, m2: 6, err: 0 };
+  for (const k of KEYS) st.d[k] = st.d0[k] = SRC[k].d;
+
+  /* ---------- Shared drawing ---------- */
+  const TR = { x0: 120, x1: 735 };
+  function trackX(s, d) {
+    const S = SRC[s];
+    return TR.x0 + (Math.log10(d) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo)) * (TR.x1 - TR.x0);
+  }
+  function trackD(s, x) {
+    const S = SRC[s], f = clamp((x - TR.x0) / (TR.x1 - TR.x0), 0, 1);
+    return 10 ** (Math.log10(S.lo) + f * (Math.log10(S.hi) - Math.log10(S.lo)));
+  }
+  function drawTrack(g, s, y, o = {}) {
+    const S = SRC[s];
+    el('line', { x1: TR.x0, y1: y, x2: TR.x1, y2: y, class: 'track' }, g);
+    for (let k = Math.ceil(logU(s, S.lo) - 1e-9); k <= Math.floor(logU(s, S.hi) + 1e-9); k++) {
+      const x = trackX(s, fromU(s, k));
+      el('line', { x1: x, y1: y - 4, x2: x, y2: y + 4, class: 'tick' }, g);
+      const L = decadeLabel(s, k);
+      if (L) text(g, x, y + 18, L, 'tlbl', 'middle');
+    }
+    if (o.landmarks) for (const [name, d] of S.marks) {
+      const x = trackX(s, d);
+      el('path', { d: `M${x.toFixed(1)} ${y + 24} l-4 6 h8 z`, class: 'lmk' }, g);
+      text(g, x, y + 43, name, 'lmklbl', 'middle');
+    }
+    // The limit labels alternate between two rows, as two limits can be only a decade apart.
+    if (o.limits) LIMITS.forEach((L, i) => {
+      const d = distFor(s, L.m);
+      if (d < S.lo || d > S.hi) return;
+      const x = trackX(s, d), ly = o.limTop - 6 - (i % 2) * 14;
+      el('line', { x1: x, y1: ly + 4, x2: x, y2: y, class: 'lim' }, g);
+      // Near the right edge the label ends at its line instead of being centred on it.
+      const right = x > 680;
+      text(g, right ? x + 4 : Math.max(x, 70), ly, `${L.short} (${L.m} mag)`, 'limlbl', right ? 'end' : 'middle');
+    });
+  }
+  const SN_PTS = [[0, -13], [1.9, -4.6], [9.2, -9.2], [4.6, -1.9], [13, 0], [4.6, 1.9], [9.2, 9.2], [1.9, 4.6], [0, 13], [-1.9, 4.6], [-9.2, 9.2], [-4.6, 1.9], [-13, 0], [-4.6, -1.9], [-9.2, -9.2], [-1.9, -4.6]];
+  function sourceGlyph(g, s, x, y, extra) {
+    const c = el('g', { transform: `translate(${x.toFixed(1)} ${y.toFixed(1)})`, class: extra || '' }, g);
+    if (s === 'lamp') {
+      el('circle', { cx: 0, cy: -3, r: 10, class: 'gfill lamp' }, c);
+      el('rect', { x: -5, y: 6, width: 10, height: 8, rx: 1.5, class: 'gbase' }, c);
+      el('line', { x1: -5, y1: 9.5, x2: 5, y2: 9.5, class: 'gline' }, c);
+    } else if (s === 'cep') {
+      el('circle', { r: 12, class: 'gring cep' }, c);
+      el('circle', { r: 7, class: 'gfill cep' }, c);
+    } else el('polygon', { points: pts(SN_PTS), class: 'gfill sn' }, c);
+    return c;
+  }
+  function telescope(g, y, label) {
+    el('line', { x1: 64, y1: y + 14, x2: 52, y2: y + 44, class: 'leg' }, g);
+    el('line', { x1: 64, y1: y + 14, x2: 76, y2: y + 44, class: 'leg' }, g);
+    el('rect', { x: 32, y: y - 14, width: 66, height: 28, rx: 3, class: 'tube' }, g);
+    el('line', { x1: 37, y1: y - 10, x2: 37, y2: y + 10, class: 'mirror' }, g);
+    if (label) text(g, 64, y + 60, 'Teleskoop', 'lbl3', 'middle');
+  }
+  // Night-sky views draw the brightness of a source as the size of a glow, as on star charts: from a dot at the
+  // Hubble limit (m ≈ 29.5) to a large disc for the brightest sources.
+  function nightDefs(svg) {
+    const defs = el('defs', {}, svg);
+    for (const [k, c] of [['lamp', 'var(--lamp)'], ['cep', 'var(--cep)'], ['sn', 'var(--sn)'], ['star', '#cdd6ff']]) {
+      const gr = el('radialGradient', { id: `${svg.id}-${k}` }, defs);
+      el('stop', { offset: '0', style: `stop-color: ${c}; stop-opacity: 0.8` }, gr);
+      el('stop', { offset: '0.35', style: `stop-color: ${c}; stop-opacity: 0.3` }, gr);
+      el('stop', { offset: '1', style: `stop-color: ${c}; stop-opacity: 0` }, gr);
+    }
+  }
+  function glow(svg, g, x, y, m, k) {
+    if (m > 30.5) return;
+    const b = clamp((29.5 - m) / 56, 0, 1), r = 1.1 + 21 * b ** 1.25, op = m > 29.5 ? 30.5 - m : 1;
+    el('circle', { cx: x, cy: y, r: r * 2.8 + 2, fill: `url(#${svg.id}-${k})`, opacity: op }, g);
+    el('circle', { cx: x, cy: y, r, fill: '#fff', opacity: op }, g);
+  }
+  function bgStars(g, w, h, seed, n = 30) {
+    const r = seeded(seed);
+    for (let i = 0; i < n; i++) el('circle', { cx: r() * w, cy: r() * h, r: 0.4 + r() * 0.7, class: 'bgstar', opacity: 0.2 + r() * 0.45 }, g);
+  }
+  // Plot frame with grid lines and tick labels; ticks are [value, label] pairs.
+  function frame(g, B, X, Y, xt, yt, xtitle, ytitle, yOff = 40) {
+    for (const [v, L] of xt) { const x = X(v); el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'gridline' }, g); if (L !== null) text(g, x, B.y1 + 15, L, 'tlbl', 'middle'); }
+    for (const [v, L] of yt) { const y = Y(v); el('line', { x1: B.x0, y1: y, x2: B.x1, y2: y, class: 'gridline' }, g); if (L !== null) text(g, B.x0 - 6, y + 4, L, 'tlbl', 'end'); }
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: 'axisline' }, g);
+    if (xtitle) text(g, (B.x0 + B.x1) / 2, B.y1 + 32, xtitle, 'lbl2', 'middle');
+    if (ytitle) text(g, 0, 0, ytitle, 'lbl2', 'middle').setAttribute('transform', `translate(${B.x0 - yOff} ${(B.y0 + B.y1) / 2}) rotate(-90)`);
+  }
+  function clipRect(svg, id, B) {
+    const cp = el('clipPath', { id }, svg);
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0 }, cp);
+    return `url(#${id})`;
+  }
+
+  /* ---------- Tab 1: the inverse-square law ---------- */
+  const side = $('side'), eye = $('eye'), flux = $('flux');
+  const SY = 96, AX = 98, TY = 172;
+  let photonLayer = null, mirrorGlow = null;
+  const fanH = sx => clamp(0.28 * (sx - AX), 24, 54);
+  // The share of the photon packets that reach the mirror: half of them at the starting distance d₀, falling as 1/d².
+  const pHit = () => Math.min(0.95, 0.5 * (st.d0[st.src] / st.d[st.src]) ** 2);
+
+  function drawSquares(g, sx) {
+    const left = sx - AX - 24, right = 752 - sx, dir = left >= right ? -1 : 1, s = Math.min(58, Math.max(left, right) / 3.3);
+    if (s < 16) return;
+    const k = 0.22;  // half the side of a square for a unit distance from the source
+    const P = (u, v, w) => [sx + dir * u - 0.42 * w * dir, SY - v + 0.26 * w];
+    const a3 = 3 * s * k;
+    for (const [v, w] of [[-1, -1], [-1, 1], [1, 1], [1, -1]]) {
+      const q = P(3 * s, v * a3, w * a3);
+      el('line', { x1: sx, y1: SY, x2: q[0], y2: q[1], class: 'cone' }, g);
+    }
+    for (let n = 1; n <= 3; n++) {
+      const u = n * s, a = k * u;
+      el('polygon', { points: pts([P(u, -a, -a), P(u, -a, a), P(u, a, a), P(u, a, -a)]), class: 'sq' }, g);
+      for (let i = 1; i < n; i++) {
+        const t = -a + 2 * a * i / n;
+        let p = P(u, t, -a), q = P(u, t, a);
+        el('line', { x1: p[0], y1: p[1], x2: q[0], y2: q[1], class: 'sqgrid' }, g);
+        p = P(u, -a, t); q = P(u, a, t);
+        el('line', { x1: p[0], y1: p[1], x2: q[0], y2: q[1], class: 'sqgrid' }, g);
+      }
+      const top = P(u, a, a), bot = P(u, -a, -a);
+      text(g, top[0], top[1] - 6, n === 1 ? '1 ruut' : `${n * n} ruutu`, 'lbl3', 'middle');
+      text(g, bot[0], bot[1] + 14, n === 1 ? 'd' : `${n}d`, 'lbl2', 'middle');
+    }
+  }
+
+  function renderSide() {
+    const s = st.src, S = SRC[s], d = st.d[s], sx = trackX(s, d), m = mag(s, d);
+    side.textContent = '';
+    side.style.setProperty('--src', `var(--${s})`);
+    const g = el('g', {}, side);
+    drawTrack(g, s, TY, { limits: true, landmarks: true, limTop: 36 });
+    const h = fanH(sx);
+    el('polygon', { points: pts([[sx, SY], [AX, SY - h], [AX, SY + h]]), class: 'fan' }, g);
+    if (st.squares) drawSquares(g, sx);
+    telescope(g, SY, true);
+    mirrorGlow = el('line', { x1: 37, y1: SY - 9, x2: 37, y2: SY + 9, class: 'mirror-glow', opacity: 0 }, g);
+    photonLayer = el('g', {}, g);
+    sourceGlyph(g, s, sx, SY);
+    const lx = clamp(sx, 150, 712);
+    text(g, lx, SY - 24, `m = ${fmt(m, 1)}`, 'srclbl', 'middle');
+    text(g, lx, SY + 34, `d = ${fmtD(s, d)}`, 'lbl2', 'middle');
+    // The photon rate on a 1 m² mirror, as a bar on a log scale from 10⁻² to 10¹⁸ per second.
+    const N = photons(m), f = clamp((Math.log10(N) + 2) / 20, 0, 1);
+    text(g, 20, 34, 'footoneid sekundis', 'lbl3');
+    el('rect', { x: 20, y: 40, width: 90, height: 8, rx: 2, class: 'bar-bg' }, g);
+    el('rect', { x: 20, y: 40, width: 90 * f, height: 8, rx: 2, class: 'bar' }, g);
+    text(g, 116, 48, fmtExp(N), 'lbl2');
+    if (reduced) {
+      // Without animation, a still picture of the packets on their way, as many reaching the mirror as on average.
+      const r = seeded(5);
+      for (let i = 0; i < 18; i++) {
+        const t = (i + 0.5) / 18, hit = r() < pHit();
+        const off = hit ? (r() * 2 - 1) * 8 : (16 + r() * (h - 16)) * (r() < 0.5 ? -1 : 1);
+        const tx = hit ? 40 : AX;
+        el('circle', { cx: sx + (tx - sx) * t, cy: SY + off * t, r: 2.4, class: 'photon' }, photonLayer);
+      }
+    }
+  }
+
+  // Photon packets fly from the source towards the telescope. A share pHit() of them is aimed at the mirror, the rest
+  // pass by above or below the tube. Their positions follow the source when it moves.
+  const ph = { list: [], acc: 0, flash: 0 }, EMIT = 26, FLY = 1.1;
+  function stepPhotons(dt) {
+    if (!photonLayer) return;
+    const sx = trackX(st.src, st.d[st.src]), h = fanH(sx);
+    ph.acc += EMIT * dt;
+    while (ph.acc >= 1) {
+      ph.acc -= 1;
+      const hit = Math.random() < pHit();
+      const off = hit ? (Math.random() * 2 - 1) * 8 : (16 + Math.random() * (h - 16)) * (Math.random() < 0.5 ? -1 : 1);
+      ph.list.push({ t: 0, off, hit });
+    }
+    for (const p of ph.list) p.t += dt / FLY;
+    ph.list = ph.list.filter(p => {
+      if (p.hit && p.t >= 1) { ph.flash = 1; return false; }
+      return p.t < (p.hit ? 1 : 1.4);
+    });
+    ph.flash = Math.max(0, ph.flash - dt * 3);
+    photonLayer.textContent = '';
+    for (const p of ph.list) {
+      const tx = p.hit ? 40 : AX;
+      el('circle', { cx: sx + (tx - sx) * p.t, cy: SY + p.off * p.t, r: 2.4, class: 'photon', opacity: p.t > 1 ? 1.4 - p.t : 1 }, photonLayer);
+    }
+    mirrorGlow.setAttribute('opacity', (0.8 * ph.flash).toFixed(2));
+  }
+
+  function renderEye() {
+    const s = st.src, m = mag(s, st.d[s]);
+    eye.textContent = '';
+    nightDefs(eye);
+    const g = el('g', {}, eye);
+    el('rect', { x: 0, y: 0, width: 240, height: 240, rx: 6, class: 'night' }, g);
+    bgStars(g, 240, 240, 3);
+    if (st.same) {
+      // All three sources at the distances where they have the same apparent magnitude as the chosen one.
+      KEYS.forEach((k, i) => {
+        const x = 42 + 78 * i;
+        glow(eye, g, x, 100, m, k);
+        text(g, x, 192, SRC[k].short, 'nl', 'middle');
+        text(g, x, 208, fmtD(k, k === s ? st.d[s] : distFor(k, m)), 'nl2', 'middle');
+      });
+      text(g, 120, 230, `kõik m = ${fmt(m, 1)}`, 'nl2', 'middle');
+      return;
+    }
+    // Two comparison stars, 5 magnitudes (100 times) apart, that bracket the source.
+    const c1 = clamp(5 * Math.floor(m / 5), -25, 25), c2 = c1 + 5;
+    glow(eye, g, 80, 112, m, s);
+    if (m > 30.5) text(g, 80, 116, 'ei paista', 'nl2', 'middle');
+    text(g, 80, 222, `m = ${fmt(m, 1)}`, 'nl', 'middle');
+    glow(eye, g, 192, 64, c1, 'star');
+    glow(eye, g, 192, 164, c2, 'star');
+    text(g, 192, 112, `${fmt(c1, 0)} mag`, 'nl2', 'middle');
+    text(g, 192, 212, `${fmt(c2, 0)} mag`, 'nl2', 'middle');
+  }
+
+  function renderFlux() {
+    const s = st.src, r = st.d[s] / st.d0[s], f = 1 / (r * r), log = st.logAxes;
+    flux.textContent = '';
+    flux.style.setProperty('--src', `var(--${s})`);
+    const B = { x0: 58, x1: 486, y0: 12, y1: 196 };
+    const X = log ? mkScale(0.1, 10, B.x0, B.x1, true) : mkScale(0, 4, B.x0, B.x1);
+    const Y = log ? mkScale(0.01, 100, B.y1, B.y0, true) : mkScale(0, 4, B.y1, B.y0);
+    const g = el('g', {}, flux);
+    const lab = String;
+    const xt = log ? [0.1, 0.2, 0.5, 1, 2, 5, 10].map(v => [v, [0.1, 1, 10].includes(v) ? lab(v) : null]) : [0, 1, 2, 3, 4].map(v => [v, String(v)]);
+    const yt = log ? [0.01, 0.1, 1, 10, 100].map(v => [v, lab(v)]) : [0, 1, 2, 3, 4].map(v => [v, String(v)]);
+    frame(g, B, X, Y, xt, yt, 'kaugus d / d₀', 'voog F / F₀');
+    const clip = el('g', { 'clip-path': clipRect(flux, 'fluxClip', B) }, g);
+    const curve = [];
+    for (let i = 0; i <= 200; i++) {
+      const x = log ? 10 ** (-1 + 2 * i / 200) : 0.45 + 3.55 * i / 200;
+      curve.push([X(x), Y(1 / (x * x))]);
+    }
+    el('polyline', { points: pts(curve), class: 'curve' }, clip);
+    // The starting point and the current one; outside the plot the point sits at its edge.
+    const px = clamp(X(clamp(r, log ? 0.1 : 0, log ? 10 : 4)), B.x0, B.x1), py = clamp(Y(clamp(f, log ? 0.01 : 0, log ? 100 : 4)), B.y0, B.y1);
+    const inside = (log ? r >= 0.1 && r <= 10 : r <= 4) && (log ? f <= 100 : f <= 4) && (log ? f >= 0.01 : true);
+    el('circle', { cx: X(1), cy: Y(1), r: 3.5, class: 'pt hollow' }, g);
+    text(g, X(1) + 8, Y(1) - 8, 'd₀', 'lbl2');
+    if (inside) {
+      el('line', { x1: px, y1: py, x2: px, y2: B.y1, class: 'guide' }, g);
+      el('line', { x1: px, y1: py, x2: B.x0, y2: py, class: 'guide' }, g);
+    }
+    el('circle', { cx: px, cy: py, r: inside ? 6 : 5, class: inside ? 'pt' : 'pt hollow' }, g);
+    if (!inside) text(g, clamp(px, B.x0 + 60, B.x1 - 60), clamp(py + (py > B.y1 - 20 ? -12 : 18), B.y0 + 14, B.y1 - 6), 'väljaspool joonist', 'lbl3', 'middle');
+    text(g, B.x1 - 8, B.y0 + 18, log ? 'tõus −2: F ∝ 1/d²' : 'F/F₀ = (d₀/d)²', 'lbl2', 'end');
+  }
+
+  /* ---------- Tab 2: magnitudes ---------- */
+  const magSvg = $('mag');
+  const MY = m => 34 + (m + 28) * 8;   // magnitudes −28 … 33, bright at the top
+  const MX = 120, AXX = 380, DX = 530, MTOP = -28, MBOT = 33;
+  const REFS = [['Päike', -26.7], ['täiskuu', -12.7], ['Veenus', -4.6], ['Siirius', -1.5], ['Vega', 0], ['palja silma piir', 6], ['Pluuto', 14], ['suure teleskoobi piir', 24], ["Hubble'i piir", 29]];
+  function renderMag() {
+    const s = st.src, S = SRC[s], d = st.d[s], m = mag(s, d), M = S.M;
+    magSvg.textContent = '';
+    magSvg.style.setProperty('--src', `var(--${s})`);
+    const g = el('g', {}, magSvg), top = MY(MTOP), bot = MY(MBOT), yIn = v => clamp(MY(v), top, bot);
+    text(g, MX, 18, 'Tähesuurus', 'lbl', 'middle');
+    text(g, DX, 18, 'Kaugus', 'lbl', 'middle');
+    text(g, 18, MY(-24), '↑ heledam', 'lbl3');
+    text(g, 18, MY(31), '↓ nõrgem', 'lbl3');
+    el('line', { x1: MX, y1: top, x2: MX, y2: bot, class: 'axisline' }, g);
+    for (let k = MTOP; k <= MBOT; k++) {
+      const y = MY(k), major = k % 5 === 0;
+      el('line', { x1: MX - (major ? 7 : 3), y1: y, x2: MX, y2: y, class: 'tick' }, g);
+      if (major) text(g, MX - 11, y + 4, fmt(k, 0), 'tlbl', 'end');
+    }
+    // The distance axis: the tick for distance d sits at the magnitude M + 5 log₁₀(d / pc) − 5 that the source would have there.
+    const yD = dd => MY(M + 5 * Math.log10(dd / PC) - 5);
+    el('line', { x1: DX, y1: top, x2: DX, y2: bot, class: 'axisline' }, g);
+    for (let k = Math.ceil(logU(s, distFor(s, MTOP))); k <= Math.floor(logU(s, distFor(s, MBOT))); k++) {
+      const y = yD(fromU(s, k)), L = decadeLabel(s, k);
+      el('line', { x1: DX, y1: y, x2: DX + 7, y2: y, class: 'tick' }, g);
+      if (L) text(g, DX + 11, y + 4, L, 'tlbl');
+    }
+    el('line', { x1: DX, y1: yIn(mag(s, S.lo)), x2: DX, y2: yIn(mag(s, S.hi)), class: 'rangeseg' }, g);
+    // The distance modulus in steps of 10 next to the distance axis: every 5 magnitudes is a factor of 10 in distance.
+    for (let mu = Math.ceil((MTOP - M) / 10) * 10; mu <= MBOT - M; mu += 10) {
+      const y = MY(M + mu);
+      el('line', { x1: DX - 5, y1: y, x2: DX, y2: y, class: 'tick' }, g);
+      text(g, DX - 8, y + 4, `μ = ${fmt(mu, 0)}`, 'lbl3', 'end');
+    }
+    // m, M and the arrow between them.
+    const ym = yIn(m), yM = yIn(M), Moff = M > MBOT || M < MTOP;
+    el('line', { x1: MX, y1: ym, x2: DX, y2: ym, class: 'mline' }, g);
+    el('line', { x1: MX, y1: yM, x2: AXX, y2: yM, class: 'Mline' }, g);
+    for (const r of REFS) {
+      const y = MY(r[1]);
+      el('line', { x1: MX, y1: y, x2: MX + 9, y2: y, class: 'tick' }, g);
+      text(g, MX + 13, y + 4, `${r[0]} ${fmt(r[1], 1)}`, 'lbl2');
+    }
+    if (Math.abs(ym - yM) > 4) arrow(g, AXX, yM, AXX, ym);
+    text(g, AXX - 8, ym + (ym < yM ? -6 : 15), `m = ${fmt(m, 1)}`, 'srclbl', 'end');
+    text(g, AXX - 8, yM + (yM <= ym ? -6 : 15), Moff ? `M = ${fmtMag(M)} (${M > MBOT ? 'allpool' : 'ülalpool'})` : `M = ${fmtMag(M)}`, 'srclbl', 'end');
+    const ymid = (ym + yM) / 2;
+    text(g, AXX + 8, ymid, `μ = ${fmt(m - M, 1)}`, 'lbl');
+    text(g, AXX + 8, ymid + 16, 'μ = m − M', 'lbl3');
+    el('circle', { cx: MX, cy: ym, r: 5, class: 'pt' }, g);
+    el('circle', { cx: DX, cy: ym, r: 5, class: 'pt' }, g);
+    if (!Moff) el('circle', { cx: MX, cy: yM, r: 4.5, class: 'pt hollow' }, g);
+    sourceGlyph(g, s, DX + 100, ym);
+    text(g, DX + 118, ym + 4, fmtD(s, d), 'srclbl');
+  }
+
+  const ratio = $('ratio');
+  function renderRatio() {
+    ratio.textContent = '';
+    nightDefs(ratio);
+    const g = el('g', {}, ratio);
+    el('rect', { x: 0, y: 0, width: 300, height: 80, rx: 6, class: 'night' }, g);
+    bgStars(g, 300, 80, 9, 12);
+    // Map the slider range (−2 … 20) onto the glow sizes so that the two stars differ visibly.
+    const vis = m => 29.5 - (20.5 - m) * 2.2;
+    glow(ratio, g, 80, 36, vis(st.m1), 'star');
+    glow(ratio, g, 220, 36, vis(st.m2), 'star');
+    text(g, 80, 72, `m₁ = ${fmt(st.m1, 1)}`, 'nl2', 'middle');
+    text(g, 220, 72, `m₂ = ${fmt(st.m2, 1)}`, 'nl2', 'middle');
+  }
+
+  /* ---------- Tab 3: calibration ---------- */
+  const calSvg = $('cal'), calPlot = $('calplot'), ladder = $('ladder');
+  function newHidden(k) { const [a, b] = SRC[k].hid; return 10 ** (Math.log10(a) + Math.random() * (Math.log10(b) - Math.log10(a))); }
+  const cal = {};
+  for (const k of KEYS) cal[k] = { done: false, hid: newHidden(k), shown: false, guess: null, computed: false, pts: [] };
+  const assumed = k => SRC[k].cal * (1 + st.err / 100);
+  const mCal = k => mag(k, SRC[k].cal);
+  const Mest = k => mCal(k) - 5 * Math.log10(assumed(k) / PC) + 5;
+  const measure = (k, d) => PC * 10 ** ((mag(k, d) - Mest(k)) / 5 + 1);
+
+  function renderCal() {
+    const s = st.src, S = SRC[s], C = cal[s];
+    calSvg.textContent = '';
+    calSvg.style.setProperty('--src', `var(--${s})`);
+    const g = el('g', {}, calSvg);
+    // Upper track: the calibrator at its true distance, and the assumed one when the calibration distance is off.
+    text(g, 20, 18, '1. Tuntud kaugusega allikas', 'lbl');
+    drawTrack(g, s, 118, {});
+    telescope(g, 72);
+    const xc = trackX(s, S.cal);
+    if (st.err !== 0) {
+      const xa = trackX(s, assumed(s));
+      sourceGlyph(g, s, xa, 72, 'ghost');
+      text(g, xa, 46, 'eeldatud', 'lbl3', 'middle');
+    }
+    sourceGlyph(g, s, xc, 72);
+    const L1 = xc > 480;  // labels go left of the source when it is far to the right
+    text(g, L1 ? xc - 22 : xc + 20, 68, `m = ${fmt(mCal(s), 2)}`, 'srclbl', L1 ? 'end' : 'start');
+    text(g, L1 ? xc - 22 : xc + 20, 84, `d = ${fmtD(s, assumed(s))} (${S.calHow})`, 'lbl3', L1 ? 'end' : 'start');
+    // Lower track: the source at a hidden distance, shown once it has been measured.
+    text(g, 20, 160, '2. Tundmatu kaugusega allikas', 'lbl');
+    drawTrack(g, s, 258, {});
+    telescope(g, 212);
+    const mh = mag(s, C.hid);
+    if (!C.shown) {
+      el('rect', { x: 400, y: 190, width: 46, height: 44, rx: 6, class: 'qbox' }, g);
+      sourceGlyph(g, s, 423, 212, 'ghost');
+      text(g, 423, 220, '?', 'qmark', 'middle');
+      text(g, 456, 208, `m = ${fmt(mh, 2)}`, 'srclbl');
+      text(g, 456, 224, 'kaugus teadmata', 'lbl3');
+    } else {
+      const xt = trackX(s, C.hid);
+      const marks = [];
+      if (C.computed) marks.push([measure(s, C.hid), 'arvutatud']);
+      if (C.guess) marks.push([clamp(C.guess, S.lo, S.hi), 'sinu']);
+      // The measured distances as open circles on the track, labelled above it.
+      marks.forEach(([dm, L], i) => {
+        const x = trackX(s, dm);
+        el('circle', { cx: x, cy: 258, r: 4.5, class: 'pt hollow' }, g);
+        text(g, x, 247 - 11 * i, L, 'lbl3', 'middle');
+      });
+      sourceGlyph(g, s, xt, 212);
+      const L2 = xt > 480;
+      text(g, L2 ? xt - 22 : xt + 20, 206, `m = ${fmt(mh, 2)}`, 'srclbl', L2 ? 'end' : 'start');
+      text(g, L2 ? xt - 22 : xt + 20, 222, `tegelik d = ${fmtD(s, C.hid)}`, 'lbl3', L2 ? 'end' : 'start');
+    }
+  }
+
+  function renderCalPlot() {
+    const s = st.src, S = SRC[s], C = cal[s];
+    calPlot.textContent = '';
+    calPlot.style.setProperty('--src', `var(--${s})`);
+    const B = { x0: 84, x1: 428, y0: 12, y1: 236 }, lo = S.hid[0] / 2, hi = S.hid[1] * 2;
+    const X = mkScale(lo, hi, B.x0, B.x1, true), Y = mkScale(lo, hi, B.y1, B.y0, true);
+    const ticks = [];
+    for (let k = Math.ceil(logU(s, lo)); k <= Math.floor(logU(s, hi)); k++) ticks.push([fromU(s, k), decadeLabel(s, k)]);
+    const g = el('g', {}, calPlot);
+    frame(g, B, X, Y, ticks, ticks, 'tegelik kaugus', 'mõõdetud kaugus', 68);
+    const clip = el('g', { 'clip-path': clipRect(calPlot, 'calClip', B) }, g);
+    el('line', { x1: X(lo), y1: Y(lo), x2: X(hi), y2: Y(hi), class: 'one2one' }, clip);
+    const k = 1 + st.err / 100;
+    if (C.done && st.err !== 0) el('line', { x1: X(lo), y1: Y(lo * k), x2: X(hi), y2: Y(hi * k), class: 'shifted' }, clip);
+    for (const dt of C.pts) el('circle', { cx: X(dt), cy: Y(measure(s, dt)), r: 5, class: 'pt' }, clip);
+    if (!C.pts.length) text(g, B.x0 + 12, B.y0 + 20, 'Mõõdetud allikad ilmuvad siia.', 'lbl3');
+  }
+
+  function renderLadder() {
+    const s = st.src;
+    ladder.textContent = '';
+    const g = el('g', {}, ladder);
+    el('line', { x1: 34, y1: 262, x2: 48, y2: 30, class: 'rail' }, g);
+    el('line', { x1: 124, y1: 262, x2: 110, y2: 30, class: 'rail' }, g);
+    const rungs = [['Parallaks', 'var(--sel)', 224, 3, null], ['Tsefeiidid', 'var(--cep)', 144, 7, 'cep'], ['Ia supernoovad', 'var(--sn)', 64, 11, 'sn']];
+    rungs.forEach(([name, c, y, e, key], i) => {
+      const x0 = 38 + (224 - y) * 0.06, x1 = 120 - (224 - y) * 0.06;
+      el('rect', { x: x0 - 4, y: y - e, width: x1 - x0 + 8, height: 2 * e, rx: e, fill: c, class: 'errband' }, g);
+      el('line', { x1: x0, y1: y, x2: x1, y2: y, stroke: c, class: 'rung' }, g);
+      text(g, 136, y + 1, name, 'lbl');
+      text(g, 136, y + 17, ['viga väike', 'viga suurem', 'viga veel suurem'][i], 'lbl3');
+      if (key === s) el('rect', { x: x0 - 12, y: y - e - 8, width: 270 - x0, height: 2 * e + 32, rx: 8, class: 'rung-hi' }, g);
+      if (i) arrow(g, 79, y + 74 - e - 12, 79, y + e + 8);
+    });
+    text(g, 140, 274, s === 'lamp' ? 'Lambi kaugus tuleb mõõdulindiga.' : '', 'lbl3', 'middle');
+  }
+
+  /* ---------- Tab 4: what makes a good candle ---------- */
+  // Reach: roughly how far each kind has been measured (pc). The lamp, at m = 29, is far off the left of the plot.
+  const TYPES = [
+    { id: 'lamp', name: 'Tundmatu võimsusega lambid', short: 'Lamp', s: 1.5, reach: 1.5e-7, c: 'lamp',
+      check: [['no', 'paistab vaid mõne miljoni km kauguselt'], ['yes', ''], ['no', 'võimsus pole teada'], ['yes', 'kaugus mõõdulindiga']],
+      card: 'Lambid on hea näide pöördruutude seadusest, kuid mitte standardküünal: 5 W ja 500 W lamp erinevad 100 korda ehk 5 tähesuurust.' },
+    { id: 'cepRaw', name: 'Tsefeiidid ilma perioodita', short: 'Tsefeiidid ilma perioodita', s: 0.8, reach: 4e7, c: 'cep',
+      check: [['yes', 'kuni ~40 Mpc'], ['yes', 'heleduse muutuse järgi'], ['no', 'heledus sõltub perioodist'], ['yes', 'parvedes ja Gaia parallaksidega']],
+      card: 'Kui perioodi ei arvestata, erinevad tsefeiidide heledused mitu korda, sest pika perioodiga tsefeiidid on palju heledamad.' },
+    { id: 'cep', name: 'Tsefeiidid perioodi-heleduse seosega', short: 'Tsefeiidid (P–L)', s: 0.15, reach: 4e7, c: 'cep',
+      check: [['yes', 'kuni ~40 Mpc'], ['yes', 'heleduse muutuse järgi'], ['yes', '≈ 0.15 mag Wesenheiti tähesuurustes'], ['yes', 'parvedes ja Gaia parallaksidega']],
+      card: 'Periood annab tsefeiidi heleduse. Kauguste redelis on need teine pulk: harjutuse 2. ja 3. osa.' },
+    { id: 'rr', name: 'RR Lüüra tähed', short: 'RR Lüüra', s: 0.2, reach: 1e6, c: 'rr',
+      check: [['no', 'umbes 50 korda nõrgemad kui tsefeiidid'], ['yes', 'lühike periood, alla päeva'], ['yes', ''], ['yes', 'palju lähedasi näiteid']],
+      card: 'Vanad pulseerivad tähed, mida on palju Linnutee halos ja kerasparvedes. Need on täpsed, kuid ulatuvad vaid naabergalaktikateni.' },
+    { id: 'trgb', name: 'Punaste hiidude haru tipp (TRGB)', short: 'TRGB', s: 0.1, reach: 2e7, c: 'trgb',
+      check: [['part', 'kuni ~20 Mpc'], ['part', 'vaja palju tähti, mitte üht'], ['yes', ''], ['yes', '']],
+      card: 'Punased hiiud ei saa olla heledamad kui teatud piir, kus heelium süttib. Selle piiri annab galaktika paljude tähtede jaotus, mitte üks täht.' },
+    { id: 'snRaw', name: 'Ia supernoovad ilma korrektsioonita', short: 'Ia ilma korrektsioonita', s: 0.4, reach: 5e9, c: 'sn',
+      check: [['yes', 'üle miljardi parseki'], ['yes', 'spektri järgi'], ['no', '≈ 0.4 mag'], ['part', 'lähedasi supernoovasid on vähe']],
+      card: 'Ia supernoovad on väga heledad, kuid ilma korrektsioonita erinevad nende maksimumheledused umbes 40 %.' },
+    { id: 'sn', name: 'Ia supernoovad, standardiseeritud', short: 'Ia standardiseeritud', s: 0.13, reach: 5e9, c: 'sn',
+      check: [['yes', 'üle miljardi parseki'], ['yes', 'spektri järgi'], ['yes', 'pärast korrektsiooni ≈ 0.13 mag'], ['part', 'umbes 40 tsefeiididega galaktikat']],
+      card: 'Tuhmumise kiirus ja värv annavad korrektsiooni, mis teeb Ia supernoovadest täpseima kauge küünla. Kauguste redelis on need kolmas pulk: harjutuse 4. osa.' },
+  ];
+  const CHECKS = ['hele', 'äratuntav', 'väike hajuvus', 'kalibreeritav'];
+  const T4 = { type: 'cep', sigma: 0.15, N: 20, view: 'galaxy' };
+  const type4 = () => TYPES.find(t => t.id === T4.type);
+  let Z = [], POS = [];
+  function newSample() {
+    const r = seeded(1 + Math.floor(Math.random() * 2e9));
+    Z = Array.from({ length: 100 }, () => gauss(r));
+    POS = Array.from({ length: 100 }, () => { const a = r() * 2 * Math.PI, q = Math.sqrt(r()) * 0.92; return [q * Math.cos(a), q * Math.sin(a)]; });
+  }
+  newSample();
+  const GX = (() => {  // background stars of the galaxy along two spiral arms
+    const r = seeded(17), out = [];
+    for (let i = 0; i < 420; i++) {
+      const arm = i % 2, t = r(), a = arm * Math.PI + t * 3.6 + (r() - 0.5) * 0.5, q = 0.08 + 0.9 * t;
+      out.push([q * Math.cos(a) + (r() - 0.5) * 0.08, q * Math.sin(a) + (r() - 0.5) * 0.08, r()]);
+    }
+    return out;
+  })();
+  const D4 = 10;  // Mpc
+  function renderGalaxy() {
+    const T = type4(), svg = $('galaxy');
+    svg.textContent = '';
+    svg.style.setProperty('--src', `var(--${T.c})`);
+    nightDefs(svg);
+    const g = el('g', {}, svg);
+    el('rect', { x: 0, y: 0, width: 300, height: 300, rx: 6, class: 'night' }, g);
+    bgStars(g, 300, 300, 21, 40);
+    const rot = -20 * Math.PI / 180, cx = 150, cy = 150, rx = 130, ry = 62;
+    const P = ([u, v]) => { const x = u * rx, y = v * ry; return [cx + x * Math.cos(rot) - y * Math.sin(rot), cy + x * Math.sin(rot) + y * Math.cos(rot)]; };
+    el('ellipse', { cx, cy, rx: 34, ry: 18, fill: 'url(#galaxy-star)', transform: `rotate(-20 ${cx} ${cy})` }, g);
+    for (const p of GX) { const [x, y] = P(p); el('circle', { cx: x, cy: y, r: 0.5 + p[2] * 0.8, class: 'gxdot', opacity: 0.25 + p[2] * 0.35 }, g); }
+    // Each candle is drawn by its apparent brightness: brighter than average means bigger.
+    for (let i = 0; i < T4.N; i++) {
+      const [x, y] = P(POS[i]);
+      el('circle', { cx: x, cy: y, r: clamp(3 * 10 ** (-0.2 * Z[i] * T4.sigma), 0.8, 9), class: 'cand' }, g);
+    }
+    text(g, 150, 288, `N = ${T4.N}`, 'nl2', 'middle');
+
+    // Histogram of the distances that each candle gives, in Mpc.
+    const B = { x0: 360, x1: 744, y0: 14, y1: 246 }, XMAX = 30;
+    const ds = Z.slice(0, T4.N).map(z => D4 * 10 ** (z * T4.sigma / 5));
+    const counts = new Array(XMAX).fill(0);
+    let over = 0;
+    for (const d of ds) { if (d >= XMAX) over++; else counts[Math.floor(d)]++; }
+    const ymax = Math.max(4, ...counts);
+    const X = mkScale(0, XMAX, B.x0, B.x1), Y = mkScale(0, ymax * 1.1, B.y1, B.y0);
+    const yt = [];
+    const step = ymax > 40 ? 10 : ymax > 16 ? 5 : ymax > 8 ? 2 : 1;
+    for (let v = 0; v <= ymax * 1.1; v += step) yt.push([v, String(v)]);
+    frame(g, B, X, Y, [0, 5, 10, 15, 20, 25, 30].map(v => [v, String(v)]), yt, 'kaugus (Mpc)', 'küünlaid');
+    const e = 0.4605 * T4.sigma / Math.sqrt(T4.N);
+    el('rect', { x: X(D4 * (1 - e)), y: B.y0, width: Math.max(1, X(D4 * (1 + e)) - X(D4 * (1 - e))), height: B.y1 - B.y0, class: 'band' }, g);
+    counts.forEach((c, i) => { if (c) el('rect', { x: X(i) + 0.5, y: Y(c), width: X(1) - X(0) - 1, height: B.y1 - Y(c), class: 'hist' }, g); });
+    el('line', { x1: X(D4), y1: B.y0, x2: X(D4), y2: B.y1, class: 'truth' }, g);
+    const dm = D4 * 10 ** (mean(Z.slice(0, T4.N)) * T4.sigma / 5);
+    if (dm < XMAX) el('line', { x1: X(dm), y1: B.y0, x2: X(dm), y2: B.y1, class: 'meanline' }, g);
+    if (over) text(g, B.x1 - 6, B.y0 + 16, `+ ${over} kaugemal kui ${XMAX} Mpc`, 'lbl3', 'end');
+  }
+
+  function renderReach() {
+    const svg = $('reach');
+    svg.textContent = '';
+    const g = el('g', {}, svg);
+    const B = { x0: 70, x1: 740, y0: 40, y1: 288 };
+    const X = mkScale(1, 2e10, B.x0, B.x1, true), Y = mkScale(0, 1.6, B.y1, B.y0);
+    const xt = [];
+    for (let k = 0; k <= 10; k++) xt.push([10 ** k, k % 3 === 0 ? decadeLabel('cep', k) : null]);
+    frame(g, B, X, Y, xt, [0, 0.4, 0.8, 1.2, 1.6].map(v => [v, v.toFixed(1)]), 'ulatus (kaugus, kuhu seda tüüpi küünlaid on mõõdetud)', 'hajuvus σ (mag)');
+    // Reference distances along the top.
+    [['lähim täht', 1.3], ['Linnutee kese', 8.2e3], ['Andromeda', 7.8e5], ['Neitsi parv', 1.65e7], ['nähtava Universumi serv', 1.4e10]].forEach(([n, d], i) => {
+      const x = X(d);
+      el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'guide' }, g);
+      text(g, x, B.y0 - 8 - (i % 2) * 14, n, 'lbl3', i === 4 ? 'end' : 'middle');
+    });
+    for (const T of TYPES) {
+      const off = T.reach < 1;
+      const x = off ? B.x0 + 12 : X(T.reach), y = Y(T.s);
+      const a = el('g', { class: 'reachpt' + (T.id === T4.type ? ' sel' : ''), tabindex: 0, role: 'button', 'aria-label': `${T.name}: hajuvus ${T.s} mag` }, g);
+      el('circle', { cx: x, cy: y, r: 7, fill: `var(--${T.c})` }, a);
+      // Each label is placed by hand where its neighbours leave room: [dx, dy, anchor].
+      const [dx, dy, anc] = { rr: [0, -12, 'middle'], trgb: [-11, 4, 'end'], cep: [8, -12, 'start'], sn: [-11, 4, 'end'], snRaw: [-11, 4, 'end'] }[T.id] || [11, 4, 'start'];
+      text(a, x + dx, y + dy, off ? `← ${T.short} (~5 mln km)` : T.short, 'lbl2', anc);
+      const pick = () => { T4.type = T.id; T4.sigma = T.s; syncTab4(); render(); };
+      a.addEventListener('click', pick);
+      a.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    }
+  }
+
+  /* ---------- Tab 5: Cepheids and supernovae ---------- */
+  const PL = { a: -3.29, b: -5.914 };                 // W_H relation, Cruz Reyes & Anderson (2023)
+  const PLV = lp => -2.43 * (lp - 1) - 4.05;         // V band, for the light curve
+  const PH = { a: 0.8, b: -19.3 };                    // peak M_B against Δm₁₅
+  const cepSample = (() => { const r = seeded(11); return Array.from({ length: 30 }, () => { const lp = 0.4 + 1.4 * r(); return [lp, PL.b + PL.a * (lp - 1) + 0.15 * gauss(r)]; }); })();
+  const snSample = (() => { const r = seeded(23); return Array.from({ length: 30 }, () => { const x = 0.8 + 0.9 * r(); return [x, PH.b + PH.a * (x - 1.1) + 0.13 * gauss(r)]; }); })();
+  const T5 = { lp: 1, usePL: false, dm15: 1.1, usePh: false, phase: 0 };
+  const cepAmp = lp => clamp(0.35 + 0.35 * (lp - 0.4), 0.3, 0.9);
+  // A Cepheid light curve: a slow decline over 80 % of the period and a fast rise. Negative is brighter.
+  function cepDm(phi, A) {
+    phi = ((phi % 1) + 1) % 1;
+    const u = phi < 0.8 ? 0.5 * phi / 0.8 : 0.5 + 0.5 * (phi - 0.8) / 0.2;
+    return -(A / 2) * Math.cos(2 * Math.PI * u);
+  }
+  function snM(t, x) {
+    const Mp = PH.b + PH.a * (x - 1.1);
+    if (t < 0) return Mp + 0.006 * t * t;
+    if (t <= 15) return Mp + x * (t / 15) ** 1.5;
+    return Mp + x + (0.1 * x - 0.02) * 10 * (1 - Math.exp(-(t - 15) / 10)) + 0.02 * (t - 15);
+  }
+  // A sideways histogram of magnitudes on the right of a scatter plot, sharing its y-axis.
+  function sideHist(g, vals, Y, lo, hi, x0, x1, w) {
+    const n = Math.round((hi - lo) / w), c = new Array(n).fill(0);
+    for (const v of vals) { const i = Math.floor((v - lo) / w); if (i >= 0 && i < n) c[i]++; }
+    const cmax = Math.max(...c);
+    c.forEach((k, i) => { if (k) { const ya = Y(lo + i * w), yb = Y(lo + (i + 1) * w); el('rect', { x: x0, y: Math.min(ya, yb) + 0.5, width: (x1 - x0) * k / cmax, height: Math.abs(yb - ya) - 1, class: 'hist' }, g); } });
+  }
+  let cepDyn = null, cepLC = null;
+  function renderCep() {
+    const svg = $('cepfig'), P = 10 ** T5.lp, A = cepAmp(T5.lp), Mv = PLV(T5.lp);
+    svg.textContent = '';
+    svg.style.setProperty('--src', 'var(--cep)');
+    const g = el('g', {}, svg);
+    // Light curve over two periods.
+    const L = { x0: 116, x1: 356, y0: 16, y1: 128 };
+    cepLC = { L, X: mkScale(0, 2 * P, L.x0, L.x1), Y: mkScale(Mv - 0.6, Mv + 0.6, L.y0, L.y1), P, A, Mv };
+    const xt = [0, P / 2, P, 1.5 * P, 2 * P].map((v, i) => [v, i % 2 ? null : sig(v, 2)]);
+    frame(g, L, cepLC.X, cepLC.Y, xt, [[Mv - 0.5, fmt(Mv - 0.5, 1)], [Mv, fmt(Mv, 1)], [Mv + 0.5, fmt(Mv + 0.5, 1)]], 'aeg (päevades)', null);
+    const c = [];
+    for (let i = 0; i <= 200; i++) { const t = 2 * P * i / 200; c.push([cepLC.X(t), cepLC.Y(Mv + cepDm(t / P, A))]); }
+    el('polyline', { points: pts(c), class: 'curve src' }, g);
+    cepDyn = el('g', {}, g);
+    drawCepDyn();
+    // Period-luminosity plot with the side histogram.
+    const B = { x0: 52, x1: 280, y0: 190, y1: 380 }, lo = -10.4, hi = -2.4;
+    const X = mkScale(0.3, 2.0, B.x0, B.x1), Y = mkScale(hi, lo, B.y1, B.y0);
+    const yt = [-10, -8, -6, -4].map(v => [v, fmt(v, 0)]);
+    frame(g, B, X, Y, [0.5, 1, 1.5, 2].map(v => [v, v.toFixed(1)]), yt, 'log P (P päevades)', T5.usePL ? 'M − seos + nullpunkt' : 'absoluutne tähesuurus M');
+    const corr = ([lp, M]) => (T5.usePL ? M - PL.a * (lp - 1) : M);
+    const line = T5.usePL ? [[0.3, PL.b], [2, PL.b]] : [[0.3, PL.b + PL.a * -0.7], [2, PL.b + PL.a]];
+    el('line', { x1: X(line[0][0]), y1: Y(line[0][1]), x2: X(line[1][0]), y2: Y(line[1][1]), class: 'curve ref' }, g);
+    for (const p of cepSample) el('circle', { cx: X(p[0]), cy: Y(corr(p)), r: 3.5, class: 'pt' }, g);
+    const yc = T5.usePL ? PL.b : PL.b + PL.a * (T5.lp - 1);
+    el('line', { x1: X(T5.lp), y1: B.y0, x2: X(T5.lp), y2: B.y1, class: 'guide' }, g);
+    el('circle', { cx: X(T5.lp), cy: Y(yc), r: 6, class: 'pt hollow' }, g);
+    el('line', { x1: 292, y1: B.y0, x2: 292, y2: B.y1, class: 'axisline' }, g);
+    sideHist(g, cepSample.map(corr), Y, lo, hi, 292, 358, 0.4);
+    text(g, 325, B.y1 + 15, 'jaotus', 'tlbl', 'middle');
+    text(g, 358, 178, `hajuvus σ = ${fmt(std(cepSample.map(corr)), 2)} mag`, 'lbl', 'end');
+  }
+  function drawCepDyn() {
+    if (!cepDyn || !cepLC) return;
+    const { X, Y, P, A, Mv } = cepLC, phi = T5.phase % 2, dm = cepDm(phi, A), k = -dm / (A / 2);
+    cepDyn.textContent = '';
+    el('circle', { cx: 54, cy: 70, r: 21 + 6 * k, fill: `hsl(${(36 + 12 * k).toFixed(0)} 95% ${(55 + 10 * k).toFixed(0)}%)` }, cepDyn);
+    text(cepDyn, 54, 120, `P = ${sig(P, 2)} p`, 'lbl3', 'middle');
+    el('circle', { cx: X(phi * P), cy: Y(Mv + dm), r: 4.5, class: 'pt' }, cepDyn);
+  }
+  function renderSn() {
+    const svg = $('snfig');
+    svg.textContent = '';
+    svg.style.setProperty('--src', 'var(--sn)');
+    const g = el('g', {}, svg);
+    const L = { x0: 52, x1: 356, y0: 16, y1: 128 };
+    const X = mkScale(-15, 45, L.x0, L.x1), Y = mkScale(-20, -14.5, L.y0, L.y1);
+    frame(g, L, X, Y, [-10, 0, 15, 30, 45].map(v => [v, fmt(v, 0)]), [-20, -18, -16].map(v => [v, fmt(v, 0)]), 'päevi pärast maksimumi', 'M');
+    const curve = x => { const c = []; for (let i = 0; i <= 120; i++) { const t = -15 + 60 * i / 120; c.push([X(t), Y(snM(t, x))]); } return c; };
+    el('polyline', { points: pts(curve(1.1)), class: 'curve ref' }, g);
+    el('polyline', { points: pts(curve(T5.dm15)), class: 'curve src' }, g);
+    const Mp = snM(0, T5.dm15);
+    el('line', { x1: X(0), y1: Y(Mp), x2: X(15), y2: Y(Mp), class: 'guide' }, g);
+    arrow(g, X(15), Y(Mp), X(15), Y(Mp + T5.dm15), true);
+    text(g, X(15) + 6, Y(Mp + T5.dm15 / 2) + 4, `Δm₁₅ = ${T5.dm15.toFixed(2)}`, 'lbl2');
+    el('circle', { cx: X(0), cy: Y(Mp), r: 4.5, class: 'pt' }, g);
+    // Peak magnitude against Δm₁₅.
+    const B = { x0: 52, x1: 280, y0: 190, y1: 380 }, lo = -20.1, hi = -18.3;
+    const X2 = mkScale(0.75, 1.75, B.x0, B.x1), Y2 = mkScale(hi, lo, B.y1, B.y0);
+    frame(g, B, X2, Y2, [0.8, 1.0, 1.2, 1.4, 1.6].map(v => [v, v.toFixed(1)]), [-20, -19.5, -19, -18.5].map(v => [v, fmt(v, 1)]), 'Δm₁₅ (mag)', T5.usePh ? 'M − seos + nullpunkt' : 'maksimumi M');
+    const corr = ([x, M]) => (T5.usePh ? M - PH.a * (x - 1.1) : M);
+    const line = T5.usePh ? [[0.75, PH.b], [1.75, PH.b]] : [[0.75, PH.b + PH.a * -0.35], [1.75, PH.b + PH.a * 0.65]];
+    el('line', { x1: X2(line[0][0]), y1: Y2(line[0][1]), x2: X2(line[1][0]), y2: Y2(line[1][1]), class: 'curve ref' }, g);
+    for (const p of snSample) el('circle', { cx: X2(p[0]), cy: Y2(corr(p)), r: 3.5, class: 'pt' }, g);
+    const yc = T5.usePh ? PH.b : Mp;
+    el('line', { x1: X2(T5.dm15), y1: B.y0, x2: X2(T5.dm15), y2: B.y1, class: 'guide' }, g);
+    el('circle', { cx: X2(T5.dm15), cy: Y2(yc), r: 6, class: 'pt hollow' }, g);
+    el('line', { x1: 292, y1: B.y0, x2: 292, y2: B.y1, class: 'axisline' }, g);
+    sideHist(g, snSample.map(corr), Y2, lo, hi, 292, 358, 0.1);
+    text(g, 325, B.y1 + 15, 'jaotus', 'tlbl', 'middle');
+    text(g, 358, 178, `hajuvus σ = ${fmt(std(snSample.map(corr)), 2)} mag`, 'lbl', 'end');
+  }
+  function renderRanges() {
+    const svg = $('ranges');
+    if (svg.childNodes.length) return;  // static
+    const g = el('g', {}, svg);
+    const X = mkScale(1, 1e10, 40, 740, true), y0 = 22, y1 = 122;
+    for (let k = 0; k <= 10; k++) {
+      const x = X(10 ** k);
+      el('line', { x1: x, y1: y0, x2: x, y2: y1, class: 'gridline' }, g);
+      text(g, x, y1 + 16, decadeLabel('cep', k), 'tlbl', 'middle');
+    }
+    // Where two rungs overlap, the upper one is calibrated with the lower one.
+    for (const [a, b] of [[100, 5e3], [7e6, 4e7]]) {
+      el('rect', { x: X(a), y: y0, width: X(b) - X(a), height: y1 - y0, class: 'overlap' }, g);
+      text(g, (X(a) + X(b)) / 2, y0 - 6, 'kalibreerimine', 'lbl3', 'middle');
+    }
+    const bars = [['Parallaks', 1, 5e3, 'var(--sel)', 'index.html#osa-1', '1. osa'], ['Tsefeiidid', 100, 4e7, 'var(--cep)', 'index.html#osa-2', '2.–3. osa'], ['Ia supernoovad', 7e6, 1e10, 'var(--sn)', 'index.html#osa-4', '4. osa']];
+    bars.forEach(([n, a, b, c, href, part], i) => {
+      const y = 34 + 28 * i;
+      const link = el('a', { href, class: 'range-link', 'aria-label': `${n}: harjutuse ${part}` }, g);
+      el('rect', { x: X(a), y, width: X(b) - X(a), height: 16, rx: 8, fill: c, class: 'bar2' }, link);
+      const right = X(b) + 8 < 640;
+      text(link, right ? X(b) + 8 : X(a) - 8, y + 12, `${n} · ${part}`, 'lbl', right ? 'start' : 'end');
+    });
+  }
+
+  /* ---------- Readouts and controls ---------- */
+  function readouts() {
+    const s = st.src, S = SRC[s], d = st.d[s], m = mag(s, d);
+    document.querySelectorAll('[data-src]').forEach(b => b.setAttribute('aria-checked', b.dataset.src === s));
+    $('srcInfo').innerHTML = `${S.what[0].toUpperCase() + S.what.slice(1)}: ${S.lum}, absoluutne tähesuurus <b>M = ${fmtMag(S.M)}</b>.`;
+    $('distOut').textContent = fmtD(s, d);
+    $('distRead').innerHTML = (s === 'lamp' ? '' : `${fmtLy(d)}.<br>`) + `Näiv tähesuurus <b>m = ${fmt(m, 2)}</b>. ${visibility(m)}`;
+    // Tab 1
+    const r = d / st.d0[s], f = 1 / (r * r);
+    const rel = f >= 1 ? `${sig(f)} korda heledam` : `${sig(1 / f)} korda nõrgem`;
+    $('fluxRead').innerHTML = `Lähtekoht <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Praegu d/d₀ = ${sig(r)}, seega <b>F/F₀ = (d₀/d)² = ${sig(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'sama hele' : rel}.`;
+    $('fluxFormula').textContent = `F = L / (4π d²). 1 m² peeglile jõuab umbes ${fmtExp(photons(m))} footonit sekundis.`;
+    $('same').setAttribute('aria-pressed', st.same);
+    $('sameRead').innerHTML = st.same ? `Sama heledusega (m = ${fmt(m, 1)}): ` + KEYS.map(k => `${SRC[k].short.toLowerCase()} ${fmtD(k, k === s ? d : distFor(k, m))}`).join(', ') + '.' : '';
+    // Tab 2
+    const mu = m - S.M;
+    $('magRead').innerHTML = `<b>m = ${fmt(m, 2)}</b>, <b>M = ${fmtMag(S.M, 2)}</b>, seega <b>μ = m − M = ${fmt(mu, 2)}</b>.`;
+    $('magFormula').textContent = `μ = 5 log₁₀(d / 1 pc) − 5 = 5 log₁₀(${fmtPc(d / PC)}) − 5 = ${fmt(mu, 2)}; d = 10^(μ/5 + 1) pc = 10^(${fmt(mu / 5 + 1, 2)}) pc = ${fmtD(s, d)}`;
+    $('m1Out').textContent = fmt(st.m1, 1);
+    $('m2Out').textContent = fmt(st.m2, 1);
+    const dm = st.m2 - st.m1, q = 10 ** (0.4 * Math.abs(dm));
+    $('ratioRead').innerHTML = Math.abs(dm) < 0.05 ? 'Tähed on ühesuguse heledusega.'
+      : `Δm = ${fmt(Math.abs(dm), 1)}, seega on täht ${dm > 0 ? 1 : 2} <b>${sig(q)} korda heledam</b>: 10^(0.4 · ${fmt(Math.abs(dm), 1)}) = 100^(${fmt(Math.abs(dm), 1)}/5).`;
+    // Tab 3
+    const C = cal[s], mc = mCal(s), da = assumed(s), u = S.unit;
+    $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtD(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`;
+    $('calFormula').textContent = C.done ? `M = m − 5 log₁₀(d / 1 pc) + 5 = ${fmt(mc, 2)} − 5 log₁₀(${fmtPc(da / PC)}) + 5 = ${fmtMag(Mest(s), 2)}` : '';
+    $('measGroup').classList.toggle('locked', !C.done);
+    $('measLock').hidden = C.done;
+    const mh = mag(s, C.hid);
+    $('measText').innerHTML = `Alumise allika näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>. Leia selle kaugus.`;
+    $('guessUnit').textContent = u[0];
+    $('measFormula').textContent = C.computed ? `d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtD(s, measure(s, C.hid))}` : '';
+    let res = '';
+    if (C.shown) {
+      const dmeas = C.guess || measure(s, C.hid), diff = (dmeas / C.hid - 1) * 100;
+      res = `${C.guess ? 'Sinu kaugus' : 'Mõõdetud kaugus'} <b>${fmtD(s, dmeas)}</b>, tegelik <b>${fmtD(s, C.hid)}</b>: erinevus <b class="${Math.abs(diff) < 2 ? 'ok' : 'off'}">${fmtPct(diff)}</b>.`;
+      if (C.guess && Math.abs(C.guess / measure(s, C.hid) - 1) > 0.02) res += ` Kalibreeritud M-iga tuleks ${fmtD(s, measure(s, C.hid))}.`;
+      if (st.err !== 0) res += ` Kalibreerimiskaugus on ${fmtPct(st.err)} vale, nii et sama palju on nihkes ka iga mõõdetud kaugus.`;
+    }
+    $('measResult').innerHTML = res;
+    $('errOut').textContent = fmtPct(st.err);
+    $('errRead').innerHTML = st.err === 0 ? 'Tuntud kaugus on õige.'
+      : `Eeldatud kaugus on ${fmtPct(st.err)} vale, seega on M viga ${fmt(5 * Math.log10(1 + st.err / 100), 3)} mag ja kõik mõõdetud kaugused on <b>${fmtPct(st.err)}</b> nihkes. Rohkem allikaid seda ei paranda.`;
+    // Tab 4
+    const T = type4();
+    $('sigmaOut').textContent = T4.sigma.toFixed(2);
+    $('ncOut').textContent = T4.N;
+    const e1 = 0.4605 * T4.sigma * 100, eN = e1 / Math.sqrt(T4.N);
+    const dmean = D4 * 10 ** (mean(Z.slice(0, T4.N)) * T4.sigma / 5);
+    $('goodRead').innerHTML = `Ühe küünla kauguse viga σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub> = <b>${fmt(e1, e1 < 10 ? 1 : 0)} %</b>.<br>` +
+      `${T4.N} küünla keskmine: ${fmt(e1, 1)} % / √${T4.N} = <b>${fmt(eN, 1)} %</b>.<br>Selle valimi keskmine kaugus ${fmt(dmean, 2)} Mpc (${fmtPct((dmean / D4 - 1) * 100)}).`;
+    $('checkTitle').textContent = T.name;
+    $('checklist').innerHTML = CHECKS.map((c, i) => {
+      const [k, note] = T.check[i], mk = { yes: '✓', no: '✗', part: '≈' }[k];
+      return `<li><span class="mk ${k}" aria-label="${{ yes: 'jah', no: 'ei', part: 'osaliselt' }[k]}">${mk}</span><span>${c}</span>${note ? `<small>${note}</small>` : ''}</li>`;
+    }).join('');
+    $('typecard').textContent = T.card;
+    document.querySelectorAll('[data-view4]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view4 === T4.view));
+    $('view4galaxy').hidden = T4.view !== 'galaxy';
+    $('view4reach').hidden = T4.view !== 'reach';
+    // Tab 5
+    const P = 10 ** T5.lp, sc = cepSample.map(([lp, M]) => M), scc = cepSample.map(([lp, M]) => M - PL.a * (lp - 1));
+    $('periodOut').textContent = sig(P, 3);
+    $('cepRead').innerHTML = `Seos: M = ${fmt(PL.b, 2)} − 3.29 (log P − 1). Selle perioodiga tsefeiid: <b>M = ${fmt(PL.b + PL.a * (T5.lp - 1), 2)}</b>.<br>` +
+      `Hajuvus ilma seoseta ${fmt(std(sc), 2)} mag, seosega <b>${fmt(std(scc), 2)} mag</b>.`;
+    const ss = snSample.map(([x, M]) => M), ssc = snSample.map(([x, M]) => M - PH.a * (x - 1.1));
+    $('dm15Out').textContent = T5.dm15.toFixed(2);
+    $('snRead').innerHTML = `Seos: M = ${fmt(PH.b, 2)} + 0.8 (Δm₁₅ − 1.1). Selle tuhmumisega supernoova: <b>M = ${fmt(PH.b + PH.a * (T5.dm15 - 1.1), 2)}</b>.<br>` +
+      `Hajuvus ilma seoseta ${fmt(std(ss), 2)} mag, seosega <b>${fmt(std(ssc), 2)} mag</b>.`;
+  }
+
+  function render() {
+    readouts();
+    if (st.tab === 'tab1') { renderSide(); renderEye(); renderFlux(); }
+    if (st.tab === 'tab2') { renderMag(); renderRatio(); }
+    if (st.tab === 'tab3') { renderCal(); renderCalPlot(); renderLadder(); }
+    if (st.tab === 'tab4') { if (T4.view === 'galaxy') renderGalaxy(); else renderReach(); }
+    if (st.tab === 'tab5') { renderCep(); renderSn(); renderRanges(); }
+  }
+
+  // The distance slider is logarithmic over the range of the chosen source.
+  const SL = 1000;
+  function syncSlider() {
+    const s = st.src, S = SRC[s];
+    $('dist').value = Math.round(SL * (Math.log10(st.d[s]) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo)));
+    $('limits').innerHTML = LIMITS.map((L, i) => {
+      const f = (Math.log10(distFor(s, L.m)) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo));
+      return f >= 0 && f <= 1 ? `<span style="left: calc(8px + (100% - 16px) * ${f.toFixed(4)}); padding-top: ${6 + 12 * (i % 2)}px">${L.slider}</span>` : '';
+    }).join('');
+  }
+  $('dist').addEventListener('input', e => {
+    const S = SRC[st.src], f = +e.target.value / SL;
+    st.d[st.src] = 10 ** (Math.log10(S.lo) + f * (Math.log10(S.hi) - Math.log10(S.lo)));
+    render();
+  });
+  document.querySelectorAll('[data-src]').forEach(b => b.addEventListener('click', () => {
+    st.src = b.dataset.src;
+    ph.list = [];
+    syncSlider();
+    $('guess').value = '';
+    render();
+  }));
+  // Arrow keys move between the source buttons, as in a radio group.
+  $('srcLbl').nextElementSibling.addEventListener('keydown', e => {
+    const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!k) return;
+    e.preventDefault();
+    const i = (KEYS.indexOf(st.src) + k + 3) % 3;
+    document.querySelector(`[data-src="${KEYS[i]}"]`).click();
+    document.querySelector(`[data-src="${KEYS[i]}"]`).focus();
+  });
+  let dragging = false;
+  function dragTo(e) { st.d[st.src] = trackD(st.src, svgPoint(side, e).x); syncSlider(); render(); }
+  side.addEventListener('pointerdown', e => {
+    const p = svgPoint(side, e);
+    if (p.x < TR.x0 - 15) return;
+    dragging = true;
+    side.setPointerCapture(e.pointerId);
+    dragTo(e);
+  });
+  side.addEventListener('pointermove', e => { if (dragging) dragTo(e); });
+  for (const t of ['pointerup', 'pointercancel']) side.addEventListener(t, () => { dragging = false; });
+  $('squares').addEventListener('change', e => { st.squares = e.target.checked; render(); });
+  $('logAxes').addEventListener('change', e => { st.logAxes = e.target.checked; render(); });
+  $('setD0').addEventListener('click', () => { st.d0[st.src] = st.d[st.src]; render(); });
+  $('same').addEventListener('click', () => { st.same = !st.same; render(); });
+  $('m1').addEventListener('input', e => { st.m1 = +e.target.value; render(); });
+  $('m2').addEventListener('input', e => { st.m2 = +e.target.value; render(); });
+
+  const addPoint = C => { if (!C.pts.includes(C.hid)) C.pts.push(C.hid); C.shown = true; };
+  $('calcM').addEventListener('click', () => { cal[st.src].done = true; render(); });
+  $('check').addEventListener('click', () => {
+    const C = cal[st.src], v = parseFloat($('guess').value.replace(',', '.').replace(/\s/g, ''));
+    if (!(v > 0)) { $('measResult').textContent = 'Sisesta kaugus positiivse arvuna.'; return; }
+    C.guess = v * SRC[st.src].unit[1];
+    addPoint(C);
+    render();
+  });
+  $('guess').addEventListener('keydown', e => { if (e.key === 'Enter') $('check').click(); });
+  $('calcD').addEventListener('click', () => {
+    const s = st.src, C = cal[s];
+    C.computed = true;
+    C.guess = null;
+    addPoint(C);
+    $('guess').value = sig(measure(s, C.hid) / SRC[s].unit[1], 4).replace(/ /g, '').replace('−', '-');
+    render();
+  });
+  $('newHid').addEventListener('click', () => {
+    const C = cal[st.src];
+    C.hid = newHidden(st.src);
+    C.shown = C.computed = false;
+    C.guess = null;
+    $('guess').value = '';
+    render();
+  });
+  $('err').addEventListener('input', e => { st.err = +e.target.value; render(); });
+
+  $('ctype').innerHTML = TYPES.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  function syncTab4() { $('ctype').value = T4.type; $('sigma').value = T4.sigma; $('nc').value = T4.N; }
+  $('ctype').addEventListener('change', e => { T4.type = e.target.value; T4.sigma = type4().s; syncTab4(); render(); });
+  $('sigma').addEventListener('input', e => { T4.sigma = +e.target.value; render(); });
+  $('nc').addEventListener('input', e => { T4.N = +e.target.value; render(); });
+  $('resample').addEventListener('click', () => { newSample(); render(); });
+  document.querySelectorAll('[data-view4]').forEach(b => b.addEventListener('click', () => { T4.view = b.dataset.view4; render(); }));
+
+  const PMIN = 0.3, PMAX = 2.0;
+  $('period').value = Math.round(SL * (T5.lp - PMIN) / (PMAX - PMIN));
+  $('period').addEventListener('input', e => { T5.lp = PMIN + (PMAX - PMIN) * e.target.value / SL; render(); });
+  $('usePL').addEventListener('change', e => { T5.usePL = e.target.checked; render(); });
+  $('dm15').addEventListener('input', e => { T5.dm15 = +e.target.value; render(); });
+  $('usePh').addEventListener('change', e => { T5.usePh = e.target.checked; render(); });
+
+  /* ---------- Tabs ---------- */
+  // Each tab has its own address, so that other pages can link to it.
+  const HASH = { tab1: 'poordruutude-seadus', tab2: 'magnituudid', tab3: 'kalibreerimine', tab4: 'hea-kuunal', tab5: 'tsefeiidid-ja-supernoovad' };
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function selectTab(id, fromHash) {
+    st.tab = id;
+    for (const b of tabs) {
+      const on = b.id === id;
+      b.setAttribute('aria-selected', on);
+      b.tabIndex = on ? 0 : -1;
+      $(b.getAttribute('aria-controls')).hidden = !on;
+    }
+    document.querySelectorAll('.controls .group').forEach(g => { g.hidden = !g.dataset.tabs.split(' ').includes(id); });
+    document.querySelectorAll('.explain [data-tab]').forEach(u => { u.hidden = u.dataset.tab !== id; });
+    if (!fromHash && location.hash.slice(1) !== HASH[id]) history.replaceState(null, '', '#' + HASH[id]);
+    render();
+  }
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => selectTab(b.id));
+    b.addEventListener('keydown', e => {
+      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!k) return;
+      const next = tabs[(i + k + tabs.length) % tabs.length];
+      selectTab(next.id);
+      next.focus();
+    });
+  });
+  const fromHash = () => {
+    const id = Object.keys(HASH).find(k => HASH[k] === decodeURIComponent(location.hash.slice(1)));
+    selectTab(id || 'tab1', true);
+  };
+  window.addEventListener('hashchange', fromHash);
+
+  /* ---------- Animation ---------- */
+  let last = 0;
+  function loop(ts) {
+    const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0;
+    last = ts;
+    if (!document.hidden) {
+      if (st.tab === 'tab1') stepPhotons(dt);
+      if (st.tab === 'tab5') { T5.phase = (T5.phase + dt / 2.5) % 2; drawCepDyn(); }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  syncSlider();
+  syncTab4();
+  fromHash();
+  if (!reduced) requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

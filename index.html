@@ -114,6 +114,7 @@ h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; le
 .ladder-art .bracket-label { fill: var(--text-2); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-anchor: middle; dominant-baseline: central; }
 .ladder-art .rung-link:hover .name, .ladder-art .rung-link:focus-visible .name { fill: var(--sel); text-decoration: underline; }
 .ladder-art .rung-link:focus-visible { outline: none; }
+.ladder-art .candle-link:hover .bracket-label, .ladder-art .candle-link:focus-visible .bracket-label { fill: var(--sel); text-decoration: underline; }
 .ladder-art .rung-link:focus-visible .hit { stroke: var(--sel); stroke-width: 2; }
 h2.rung { font-size: 1.3rem; margin: 0 0 4px; color: var(--text-2); }
 .lede { color: var(--text-2); margin: 0 0 20px; max-width: 70ch; }
@@ -417,7 +418,7 @@ footer a { color: inherit; }
   <div class="intro-row">
   <div>
     <p class="intro">Kaugusi kosmoses ei saa mõõta ühe meetodiga. Lähedaste tähtede kauguse annab otse <a href="https://et.wikipedia.org/wiki/Parallaks" target="_blank" rel="noopener">parallaks</a> — tähe näiv nihe taevas,
-    mis tekib Maa liikumisest ümber Päikese. Kaugemal on parallaks liiga väike ja appi tulevad <i><a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder#Standard_candles" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">standardküünlad</a></i>: objektid, mille
+    mis tekib Maa liikumisest ümber Päikese. Kaugemal on parallaks liiga väike ja appi tulevad <i><a href="standardkuunlad.html">standardküünlad</a></i>: objektid, mille
     tegelikku heledust me teame, nii et nende näiv heledus annab kauguse. Iga uus meetod kalibreeritakse eelmise abil, nii et meetodid
     moodustavad <a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">redeli</a>, mille iga pulk ulatub kaugemale. Sellel lehel ronid redelil neli pulka: <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">hajusparvede</a> kaugustest <a href="https://et.wikipedia.org/wiki/Gaia_(kosmoseteleskoop)" target="_blank" rel="noopener">Gaia</a> parallaksidega
     (1. osa) <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">tsefeiidide</a> <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seoseni</a> (2. osa), sealt tsefeiididega <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> kaugusteni ja <a href="https://et.wikipedia.org/wiki/Hubble'i_seadus" target="_blank" rel="noopener">Hubble'i seaduseni</a> (3. osa)
@@ -429,8 +430,11 @@ footer a { color: inherit; }
       <desc id="artDesc">Redel, mille alumine pulk on parallaks, keskmine tsefeiidid ja ülemine Ia tüüpi supernoovad; iga pulk ulatub kaugemale. Iga pulk kalibreeritakse eelmise abil. Tsefeiidid ja supernoovad on mõlemad standardküünlad.</desc>
       <defs><linearGradient id="candleGrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" style="stop-color: var(--cep)"/><stop offset="1" style="stop-color: var(--accent)"/></linearGradient></defs>
       <polygon class="cal-arrow" points="210,167 221,178 214,178 214,191 206,191 206,178 199,178"/><polygon class="cal-arrow" points="210,92 221,103 214,103 214,116 206,116 206,103 199,103"/>
-      <path class="bracket" d="M346 44 H352 V155 H346"/>
-      <text class="bracket-label" x="364" y="99.5" transform="rotate(90 364 99.5)">Standardküünlad</text>
+      <a class="rung-link candle-link" href="standardkuunlad.html" aria-label="Standardküünlad: interaktiivsed joonised standardküünaldest">
+        <rect class="hit" x="340" y="40" width="37" height="119"/>
+        <path class="bracket" d="M346 44 H352 V155 H346"/>
+        <text class="bracket-label" x="364" y="99.5" transform="rotate(90 364 99.5)">Standardküünlad</text>
+      </a>
       <line class="rail" x1="52.0" y1="262" x2="74.0" y2="12"/>
       <line class="rail" x1="152.0" y1="262" x2="130.0" y2="12"/>
       <a class="rung-link" href="parallaks.html" aria-label="Parallaks: interaktiivne joonis parallaksi meetodist">
@@ -458,8 +462,8 @@ footer a { color: inherit; }
         <p>Interaktiivne joonis: Maa liikumine ümber Päikese paneb lähedase tähe kaugete kvasarite taustal ellipsit joonistama.</p>
         <span class="rel">Seotud: <a href="#osa-1">1. osa</a></span>
       </li>
-      <li class="mc soon">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-9" cy="0" r="6"/><circle class="fill" cx="5" cy="0" r="3.8" opacity="0.6"/><circle class="fill" cx="14" cy="0" r="2.2" opacity="0.35"/></svg><span class="toc-part">Standardküünlad <span class="badge">tulekul</span></span></div>
+      <li class="mc">
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-9" cy="0" r="6"/><circle class="fill" cx="5" cy="0" r="3.8" opacity="0.6"/><circle class="fill" cx="14" cy="0" r="2.2" opacity="0.35"/></svg><a class="toc-part" href="standardkuunlad.html">Standardküünlad</a></div>
         <p>Kui valgusallika tegelik heledus on teada, annab näiv heledus kauguse. Tähesuurused, kaugusmoodul ja kalibreerimine.</p>
         <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a>, <a href="#osa-4">4. osa</a></span>
       </li>

@@ -26,7 +26,7 @@ queries the data services directly from the browser.
 The page opens on the introduction and a table of contents. The table of
 contents has two groups: **Uuri lähemalt**, a row of cards that lead to background
 pages (parallax, standard candles, Cepheids, type Ia supernovae and the Hubble
-law), and **Harjutus andmetega**, the four parts of the exercise. So far only the parallax page exists; the other cards are marked
+law), and **Harjutus andmetega**, the four parts of the exercise. So far the parallax and standard candles pages exist; the other cards are marked
 *tulekul* (coming). Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
@@ -198,6 +198,49 @@ on, the parallax angle is marked as a wedge at the star in the 3D view and as
 the semi-major axis of the ellipse in the sky view; a readout gives the angle
 in the drawing, arcsin(1/d), and for a real star as many parsecs away. The drawing is not to scale.
 
+### Standard candles page
+
+`standardkuunlad.html` is linked from the table of contents, from the
+standard candles bracket of the ladder picture and from the word
+"standardküünlad" in the introduction. It has five tabs, and the address
+keeps the tab (`#poordruutude-seadus`, `#magnituudid`, `#kalibreerimine`,
+`#hea-kuunal`, `#tsefeiidid-ja-supernoovad`). The first three share a light
+source (a 100 W bulb, a Cepheid with P = 10 d or a type Ia supernova at its
+peak) and, in the first two, a logarithmic distance slider marked with the
+naked-eye, large-telescope and *Hubble* limits (m = 6, 24 and 29).
+
+1. **Pöördruutude seadus**: the source slides away from a telescope on a log
+   distance track (drag it or use the slider). Photon packets fly towards the
+   telescope, and fewer of them reach the mirror as the source moves away;
+   a bar gives the photons per second on a 1 m² mirror. **Näita ruute** draws
+   the squares at d, 2d and 3d. Below are the observer's view, with the source
+   between two comparison stars 5 magnitudes apart, and F/F₀ against d/d₀
+   (linear or log axes). **Määra lähtekohaks d₀** sets the reference distance,
+   and **Sama heledus, eri kaugus** shows all three sources at the distances
+   where they look equally bright.
+2. **Magnituudid**: a magnitude scale with reference objects, with m, M and
+   the distance modulus μ of the source, beside a distance axis shifted so
+   that each distance lines up with the magnitude the source would have
+   there. A small calculator gives the brightness ratio of two magnitudes.
+3. **Kalibreerimine**: **Arvuta M** calibrates the source at a known
+   distance (a tape measure, a cluster parallax or the Cepheids of a host
+   galaxy). The user then measures a source at a hidden distance, either by
+   entering a distance and pressing **Kontrolli** or with **Arvuta kaugus**;
+   **Uus allikas** hides a new one. A slider puts a −20 … +20 % error into the
+   known distance, which shifts every measured distance in the plot of
+   measured against true distance by the same fraction.
+4. **Hea küünal**: N candles of one type in a simulated galaxy at 10 Mpc, with
+   a histogram of the distances they give, for a chosen type and scatter σ_M;
+   the readouts give 0.46 σ_M for one candle and that over √N for the mean.
+   The second view plots the reach and the scatter of seven candle types;
+   clicking a point selects that type. A checklist rates the selected type.
+5. **Tsefeiidid ja supernoovad**: a pulsating Cepheid with its light curve and
+   a simulated period-luminosity plot, and a supernova light curve with a
+   simulated plot of peak magnitude against Δm₁₅. **Kasuta seost** subtracts
+   the relation, which narrows the histogram beside each plot. A distance
+   axis below shows the ranges of parallax, Cepheids and supernovae, and links
+   to the parts of the exercise.
+
 ## Method
 
 - Only stars with RUWE < 1.4 and with a measured parallax and proper motion
@@ -296,8 +339,9 @@ service uses only that one. The choice is remembered in the browser.
 ## Code
 
 Everything is in `index.html`: the HTML, the CSS and the JavaScript. The
-parallax demonstration is a separate self-contained page, `parallaks.html`,
-with no external dependencies. The only
+parallax demonstration (`parallaks.html`) and the standard candles page
+(`standardkuunlad.html`) are separate self-contained pages with no external
+dependencies. The only
 external dependency is [Plotly.js](https://plotly.com/javascript/), loaded
 from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 

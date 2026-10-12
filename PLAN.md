@@ -3,8 +3,8 @@
 The table of contents of `index.html` has a row of **Uuri lähemalt** cards
 that lead to background pages. Each page gives the wider picture behind a
 rung of the distance ladder or behind the result of the exercise. So far only
-the parallax page (`parallaks.html`) exists; the other cards are marked
-*tulekul* (coming).
+the parallax page (`parallaks.html`) and the standard candles page
+(`standardkuunlad.html`) exist; the other cards are marked *tulekul* (coming).
 
 The cards, in reading order:
 
@@ -35,7 +35,7 @@ Still to add, because part 1 of the exercise relies on it:
 
 Related part: 1.
 
-## 2. Standardküünlad (new)
+## 2. Standardküünlad (exists, `standardkuunlad.html`)
 
 1. **The inverse-square law.** A light source of known luminosity looks
    fainter with distance, so its brightness gives the distance.
@@ -56,6 +56,9 @@ brightness and magnitude update. A second step calibrates it at a known
 distance and then measures an unknown one.
 
 Related parts: 2, 3 and 4.
+
+The design of the page, with its tabs and interactive plots, is in
+`DESIGN-standardkuunlad.md`.
 
 ## 3. Tsefeiidid (new)
 
