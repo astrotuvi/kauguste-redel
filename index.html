@@ -129,7 +129,8 @@ h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
 }
 
 /* Controls */
-form.controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; }
+form.controls { display: flex; flex-wrap: wrap; gap: 18px 16px; align-items: flex-end; }
+form.controls .actions { flex: 1 1 100%; display: flex; gap: 12px; }   /* the buttons on a line of their own */
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field label { font-size: 0.78rem; color: var(--text-2); font-weight: 550; }
 .field input {
@@ -137,8 +138,8 @@ form.controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: fle
   border: 1px solid var(--border); border-radius: 7px; padding: 7px 10px; min-width: 0;
 }
 .field input:focus-visible { outline: 2px solid var(--sel); outline-offset: 1px; }
-.field.target { flex: 1 1 260px; }
-.field.source { align-items: flex-start; margin-bottom: 12px; }
+.field.target { flex: 1 1 100%; }   /* alone on the first line; the other fields and the button below */
+.field.source { align-items: flex-start; margin-bottom: 18px; }
 .field.coords { flex: 0 1 220px; }
 .field.coords input { width: 100%; }
 .field.num input { width: 92px; }
@@ -149,7 +150,7 @@ button {
 button.primary { background: var(--btn); color: var(--btn-text); border-color: transparent; font-weight: 600; }
 button:disabled { opacity: 0.55; cursor: progress; }
 button:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
-.examples { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; font-size: 0.82rem; color: var(--text-3); }
+.examples { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: -8px; font-size: 0.82rem; color: var(--text-3); }
 .examples button { font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
 
 .status { margin: 12px 0 0; font-size: 0.88rem; color: var(--text-2); min-height: 1.4em; }
@@ -365,9 +366,12 @@ table.data-table tr.cur td { background: color-mix(in srgb, var(--accent) 12%, t
   border: 1px solid var(--border); border-radius: 7px; padding: 7px 8px;
 }
 .query-info .value { overflow-wrap: anywhere; }
-.query-info:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 12px; align-items: start; }
-.query-info .cards { display: grid; gap: 12px; }
-.sky-pic { position: relative; aspect-ratio: 1; margin-top: 8px; border-radius: 6px; overflow: hidden; background: #000; }
+/* the query form and its result cards on the left, the image of the field on the right */
+.query-layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 14px; align-items: start; }
+.sky-card h2 { margin-bottom: 10px; }
+.sky-pic { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: #000; }
+.sky-pic.empty { background: var(--bg); border: 1px dashed var(--border); }
+.sky-pic.empty > * { display: none; }   /* before a query, and while the name box differs from the queried name */
 .sky-pic img, .sky-pic svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .sky-pic circle { fill: none; stroke: rgba(255, 255, 255, 0.7); stroke-width: 1.2; stroke-dasharray: 4 4; }
 /* the queried cluster after a card title */
@@ -395,8 +399,8 @@ footer a { color: inherit; }
   .plot-side { grid-template-columns: minmax(0, 1fr); }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
   .tiles { grid-template-columns: 1fr; }
-  .query-info:not([hidden]) { grid-template-columns: minmax(0, 1fr); }
-  .query-info .sky-tile { max-width: 360px; }
+  .query-layout { grid-template-columns: minmax(0, 1fr); }
+  .sky-card { max-width: 480px; }
   .toc ol { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
@@ -518,6 +522,8 @@ footer a { color: inherit; }
   </div>
 
   <div role="tabpanel" class="pane" id="paneQuery" aria-labelledby="tabQuery" hidden>
+  <div class="query-layout">
+  <div class="query-main">
   <section class="card">
     <div class="field source">
       <label for="source">Andmeallikas</label>
@@ -531,6 +537,7 @@ footer a { color: inherit; }
         <input id="target" name="target" value="Pleiades" autocomplete="off" spellcheck="false"
                placeholder="nt NGC 2516, Pleiades, 08:51:23 +11:48:50">
       </div>
+      <div class="examples" id="examples">Proovi:</div>
       <div class="field coords">
         <label for="coords">α δ (kraadides)</label>
         <input id="coords" name="coords" autocomplete="off" spellcheck="false" placeholder="nt 132.85 11.81">
@@ -543,13 +550,22 @@ footer a { color: inherit; }
         <label for="gmax">G piir (mag)</label>
         <input id="gmax" type="number" lang="en" value="17" min="6" max="21" step="0.5">
       </div>
-      <button type="submit" class="primary" id="go">Päri Gaiast</button>
-      <button type="button" id="stop" hidden>Katkesta</button>
+      <div class="actions">
+        <button type="submit" class="primary" id="go">Päri Gaiast</button>
+        <button type="button" id="showSky">Näita taevapilti</button>
+        <button type="button" id="stop" hidden>Katkesta</button>
+      </div>
     </form>
-    <div class="examples" id="examples">Proovi:</div>
     <p class="status" id="status" role="status" aria-live="polite"></p>
   </section>
-  <div class="tiles query-info" id="queryInfo" hidden></div>
+  <div class="tiles two query-info" id="queryInfo" hidden></div>
+  </div>
+  <section class="card sky-card">
+    <h2>Päringu ala taevas</h2>
+    <div class="sky-pic empty" id="skyPic"></div>
+    <p class="hint">DSS2 värviline ülesvõte, kriipsjoonega päringu ala; põhi üleval, ida vasakul.</p>
+  </section>
+  </div>
   </div>
 
   <div role="tabpanel" class="pane" id="paneTable" aria-labelledby="tabTable" hidden>
@@ -1151,6 +1167,8 @@ const S = {
   qctrl: null,        // AbortController of the running query
   coordsFor: null,    // name-box text that the coordinate box belongs to
   queryTarget: null,  // name-box text of the last successful query, which its result cards belong to
+  picTarget: null,    // name-box text that the image of the field in the query tab belongs to
+  skyToken: 0,        // bumped per "Näita taevapilti", so that only the latest one shows its image
   title: null,        // cluster name of the data, or the query coordinates without a name
   coordsLabel: null,  // status label for those coordinates, when they came from a name lookup
   page: 0,            // data table page
@@ -1594,7 +1612,8 @@ const SKY_VIEW = 1.15, SKY_ASPECT = [0.6, 2.2];
 const hips2fits = (wcs) => "https://alasky.cds.unistra.fr/hips-image-services/hips2fits?" +
   new URLSearchParams({ hips: "CDS/P/DSS2/color", format: "jpg", wcs: JSON.stringify(wcs) });
 
-// DSS2 colour image of the query field for the query tab, north up and east left, with the query circle.
+// DSS2 colour image of the query field for the query tab (the contents of #skyPic), north up and east
+// left, with the query circle.
 // A gnomonic (TAN) projection centred on the field maps the circle to a circle; the image is SKY_VIEW
 // times its radius on each side, like the default view of the sky plot.
 function fieldPicture(ra0, dec0, r) {
@@ -1603,8 +1622,8 @@ function fieldPicture(ra0, dec0, r) {
     NAXIS: 2, NAXIS1: n, NAXIS2: n, CTYPE1: "RA---TAN", CTYPE2: "DEC--TAN",
     CRVAL1: ra0, CRVAL2: dec0, CRPIX1: n / 2 + 0.5, CRPIX2: n / 2 + 0.5, CDELT1: -s, CDELT2: s,
   };
-  return `<div class="sky-pic"><img src="${esc(hips2fits(wcs))}" alt="DSS2 värviline ülesvõte päringu alast">
-    <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="${(50 / SKY_VIEW).toFixed(3)}" vector-effect="non-scaling-stroke"/></svg></div>`;
+  return `<img src="${esc(hips2fits(wcs))}" alt="DSS2 värviline ülesvõte päringu alast">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="${(50 / SKY_VIEW).toFixed(3)}" vector-effect="non-scaling-stroke"/></svg>`;
 }
 
 // DSS2 colour image of the field from the CDS hips2fits service, as a Plotly layout image under the
@@ -2583,6 +2602,51 @@ function setStatus(msg, kind = "") {
   el.className = "status" + (kind ? " " + kind : "");
 }
 
+// The centre of the query: the coordinate box when it belongs to the current name (or was typed in
+// directly), otherwise the resolved name, which also fills in the coordinate box. Returns null when
+// current() says that a newer request has taken over meanwhile.
+async function queryCentre(target, coordText, current) {
+  if (coordText && (!target || S.coordsFor === target)) {
+    const p = parseCoords(coordText);
+    if (!p) throw new Error("Koordinaadid peavad olema kujul α δ kraadides, nt 132.85 11.81.");
+    return { ...p, label: S.coordsLabel || `α = ${fmtN(p.ra, 4)}°, δ = ${p.dec >= 0 ? "+" : ""}${fmtN(p.dec, 4)}°` };
+  }
+  setStatus(`Otsin „${target}“…`);
+  const c = await resolveTarget(target);
+  if (!current()) return null;
+  $("coords").value = `${c.ra.toFixed(5)} ${c.dec.toFixed(5)}`;
+  S.coordsFor = target;
+  S.coordsLabel = c.label;
+  return c;
+}
+
+// The image of the field in the query tab, for the name in the name box when it was shown
+function setSkyPic(c, radius, target) {
+  $("skyPic").innerHTML = fieldPicture(c.ra, c.dec, radius);
+  $("skyPic").classList.remove("empty");
+  S.picTarget = target;
+}
+
+// "Näita taevapilti": the image of the field from the name or coordinates and the radius in the form,
+// without querying Gaia
+async function showSky() {
+  const target = $("target").value.trim();
+  const coordText = $("coords").value.trim();
+  const radius = +$("radius").value;
+  if (!target && !coordText) { setStatus("Sisesta parve nimi või koordinaadid.", "error"); return; }
+  if (!(radius > 0 && radius <= 3)) { setStatus("Raadius peab olema vahemikus 0 kuni 3 kraadi.", "error"); return; }
+  const token = ++S.skyToken;
+  const resolving = !(coordText && (!target || S.coordsFor === target));
+  try {
+    const c = await queryCentre(target, coordText, () => token === S.skyToken);
+    if (!c) return;
+    setSkyPic(c, radius, target);
+    if (resolving && $("stop").hidden) setStatus("");   // the name is found; a running query keeps its message
+  } catch (e) {
+    if (token === S.skyToken) setStatus(e.message, "error");
+  }
+}
+
 async function run() {
   const target = $("target").value.trim();
   const coordText = $("coords").value.trim();
@@ -2597,20 +2661,8 @@ async function run() {
   $("go").disabled = true;
   $("stop").hidden = false;
   try {
-    let c;
-    // use the coordinate box when it belongs to the current name (or was typed in directly)
-    if (coordText && (!target || S.coordsFor === target)) {
-      const p = parseCoords(coordText);
-      if (!p) throw new Error("Koordinaadid peavad olema kujul α δ kraadides, nt 132.85 11.81.");
-      c = { ...p, label: S.coordsLabel || `α = ${fmtN(p.ra, 4)}°, δ = ${p.dec >= 0 ? "+" : ""}${fmtN(p.dec, 4)}°` };
-    } else {
-      setStatus(`Otsin „${target}“…`);
-      c = await resolveTarget(target);
-      if (token !== S.token) return;
-      $("coords").value = `${c.ra.toFixed(5)} ${c.dec.toFixed(5)}`;
-      S.coordsFor = target;
-      S.coordsLabel = c.label;
-    }
+    const c = await queryCentre(target, coordText, () => token === S.token);
+    if (!c) return;
     setStatus("Pärin Gaia DR3 andmeid…");
     const t0 = performance.now();
     const { d, source } = await queryGaia(c, radius, gmax, (sec) => {
@@ -2637,11 +2689,11 @@ async function run() {
     // the cluster name, unless coordinates were typed in
     const name = target && !parseCoords(target) ? target : null;
     const sign = c.dec >= 0 ? "+" : "";
-    $("queryInfo").innerHTML = `<div class="cards">` + (name ? `<div class="tile"><div class="label">Parv</div><div class="value">${esc(name)}</div>
+    $("queryInfo").innerHTML = (name ? `<div class="tile"><div class="label">Parv</div><div class="value">${esc(name)}</div>
         <div class="unit">α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°</div></div>` : "") +
       `<div class="tile"><div class="label">Saadud ridu</div><div class="value">${fmt(n)}</div>
-        <div class="unit">Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)</div></div></div>
-      <div class="tile sky-tile"><div class="label">Päringu ala taevas (DSS2)</div>${fieldPicture(c.ra, c.dec, radius)}</div>`;
+        <div class="unit">Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)</div></div>`;
+    setSkyPic(c, radius, target);
     $("queryInfo").hidden = false;
     S.queryTarget = target;
     S.title = name || `α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°`;
@@ -2714,11 +2766,13 @@ $("target").addEventListener("input", () => { clearCoords(); markStale(); });
 function markStale() {
   const stale = S.queryTarget !== null && $("target").value.trim() !== S.queryTarget;
   $("queryInfo").hidden = S.queryTarget === null || stale;
+  $("skyPic").classList.toggle("empty", S.picTarget === null || $("target").value.trim() !== S.picTarget);
   if (stale && $("stop").hidden) setStatus("");
 }
 $("coords").addEventListener("input", () => { S.coordsFor = $("target").value.trim(); S.coordsLabel = null; });
 $("clear").addEventListener("click", clearSelection);
 $("download").addEventListener("click", downloadSelection);
+$("showSky").addEventListener("click", showSky);
 // a click on a data table row marks that star in the plots, like a click on the star itself
 for (const th of document.querySelectorAll("#dataCard th[data-col]")) th.addEventListener("click", () => sortBy(th.dataset.col));
 $("dataBody").addEventListener("click", (e) => {

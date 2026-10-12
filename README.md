@@ -44,9 +44,15 @@ button and reloading work.
    **Päri Gaiast**. A name is resolved when the query runs, and its
    coordinates appear in the right box. The example buttons fill in suitable
    values for a few well-known clusters. A query runs only when you press
-   the button (or Enter). After the query, cards with the cluster name and
-   the number of stars appear below it, and next to them a DSS2 colour image
-   of the field with the query circle.
+   the button (or Enter). The name box has a line of its own, with the
+   example buttons under it, then the coordinates, radius and magnitude
+   limit, and the buttons on the last line. The form takes about 60% of the
+   width, and to its right is a box for a DSS2 colour image of the field
+   with the query circle. The box is empty until **Näita taevapilti** shows
+   the field for the name (or coordinates) and radius in the form without
+   querying Gaia, or a query shows it together with cards with the cluster
+   name and the number of stars below the form. Both are hidden again when
+   the name box changes.
    Part 1 is split into five tabs under its title: **Sissejuhatus** (the
    steps below), **Päring** (the query), **Tabel** (the queried stars),
    **Joonised** (the four plots on a 2 × 2 grid) and **Kaugus** (the mean
