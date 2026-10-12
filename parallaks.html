@@ -159,6 +159,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outli
 .full { stroke: var(--path-dim); stroke-width: 1.5; fill: none; }
 .wedge { fill: color-mix(in srgb, var(--accent) 28%, transparent); stroke: none; }
 .wedge-arc, .axis { stroke: var(--text-1); stroke-width: 1.5; fill: none; }
+.pax-arrow { stroke: var(--text-1); stroke-width: 1.3; }
+.pax-head { fill: var(--text-1); }
 .pax { fill: var(--text-1); font-size: 17px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 .goal { stroke: var(--text-1); stroke-width: 2; stroke-dasharray: 6 5; fill: none; opacity: 0.75; stroke-linejoin: round; }
 .goal.solved { stroke: var(--good); stroke-width: 5; stroke-dasharray: none; opacity: 0.6; }
@@ -259,7 +261,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outli
         <div class="playrow"><button type="button" class="primary" id="play">▶ Käivita</button></div>
         <div class="toggles">
           <label class="toggle"><input type="checkbox" id="line" checked> Rada joonena</label>
-          <label class="toggle"><input type="checkbox" id="gaia" checked> Gaia vaatlused (14 aastas)</label>
+          <label class="toggle"><input type="checkbox" id="gaia"> Gaia vaatlused (14 aastas)</label>
         </div>
       </div>
       <div class="group">
@@ -272,7 +274,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outli
         <div class="slider"><label for="phi">Suund (põhjast itta)</label><input type="range" id="phi" min="0" max="360" step="1" value="60" disabled><output for="phi" id="phiOut"></output></div>
       </div>
       <div class="group">
-        <label class="toggle"><input type="checkbox" id="pax" checked> Näita parallaksinurka</label>
+        <label class="toggle"><input type="checkbox" id="pax"> Näita parallaksinurka</label>
         <p class="paxout" id="paxOut"></p>
       </div>
     </section>
@@ -294,7 +296,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outli
   // Schematic units: the Earth's orbit has radius 1, the quasar background is a plane at distance D from the Sun,
   // perpendicular to the direction of the star, and spans ±H in both directions. The time runs from 0 to st.T years.
   const D = 13, H = 5, NS = 'http://www.w3.org/2000/svg';
-  const st = { T: 3, t: 0, d: 5, beta: 50, pm: false, mu: 0.8, phi: 60, az: 28, el: 0, roll: false, view: 'oblique', pax: true, line: true, gaia: true, playing: false };
+  const st = { T: 3, t: 0, d: 5, beta: 50, pm: false, mu: 0.8, phi: 60, az: 28, el: 0, roll: false, view: 'oblique', pax: false, line: true, gaia: false, playing: false };
   // Preset viewing angles (az, el in the camera's star-based frame, see camera(); roll turns the picture upside down). The pole view depends on β, so the
   // presets are applied again whenever β changes; dragging the view leaves the preset.
   const VIEWS = {
@@ -594,7 +596,14 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outli
     wedge(a0 - Math.PI, a1 - Math.PI, Math.max(0.3, 0.6 * (TX1 - d)));
     // The value goes above the line of sight where the arc meets it, as the narrow wedge has no room for it.
     const m = tp([d + rho * Math.cos(a1), rho * Math.sin(a1)]);
-    text(tri, m[0] + 2, m[1] - 10, `p = ${(Math.atan(1 / d) / rad).toFixed(1)}°`, 'pax');
+    text(tri, m[0] + 22, m[1] - 10, `p = ${(Math.atan(1 / d) / rad).toFixed(1)}°`, 'pax');
+    // A short arrow from the label into the wedge, to show that p is the angle and not the side next to it.
+    const am = (a0 + a1) / 2, tip = tp([d + 0.93 * rho * Math.cos(am), 0.93 * rho * Math.sin(am)]);
+    const tail = [m[0] + 26, m[1] - 5];
+    const ang = Math.atan2(tip[1] - tail[1], tip[0] - tail[0]), hl = 8, hw = 3.5;
+    const base = [tip[0] - hl * Math.cos(ang), tip[1] - hl * Math.sin(ang)];
+    el('line', { x1: tail[0], y1: tail[1], x2: base[0], y2: base[1], class: 'pax-arrow' }, tri);
+    el('polygon', { points: pts([tip, [base[0] - hw * Math.sin(ang), base[1] + hw * Math.cos(ang)], [base[0] + hw * Math.sin(ang), base[1] - hw * Math.cos(ang)]]), class: 'pax-head' }, tri);
 
     el('circle', { cx: pS[0], cy: pS[1], r: 9, class: 'sun' }, tri);
     el('circle', { cx: pE[0], cy: pE[1], r: 6, class: 'earth' }, tri);

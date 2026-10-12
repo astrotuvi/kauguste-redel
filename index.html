@@ -190,7 +190,10 @@ ol.steps li > span { padding-top: 4px; }
 /* --head is where the part's links, title and tab bar end on the page, measured in the script and set
    on its tabs, so that a tab fills the rest of the window */
 .part-head .tabs { margin-bottom: 0; }
-.pane { padding: 14px 0 12px; min-height: max(460px, calc(100dvh - var(--head, 120px))); }
+.pane { position: relative; padding: 14px 0 58px; min-height: max(460px, calc(100dvh - var(--head, 120px))); }
+/* the button to the next tab or part, in the space kept free at the bottom of every tab */
+.pane-nav { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: space-between; gap: 12px; }
+.pane-nav button { padding: 6px 16px; }
 .pane.fit { height: max(460px, calc(100dvh - var(--head, 120px))); }
 /* a Hubble diagram with its results in a column to the right */
 .plot-side { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; margin-top: 6px; }
@@ -458,7 +461,7 @@ footer a { color: inherit; }
     <h3>Harjutus andmetega</h3>
     <ol>
       <li><a class="toc-part" href="#osa-1">1. osa: Hajusparvede kaugused Gaia parallaksidest</a>
-        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest. <span class="rel">Uuri lähemalt: <a href="parallaks.html">Parallaks</a></span></p>
+        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest.</p>
         <div class="toc-tabs"><a href="#intro">Sissejuhatus</a><a href="#query">Päring</a><a href="#table">Tabel</a><a href="#plots">Joonised</a><a href="#dist">Kaugus</a></div></li>
       <li><a class="toc-part" href="#osa-2">2. osa: Tsefeiidide perioodi-heleduse seos</a>
         <p>Parvede kaugustest leia tsefeiidide heledus ja perioodi-heleduse seos.</p>
@@ -495,7 +498,6 @@ footer a { color: inherit; }
     <li><span>Kontrolli värvus-heledusdiagrammi: parve liikmed moodustavad selge peajada. <a class="go" href="#plots" data-go="plots">Joonised →</a></span></li>
     <li><span>Loe keskmine parallaks ja kaugus. <a class="go" href="#dist" data-go="dist">Kaugus →</a></span></li>
   </ol>
-  <button type="button" class="primary go-btn" data-go="query">Alusta päringuga</button>
   </div>
 
   <div role="tabpanel" class="pane" id="paneQuery" aria-labelledby="tabQuery" hidden>
@@ -986,7 +988,8 @@ const ASYNC_LIMIT = 300;   // s; give up on an async job after this long
 const ZP = -0.017;   // mas, Gaia DR3 global parallax zero-point
 const SYS = 0.010;   // mas, systematic floor for a cluster-mean parallax
 const RUWE_MAX = 1.4; // astrometric quality cut applied in every query
-const PAGE_MIN = 10;   // table rows per page at least; more when they fit the tab
+const PAGE_SIZE = 12;  // rows per page of the Gaia star table
+const PAGE_MIN = 10;   // rows per page of the galaxy and supernova tables at least; more when they fit the tab
 const PC_LY = 3.261563777;
 const PC_KM = 3.0856775814913673e13;
 const PC_AU = 206264.80624709636;
@@ -1121,7 +1124,6 @@ const S = {
   idx: null,          // combined selection (sorted indices) or null
   stats: null,
   pages: { gal: { page: 0, size: PAGE_MIN }, sn: { page: 0, size: PAGE_MIN } },   // galaxy and supernova tables
-  pageSize: PAGE_MIN, // data table rows per page, see fitPageSize
   distOn: false,      // cluster distance shown after "Arvuta kaugus"; reset with each new dataset
   rev: 0,             // uirevision, bumped per dataset
   token: 0,
@@ -2196,7 +2198,7 @@ function drawTable() {
   if (!S.d) { card.hidden = true; return; }
   card.hidden = false;
   const d = S.d;
-  const size = S.pageSize;
+  const size = PAGE_SIZE;
   const pages = Math.max(1, Math.ceil(S.n / size));
   S.page = Math.min(Math.max(S.page, 0), pages - 1);
   const first = S.page * size;
@@ -2226,12 +2228,6 @@ function drawTable() {
 
 // as many table rows per page as fit the table tab; the first row shown stays on the page
 function fitPageSize() {
-  const size = rowsThatFit($("dataBody"));
-  if (size && size !== S.pageSize) {
-    S.page = Math.floor((S.page * S.pageSize) / size);
-    S.pageSize = size;
-    drawTable();
-  }
   let redraw = false;
   for (const [key, body] of [["gal", "galBody"], ["sn", "snBody"]]) {
     const p = S.pages[key], size = rowsThatFit($(body));
@@ -2282,7 +2278,7 @@ function showStar(i) {
   if (i === S.hl) S.hl = null;              // a second click on the marked star unmarks it
   else {
     S.hl = i;
-    S.page = Math.floor((S.order ? S.order.indexOf(i) : i) / S.pageSize);
+    S.page = Math.floor((S.order ? S.order.indexOf(i) : i) / PAGE_SIZE);
   }
   drawTable();
   for (const [plot, t] of Object.entries(CROSS_TRACE)) {   // restyle keeps the current zoom
@@ -2597,6 +2593,37 @@ function go(hash) {
   route();
 }
 window.addEventListener("hashchange", route);
+// buttons at the bottom of every tab to the previous and the next tab; across parts they lead to the
+// last tab of the previous part and the first tab of the next one, and at both ends to the contents
+function navButton(label, primary, onClick) {
+  const b = document.createElement("button");
+  b.type = "button";
+  if (primary) b.className = "primary";
+  b.textContent = label;
+  b.addEventListener("click", onClick);
+  return b;
+}
+for (const [k, part] of PARTS.entries()) {
+  const tabs = tabsOf(part);
+  for (const [i, tab] of tabs.entries()) {
+    const prev = tabs[i - 1], prevPart = PARTS[k - 1];
+    const next = tabs[i + 1], nextPart = PARTS[k + 1];
+    const nav = document.createElement("div");
+    nav.className = "pane-nav";
+    nav.append(
+      navButton(prev ? `← ${prev.textContent}` : prevPart ? `← ${k}. osa` : "← Sisukord", false, () => {
+        if (prev) pickTab(prev.dataset.tab);
+        else if (prevPart) go(tabsOf(prevPart).at(-1).dataset.tab);
+        else go("");
+      }),
+      navButton(next ? `Edasi: ${next.textContent} →` : nextPart ? `Edasi: ${k + 2}. osa →` : "Tagasi sisukorda", true, () => {
+        if (next) pickTab(next.dataset.tab);
+        else if (nextPart) go(tabsOf(nextPart)[0].dataset.tab);
+        else go("");
+      }));
+    $(tab.getAttribute("aria-controls")).append(nav);
+  }
+}
 // links to the home view and to every part above each part title
 for (const [k, part] of PARTS.entries()) {
   const nav = document.createElement("nav");

@@ -30,7 +30,11 @@ law), and **Harjutus andmetega**, the four parts of the exercise. So far only th
 *tulekul* (coming). Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
-contents and to the other parts, and below the title are its tabs. The
+contents and to the other parts, and below the title are its tabs. Buttons at
+the bottom of every tab lead to the previous tab (left) and the next one
+(right). Across parts they go to the last tab of the previous part and the
+first tab of the next one, and at both ends of the exercise back to the table
+of contents. The
 address keeps the part or tab (`#osa-2`, `#plots`), so the browser's back
 button and reloading work.
 
@@ -46,8 +50,7 @@ button and reloading work.
    **Joonised** (the four plots on a 2 × 2 grid) and **Kaugus** (the mean
    parallax and the distance). Each tab is about one window high, so the
    four plots fit on the screen together.
-2. Check the queried stars on the **Tabel** tab. It shows as many rows per
-   page as fit the window, at least 10.
+2. Check the queried stars on the **Tabel** tab, 12 rows per page.
 3. On the **Joonised** tab, use the lasso on the proper-motion plot to mark
    the dense clump of stars that move together. Each lasso adds stars to the
    selection, and **Tühista valik** clears it. The selected stars are
@@ -147,7 +150,7 @@ parameter q₀ = −0.55 as in SH0ES. Without it, H₀ comes out about 3 % low.
 
 ### Parallax demonstration
 
-`parallaks.html`, linked from the table of contents, from the part 1 card and from the parallax rung of the ladder picture, shows the parallax method with
+`parallaks.html`, linked from the table of contents and from the parallax rung of the ladder picture, shows the parallax method with
 an interactive schematic. The left view shows the Sun, the Earth's orbit, the
 star and a plane of distant quasars in 3D; the line from the Earth through the
 star meets the quasar plane at a point that traces an ellipse during the year.
