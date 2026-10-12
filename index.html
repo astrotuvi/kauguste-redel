@@ -365,6 +365,9 @@ table.data-table tr.cur td { background: color-mix(in srgb, var(--accent) 12%, t
   border: 1px solid var(--border); border-radius: 7px; padding: 7px 8px;
 }
 .query-info .value { overflow-wrap: anywhere; }
+/* the queried cluster after a card title */
+.cluster-name { color: var(--text-2); font-weight: 500; }
+.cluster-name:not(:empty)::before { content: " · "; }
 table.data-table tr[data-gal] { cursor: pointer; }
 table.data-table tr.gal-detail > td { text-align: left; padding: 8px 4px 12px; background: var(--bg); }
 .gal-detail .hint { margin: 0 4px; white-space: normal; }
@@ -547,7 +550,7 @@ footer a { color: inherit; }
   <section class="card data" id="dataCard" hidden>
     <div class="card-head">
       <div>
-        <h2>Päritud tähed</h2>
+        <h2>Päritud tähed<span class="cluster-name"></span></h2>
         <p class="hint">Valitud tähed on esile tõstetud. Klõps real märgib tähe joonistel, klõps veeru pealkirjal sorteerib (uus klõps pöörab järjekorra).</p>
       </div>
       <span class="count" id="dataCount"></span>
@@ -629,13 +632,13 @@ footer a { color: inherit; }
 
   <div role="tabpanel" class="pane compact" id="paneDist" aria-labelledby="tabDist" hidden>
   <section class="card">
-    <h2>Keskmine parallaks</h2>
+    <h2>Keskmine parallaks<span class="cluster-name"></span></h2>
     <div id="plxStats"><p class="empty">Andmeid pole laaditud.</p></div>
   </section>
 
   <section class="card results">
     <div class="results-head">
-      <h2>Parve kaugus</h2>
+      <h2>Parve kaugus<span class="cluster-name"></span></h2>
       <div class="opts">
         <button type="button" id="download" disabled>Laadi valik alla (CSV)</button>
       </div>
@@ -1139,6 +1142,8 @@ const S = {
   token: 0,
   qctrl: null,        // AbortController of the running query
   coordsFor: null,    // name-box text that the coordinate box belongs to
+  queryTarget: null,  // name-box text of the last successful query, which its result cards belong to
+  title: null,        // cluster name of the data, or the query coordinates without a name
   coordsLabel: null,  // status label for those coordinates, when they came from a name lookup
   page: 0,            // data table page
   pageSize: PAGE_MIN, // data table rows per page, set to what fits its tab
@@ -1500,6 +1505,16 @@ function onShiftClick(id, fn) {
   });
 }
 
+// the cluster name in bold in the top left corner of the sky view, as far from the left as from the top,
+// as a list of annotations (none before a query)
+function nameTag() {
+  return !S.title ? [] : [{
+    text: `<b>${esc(S.title)}</b>`, xref: "paper", yref: "paper", x: 0, y: 1, xanchor: "left", yanchor: "top", xshift: 30, yshift: -30,
+    showarrow: false,
+    font: { size: 13, color: css("--text-1") }, bgcolor: css("--surface"), borderpad: 3,
+  }];
+}
+
 function emptyPlot(id, msg) {
   Plotly.react(id, [], baseLayout({
     xaxis: { visible: false }, yaxis: { visible: false },
@@ -1572,6 +1587,7 @@ function drawSky() {
     dragmode: "zoom",
     xaxis: axis("Otsetõus α (°)", { autorange: "reversed", scaleanchor: "y", scaleratio: cosd }),
     yaxis: axis("Kääne δ (°)"),
+    annotations: nameTag(),
     shapes: [{
       type: "circle", xref: "x", yref: "y", layer: "below",
       x0: ra0 - r / cosd, x1: ra0 + r / cosd, y0: dec0 - r, y1: dec0 + r,
@@ -1907,6 +1923,7 @@ function measureCluster(cl) {
   S.coordsLabel = `${x.cluster} → α = ${fmtN(x.ra, 4)}°, δ = ${x.dec >= 0 ? "+" : ""}${fmtN(x.dec, 4)}°`;
   $("radius").value = x.r;
   $("gmax").value = x.g;
+  markStale();
   go("query");
   $("form").scrollIntoView({ behavior: "smooth", block: "center" });
   $("go").focus({ preventScroll: true });
@@ -2570,8 +2587,12 @@ async function run() {
       `<div class="tile"><div class="label">Saadud ridu</div><div class="value">${fmt(n)}</div>
         <div class="unit">Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)</div></div>`;
     $("queryInfo").hidden = false;
+    S.queryTarget = target;
+    S.title = name || `α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°`;
+    for (const el of document.querySelectorAll(".cluster-name")) el.textContent = S.title;
     const trunc = n >= MAXREC;
     setStatus(`${done}` + (trunc ? ` Tulemus on kärbitud — vähenda raadiust või G piiri.` : "") + ` Ridu: ${fmt(n)}.`, trunc ? "warn" : "");
+    markStale();                // the name box may have changed while the query ran
 
     drawSky();
     drawPM();
@@ -2631,7 +2652,14 @@ function redrawAll() {
 $("form").addEventListener("submit", (e) => { e.preventDefault(); run(); });
 // a new name makes the coordinate box stale; typed coordinates are used as they are
 function clearCoords() { $("coords").value = ""; S.coordsFor = S.coordsLabel = null; }
-$("target").addEventListener("input", clearCoords);
+$("target").addEventListener("input", () => { clearCoords(); markStale(); });
+// once the name box differs from the last queried name, the result cards of that query are hidden and
+// its status is removed; a running query keeps its progress message
+function markStale() {
+  const stale = S.queryTarget !== null && $("target").value.trim() !== S.queryTarget;
+  $("queryInfo").hidden = S.queryTarget === null || stale;
+  if (stale && $("stop").hidden) setStatus("");
+}
 $("coords").addEventListener("input", () => { S.coordsFor = $("target").value.trim(); S.coordsLabel = null; });
 $("clear").addEventListener("click", clearSelection);
 $("download").addEventListener("click", downloadSelection);
@@ -2892,6 +2920,7 @@ for (const ex of EXAMPLES) {
   b.addEventListener("click", () => {
     $("target").value = ex.name;
     clearCoords();
+    markStale();
     $("radius").value = ex.r;
     $("gmax").value = ex.g;
     $("target").focus();
