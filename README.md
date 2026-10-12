@@ -24,10 +24,10 @@ page needs an internet connection, because it loads Plotly from a CDN and
 queries the data services directly from the browser.
 
 The page opens on the introduction and a table of contents. The table of
-contents has two groups: **Meetodid lähemalt**, one card for each rung of the
-ladder (parallax, Cepheids, type Ia supernovae) that leads to a page explaining
-the method, and **Ülesanne**, the four parts of the exercise. So far only the
-parallax page exists; the other two cards are marked *tulekul* (coming). Clicking a part
+contents has two groups: **Uuri lähemalt**, a row of cards that lead to background
+pages (parallax, standard candles, Cepheids, type Ia supernovae and the Hubble
+law), and **Harjutus andmetega**, the four parts of the exercise. So far only the parallax page exists; the other cards are marked
+*tulekul* (coming). Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
 contents and to the other parts, and below the title are its tabs. The

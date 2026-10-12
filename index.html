@@ -308,21 +308,28 @@ body.in-part main { padding-top: 10px; padding-bottom: 0; }
 .toc .rel { font-size: 0.82rem; color: var(--text-3); }
 .toc .rel a { color: var(--sel); text-decoration: none; }
 .toc .rel a:hover { text-decoration: underline; }
-/* the explanations of the three rungs, in the colours of the ladder picture; pages still to come are muted */
-.methods { list-style: none; padding: 0; margin: 0 0 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.methods li { display: flex; gap: 12px; align-items: flex-start; border-left: 4px solid var(--m); }
-.methods li p { margin: 4px 0 8px; }
+/* the background pages, in the colours of the ladder picture; pages still to come are muted */
+.methods { list-style: none; padding: 0; margin: 0 0 22px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.methods li { position: relative; overflow: hidden; padding-left: 20px; }
+.methods li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--stripe, var(--m)); }
+.methods li p { margin: 6px 0 8px; font-size: 0.86rem; }
+.methods .m-head { display: flex; gap: 10px; align-items: center; }
 .methods .m1 { --m: var(--sel); }
 .methods .m2 { --m: var(--cep); }
 .methods .m3 { --m: var(--accent); }
-.methods svg { flex: none; width: 34px; height: 34px; margin-top: 2px; }
+.methods .mh { --m: var(--text-3); }
+/* standard candles cover both candle rungs: the stripe runs from the Cepheid to the supernova colour */
+.methods .mc { --m: var(--cep); --stripe: linear-gradient(var(--cep), var(--accent)); }
+.methods .mc .fill { fill: var(--cep); }
+.methods svg { flex: none; width: 30px; height: 30px; }
 .methods .fill { fill: var(--m); }
 .methods .ring { fill: none; stroke: var(--m); stroke-width: 1.3; opacity: 0.5; }
+.methods .arrow { fill: none; stroke: var(--m); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .methods .orbit, .methods .sight { fill: none; stroke: var(--text-3); stroke-width: 1.2; }
 .methods .sight { stroke-dasharray: 3 2; }
 .methods .earth { fill: var(--text-2); }
 .methods .soon svg, .methods .soon .toc-part, .methods .soon p { opacity: 0.55; }
-.methods .badge { font-size: 0.72rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--text-2); vertical-align: 2px; margin-left: 4px; }
+.methods .badge { display: table; margin-top: 2px; font-size: 0.72rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--text-2); }
 table.data-table td.act { white-space: nowrap; }
 table.data-table td.act button { padding: 3px 10px; font-size: 0.8rem; margin-left: 4px; }
 table.data-table td.muted { color: var(--text-3); }
@@ -367,7 +374,7 @@ footer a { color: inherit; }
   .plot-side { grid-template-columns: minmax(0, 1fr); }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
   .tiles { grid-template-columns: 1fr; }
-  .toc ol, .methods { grid-template-columns: 1fr; }
+  .toc ol { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
   .tiles.four { grid-template-columns: 1fr; }
@@ -413,38 +420,38 @@ footer a { color: inherit; }
   </div>
   <nav class="toc" aria-labelledby="tocTitle">
     <h2 id="tocTitle">Sisukord</h2>
-    <h3>Meetodid lähemalt</h3>
+    <h3>Uuri lähemalt</h3>
     <ul class="methods">
       <li class="m1">
-        <svg viewBox="-17 -17 34 34" aria-hidden="true"><ellipse class="orbit" cx="0" cy="8" rx="14" ry="5"/><circle class="fill" cx="0" cy="8" r="3.5"/>
-          <path class="sight" d="M-14 8 L0 -14 L14 8"/><circle class="fill" cx="0" cy="-14" r="3"/><circle class="earth" cx="-14" cy="8" r="2.5"/><circle class="earth" cx="14" cy="8" r="2.5"/></svg>
-        <div>
-          <a class="toc-part" href="parallaks.html">Parallaks</a>
-          <p>Interaktiivne joonis: Maa liikumine ümber Päikese paneb lähedase tähe kaugete kvasarite taustal ellipsit joonistama.</p>
-          <span class="rel">Seotud: <a href="#osa-1">1. osa</a></span>
-        </div>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><ellipse class="orbit" cx="0" cy="8" rx="14" ry="5"/><circle class="fill" cx="0" cy="8" r="3.5"/><path class="sight" d="M-14 8 L0 -14 L14 8"/><circle class="fill" cx="0" cy="-14" r="3"/><circle class="earth" cx="-14" cy="8" r="2.5"/><circle class="earth" cx="14" cy="8" r="2.5"/></svg><a class="toc-part" href="parallaks.html">Parallaks</a></div>
+        <p>Interaktiivne joonis: Maa liikumine ümber Päikese paneb lähedase tähe kaugete kvasarite taustal ellipsit joonistama.</p>
+        <span class="rel">Seotud: <a href="#osa-1">1. osa</a></span>
+      </li>
+      <li class="mc soon">
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-9" cy="0" r="6"/><circle class="fill" cx="5" cy="0" r="3.8" opacity="0.6"/><circle class="fill" cx="14" cy="0" r="2.2" opacity="0.35"/></svg><span class="toc-part">Standardküünlad <span class="badge">tulekul</span></span></div>
+        <p>Kui valgusallika tegelik heledus on teada, annab näiv heledus kauguse. Tähesuurused, kaugusmoodul ja kalibreerimine.</p>
+        <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a>, <a href="#osa-4">4. osa</a></span>
       </li>
       <li class="m2 soon">
-        <svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="ring" r="13"/><circle class="ring" r="9"/><circle class="fill" r="5"/></svg>
-        <div>
-          <span class="toc-part">Tsefeiidid <span class="badge">tulekul</span></span>
-          <p>Miks tsefeiidid pulseerivad ja miks nende periood näitab, kui heledad nad on.</p>
-          <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a></span>
-        </div>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="ring" r="13"/><circle class="ring" r="9"/><circle class="fill" r="5"/></svg><span class="toc-part">Tsefeiidid <span class="badge">tulekul</span></span></div>
+        <p>Miks tsefeiidid pulseerivad ja miks nende periood näitab heledust; tähtedevaheline tolm ja Wesenheiti tähesuurus.</p>
+        <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a></span>
       </li>
       <li class="m3 soon">
-        <svg viewBox="-17 -17 34 34" aria-hidden="true"><polygon class="fill" points="0.0,-13.0 1.9,-4.6 9.2,-9.2 4.6,-1.9 13.0,-0.0 4.6,1.9 9.2,9.2 1.9,4.6 0.0,13.0 -1.9,4.6 -9.2,9.2 -4.6,1.9 -13.0,0.0 -4.6,-1.9 -9.2,-9.2 -1.9,-4.6"/></svg>
-        <div>
-          <span class="toc-part">Ia supernoovad <span class="badge">tulekul</span></span>
-          <p>Miks plahvatav valge kääbus on maksimumis alati peaaegu ühesuguse heledusega.</p>
-          <span class="rel">Seotud: <a href="#osa-4">4. osa</a></span>
-        </div>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><polygon class="fill" points="0.0,-13.0 1.9,-4.6 9.2,-9.2 4.6,-1.9 13.0,-0.0 4.6,1.9 9.2,9.2 1.9,4.6 0.0,13.0 -1.9,4.6 -9.2,9.2 -4.6,1.9 -13.0,0.0 -4.6,-1.9 -9.2,-9.2 -1.9,-4.6"/></svg><span class="toc-part">Ia supernoovad <span class="badge">tulekul</span></span></div>
+        <p>Miks plahvatav valge kääbus on maksimumis peaaegu ühesuguse heledusega ja kuidas seda heledust täpsustatakse.</p>
+        <span class="rel">Seotud: <a href="#osa-4">4. osa</a></span>
+      </li>
+      <li class="mh soon">
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" r="3"/><path class="arrow" d="M0 -6 V-14 M-3 -11 L0 -14 L3 -11 M0 6 V14 M-3 11 L0 14 L3 11 M-6 0 H-14 M-11 -3 L-14 0 L-11 3 M6 0 H14 M11 -3 L14 0 L11 3"/></svg><span class="toc-part">Hubble'i seadus <span class="badge">tulekul</span></span></div>
+        <p>Punanihe, eemaldumiskiirus ja Hubble'i konstant; miks lähedased galaktikad hajuvad ja mis on Hubble'i pinge.</p>
+        <span class="rel">Seotud: <a href="#osa-3">3. osa</a>, <a href="#osa-4">4. osa</a></span>
       </li>
     </ul>
-    <h3>Ülesanne</h3>
+    <h3>Harjutus andmetega</h3>
     <ol>
       <li><a class="toc-part" href="#osa-1">1. osa: Hajusparvede kaugused Gaia parallaksidest</a>
-        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest. <span class="rel">Taust: <a href="parallaks.html">Parallaks</a></span></p>
+        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest. <span class="rel">Uuri lähemalt: <a href="parallaks.html">Parallaks</a></span></p>
         <div class="toc-tabs"><a href="#intro">Sissejuhatus</a><a href="#query">Päring</a><a href="#table">Tabel</a><a href="#plots">Joonised</a><a href="#dist">Kaugus</a></div></li>
       <li><a class="toc-part" href="#osa-2">2. osa: Tsefeiidide perioodi-heleduse seos</a>
         <p>Parvede kaugustest leia tsefeiidide heledus ja perioodi-heleduse seos.</p>
