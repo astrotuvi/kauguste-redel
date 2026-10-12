@@ -296,11 +296,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outli
   // Schematic units: the Earth's orbit has radius 1, the quasar background is a plane at distance D from the Sun,
   // perpendicular to the direction of the star, and spans ±H in both directions. The time runs from 0 to st.T years.
   const D = 13, H = 5, NS = 'http://www.w3.org/2000/svg';
-  const st = { T: 3, t: 0, d: 5, beta: 50, pm: false, mu: 0.8, phi: 60, az: 28, el: 0, roll: false, view: 'oblique', pax: false, line: true, gaia: false, playing: false };
+  const st = { T: 3, t: 0, d: 5, beta: 50, pm: false, mu: 0.8, phi: 60, az: 36, el: 0, roll: false, view: 'oblique', pax: false, line: true, gaia: false, playing: false };
   // Preset viewing angles (az, el in the camera's star-based frame, see camera(); roll turns the picture upside down). The pole view depends on β, so the
   // presets are applied again whenever β changes; dragging the view leaves the preset.
   const VIEWS = {
-    oblique: () => [28, 0, false],                        // the default: from behind the Sun, turned just enough to bring the Sun out to the left of the sphere
+    oblique: () => [36, 0, false],                        // the default: from behind the Sun, turned far enough to bring the Sun and the star out to the left of the sphere
     sun: () => [0, 0, false],                             // from behind the Sun along the line of sight: the ellipse face-on
     side: () => [90, 0, false],                           // from the side: the orbit and the quasar plane edge-on, the parallax angle in full
     pole: () => [180, Math.min(85, 90 - st.beta), true],  // from above the ecliptic north pole: the orbit face-on, the star up
