@@ -2611,10 +2611,19 @@ $("prevPage").addEventListener("click", () => { S.page--; drawTable(); });
 $("nextPage").addEventListener("click", () => { S.page++; drawTable(); });
 $("cmdAbs").addEventListener("change", refresh);
 $("histAll").addEventListener("change", drawHist);
-// the other plots: all stars or only the selected ones
-$("allSky").addEventListener("change", () => { if (S.d) drawSky(); });
-$("allPm").addEventListener("change", () => { if (S.d) drawPM(); });
-$("allCmd").addEventListener("change", () => { if (S.d) drawCMD(); });
+// the other plots: all stars or only the selected ones. Only the data of the layer of all stars is replaced;
+// the axes are first fixed at the range they have, so that the plot keeps its zoom and its range. (A full
+// redraw would pass a new range to Plotly, which then drops the zoom, and would rescale autoranged axes.)
+function toggleAllStars(id, on, x, y, text) {
+  const gd = $(id);
+  if (!S.d || !gd._fullLayout || !gd._fullLayout.xaxis) return;
+  const { xaxis, yaxis } = gd._fullLayout;
+  Plotly.relayout(id, { "xaxis.range": [...xaxis.range], "yaxis.range": [...yaxis.range] }).then(() =>
+    Plotly.restyle(id, { x: [on ? x : []], y: [on ? y : []], ...(text ? { text: [on ? text : []] } : {}) }, [0]));
+}
+$("allSky").addEventListener("change", (e) => toggleAllStars("sky", e.target.checked, S.d && S.sky.raPlot, S.d && S.d.dec, S.d && S.hover));
+$("allPm").addEventListener("change", (e) => toggleAllStars("pm", e.target.checked, S.d && S.d.pmra, S.d && S.d.pmdec));
+$("allCmd").addEventListener("change", (e) => toggleAllStars("cmd", e.target.checked, S.d && S.d.bprp, S.d && S.d.g.map((g) => g + S.cmdShift)));
 $("restore").addEventListener("click", restoreSelection);
 $("dropOutliers").addEventListener("click", dropOutliers);
 $("results").addEventListener("click", (e) => { if (e.target.id === "saveDist") storeDistance(); });

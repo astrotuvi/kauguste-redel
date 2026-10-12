@@ -57,8 +57,9 @@ button and reloading work.
    highlighted in the sky view, the colour–magnitude diagram and the table.
    Every plot has a **Kõik tähed** checkbox. In the sky view, the
    proper-motion plot and the colour–magnitude diagram it is on by default and
-   shows all queried stars; unchecked, only the selected stars are drawn (the
-   lasso picks stars only while all stars are shown). In the parallax
+   shows all queried stars; unchecked, only the selected stars are drawn, and
+   the zoom and range of the plot stay as they are (the lasso picks stars only
+   while all stars are shown). In the parallax
    histogram it is off by default, and checked it adds all stars in grey.
    Clicking a star marks it with a crosshair in the other plots and in the
    table. Its parallax is also shown on the parallax histogram: as a line when
