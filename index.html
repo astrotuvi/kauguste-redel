@@ -186,15 +186,22 @@ ol.steps li > span { padding-top: 4px; }
 .tabs button:hover { color: var(--text-1); }
 .tabs button[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--btn); }
 /* Every tab is at least one window high (less the tab bar), so switching tabs does not move the page.
-   The plot tab is exactly that high, and its four plots on a 2 × 2 grid share the height. */
+   The plot tab is exactly that high, and its four plots on a 2 × 2 grid share the height.
+   On a large screen the height is capped by the content width (about 1000 px at full width), so a tab
+   keeps the same proportions as on a laptop instead of stretching. */
 /* --head is where the part's links, title and tab bar end on the page, measured in the script and set
    on its tabs, so that a tab fills the rest of the window */
 .part-head .tabs { margin-bottom: 0; }
-.pane { position: relative; padding: 14px 0 58px; min-height: max(460px, calc(100dvh - var(--head, 120px))); }
-/* the button to the next tab or part, in the space kept free at the bottom of every tab */
-.pane-nav { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: space-between; gap: 12px; }
+.pane {
+  --pane-h: clamp(460px, calc(100dvh - var(--head, 120px)), calc(min(100vw, 1280px) * 0.78));
+  padding: 14px 0 12px; min-height: var(--pane-h);
+}
+/* the buttons to the previous and the next tab or part, right below the content of every tab */
+.pane-nav { margin-top: 14px; display: flex; justify-content: space-between; gap: 12px; }
 .pane-nav button { padding: 6px 16px; }
-.pane.fit { height: max(460px, calc(100dvh - var(--head, 120px))); }
+/* a plot tab is a column: its plots take the height left above the buttons */
+.pane.fit { height: var(--pane-h); display: flex; flex-direction: column; }
+.pane.fit > .card.fill, .pane.fit > .grid.quad { flex: 1 1 0; min-height: 0; }
 /* a Hubble diagram with its results in a column to the right */
 .plot-side { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; margin-top: 6px; }
 .plot-side .plot { height: auto; min-height: 0; margin-top: 0; }
@@ -204,13 +211,13 @@ ol.steps li > span { padding-top: 4px; }
 .side-choice .calib-row { margin-top: 4px; }
 .side-choice select { flex: 1 1 100%; min-width: 0; }
 /* a single plot card that fills its tab */
-.pane.fit > .card.fill { display: flex; flex-direction: column; height: 100%; container-type: normal; }
+.pane.fit > .card.fill { display: flex; flex-direction: column; container-type: normal; }
 .card.fill .plot { flex: 1 1 0; min-height: 0; height: auto; }
 .pane > .card + .card, .pane > .card + .tiles { margin-top: 14px; }
 /* Each card spans a head row and a plot row of the outer grid (subgrid; it needs container-type: normal,
    as containment turns a subgrid off), so the plots in a row stay
    equal when one head wraps onto two lines. */
-.grid.quad { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr) auto minmax(0, 1fr); height: 100%; margin-top: 0; }
+.grid.quad { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr) auto minmax(0, 1fr); margin-top: 0; }
 .grid.quad > .card { display: grid; grid-row: span 2; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); row-gap: 6px; container-type: normal; min-height: 0; padding: 10px 12px; }
 .grid.quad .plot { min-width: 0; min-height: 0; height: auto; margin-top: 0; overflow: hidden; }
 .grid.quad .card-head { position: relative; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
@@ -372,7 +379,7 @@ footer a { color: inherit; }
   .ladder-art { max-width: 350px; }
   .tiles.four { grid-template-columns: repeat(2, 1fr); }
   .plot { height: 340px; }
-  .pane.fit { height: auto; }
+  .pane.fit { height: auto; display: block; }
   .grid.quad { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
   .grid.quad > .card { display: block; grid-row: auto; }
   .grid.quad .plot { height: 340px; margin-top: 6px; }
@@ -711,7 +718,7 @@ footer a { color: inherit; }
       <div class="card-head">
         <div>
           <h2>Perioodi-heleduse seos</h2>
-          <p class="hint">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud; rombid on seosesse lisatud väljatsefeiidid. Katkendjoon: sinu kaalutud vähimruutude sirge; punktiir: avaldatud seos.</p>
+          <p class="hint">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud; rombid on seosesse lisatud väljatsefeiidid. Katkendjoon: sinu kaalutud vähimruutude sirge; punktiir: avaldatud seos. Shift + klõps väljatsefeiidil eemaldab selle seosest.</p>
         </div>
       </div>
       <div class="plot" id="pl"></div>
@@ -787,7 +794,7 @@ footer a { color: inherit; }
       <div class="card-head">
         <div>
           <h2>Kiiruse ja kauguse seos</h2>
-          <p class="hint">Joon: v = H<sub>0</sub> · d, sobitatud vähimruutude meetodil läbi nullpunkti.</p>
+          <p class="hint">Joon: v = H<sub>0</sub> · d, sobitatud vähimruutude meetodil läbi nullpunkti. Shift + klõps galaktikal jätab selle sobitusest välja; väljajäetud galaktika (hall) tuleb Shift + klõpsuga tagasi.</p>
         </div>
       </div>
       <div class="plot-side">
@@ -992,8 +999,7 @@ const ASYNC_LIMIT = 300;   // s; give up on an async job after this long
 const ZP = -0.017;   // mas, Gaia DR3 global parallax zero-point
 const SYS = 0.010;   // mas, systematic floor for a cluster-mean parallax
 const RUWE_MAX = 1.4; // astrometric quality cut applied in every query
-const PAGE_SIZE = 12;  // rows per page of the Gaia star table
-const PAGE_MIN = 10;   // rows per page of the galaxy and supernova tables at least; more when they fit the tab
+const PAGE_MIN = 10;   // rows per page of the star, galaxy and supernova tables at least; more when they fit the tab
 const PC_LY = 3.261563777;
 const PC_KM = 3.0856775814913673e13;
 const PC_AU = 206264.80624709636;
@@ -1135,6 +1141,7 @@ const S = {
   coordsFor: null,    // name-box text that the coordinate box belongs to
   coordsLabel: null,  // status label for those coordinates, when they came from a name lookup
   page: 0,            // data table page
+  pageSize: PAGE_MIN, // data table rows per page, set to what fits its tab
   hl: null,           // data row of the star last clicked in a plot
   snChoice: "own",    // supernova luminosity chosen in the part 4 menu
   snUsed: null,       // luminosity applied with "Kasuta heledust" ("own" or "pub"), or null before that
@@ -1480,6 +1487,19 @@ function baseLayout(extra = {}) {
   };
 }
 
+// Shift-click on a point of a plot calls fn with the point's customdata (the name of a field Cepheid
+// or a galaxy); points without customdata cannot be clicked. The handler is bound once per plot.
+function onShiftClick(id, fn) {
+  const gd = $(id);
+  if (gd.dataset.shiftClick) return;
+  gd.dataset.shiftClick = "1";
+  gd.on("plotly_click", (ev) => {
+    if (!ev.event || !ev.event.shiftKey) return;
+    const p = ev.points && ev.points.find((q) => q.customdata != null);
+    if (p) fn(p.customdata);
+  });
+}
+
 function emptyPlot(id, msg) {
   Plotly.react(id, [], baseLayout({
     xaxis: { visible: false }, yaxis: { visible: false },
@@ -1746,17 +1766,18 @@ function updateHistStar() {
   Plotly.relayout("hist", { shapes, annotations });
 }
 
-// mean parallax of the selection with its error, the number of stars and the median single-star error
+// mean parallax of the selection with its error, the number of stars, the median single-star error and
+// the statistical error of the mean
 function drawPlxStats() {
   const st = S.stats;
   if (!st) { $("plxStats").innerHTML = `<p class="empty">Märgi parve tähed lassoga omaliikumiste joonisel (vaheleht „Joonised“).</p>`; return; }
   const [pV, pE] = valErr(st.wmean, st.etot);
   const typ = percentile(st.use.map((i) => S.d.eplx[i]), 0.5);
   $("plxStats").innerHTML = `<div class="tiles four">
-      <div class="tile"><div class="label">Keskmine parallaks ⟨p⟩</div><div class="value">${pV}</div><div class="unit">mas</div></div>
-      <div class="tile"><div class="label">Keskmise parallaksi viga σ<sub>⟨p⟩</sub></div><div class="value">${pE}</div><div class="unit">mas</div></div>
+      <div class="tile"><div class="label">Keskmine parallaks ⟨p⟩</div><div class="value">${pV} <small>± ${pE}</small></div><div class="unit">mas</div></div>
       <div class="tile"><div class="label">Tähti arvutuses</div><div class="value">${fmt(st.n)}</div><div class="unit">tähte</div></div>
       <div class="tile"><div class="label">Ühe tähe tüüpiline viga σ<sub>p</sub></div><div class="value">${fmtN(typ, typ < 0.1 ? 3 : 2)}</div><div class="unit">mas (mediaan)</div></div>
+      <div class="tile"><div class="label">Keskmise statistiline viga 1/√Σw<sub>i</sub></div><div class="value">${valErr(st.estat, st.estat)[1]}</div><div class="unit">mas</div></div>
     </div>
     <p class="formula">Kaalutud keskmine ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, kaal w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, parallaksi nullpunkti parandusega +${fmtN(-ZP, 3)} mas.
     Viga: statistiline 1/√Σw<sub>i</sub> = ${fmtN(st.estat, 4)} mas ja Gaia süsteemne ${fmtN(SYS, 3)} mas, liidetud ruutudena.</p>
@@ -1804,7 +1825,8 @@ function drawResults() {
   if (cl && st.wmean > 0) {
     const old = S.stored[cl];
     save = `<div class="save"><button type="button" class="primary" id="saveDist">${old ? "Uuenda" : "Salvesta"} parve ${esc(cl)} kaugus tsefeiidide jaoks</button>` +
-      (old ? `<span>Salvestatud: p = ${fmtN(old.plx, 4)} ± ${fmtN(old.e, 4)} mas (${fmt(old.n)} tähte)</span>` : "") + `</div>`;
+      (old ? `<span>Salvestatud: p = ${fmtN(old.plx, 4)} ± ${fmtN(old.e, 4)} mas (${fmt(old.n)} tähte)</span>` +
+        `<button type="button" data-go="cepCluster">Parvede tsefeiidid →</button>` : "") + `</div>`;
   }
   el.innerHTML = `${counts}${tiles}${notes.join("")}${save}
     <p class="formula">d [pc] = 1000 / ⟨p⟩ [mas]. Keskmista kõigepealt parallaksid ja alles siis pööra ümber — 1/p keskmine on nihkega.
@@ -1987,6 +2009,7 @@ function drawPL() {
       error_y: { type: "data", array: q.map((p) => p.eM), color: css("--field"), thickness: 1, width: 0 },
       text: q.map((p) => `${p.cep} (${field ? "väljatsefeiid" : p.cluster})<br>P = ${fmtN(p.P, 3)} ööp<br>M<sub>${sub}</sub><sup>W</sup> = ${fmtN(p.M, 2)} ± ${fmtN(p.eM, 2)} mag`),
       hovertemplate: "%{text}<extra></extra>",
+      customdata: field ? q.map((p) => p.cep) : undefined,
       marker: field ? { size: 9, symbol: "diamond-open", color: css("--accent"), line: { width: 1.5 } }
                     : { size: 8, color: css("--sel"), line: { width: 1, color: css("--surface") } },
     });
@@ -1996,6 +2019,7 @@ function drawPL() {
     xaxis: axis("log P (P ööpäevades)", { range: [lo, hi] }),
     yaxis: axis(`M<sub>${sub}</sub><sup>W</sup> (mag)`, { autorange: "reversed" }),
   }), CONFIG);
+  onShiftClick("pl", toggleField);
   const nf = pts.filter((p) => p.field).length;
   const n = `${fmt(pts.length)} ${pts.length === 1 ? "tsefeiid" : "tsefeiidi"}` + (nf ? `, neist ${fmt(nf)} väljatsefeiidi` : "");
   const own = !fit ? `${n}. Sirge sobitamiseks on vaja vähemalt kahte tsefeiidi.`
@@ -2109,6 +2133,7 @@ function drawHubble() {
       error_x: { type: "data", array: list.map((g) => g.eD), color: css("--field"), thickness: 1, width: 0 },
       text: list.map((g) => `${g.name} (SN ${g.sn})<br>d = ${fmtN(g.d, 1)} Mpc<br>v = ${fmtN(g.v, 0)} km/s`),
       hovertemplate: "%{text}<extra></extra>",
+      customdata: list.map((g) => g.name),
       marker: { size: 9, color, line: { width: 1, color: css("--surface") } },
     });
   }
@@ -2117,6 +2142,10 @@ function drawHubble() {
     xaxis: axis("Kaugus d (Mpc)", { range: [0, dMax] }),
     yaxis: axis("Kiirus v (km/s)", { rangemode: "tozero" }),
   }), CONFIG);
+  onShiftClick("hub", (name) => {
+    if (S.galOff.has(name)) S.galOff.delete(name); else S.galOff.add(name);
+    drawHubble();
+  });
 
   S.h0Local = fit ? fit.H : null;
   drawSupernovae(gals);
@@ -2266,7 +2295,7 @@ function drawTable() {
   if (!S.d) { card.hidden = true; return; }
   card.hidden = false;
   const d = S.d;
-  const size = PAGE_SIZE;
+  const size = S.pageSize;
   const pages = Math.max(1, Math.ceil(S.n / size));
   S.page = Math.min(Math.max(S.page, 0), pages - 1);
   const first = S.page * size;
@@ -2305,14 +2334,21 @@ function fitPageSize() {
     redraw = true;
   }
   if (redraw) drawHubble();   // draws the supernova table too
+  const size = rowsThatFit($("dataBody"));
+  if (size && size !== S.pageSize) {
+    S.page = Math.floor((S.page * S.pageSize) / size);
+    S.pageSize = size;
+    drawTable();
+  }
 }
-// rows of a table that fit the window height of its tab beside the rest of its card (at least
-// PAGE_MIN), or null while the tab is hidden; an opened galaxy row does not count
+// rows of a table that fit the window height of its tab beside the rest of its card and the buttons
+// below it (at least PAGE_MIN), or null while the tab is hidden; an opened galaxy row does not count
 function rowsThatFit(body) {
   const pane = body.closest(".pane"), card = body.closest(".card"), row = body.querySelector("tr:not(.gal-detail)");
   if (pane.hidden || !row || !row.offsetHeight) return null;
-  const cs = getComputedStyle(pane);
+  const cs = getComputedStyle(pane), nav = pane.querySelector(".pane-nav");
   const room = parseFloat(cs.minHeight) - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
+    - nav.offsetHeight - parseFloat(getComputedStyle(nav).marginTop)
     - (card.offsetHeight - body.offsetHeight);
   return Math.max(PAGE_MIN, Math.floor(room / row.offsetHeight));
 }
@@ -2346,7 +2382,7 @@ function showStar(i) {
   if (i === S.hl) S.hl = null;              // a second click on the marked star unmarks it
   else {
     S.hl = i;
-    S.page = Math.floor((S.order ? S.order.indexOf(i) : i) / PAGE_SIZE);
+    S.page = Math.floor((S.order ? S.order.indexOf(i) : i) / S.pageSize);
   }
   drawTable();
   for (const [plot, t] of Object.entries(CROSS_TRACE)) {   // restyle keeps the current zoom
