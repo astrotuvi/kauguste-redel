@@ -12,7 +12,7 @@ no external dependencies. The layout is the same:
 - a control panel on the right;
 - a **Mida joonis näitab** text below that explains the current tab.
 
-The selected tab is kept in the address (`#magnituudid`), so that
+The selected tab is kept in the address (`#tahesuurused`), so that
 `index.html` and the other pages can link to a tab.
 
 ## Light source selector
@@ -49,7 +49,7 @@ text:
 The screen cannot show brightness differences of 10²⁰ times. The glow of a
 source is therefore drawn with its size and opacity set by the magnitude, as
 on star charts. The eye also judges brightness on a roughly logarithmic
-scale, and the Magnituudid tab builds on that.
+scale, and the Tähesuurused tab builds on that.
 
 ## Tab 1: Pöördruutude seadus (the inverse-square law)
 
@@ -85,7 +85,7 @@ a supernova at about 10 kpc all look the same. Brightness alone gives no
 distance. The luminosity has to be known, and that is what a standard candle
 provides.
 
-## Tab 2: Magnituudid (magnitudes)
+## Tab 2: Tähesuurused (magnitudes)
 
 The same source and distance slider as tab 1. The scene is a vertical
 magnitude axis, with the bright end at the top and these reference marks:

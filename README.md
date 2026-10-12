@@ -203,7 +203,7 @@ in the drawing, arcsin(1/d), and for a real star as many parsecs away. The drawi
 `standardkuunlad.html` is linked from the table of contents, from the
 standard candles bracket of the ladder picture and from the word
 "standardküünlad" in the introduction. It has five tabs, and the address
-keeps the tab (`#poordruutude-seadus`, `#magnituudid`, `#kalibreerimine`,
+keeps the tab (`#poordruutude-seadus`, `#tahesuurused`, `#kalibreerimine`,
 `#hea-kuunal`, `#tsefeiidid-ja-supernoovad`). The first three share a light
 source (a 100 W bulb, a Cepheid with P = 10 d or a type Ia supernova at its
 peak) and, in the first two, a logarithmic distance slider marked with the
@@ -218,21 +218,28 @@ naked-eye, large-telescope and *Hubble* limits (m = 6, 24 and 29).
    (linear or log axes). **Määra lähtekohaks d₀** sets the reference distance,
    and **Sama heledus, eri kaugus** shows all three sources at the distances
    where they look equally bright.
-2. **Magnituudid**: a magnitude scale with reference objects, with m, M and
+2. **Tähesuurused**: a magnitude scale with reference objects, with m, M and
    the distance modulus μ of the source, beside a distance axis shifted so
    that each distance lines up with the magnitude the source would have
    there. A small calculator gives the brightness ratio of two magnitudes.
-3. **Kalibreerimine**: **Arvuta M** calibrates the source at a known
-   distance (a tape measure, a cluster parallax or the Cepheids of a host
-   galaxy). The user then measures a source at a hidden distance, either by
-   entering a distance and pressing **Kontrolli** or with **Arvuta kaugus**;
-   **Uus allikas** hides a new one. The lamp is calibrated in lighting units
-   rather than magnitudes: a lux meter gives the illuminance E, **Arvuta
-   valgustugevus** gives the luminous intensity I = E d² (cd) and the luminous
-   flux Φ = 4π I (lm), and the hidden distance is d = √(I / E). A slider puts a
-   −20 … +20 % error into the known distance, which shifts every measured
-   distance in the plot of measured against true distance by the same
-   fraction.
+3. **Kalibreerimine**: two identical sources, one at a known distance (a
+   tape measure, a cluster parallax or the Cepheids of a host galaxy) and one
+   at a hidden distance. The hidden one is a whole number n of known
+   distances away (for the Cepheid and the supernova a round one: any whole
+   number up to 20, then multiples of 5 up to 30, of 10 up to 100, of 100 up
+   to 1000 and of 1000 beyond), so n² times less light arrives from it, and the page says
+   so next to its reading. The lamp is read with a lux meter (lux to one
+   decimal), the Cepheid and the supernova in magnitudes. The user enters
+   the distance, which is a whole number in the unit of the answer box
+   (m, kpc or Mpc), and presses **Kontrolli**; a wrong answer can be tried
+   again, and a right one, or **Arvuta kaugus**, reveals the source and shows
+   the calculation d = √N × the known distance. **Uus allikas** hides a new
+   one. Optionally, **Arvuta M** (for the lamp, **Arvuta valgustugevus**, with
+   I = E d² in cd and Φ = 4π I in lm) shows the calibration through the
+   absolute magnitude, which is then also used in the shown calculation. A
+   slider puts a −20 … +20 % error into the known distance, which shifts
+   every measured distance in the plot of measured against true distance by
+   the same fraction.
 4. **Hea küünal**: N candles of one type in a simulated galaxy at 10 Mpc, with
    a histogram of the distances they give, for a chosen type and scatter σ_M;
    the readouts give 0.46 σ_M for one candle and that over √N for the mean.

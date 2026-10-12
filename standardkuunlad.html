@@ -169,8 +169,6 @@ select { width: 100%; }
 .formula:empty { display: none; }
 .ok { color: var(--good); }
 .off { color: var(--bad); }
-.group.locked > :not(h3):not(.lockmsg) { opacity: 0.45; pointer-events: none; }
-.lockmsg { font-size: 0.82rem; color: var(--text-3); margin: 0; }
 .checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; }
 .checklist li { display: grid; grid-template-columns: 1.4em 1fr; gap: 2px 6px; }
 .checklist .mk { font-weight: 700; text-align: center; }
@@ -291,7 +289,7 @@ select { width: 100%; }
     <section class="card">
       <div class="tabs" role="tablist" aria-label="Teema">
         <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Pöördruutude seadus</button>
-        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Magnituudid</button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Tähesuurused</button>
         <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Kalibreerimine</button>
         <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Hea küünal</button>
         <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1">Tsefeiidid ja supernoovad</button>
@@ -318,8 +316,8 @@ select { width: 100%; }
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <p class="hint">Ülemise allika kaugus on teada, alumise kaugus on peidetud. Mõlema heledus on mõõdetud: lambil luksmeetriga, tsefeiidil ja supernooval teleskoobiga. Tee paremal läbi kaks sammu.</p>
-        <svg id="cal" class="scene" viewBox="0 0 760 290" role="img" aria-label="Kaks ühesugust allikat: üks tuntud, teine tundmatu kaugusel"></svg>
+        <p class="hint">Kaks ühesugust allikat: ülemise kaugus on teada, alumise kaugus on peidetud. Mõlema heledus on mõõdetud, lambil luksmeetriga, tsefeiidil ja supernooval teleskoobiga. Leia paremal alumise allika kaugus.</p>
+        <svg id="cal" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kaks ühesugust allikat: üks tuntud, teine tundmatu kaugusel"></svg>
         <div class="row-cal">
           <div>
             <p class="sub">Mõõdetud ja tegelik kaugus</p>
@@ -421,15 +419,15 @@ select { width: 100%; }
       </div>
 
       <div class="group" data-tabs="tab3">
-        <h3>1. Kalibreeri</h3>
+        <h3>1. Tuntud kaugusega allikas</h3>
         <p class="readout" id="calText"></p>
-        <div class="btnrow"><button type="button" class="primary" id="calcM">Arvuta M</button></div>
+        <div class="inrow">Soovi korral: <button type="button" id="calcM">Arvuta M</button></div>
         <p class="formula" id="calFormula"></p>
       </div>
-      <div class="group" data-tabs="tab3" id="measGroup">
-        <h3>2. Mõõda</h3>
-        <p class="lockmsg" id="measLock"></p>
+      <div class="group" data-tabs="tab3">
+        <h3>2. Mõõda kaugus</h3>
         <p class="readout" id="measText"></p>
+        <p class="hint" id="measHint"></p>
         <div class="inrow">
           <label for="guess">Sinu kaugus</label><input type="text" inputmode="decimal" class="numin" id="guess" autocomplete="off"><span id="guessUnit"></span>
           <button type="button" id="check">Kontrolli</button>
@@ -496,8 +494,10 @@ select { width: 100%; }
       <li>Harjutuse 2.–4. osa kasutab just neid valemeid: 2. osas leiad tsefeiidide M parvede kaugustest, 3. osas galaktikate kaugusmoodulid μ ja 4. osas supernoovade M.</li>
     </ul>
     <ul data-tab="tab3" hidden>
-      <li>Standardküünla tegelik heledus tuleb kõigepealt mõõta lähedaste näidete abil, mille kaugus on teada eelmisest redelipulgast. Seda nimetatakse kalibreerimiseks: M = m − 5 log₁₀ d + 5.</li>
-      <li>Kalibreeritud küünlaga saab mõõta kaugusi, kuhu eelmine meetod ei ulatu: d = 10<sup>(m − M)/5 + 1</sup> pc.</li>
+      <li>Kui kaks küünalt on ühesugused, annab nende heleduste suhe kauguste suhte. Kui ühelt jõuab N korda vähem valgust, on see √N korda kaugemal: 4 korda vähem valgust tähendab 2 korda suuremat kaugust, 100 korda vähem 10 korda suuremat.
+        Tähesuurustes on heleduste suhe N = 10<sup>0.4 Δm</sup>, kus Δm on tähesuuruste vahe.</li>
+      <li>Selleks peab vähemalt ühe küünla kaugus olema teada. Selle annab eelmine redelipulk, ja seda nimetatakse kalibreerimiseks. Tavaliselt arvutatakse kalibreerimisel välja küünla absoluutne tähesuurus M = m − 5 log₁₀ d + 5
+        ja sellega teiste küünalde kaugus d = 10<sup>(m − M)/5 + 1</sup> pc. See annab sama tulemuse kui heleduste suhe.</li>
       <li>Lambi heledust mõõdetakse valgustehnika ühikutes. Luksmeeter näitab valgustatust E luksides, lambi valgustugevus on I = E d² kandelates ja valgusvoog Φ = 4π I luumenites.
         Tundmatu kaugus on siis d = √(I / E). Tähesuurustega on arvutus sama, ainult logaritmilises skaalas: absoluutne tähesuurus M vastab valgustugevusele I ja näiv tähesuurus m valgustatusele E.</li>
       <li>Harjutuses käib see samamoodi: 2. osas kalibreerid tsefeiidid parvede parallaksidega, 3. osas mõõdad nendega galaktikate kaugused ja 4. osas kalibreerid samades galaktikates Ia supernoovad.</li>
@@ -588,11 +588,11 @@ select { width: 100%; }
   // so M = +68.1 at 10 pc. The Cepheid has P = 10 d (M_V ≈ −4.0), the supernova is a type Ia at its peak (M_B ≈ −19.3).
   const SRC = {
     lamp: { name: 'Lamp', short: 'Lamp', what: '100 W hõõglamp', lum: 'valgusvoog umbes 1700 luumenit', M: 68.1, lo: 1, hi: 1e9, d: 10,
-      marks: [['Tallinn–Tartu', 1.6e5], ['Kuu', 3.844e8]], cal: 10, calHow: 'mõõdulindiga', hid: [50, 5e4], unit: ['m', 1] },
+      marks: [['Tallinn–Tartu', 1.6e5], ['Kuu', 3.844e8]], cal: 2, calHow: 'mõõdulindiga', hid: [4, 40], unit: ['m', 1], gen: 'lambi' },
     cep: { name: 'Tsefeiid', short: 'Tsefeiid', what: 'tsefeiid perioodiga 10 päeva', lum: 'umbes 3000 korda heledam kui Päike', M: -4.0, lo: 10 * PC, hi: 1e8 * PC, d: 1e3 * PC,
-      marks: [['Linnutee kese', 8.2e3 * PC], ['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', hid: [5e4 * PC, 4e7 * PC], unit: ['kpc', 1e3 * PC] },
+      marks: [['Linnutee kese', 8.2e3 * PC], ['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', hid: [5e4 * PC, 2e7 * PC], unit: ['kpc', 1e3 * PC], gen: 'tsefeiidi' },
     sn: { name: 'Ia supernoova', short: 'Supernoova', what: 'Ia tüüpi supernoova heleduse maksimumis', lum: 'umbes 5 miljardit korda heledam kui Päike', M: -19.3, lo: 10 * PC, hi: 5e9 * PC, d: 1e6 * PC,
-      marks: [['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e7 * PC, calHow: 'peregalaktika tsefeiididest (3. osa)', hid: [3e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC] },
+      marks: [['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e7 * PC, calHow: 'galaktikasse kuuluvate tsefeiidide järgi (3. osa)', hid: [4e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC], gen: 'supernoova' },
   };
   const KEYS = ['lamp', 'cep', 'sn'];
   const LIMITS = [{ m: 6, short: 'silm', slider: 'silm' }, { m: 24, short: 'suur teleskoop', slider: 'teleskoop' }, { m: 29, short: 'Hubble', slider: 'Hubble' }];
@@ -636,21 +636,31 @@ select { width: 100%; }
 
   /* ---------- Shared drawing ---------- */
   const TR = { x0: 120, x1: 735 };
-  function trackX(s, d) {
-    const S = SRC[s];
+  function trackX(s, d, S = SRC[s]) {
     return TR.x0 + (Math.log10(d) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo)) * (TR.x1 - TR.x0);
   }
   function trackD(s, x) {
     const S = SRC[s], f = clamp((x - TR.x0) / (TR.x1 - TR.x0), 0, 1);
     return 10 ** (Math.log10(S.lo) + f * (Math.log10(S.hi) - Math.log10(S.lo)));
   }
+  // Ticks at 1, 2 and 5 times the powers of ten between lo and hi. Only the powers of ten are labelled, except on short
+  // lamp scales, where 2 and 5 are labelled too.
+  function ticks125(s, lo, hi) {
+    const out = [], short = s === 'lamp' && hi / lo < 1e3;
+    for (let k = Math.floor(logU(s, lo)); k <= Math.ceil(logU(s, hi)); k++) for (const f of [1, 2, 5]) {
+      const v = fromU(s, k) * f;
+      if (v < lo * 0.999 || v > hi * 1.001) continue;
+      out.push([v, f === 1 ? decadeLabel(s, k) : short ? `${f * 10 ** k} m` : null, f === 1]);
+    }
+    return out;
+  }
   function drawTrack(g, s, y, o = {}) {
-    const S = SRC[s];
+    const S = o.R || SRC[s];
     el('line', { x1: TR.x0, y1: y, x2: TR.x1, y2: y, class: 'track' }, g);
-    for (let k = Math.ceil(logU(s, S.lo) - 1e-9); k <= Math.floor(logU(s, S.hi) + 1e-9); k++) {
-      const x = trackX(s, fromU(s, k));
+    for (const [v, L, major] of ticks125(s, S.lo, S.hi)) {
+      if (!major && !L) continue;
+      const x = trackX(s, v, S);
       el('line', { x1: x, y1: y - 4, x2: x, y2: y + 4, class: 'tick' }, g);
-      const L = decadeLabel(s, k);
       if (L) text(g, x, y + 18, L, 'tlbl', 'middle');
     }
     if (o.landmarks) for (const [name, d] of S.marks) {
@@ -955,9 +965,35 @@ select { width: 100%; }
 
   /* ---------- Tab 3: calibration ---------- */
   const calSvg = $('cal'), calPlot = $('calplot'), ladder = $('ladder');
-  function newHidden(k) { const [a, b] = SRC[k].hid; return 10 ** (Math.log10(a) + Math.random() * (Math.log10(b) - Math.log10(a))); }
+  // The hidden source is a whole number n of calibration distances away, so that n² times less light arrives from it and
+  // the answer, n times the calibration distance, is a whole number. For the Cepheid and the supernova, n is a round
+  // number: any whole number up to 20, then multiples of 5 up to 30, of 10 up to 100, of 100 up to 1000 and of 1000
+  // beyond.
+  const CALN = { lamp: [2, 20], cep: [25, 10000], sn: [2, 50] };
+  const ROUND_N = [];
+  for (let n = 1; n <= 10000; n += n < 20 ? 1 : n < 30 ? 5 : n < 100 ? 10 : n < 1000 ? 100 : 1000) ROUND_N.push(n);
+  function newHidden(k, prev) {
+    const [a, b] = CALN[k];
+    const allowed = k === 'lamp' ? null : ROUND_N.filter(n => n >= a && n <= b);
+    let n;
+    do {
+      // A log-uniform draw, moved to the nearest allowed number on the log scale.
+      const t = Math.log10(a) + Math.random() * (Math.log10(b) - Math.log10(a));
+      n = allowed ? allowed.reduce((m, v) => (Math.abs(Math.log10(v) - t) < Math.abs(Math.log10(m) - t) ? v : m)) : Math.round(10 ** t);
+    } while (prev && n * SRC[k].cal === prev);
+    return n * SRC[k].cal;
+  }
   const cal = {};
-  for (const k of KEYS) cal[k] = { done: false, hid: newHidden(k), shown: false, guess: null, computed: false, pts: [] };
+  for (const k of KEYS) cal[k] = { done: false, hid: newHidden(k), shown: false, msg: null, guess: null, pts: [] };
+  const nOf = k => Math.round(cal[k].hid / SRC[k].cal);
+  const CAL_R = { lamp: { lo: 1, hi: 100 }, cep: SRC.cep, sn: SRC.sn };  // the lamp tracks are short
+  const fmtInt = n => (n >= 1e4 ? String(n).replace(/\B(?=(\d{3})+$)/g, '\u00a0') : String(n));
+  // A distance in the unit of the answer box (m, kpc or Mpc), without trailing zeros: 2 m rather than 2.00 m.
+  function fmtU(s, d) {
+    const v = d / SRC[s].unit[1], r = Math.round(v);
+    const t = Math.abs(v - r) < 1e-6 * Math.max(1, v) ? fmtInt(r) : sig(v, 4).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+    return `${t} ${SRC[s].unit[0]}`;
+  }
   const assumed = k => SRC[k].cal * (1 + st.err / 100);
   const mCal = k => mag(k, SRC[k].cal);
   const Mest = k => mCal(k) - 5 * Math.log10(assumed(k) / PC) + 5;
@@ -973,7 +1009,9 @@ select { width: 100%; }
     if (a >= 10) { a /= 10; e++; }
     return a.toFixed(2) + '·10' + sup(e);
   }
-  const reading = (k, d) => (k === 'lamp' ? `E = ${fmtSci(lux(d))} lx` : `m = ${fmt(mag(k, d), 2)}`);
+  // Lux meter readings: one decimal, or two below 1 lx so that the far lamps still differ.
+  const fmtLux = v => v.toFixed(v < 1 ? 2 : 1);
+  const reading = (k, d) => (k === 'lamp' ? `E = ${fmtLux(lux(d))} lx` : `m = ${fmt(mag(k, d), 2)}`);
   function luxmeter(g, y) {
     el('rect', { x: 44, y: y - 18, width: 40, height: 36, rx: 5, class: 'tube' }, g);
     el('rect', { x: 50, y: y - 10, width: 22, height: 12, rx: 2, class: 'lcd' }, g);
@@ -988,44 +1026,43 @@ select { width: 100%; }
     calSvg.style.setProperty('--src', `var(--${s})`);
     const g = el('g', {}, calSvg);
     // Upper track: the calibrator at its true distance, and the assumed one when the calibration distance is off.
+    const R = CAL_R[s], X = d => trackX(s, d, R);
     text(g, 20, 18, '1. Tuntud kaugusega allikas', 'lbl');
-    drawTrack(g, s, 118, {});
+    drawTrack(g, s, 118, { R });
     meter(g, s, 72);
-    const xc = trackX(s, S.cal);
+    const xc = X(S.cal);
     if (st.err !== 0) {
-      const xa = trackX(s, assumed(s));
+      const xa = X(assumed(s));
       sourceGlyph(g, s, xa, 72, 'ghost');
       text(g, xa, 46, 'eeldatud', 'lbl3', 'middle');
     }
     sourceGlyph(g, s, xc, 72);
     const L1 = xc > 480;  // labels go left of the source when it is far to the right
     text(g, L1 ? xc - 22 : xc + 20, 68, reading(s, S.cal), 'srclbl', L1 ? 'end' : 'start');
-    text(g, L1 ? xc - 22 : xc + 20, 84, `d = ${fmtD(s, assumed(s))} (${S.calHow})`, 'lbl3', L1 ? 'end' : 'start');
+    text(g, L1 ? xc - 22 : xc + 20, 84, `d = ${fmtU(s, assumed(s))} (${S.calHow})`, 'lbl3', L1 ? 'end' : 'start');
     // Lower track: the source at a hidden distance, shown once it has been measured.
     text(g, 20, 160, '2. Tundmatu kaugusega allikas', 'lbl');
-    drawTrack(g, s, 258, {});
+    drawTrack(g, s, 258, { R });
     meter(g, s, 212);
+    const less = `${fmtInt(nOf(s) ** 2)} korda vähem valgust`;
     if (!C.shown) {
       el('rect', { x: 400, y: 190, width: 46, height: 44, rx: 6, class: 'qbox' }, g);
       sourceGlyph(g, s, 423, 212, 'ghost');
       text(g, 423, 220, '?', 'qmark', 'middle');
-      text(g, 456, 208, reading(s, C.hid), 'srclbl');
-      text(g, 456, 224, 'kaugus teadmata', 'lbl3');
+      text(g, 456, 204, reading(s, C.hid), 'srclbl');
+      text(g, 456, 220, less, 'lbl2');
+      text(g, 456, 235, 'kaugus teadmata', 'lbl3');
     } else {
-      const xt = trackX(s, C.hid);
-      const marks = [];
-      if (C.computed) marks.push([measure(s, C.hid), 'arvutatud']);
-      if (C.guess) marks.push([clamp(C.guess, S.lo, S.hi), 'sinu']);
-      // The measured distances as open circles on the track, labelled above it.
-      marks.forEach(([dm, L], i) => {
-        const x = trackX(s, dm);
-        el('circle', { cx: x, cy: 258, r: 4.5, class: 'pt hollow' }, g);
-        text(g, x, 247 - 11 * i, L, 'lbl3', 'middle');
-      });
+      // The measured distance as an open circle on the track, labelled below the tick labels; it differs from the true
+      // one only when the calibration distance is wrong.
+      const xm = X(measure(s, C.hid)), xt = X(C.hid);
+      el('circle', { cx: xm, cy: 258, r: 4.5, class: 'pt hollow' }, g);
+      text(g, xm, 293, 'mõõdetud', 'lbl3', 'middle');
       sourceGlyph(g, s, xt, 212);
       const L2 = xt > 480;
-      text(g, L2 ? xt - 22 : xt + 20, 206, reading(s, C.hid), 'srclbl', L2 ? 'end' : 'start');
-      text(g, L2 ? xt - 22 : xt + 20, 222, `tegelik d = ${fmtD(s, C.hid)}`, 'lbl3', L2 ? 'end' : 'start');
+      text(g, L2 ? xt - 22 : xt + 20, 204, reading(s, C.hid), 'srclbl', L2 ? 'end' : 'start');
+      text(g, L2 ? xt - 22 : xt + 20, 220, less, 'lbl2', L2 ? 'end' : 'start');
+      text(g, L2 ? xt - 22 : xt + 20, 235, `tegelik d = ${fmtU(s, C.hid)}`, 'lbl3', L2 ? 'end' : 'start');
     }
   }
 
@@ -1035,14 +1072,13 @@ select { width: 100%; }
     calPlot.style.setProperty('--src', `var(--${s})`);
     const B = { x0: 84, x1: 428, y0: 12, y1: 236 }, lo = S.hid[0] / 2, hi = S.hid[1] * 2;
     const X = mkScale(lo, hi, B.x0, B.x1, true), Y = mkScale(lo, hi, B.y1, B.y0, true);
-    const ticks = [];
-    for (let k = Math.ceil(logU(s, lo)); k <= Math.floor(logU(s, hi)); k++) ticks.push([fromU(s, k), decadeLabel(s, k)]);
+    const ticks = ticks125(s, lo, hi).filter(t => t[2] || t[1]).map(t => [t[0], t[1]]);
     const g = el('g', {}, calPlot);
     frame(g, B, X, Y, ticks, ticks, 'tegelik kaugus', 'mõõdetud kaugus', 68);
     const clip = el('g', { 'clip-path': clipRect(calPlot, 'calClip', B) }, g);
     el('line', { x1: X(lo), y1: Y(lo), x2: X(hi), y2: Y(hi), class: 'one2one' }, clip);
     const k = 1 + st.err / 100;
-    if (C.done && st.err !== 0) el('line', { x1: X(lo), y1: Y(lo * k), x2: X(hi), y2: Y(hi * k), class: 'shifted' }, clip);
+    if (st.err !== 0) el('line', { x1: X(lo), y1: Y(lo * k), x2: X(hi), y2: Y(hi * k), class: 'shifted' }, clip);
     for (const dt of C.pts) el('circle', { cx: X(dt), cy: Y(measure(s, dt)), r: 5, class: 'pt' }, clip);
     if (!C.pts.length) text(g, B.x0 + 12, B.y0 + 20, 'Mõõdetud allikad ilmuvad siia.', 'lbl3');
   }
@@ -1330,29 +1366,27 @@ select { width: 100%; }
       : `Δm = ${fmt(Math.abs(dm), 1)}, seega on täht ${dm > 0 ? 1 : 2} <b>${sig(q)} korda heledam</b>: 10^(0.4 · ${fmt(Math.abs(dm), 1)}) = 100^(${fmt(Math.abs(dm), 1)}/5).`;
     // Tab 3
     const C = cal[s], mc = mCal(s), da = assumed(s), u = S.unit, isLamp = s === 'lamp';
-    const calcName = isLamp ? 'Arvuta valgustugevus' : 'Arvuta M', calibrated = isLamp ? 'valgustugevusega' : 'M-iga';
+    const calcName = isLamp ? 'Arvuta valgustugevus' : 'Arvuta M';
     $('calcM').textContent = calcName;
-    $('measLock').innerHTML = `Kalibreeri enne ${isLamp ? 'lamp' : 'küünal'}: vajuta <b>${calcName}</b>.`;
-    const Ec = lux(SRC.lamp.cal), Eh = lux(C.hid), mh = mag(s, C.hid);
-    $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtD(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. ` +
-      (isLamp ? `Luksmeeter näitab seal valgustatust <b>E = ${fmtSci(Ec)} lx</b>.` : `Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`);
+    const Ec = lux(SRC.lamp.cal), Eh = lux(C.hid), mh = mag(s, C.hid), n = nOf(s), N = n * n, dmeas = measure(s, C.hid);
+    $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtU(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. ` +
+      (isLamp ? `Luksmeeter näitab seal valgustatust <b>E = ${fmtLux(Ec)} lx</b>.` : `Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`);
     $('calFormula').textContent = !C.done ? ''
-      : isLamp ? `I = E d² = ${fmtSci(Ec)} lx × (${sig(da)} m)² = ${sig(Iest())} cd. Valgusvoog Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`
+      : isLamp ? `Valgustugevus I = E d² = ${fmtLux(Ec)} lx × (${fmtU(s, da)})² = ${sig(Iest())} cd. Valgusvoog Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`
       : `M = m − 5 log₁₀(d / 1 pc) + 5 = ${fmt(mc, 2)} − 5 log₁₀(${fmtPc(da / PC)}) + 5 = ${fmtMag(Mest(s), 2)}`;
-    $('measGroup').classList.toggle('locked', !C.done);
-    $('measLock').hidden = C.done;
-    $('measText').innerHTML = isLamp ? `Alumise lambi valgust mõõtev luksmeeter näitab <b>E = ${fmtSci(Eh)} lx</b>. Leia lambi kaugus.`
-      : `Alumise allika näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>. Leia selle kaugus.`;
+    $('measText').innerHTML = isLamp
+      ? `Alumise lambi juures näitab luksmeeter <b>E = ${fmtLux(Eh)} lx</b>. See on <b>${fmtInt(N)} korda vähem</b> kui ülemise lambi juures (${fmtLux(Ec)} lx).`
+      : `Alumise ${S.gen} näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>, ülemisest Δm = ${fmt(mh - mc, 2)} võrra suurem. Sealt jõuab <b>${fmtInt(N)} korda vähem valgust</b>.`;
+    $('measHint').textContent = 'Kui valgust jõuab N korda vähem, on allikas √N korda kaugemal kui ülemine.';
     $('guessUnit').textContent = u[0];
-    $('measFormula').textContent = !C.computed ? ''
-      : isLamp ? `d = √(I / E) = √(${sig(Iest())} cd / ${fmtSci(Eh)} lx) = ${fmtD(s, measure(s, C.hid))}`
-      : `d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtD(s, measure(s, C.hid))}`;
+    $('measFormula').textContent = !C.shown ? ''
+      : `Valgust jõuab ${fmtInt(N)} korda vähem, seega on ${S.short.toLowerCase()} √${fmtInt(N)} = ${n} korda kaugemal: d = ${n} × ${fmtU(s, da)} = ${fmtU(s, dmeas)}.` +
+        (C.done && !isLamp ? ` Absoluutse tähesuurusega: d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtU(s, dmeas)}.` : '');
     let res = '';
-    if (C.shown) {
-      const dmeas = C.guess || measure(s, C.hid), diff = (dmeas / C.hid - 1) * 100;
-      res = `${C.guess ? 'Sinu kaugus' : 'Mõõdetud kaugus'} <b>${fmtD(s, dmeas)}</b>, tegelik <b>${fmtD(s, C.hid)}</b>: erinevus <b class="${Math.abs(diff) < 2 ? 'ok' : 'off'}">${fmtPct(diff)}</b>.`;
-      if (C.guess && Math.abs(C.guess / measure(s, C.hid) - 1) > 0.02) res += ` Kalibreeritud ${calibrated} tuleks ${fmtD(s, measure(s, C.hid))}.`;
-      if (st.err !== 0) res += ` Kalibreerimiskaugus on ${fmtPct(st.err)} vale, nii et sama palju on nihkes ka iga mõõdetud kaugus.`;
+    if (C.msg === 'wrong') res = `Sinu vastus ${fmtU(s, C.guess)} ei ole õige. Proovi uuesti: kui palju on √${fmtInt(N)}?`;
+    else if (C.shown) {
+      res = C.msg === 'right' ? `<b class="ok">✓ Õige!</b> Kaugus on ${fmtU(s, dmeas)}.` : `Kaugus on ${fmtU(s, dmeas)}.`;
+      if (st.err !== 0) res += ` Tegelik kaugus on aga <b>${fmtU(s, C.hid)}</b>: ülemise allika kaugus oli ${fmtPct(st.err)} vale, nii et sama palju on vale ka mõõdetud kaugus.`;
     }
     $('measResult').innerHTML = res;
     $('errOut').textContent = fmtPct(st.err);
@@ -1449,27 +1483,29 @@ select { width: 100%; }
 
   const addPoint = C => { if (!C.pts.includes(C.hid)) C.pts.push(C.hid); C.shown = true; };
   $('calcM').addEventListener('click', () => { cal[st.src].done = true; render(); });
+  // A guess within 0.5 % of the measured distance is right and reveals the source; otherwise the user can try again.
   $('check').addEventListener('click', () => {
-    const C = cal[st.src], v = parseFloat($('guess').value.replace(',', '.').replace(/\s/g, ''));
+    const s = st.src, C = cal[s], v = parseFloat($('guess').value.replace(',', '.').replace(/\s/g, ''));
     if (!(v > 0)) { $('measResult').textContent = 'Sisesta kaugus positiivse arvuna.'; return; }
-    C.guess = v * SRC[st.src].unit[1];
-    addPoint(C);
+    C.guess = v * SRC[s].unit[1];
+    const right = Math.abs(C.guess / measure(s, C.hid) - 1) < 0.005;
+    C.msg = right ? 'right' : 'wrong';
+    if (right) addPoint(C);
     render();
   });
   $('guess').addEventListener('keydown', e => { if (e.key === 'Enter') $('check').click(); });
   $('calcD').addEventListener('click', () => {
     const s = st.src, C = cal[s];
-    C.computed = true;
-    C.guess = null;
+    C.msg = 'computed';
     addPoint(C);
-    $('guess').value = sig(measure(s, C.hid) / SRC[s].unit[1], 4).replace(/ /g, '').replace('−', '-');
+    $('guess').value = fmtU(s, measure(s, C.hid)).split(' ')[0].replace(/\u00a0/g, '').replace('−', '-');
     render();
   });
   $('newHid').addEventListener('click', () => {
     const C = cal[st.src];
-    C.hid = newHidden(st.src);
-    C.shown = C.computed = false;
-    C.guess = null;
+    C.hid = newHidden(st.src, C.hid);
+    C.shown = false;
+    C.msg = C.guess = null;
     $('guess').value = '';
     render();
   });
@@ -1492,7 +1528,7 @@ select { width: 100%; }
 
   /* ---------- Tabs ---------- */
   // Each tab has its own address, so that other pages can link to it.
-  const HASH = { tab1: 'poordruutude-seadus', tab2: 'magnituudid', tab3: 'kalibreerimine', tab4: 'hea-kuunal', tab5: 'tsefeiidid-ja-supernoovad' };
+  const HASH = { tab1: 'poordruutude-seadus', tab2: 'tahesuurused', tab3: 'kalibreerimine', tab4: 'hea-kuunal', tab5: 'tsefeiidid-ja-supernoovad' };
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   function selectTab(id, fromHash) {
     st.tab = id;
