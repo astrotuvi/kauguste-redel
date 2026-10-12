@@ -44,7 +44,9 @@ button and reloading work.
    **Päri Gaiast**. A name is resolved when the query runs, and its
    coordinates appear in the right box. The example buttons fill in suitable
    values for a few well-known clusters. A query runs only when you press
-   the button (or Enter).
+   the button (or Enter). After the query, cards with the cluster name and
+   the number of stars appear below it, and next to them a DSS2 colour image
+   of the field with the query circle.
    Part 1 is split into five tabs under its title: **Sissejuhatus** (the
    steps below), **Päring** (the query), **Tabel** (the queried stars),
    **Joonised** (the four plots on a 2 × 2 grid) and **Kaugus** (the mean
@@ -61,6 +63,10 @@ button and reloading work.
    the zoom and range of the plot stay as they are (the lasso picks stars only
    while all stars are shown). In the parallax
    histogram it is off by default, and checked it adds all stars in grey.
+   The sky view also has a **Taevapilt** checkbox, off by default, that puts
+   a DSS2 colour image of the field from the CDS hips2fits service under the
+   stars, in a projection that keeps it aligned with the α and δ axes. The
+   image fills the default view, and the grid lines are hidden.
    Clicking a star marks it with a crosshair in the other plots and in the
    table. Its parallax is also shown on the parallax histogram: as a line when
    it lies within the range shown, and otherwise as an arrow at the left or

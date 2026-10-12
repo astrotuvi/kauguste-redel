@@ -365,6 +365,11 @@ table.data-table tr.cur td { background: color-mix(in srgb, var(--accent) 12%, t
   border: 1px solid var(--border); border-radius: 7px; padding: 7px 8px;
 }
 .query-info .value { overflow-wrap: anywhere; }
+.query-info:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 12px; align-items: start; }
+.query-info .cards { display: grid; gap: 12px; }
+.sky-pic { position: relative; aspect-ratio: 1; margin-top: 8px; border-radius: 6px; overflow: hidden; background: #000; }
+.sky-pic img, .sky-pic svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sky-pic circle { fill: none; stroke: rgba(255, 255, 255, 0.7); stroke-width: 1.2; stroke-dasharray: 4 4; }
 /* the queried cluster after a card title */
 .cluster-name { color: var(--text-2); font-weight: 500; }
 .cluster-name:not(:empty)::before { content: " · "; }
@@ -390,6 +395,8 @@ footer a { color: inherit; }
   .plot-side { grid-template-columns: minmax(0, 1fr); }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
   .tiles { grid-template-columns: 1fr; }
+  .query-info:not([hidden]) { grid-template-columns: minmax(0, 1fr); }
+  .query-info .sky-tile { max-width: 360px; }
   .toc ol { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
@@ -542,7 +549,7 @@ footer a { color: inherit; }
     <div class="examples" id="examples">Proovi:</div>
     <p class="status" id="status" role="status" aria-live="polite"></p>
   </section>
-  <div class="tiles two query-info" id="queryInfo" hidden></div>
+  <div class="tiles query-info" id="queryInfo" hidden></div>
   </div>
 
   <div role="tabpanel" class="pane" id="paneTable" aria-labelledby="tabTable" hidden>
@@ -580,10 +587,11 @@ footer a { color: inherit; }
       <div class="card-head">
         <h2>Asukohad taevas<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="allSky" checked> Kõik tähed</label>
+          <label class="toggle"><input type="checkbox" id="skyImage" autocomplete="off"> Taevapilt</label>
+          <label class="toggle"><input type="checkbox" id="allSky" autocomplete="off" checked> Kõik tähed</label>
           <button type="button" class="expand">⤢ Suurenda</button>
         </div>
-        <p class="hint help">Omaliikumiste joonisel valitud tähed on esile tõstetud, tähekesega on märgitud tsefeiid; tähe andmete nägemiseks vii kursor selle kohale, klõps märgib tähe sihikuga ja näitab selle rida tabelis. Keri suumimiseks, topeltklõps taastab vaate. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti.</p>
+        <p class="hint help">Omaliikumiste joonisel valitud tähed on esile tõstetud, tähekesega on märgitud tsefeiid; tähe andmete nägemiseks vii kursor selle kohale, klõps märgib tähe sihikuga ja näitab selle rida tabelis. Keri suumimiseks, topeltklõps taastab vaate. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti, „Taevapilt“ lisab taustaks DSS2 värvilise ülesvõtte samast taevaosast.</p>
       </div>
       <div class="plot" id="sky"></div>
     </section>
@@ -591,7 +599,7 @@ footer a { color: inherit; }
       <div class="card-head">
         <h2>Omaliikumised<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="allPm" checked> Kõik tähed</label>
+          <label class="toggle"><input type="checkbox" id="allPm" autocomplete="off" checked> Kõik tähed</label>
           <button type="button" id="clear">Tühista valik</button>
           <button type="button" class="expand">⤢ Suurenda</button>
         </div>
@@ -603,8 +611,8 @@ footer a { color: inherit; }
       <div class="card-head">
         <h2>Värvus-heledusdiagramm<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="allCmd" checked> Kõik tähed</label>
-          <label class="toggle"><input type="checkbox" id="cmdAbs"> Absoluutne M<sub>G</sub></label>
+          <label class="toggle"><input type="checkbox" id="allCmd" autocomplete="off" checked> Kõik tähed</label>
+          <label class="toggle"><input type="checkbox" id="cmdAbs" autocomplete="off"> Absoluutne M<sub>G</sub></label>
           <button type="button" id="dropOutliers" disabled>Eemalda erindid</button>
           <button type="button" id="restore" disabled>Taasta valik</button>
           <button type="button" class="expand">⤢ Suurenda</button>
@@ -617,7 +625,7 @@ footer a { color: inherit; }
       <div class="card-head">
         <h2>Valitud tähtede parallaksid<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="histAll"> Kõik tähed</label>
+          <label class="toggle"><input type="checkbox" id="histAll" autocomplete="off"> Kõik tähed</label>
           <button type="button" class="expand">⤢ Suurenda</button>
         </div>
         <p class="hint help" id="histHint">Katkendjoon: kaalutud keskmine parallaks. Punktiir: kõrvalekallete piirid (alumine kvartiil − 3 × kvartiilhaare
@@ -927,7 +935,7 @@ footer a { color: inherit; }
     <a href="https://gaia.ari.uni-heidelberg.de/" target="_blank" rel="noopener">ARI Heidelbergi Gaia-andmekeskus</a>,
     <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">ESA Gaia arhiiv</a>
     ja <a href="https://gaia.aip.de/" target="_blank" rel="noopener">AIP Potsdam</a>).
-    Nimed lahendatakse SIMBADi ja Sesame abil (CDS, Strasbourg). Parallaksi nullpunkt −0,017 mas pärineb tööst Lindegren jt (2021);
+    Nimed lahendatakse SIMBADi ja Sesame abil (CDS, Strasbourg), taevapildid on DSS2 värviline ülevaade (CDS hips2fits). Parallaksi nullpunkt −0,017 mas pärineb tööst Lindegren jt (2021);
     lisatud on ~0,010 mas süstemaatiline viga, sest nurga järgi korreleeruvad parallaksivead keskmistamisel ei vähene
     (Lindegren jt 2021; Maíz Apellániz jt 2021). Absoluutse tähesuurusega HR-diagrammil on ekstinktsioon arvestamata.
     Tsefeiidide ja parvede seosed pärinevad tööst Cruz Reyes &amp; Anderson (2023; liikmesuse tõenäosus ≥ 0,5, ainult põhitoonis pulseerivad tsefeiidid);
@@ -1577,21 +1585,66 @@ function linkedTraces(x, y, hover, cx, cy, all = true) {
 }
 
 
+// With the sky image on, the default view spans SKY_VIEW times the query radius in δ above and below
+// the centre, and the α range follows from the shape of the plot. The image reaches further, so that it
+// fills plots from SKY_ASPECT[0] to SKY_ASPECT[1] times as wide as tall (from a phone to full screen).
+const SKY_VIEW = 1.15, SKY_ASPECT = [0.6, 2.2];
+
+// URL of a cutout of the DSS2 colour survey with the given FITS WCS header
+const hips2fits = (wcs) => "https://alasky.cds.unistra.fr/hips-image-services/hips2fits?" +
+  new URLSearchParams({ hips: "CDS/P/DSS2/color", format: "jpg", wcs: JSON.stringify(wcs) });
+
+// DSS2 colour image of the query field for the query tab, north up and east left, with the query circle.
+// A gnomonic (TAN) projection centred on the field maps the circle to a circle; the image is SKY_VIEW
+// times its radius on each side, like the default view of the sky plot.
+function fieldPicture(ra0, dec0, r) {
+  const n = 720, rho = (180 / Math.PI) * Math.tan((r * Math.PI) / 180), s = (2 * SKY_VIEW * rho) / n;
+  const wcs = {
+    NAXIS: 2, NAXIS1: n, NAXIS2: n, CTYPE1: "RA---TAN", CTYPE2: "DEC--TAN",
+    CRVAL1: ra0, CRVAL2: dec0, CRPIX1: n / 2 + 0.5, CRPIX2: n / 2 + 0.5, CDELT1: -s, CDELT2: s,
+  };
+  return `<div class="sky-pic"><img src="${esc(hips2fits(wcs))}" alt="DSS2 värviline ülesvõte päringu alast">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="${(50 / SKY_VIEW).toFixed(3)}" vector-effect="non-scaling-stroke"/></svg></div>`;
+}
+
+// DSS2 colour image of the field from the CDS hips2fits service, as a Plotly layout image under the
+// stars. A CAR projection with CRVAL2 = 0 keeps the pixels linear in α and δ, like the plot axes, and
+// a pixel spans 1/cos δ0 times more in α than in δ, like scaleratio does on the plot.
+function skyImage(ra0, dec0, r, cosd) {
+  const view = SKY_VIEW * r, s = view / 400;              // 800 pixels across the default δ range
+  const hx = view * SKY_ASPECT[1], hy = view / SKY_ASPECT[0];
+  const nx = Math.round((2 * hx) / s), ny = Math.round((2 * hy) / s);
+  const wcs = {
+    NAXIS: 2, NAXIS1: nx, NAXIS2: ny, CTYPE1: "RA---CAR", CTYPE2: "DEC--CAR",
+    CRVAL1: ra0, CRVAL2: 0, CRPIX1: nx / 2 + 0.5, CRPIX2: ny / 2 + 0.5 - dec0 / s,
+    CDELT1: -s / cosd, CDELT2: s,
+  };
+  return {
+    source: hips2fits(wcs),
+    xref: "x", yref: "y", x: ra0 + hx / cosd, y: dec0 + hy,   // the α axis is reversed, so the left edge has the largest α
+    sizex: (2 * hx) / cosd, sizey: 2 * hy,
+    xanchor: "left", yanchor: "top", sizing: "stretch", layer: "below",
+  };
+}
+
 function drawSky() {
   const { ra0, dec0, raPlot } = S.sky;
   const cosd = Math.max(Math.cos((dec0 * Math.PI) / 180), 0.05);
   const r = S.radius;
+  const image = $("skyImage").checked;
   const traces = linkedTraces(raPlot, S.d.dec, true, S.ceph.map((c) => unwrapRA(c.at[0], ra0)), S.ceph.map((c) => c.at[1]), $("allSky").checked);
   traces.push(crosshairTrace("sky"));
   return Plotly.react("sky", traces, baseLayout({
     dragmode: "zoom",
-    xaxis: axis("Otsetõus α (°)", { autorange: "reversed", scaleanchor: "y", scaleratio: cosd }),
-    yaxis: axis("Kääne δ (°)"),
+    // with the image, δ has a fixed range and the plot widens the α range to the shape of the plot
+    xaxis: axis("Otsetõus α (°)", { autorange: "reversed", scaleanchor: "y", scaleratio: cosd, showgrid: !image }),
+    yaxis: axis("Kääne δ (°)", image ? { range: [dec0 - SKY_VIEW * r, dec0 + SKY_VIEW * r], showgrid: false } : {}),
     annotations: nameTag(),
+    images: image ? [skyImage(ra0, dec0, r, cosd)] : [],
     shapes: [{
-      type: "circle", xref: "x", yref: "y", layer: "below",
+      type: "circle", xref: "x", yref: "y", layer: image ? "above" : "below",
       x0: ra0 - r / cosd, x1: ra0 + r / cosd, y0: dec0 - r, y1: dec0 + r,
-      line: { color: css("--axis"), width: 1, dash: "dot" },
+      line: { color: image ? "rgba(255,255,255,0.6)" : css("--axis"), width: 1, dash: "dot" },
     }],
   }), { ...CONFIG, modeBarButtonsToRemove: [...CONFIG.modeBarButtonsToRemove, "select2d", "lasso2d"] });
 }
@@ -1625,10 +1678,12 @@ function drawCMD() {
   S.cmdRemoved = removed;
   $("restore").disabled = !removed.length;
   $("dropOutliers").disabled = !out.size;
-  // full colour range of the data, so that every star is visible initially
-  const lo = percentile(d.bprp, 0), hi = percentile(d.bprp, 1);
-  const padX = 0.03 * (hi - lo || 1);
-  const xr = [lo - padX, hi + padX];
+  // full colour and magnitude ranges of the data, so that every star is visible initially; set here
+  // rather than autoranged, because with "Kõik tähed" off and no selection the plot has no stars
+  const pad = (lo, hi) => { const w = 0.03 * (hi - lo || 1); return [lo - w, hi + w]; };
+  const xr = pad(percentile(d.bprp, 0), percentile(d.bprp, 1));
+  const yC = [...yAll, ...S.ceph.map((c) => c.at[4] + shift)];
+  const yr = pad(percentile(yC, 0), percentile(yC, 1)).reverse();   // bright stars at the top
   Plotly.react("cmd", [
     {
       type: "scattergl", mode: "markers", x: $("allCmd").checked ? d.bprp : [], y: $("allCmd").checked ? yAll : [], hoverinfo: "none",   // no label, but clickable
@@ -1657,7 +1712,7 @@ function drawCMD() {
     dragmode: "zoom",
     hoverdistance: SHIFT_PICK_PX,   // clicks within this distance of any star are reported
     xaxis: axis("G<sub>BP</sub> − G<sub>RP</sub> (mag)", { range: xr }),
-    yaxis: axis(abs ? `M<sub>G</sub> (mag), μ = ${fmtN(-shift, 2)}` : "G (mag)", { autorange: "reversed" }),
+    yaxis: axis(abs ? `M<sub>G</sub> (mag), μ = ${fmtN(-shift, 2)}` : "G (mag)", { range: yr }),
   }), CONFIG);
 }
 
@@ -2582,10 +2637,11 @@ async function run() {
     // the cluster name, unless coordinates were typed in
     const name = target && !parseCoords(target) ? target : null;
     const sign = c.dec >= 0 ? "+" : "";
-    $("queryInfo").innerHTML = (name ? `<div class="tile"><div class="label">Parv</div><div class="value">${esc(name)}</div>
+    $("queryInfo").innerHTML = `<div class="cards">` + (name ? `<div class="tile"><div class="label">Parv</div><div class="value">${esc(name)}</div>
         <div class="unit">α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°</div></div>` : "") +
       `<div class="tile"><div class="label">Saadud ridu</div><div class="value">${fmt(n)}</div>
-        <div class="unit">Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)</div></div>`;
+        <div class="unit">Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)</div></div></div>
+      <div class="tile sky-tile"><div class="label">Päringu ala taevas (DSS2)</div>${fieldPicture(c.ra, c.dec, radius)}</div>`;
     $("queryInfo").hidden = false;
     S.queryTarget = target;
     S.title = name || `α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°`;
@@ -2685,6 +2741,7 @@ function toggleAllStars(id, on, x, y, text) {
   Plotly.relayout(id, { "xaxis.range": [...xaxis.range], "yaxis.range": [...yaxis.range] }).then(() =>
     Plotly.restyle(id, { x: [on ? x : []], y: [on ? y : []], ...(text ? { text: [on ? text : []] } : {}) }, [0]));
 }
+$("skyImage").addEventListener("change", () => { if (S.d) drawSky(); });
 $("allSky").addEventListener("change", (e) => toggleAllStars("sky", e.target.checked, S.d && S.sky.raPlot, S.d && S.d.dec, S.d && S.hover));
 $("allPm").addEventListener("change", (e) => toggleAllStars("pm", e.target.checked, S.d && S.d.pmra, S.d && S.d.pmdec));
 $("allCmd").addEventListener("change", (e) => toggleAllStars("cmd", e.target.checked, S.d && S.d.bprp, S.d && S.d.g.map((g) => g + S.cmdShift)));
