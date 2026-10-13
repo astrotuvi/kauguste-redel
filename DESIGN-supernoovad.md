@@ -72,14 +72,15 @@ and the colour agree:
 Controls at the top of the panel, shared by tabs 2 and 3:
 
 - **Nikli mass**, a slider from 0.4 to 0.8 M☉;
-- **Tuntud supernoovad** (known supernovae), buttons that set M_Ni and the
-  name in the readouts: SN 2011fe (M101, a normal one, the nearest in
-  decades, and the first calibrator of part 3), SN 1991T (bright and slow)
-  and SN 2014J (M82, behind a lot of dust, for tab 3). SN 1991bg (faint and
-  fast, M_Ni ≈ 0.1 M☉) is a fourth button marked as a special case: it lies
-  off the slider and below the relation, and the text says that such
-  supernovae are left out of cosmology samples, as Pantheon+ does with its
-  limits on the stretch and colour.
+- **Tuntud supernoovad** (known supernovae), buttons that set M_Ni, the host
+  dust E(B − V) and the name in the readouts: SN 2011fe (M_Ni = 0.55 M☉;
+  M101, a normal one, the nearest in decades, and the first calibrator of
+  part 3), SN 1991T (0.68 M☉, E(B − V) = 0.14; bright and slow) and SN 2014J
+  (0.6 M☉, E(B − V) = 1.2; M82, behind a lot of dust, for tab 3). SN 1991bg
+  (faint and fast, M_Ni ≈ 0.1 M☉, M_B = −17.1, Δm₁₅ = 1.93) is a fourth
+  button marked as a special case: it lies off the slider and below the
+  relation, and the text says that such supernovae are left out of cosmology
+  samples, as Pantheon+ does with its limits on the stretch and colour.
 
 ## Tab 1: Plahvatus (the explosion)
 
@@ -100,10 +101,15 @@ mass. The scene has two views, **Kaksiktäht** (the binary) and **Spekter**
   marks the current white dwarf, with the Earth's radius as a dashed line
   for comparison (a 0.6 M☉ white dwarf is about the size of the Earth).
 
+The system view has a magnified inset of the white dwarf beside a dashed
+circle of the Earth's size. The mass–radius plot also marks Sirius B
+(1.02 M☉, 0.0084 R☉; Bond et al. 2017) and the ignition mass.
+
 Under the scene is the **Aeg** slider and a play button, as on the other
-pages. Time runs from the start of the mass transfer (M = 1.0 M☉) for a few
-million years, at about 10⁻⁷ M☉ per year. Four step buttons move the time to
-each stage and show a short caption:
+pages. Time runs from the start of the mass transfer (M = 1.0 M☉) for
+3.8 million years, at 10⁻⁷ M☉ per year; the last 5 % of the slider is the
+explosion. Four step buttons move the time to each stage and show a short
+caption:
 
 1. **Kogub massi**: the white dwarf takes gas from its companion. Its own
    heat cannot hold it up; the pressure of its electrons does, because two
@@ -121,8 +127,12 @@ each stage and show a short caption:
    10 000 km/s. Nothing is left behind.
 
 **Kaks valget kääbust** (two white dwarfs), a toggle: the other way it can
-happen. Two white dwarfs spiral towards each other as they lose energy to
-gravitational waves, and merge. The text says honestly that which of the two
+happen. Two white dwarfs, 0.9 and 0.7 M☉, spiral towards each other as they
+lose energy to gravitational waves, and merge. Their separation shrinks from
+0.905 R☉ (orbital period 1.9 hours) so that the time left is proportional to
+its fourth power, 100 million years in all, down to 0.035 R☉ (under a
+minute). The steps change to **Kaks kääbust**, **Spiraal**, **Ühinevad** and
+**Plahvatab**, and the readout gives the separation and the period. The text says honestly that which of the two
 ways is more common is still not known, and that some white dwarfs may
 explode below the Chandrasekhar mass. This is one reason why the peak
 brightness is not exactly the same every time, which tab 3 deals with.
@@ -172,14 +182,19 @@ brightness are linked. The scene has three parts.
   colour), and the intermediate elements (silicon, sulphur, calcium) in an
   outer shell. Gamma rays from the decay are short arrows; early on they are
   absorbed inside the cloud, later more of them escape.
-- **Heleduskõver**: M_B and M_V against time from −20 to +100 days, with a
-  time marker. The power of the radioactive decay is drawn as a dashed line
-  on the same axis, so that the peak touches it (Arnett's rule) and the tail
-  follows it. Δm₁₅ is marked as a bracket between the peak and 15 days
-  later.
 - **Lagunemisahel** (the decay chain): ⁵⁶Ni → ⁵⁶Co (half-life 6.1 days) →
   ⁵⁶Fe (77 days), as three bars that show how much of each there is at the
   current time.
+- **Heledus** (luminosity): the luminosity in erg/s on a log axis against the
+  days since the explosion, 0–120, from Arnett's (1982) model with the gamma
+  rays partly escaping (deposition 1 − exp(−(40 d / t)²)). The power of the
+  radioactive decay (Nadyozhin 1994) is a dashed line: the light stays below
+  it at first, touches it at the peak (Arnett's rule) and falls below it
+  again as the gamma rays escape. The diffusion time is 15.5 s days, so the
+  peak comes about 18 days after the explosion.
+- **Heleduskõver**: M_B and M_V on the same time axis, with Δm₁₅ marked as an
+  arrow from the peak to 15 days later. The two plots are separate, because
+  the B band takes a falling share of the light as the supernova reddens.
 
 Under the scene is the **Päev** slider and a play button.
 
@@ -214,21 +229,25 @@ How the scatter of peak magnitudes is reduced from about 0.4 mag to about
 **Phillipsi seos** (the Phillips relation), switched by a segmented button.
 Both use the same simulated sample of 40 nearby supernovae at known
 distances, each with its own M_Ni (0.4–0.8 M☉), its own dust in the host
-galaxy (E(B − V) from an exponential distribution with a mean of
-0.07 mag, R_B = 4.1 as for Milky Way dust; real host dust has a smaller R_B,
-as the text says) and a random intrinsic scatter of 0.10 mag. The supernova
-of the shared slider is drawn on top, in the accent colour.
+galaxy (E(B − V) from an exponential distribution with a mean of 0.10 mag,
+R_B = 3.1, smaller than 4.1 for Milky Way dust, as found for supernova
+hosts), an intrinsic colour (σ = 0.05 mag) that dims it by 2.0 c rather than
+β c, and a random scatter of 0.10 mag. Without corrections the scatter is
+about 0.3–0.4 mag. The supernova of the shared slider is drawn on top, in
+the accent colour; one that falls outside a plot is an arrow at its edge
+with its value.
 
 ### View 1: Heleduskõverad
 
 The absolute B light curves of 12 of the supernovae, against days since the
 peak. Without corrections they spread over about 1 mag at the peak. Two
-checkboxes:
+checkboxes, shared by both views:
 
-- **Venita ajatelge** (stretch the time axis): each curve is stretched by
-  1/s on the time axis and moved by its Phillips correction in magnitude.
-  The curves slide together, but a few stay too faint: the dusty ones.
-- **Paranda värvi järgi** (correct for colour): each curve is moved up by
+- **Nõrgenemise korrektsioon** (the decline-rate correction): each curve is
+  stretched by 1/s on the time axis and moved by its Phillips correction in
+  magnitude. The curves take one shape, but a few stay too faint: the dusty
+  ones.
+- **Värvi korrektsioon** (the colour correction): each curve is moved up by
   β c, where c is its colour at the peak. Now all of them lie on one curve
   within about 0.15 mag.
 
@@ -238,16 +257,16 @@ Supernova Cosmology Project used.
 
 ### View 2: Phillipsi seos
 
-- **Maksimum ja tuhmumine**: M_B against Δm₁₅ for the 40 supernovae, with
-  the relation as a line. SN 1991bg is drawn as an open point far below,
-  outside the range of the fit. A histogram of M_B is on its right side.
+- **Maksimum ja nõrgenemine**: M_B against Δm₁₅ for the 40 supernovae, with
+  the relation as a line. SN 1991bg is drawn as an arrow at the bottom edge
+  with its M_B, far below the relation. A histogram of M_B is on the right.
 - **Maksimum ja värvus**: M_B against the colour c, with the line of slope
   β. The dusty supernovae are far to the right and down.
 
-Checkboxes **Tuhmumise korrektsioon** and **Värvi korrektsioon** subtract
-each relation; the points move and the histogram narrows. A small table
-gives σ for no correction (about 0.40 mag), for Δm₁₅ alone (about 0.25), for
-colour alone and for both (about 0.13).
+The same checkboxes subtract each relation; the points move and the
+histogram narrows. A small table gives σ and the distance error for no
+correction, for Δm₁₅ alone, for colour alone and for both (about 0.12 mag,
+±6 %).
 
 The text gives the formula used in practice, the Tripp (1998) formula with
 SALT2 parameters:
@@ -314,17 +333,20 @@ mag, default 0.13 for one supernova). Two plots:
 
 Readouts in the panel: the fitted H₀ with its error and the scatter about
 the line, for the chosen range, and the share of the scatter from the
-velocities and from the distances.
+velocities and from the distances. A **Galaktikate arv** slider (5–200) sets
+the number of galaxies, and **Uued galaktikad** draws new ones. The σ_v and
+σ_μ sliders are shown in both views, so that in the second the bands can be
+fitted to the real points.
 
 ### View 2: Päris andmed
 
 The same two plots with the data built into `index.html`:
 
 - the 29 Cepheid galaxies of part 3, with μ from their Cepheids and the
-  published relation (precomputed), v = c z_HD (1 + 0.775 z). They are 7–59
+  published relation (precomputed), v = c z_HD as in part 3. They are 7–59
   Mpc away at 370–4000 km/s. The fit through the origin gives about
-  68 km/s/Mpc, and the velocities scatter by about 15 % about the line
-  (0.34 mag; about 230 km/s).
+  67 km/s/Mpc, and the velocities scatter by about 14 % about the line
+  (0.34 mag; about 225 km/s).
 - the 166 distant supernovae of part 4 with M_B = −19.33 (the calibrators'
   mean with the published relation) or −19.253 (SH0ES), chosen by a
   segmented button. They are 80–270 Mpc away at 7 000–18 000 km/s, and they
@@ -338,8 +360,8 @@ does not read the user's own results from `index.html`; a link goes to
 
 The text explains also why part 4 stops at z = 0.06: farther out the
 expansion of the Universe while the light travelled matters more, and the
-factor (1 + 0.775 z) is only the first term. Link to the Hubble'i seadus
-page, or *tulekul* until it exists.
+factor (1 + 0.775 z) is only the first term. The Hubble'i seadus page is
+marked *tulekul* until it exists.
 
 Mida joonis näitab:
 
@@ -372,7 +394,9 @@ are copies of the arrays in `index.html`.
      **Ia tüüpi supernoovad** and a link to `supernoovad.html`, and the
      *tulekul* badge and the `soon` class are removed;
    - the Ia supernoovad rung of the ladder picture becomes
-     **Ia tüüpi supernoovad** and a `rung-link`;
+     **Ia tüüpi supernoovad** and a `rung-link`. The picture is 16 units
+     wider, and the standard candles bracket moves right, so that the longer
+     name fits;
    - the word "supernoovadeni" in the main introduction and "supernoova" in
      the lede of part 4 point to the new page instead of Wikipedia;
    - the note under the supernova table of part 4 (about m_B being the peak

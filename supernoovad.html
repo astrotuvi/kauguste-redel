@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ia tüüpi supernoovad</title>
+<meta name="description" content="Interaktiivsed joonised Ia tüüpi supernoovadest: miks valge kääbus plahvatab, mis paneb supernoova helendama, kuidas maksimumheledust standardiseeritakse ja miks kaugete supernoovade hajuvus on väike.">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4;
+  --surface: #fcfcfb;
+  --border: #e3e2dd;
+  --text-1: #0b0b0b;
+  --text-2: #52514e;
+  --text-3: #75746e;
+  --grid: #ecebe7;
+  --axis: #c4c3bd;
+  --sel: #2a78d6;
+  --accent: #eb6834;
+  --sn: #eb6834;
+  --cep: #d32f2f;
+  --btn: #2a78d6;
+  --btn-text: #ffffff;
+  --chip: #eeede9;
+  --good: #1f8a4c;
+  --bad: #c62828;
+  --night: #070912;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1a1a19;
+    --border: #2f2f2c;
+    --text-1: #ffffff;
+    --text-2: #c3c2b7;
+    --text-3: #959489;
+    --grid: #282826;
+    --axis: #4a4a46;
+    --sel: #3987e5;
+    --accent: #d95926;
+    --sn: #f07a45;
+    --cep: #f05454;
+    --btn: #3987e5;
+    --btn-text: #ffffff;
+    --chip: #262624;
+    --good: #4cc27a;
+    --bad: #f06a6a;
+    --night: #05060c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211;
+  --surface: #1a1a19;
+  --border: #2f2f2c;
+  --text-1: #ffffff;
+  --text-2: #c3c2b7;
+  --text-3: #959489;
+  --grid: #282826;
+  --axis: #4a4a46;
+  --sel: #3987e5;
+  --accent: #d95926;
+  --sn: #f07a45;
+  --cep: #f05454;
+  --btn: #3987e5;
+  --btn-text: #ffffff;
+  --chip: #262624;
+  --good: #4cc27a;
+  --bad: #f06a6a;
+  --night: #05060c;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.back a { color: var(--text-2); text-decoration: none; }
+.back a:hover { color: var(--sel); }
+.back .sep { margin: 0 6px; }
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+.byline { color: var(--text-2); font-size: 0.9rem; margin: -4px 0 16px; }
+.intro a, .explain a, .links a, .hint a, .readout a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+.intro a:hover, .explain a:hover, .links a:hover, .hint a:hover, .readout a:hover { color: var(--sel); text-decoration-style: solid; }
+.intro { margin: 0 0 24px; max-width: 75ch; }
+h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+.hint { color: var(--text-3); font-size: 0.82rem; margin: 2px 0 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; align-items: start; }
+.tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; border-bottom: 1px solid var(--border); margin: -4px 0 10px; }
+.tabs button {
+  border: none; border-radius: 0; background: none; padding: 8px 14px; margin-bottom: -1px;
+  color: var(--text-2); font-weight: 550; border-bottom: 2px solid transparent;
+}
+.tabs button:hover { color: var(--text-1); }
+.tabs button[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--btn); }
+
+svg.scene { display: block; width: 100%; height: auto; margin-top: 8px; user-select: none; -webkit-user-select: none; font-family: inherit; }
+#spec .hit { cursor: pointer; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.duo > div { min-width: 0; }
+.sub { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 10px 0 0; }
+.badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0 6px; border-radius: 999px; background: var(--chip); color: var(--text-3); }
+
+/* Controls */
+.controls { display: flex; flex-direction: column; gap: 12px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.controls .group:not([hidden]) ~ .group:not([hidden]) { border-top: 1px solid var(--border); padding-top: 12px; }
+.group h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 0; }
+.slider { display: grid; grid-template-columns: 1fr 5.5em; align-items: center; gap: 2px 10px; font-size: 0.85rem; color: var(--text-2); }
+.slider label { grid-column: 1 / -1; }
+.slider output { font-variant-numeric: tabular-nums; text-align: right; color: var(--text-1); }
+input[type="range"] { accent-color: var(--btn); width: 100%; min-width: 0; }
+.toggle { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; color: var(--text-1); font-weight: 550; }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.toggles.col { flex-direction: column; }
+.toggle input { accent-color: var(--btn); width: 16px; height: 16px; margin: 0; }
+button {
+  font: inherit; cursor: pointer; border-radius: 7px; padding: 7px 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text-1);
+}
+button:disabled { cursor: default; opacity: 0.5; }
+button.primary { background: var(--btn); color: var(--btn-text); border-color: transparent; font-weight: 600; }
+button.small { padding: 4px 10px; font-size: 0.85rem; }
+button[aria-pressed="true"]:not(.chip) { background: var(--chip); border-color: var(--btn); }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { flex: 1; border: none; border-radius: 0; padding: 6px 4px; font-size: 0.86rem; white-space: nowrap; color: var(--text-2); background: var(--surface); }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-checked="true"] { background: var(--btn); color: var(--btn-text); font-weight: 600; }
+.views-btns { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 8px; font-size: 0.82rem; color: var(--text-3); }
+.views-btns button { font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.views-btns button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); }
+.readout { margin: 0; font-size: 0.85rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.readout b { color: var(--text-1); font-weight: 600; }
+.readout:empty { display: none; }
+.formula { font-size: 0.82rem; color: var(--text-2); background: var(--chip); border-radius: 6px; padding: 6px 8px; margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.formula:empty { display: none; }
+.formula b { color: var(--text-1); }
+.ok { color: var(--good); }
+.off { color: var(--bad); }
+table.res { border-collapse: collapse; font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--text-2); }
+table.res th { font-weight: 600; text-align: right; padding: 2px 0 2px 12px; color: var(--text-3); font-size: 0.78rem; }
+table.res td { padding: 2px 0 2px 12px; text-align: right; color: var(--text-1); }
+table.res td:first-child, table.res th:first-child { text-align: left; padding-left: 0; color: var(--text-2); }
+table.res tr.hl td { font-weight: 650; }
+
+/* Scenes and plots */
+.night { fill: var(--night); }
+.nl { fill: #e8ecf5; font-size: 12px; font-weight: 600; paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.nl2 { fill: #9aa3b5; font-size: 11px; paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.tlbl { fill: var(--text-2); font-size: 11px; }
+.lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl2 { fill: var(--text-2); font-size: 12px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl3 { fill: var(--text-3); font-size: 11px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.slbl { fill: var(--sn); font-size: 12px; font-weight: 650; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.axisline { stroke: var(--axis); stroke-width: 1; fill: none; }
+.guide { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.curve { stroke: var(--sn); stroke-width: 2; fill: none; }
+.curve.thin { stroke-width: 1.5; }
+.curve.vband { stroke: var(--sel); stroke-width: 1.5; }
+.curve.ref { stroke: var(--text-3); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.curve.fitc { stroke: var(--text-1); stroke-width: 1.5; }
+.curve.mr { stroke: var(--text-1); stroke-width: 2; }
+.curve.samp { stroke: var(--text-3); stroke-width: 1.2; opacity: 0.55; }
+.spt { fill: var(--sn); stroke: var(--surface); stroke-width: 1.5; }
+.spt.hollow { fill: var(--surface); stroke: var(--sn); stroke-width: 2; }
+.fpt { fill: var(--text-3); opacity: 0.6; }
+.gpt { fill: var(--cep); stroke: var(--surface); stroke-width: 1; opacity: 0.9; }
+.npt { fill: var(--sn); opacity: 0.75; }
+.mpt { fill: var(--sel); opacity: 0.75; }
+.wdpt { fill: var(--sel); stroke: var(--surface); stroke-width: 1.5; }
+.ring { fill: var(--surface); stroke: var(--text-2); stroke-width: 1.5; }
+.fitline { stroke: var(--sel); stroke-width: 2; }
+.fitline.sn { stroke: var(--sn); }
+.fitline.cep { stroke: var(--cep); }
+.truel { stroke: var(--text-1); stroke-width: 1.2; stroke-dasharray: 6 4; }
+.vfill { fill: color-mix(in srgb, var(--sel) 14%, transparent); }
+.dfill { fill: color-mix(in srgb, var(--sn) 16%, transparent); }
+.hbar { fill: color-mix(in srgb, var(--sn) 55%, transparent); }
+.hbar.raw { fill: color-mix(in srgb, var(--text-3) 30%, transparent); }
+.inset { fill: #10131f; stroke: #2a3047; }
+.arrow { stroke: var(--text-1); stroke-width: 1.5; fill: none; }
+.arrowhead { fill: var(--text-1); }
+.snarr { stroke: var(--sn); stroke-width: 1.5; fill: none; }
+.snarrhead { fill: var(--sn); }
+.gam { stroke: #b48cff; stroke-width: 1.5; fill: none; }
+.gamhead { fill: #b48cff; }
+.gwave { fill: none; stroke: #8fa6d8; stroke-width: 1; }
+.skystar { fill: #c9d0e6; }
+.hit { fill: transparent; }
+.chainbox { fill: var(--chip); stroke: var(--border); }
+.dim { opacity: 0.3; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+.legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
+.legend i.box { width: 14px; height: 10px; border: none; border-radius: 2px; }
+.legend i.ring { width: 8px; height: 8px; border: 1.5px solid; border-radius: 50%; }
+
+.explain { margin-top: 14px; }
+.explain ul { margin: 8px 0 0; padding-left: 20px; max-width: 80ch; }
+.explain li { margin: 4px 0; }
+.explain .src { color: var(--text-3); font-size: 0.82rem; margin: 10px 0 0; max-width: 80ch; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .duo { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span>Ia tüüpi supernoovad</p>
+  <h1>Ia tüüpi supernoovad</h1>
+  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
+  <p class="intro">Ia tüüpi <a href="https://et.wikipedia.org/wiki/Supernoova" target="_blank" rel="noopener">supernoova</a> on kaksiktähe süsteemis oleva <a href="https://et.wikipedia.org/wiki/Valge_k%C3%A4%C3%A4bus" target="_blank" rel="noopener">valge kääbuse</a> plahvatus. Valge kääbus on läbipõlenud täht, mille mass on Päikese massi lähedane, kuid suurus umbes sama kui Maal.
+    Mõne nädala jooksul paistab supernoova sama heledalt kui terve galaktika, mõni miljard Päikest, nii et teda on näha miljardite valgusaastate kauguselt.
+    Kõik need plahvatused on peaaegu ühesugused, seepärast on Ia tüüpi supernoovad <a href="standardkuunlad.html#tsefeiidid-ja-supernoovad">standardküünlad</a>, ja väikese parandusega parimad, mis suurte kauguste jaoks on.
+    Linnutee-suguses galaktikas plahvatab neid umbes üks mõnesaja aasta jooksul; viimane Linnuteel nähtud oli Kepleri supernoova 1604. aastal.
+    Harjutuse <a href="index.html#osa-4">4. osas</a> kalibreerid nende heleduse ja mõõdad nendega Universumi paisumist.</p>
+
+  <div class="layout">
+    <section class="card">
+      <div class="tabs" role="tablist" aria-label="Teema">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Plahvatus</button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Heleduskõver</button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Standardiseerimine</button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Väike hajuvus</button>
+      </div>
+
+      <div id="pane1" role="tabpanel" aria-labelledby="tab1">
+        <div class="views-btns" role="group" aria-label="Vaade">
+          <span>Vaade:</span>
+          <button type="button" data-view1="sys">Kaksiktäht</button>
+          <button type="button" data-view1="spec">Spekter</button>
+        </div>
+        <div id="view1sys">
+          <p class="hint">Vasakul on kaksiktäht, paremal valge kääbuse raadius tema massi järgi. Käivita aeg või vali paremal etapp. Joonis pole mõõtkavas.</p>
+          <div class="duo">
+            <div>
+              <p class="sub">Süsteem</p>
+              <svg id="sys" class="scene" viewBox="0 0 370 370" role="img" aria-label="Valge kääbus, mis saab kaaslaselt massi"></svg>
+            </div>
+            <div>
+              <p class="sub">Mass ja raadius</p>
+              <svg id="mr" class="scene" viewBox="0 0 370 370" role="img" aria-label="Valge kääbuse raadius massi järgi kuni Chandrasekhari massini"></svg>
+            </div>
+          </div>
+        </div>
+        <div id="view1spec" hidden>
+          <p class="hint">Nelja tüüpi supernoovade spektrid maksimumi lähedal (skemaatilised). Klõpsa spektril või vali paremal tüüp.</p>
+          <svg id="spec" class="scene" viewBox="0 0 760 470" role="img" aria-label="Ia, Ib, Ic ja II tüüpi supernoovade spektrid"></svg>
+        </div>
+      </div>
+
+      <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
+        <p class="hint">Vasakul on paisuv supernoova pilv, paremal radioaktiivne lagunemisahel, all heledus ja heleduskõver päevades pärast plahvatust.
+          Käivita aeg ja muuda paremal nikli massi.</p>
+        <div class="duo">
+          <div>
+            <p class="sub">Paisuv pilv</p>
+            <svg id="cloud" class="scene" viewBox="0 0 370 370" role="img" aria-label="Paisuva supernoova läbilõige nikli, koobalti ja raua ning gammakiirtega"></svg>
+          </div>
+          <div>
+            <p class="sub">Lagunemisahel</p>
+            <svg id="chain" class="scene" viewBox="0 0 370 370" role="img" aria-label="Nikli, koobalti ja raua hulk valitud päeval"></svg>
+          </div>
+        </div>
+        <p class="sub">Heledus</p>
+        <svg id="lum" class="scene" viewBox="0 0 760 250" role="img" aria-label="Supernoova heledus ja radioaktiivse lagunemise võimsus aja järgi"></svg>
+        <div class="legend">
+          <span><i style="border-color: var(--sn)"></i>supernoova heledus</span>
+          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>lagunemise võimsus</span>
+        </div>
+        <p class="sub">Heleduskõver</p>
+        <svg id="lc" class="scene" viewBox="0 0 760 230" role="img" aria-label="Supernoova B- ja V-tähesuurus aja järgi"></svg>
+        <div class="legend">
+          <span><i style="border-color: var(--sn)"></i>B (sinine)</span>
+          <span><i style="border-color: var(--sel)"></i>V (roheline)</span>
+        </div>
+      </div>
+
+      <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
+        <div class="views-btns" role="group" aria-label="Vaade">
+          <span>Vaade:</span>
+          <button type="button" data-view3="curves">Heleduskõverad</button>
+          <button type="button" data-view3="phil">Phillipsi seos</button>
+        </div>
+        <div id="view3curves">
+          <p class="hint">Lähedaste supernoovade heleduskõverad tuntud kaugustelt. Lülita paremal korrektsioonid sisse ja vaata, kuidas kõverad üheks kokku tulevad. Andmed on simuleeritud.</p>
+          <svg id="curves3" class="scene" viewBox="0 0 760 400" role="img" aria-label="Supernoovade heleduskõverad enne ja pärast korrektsioone"></svg>
+          <div class="legend">
+            <span><i style="border-color: var(--text-3)"></i>valimi supernoovad</span>
+            <span><i style="border-color: var(--sn)"></i><span id="lg3a">valitud supernoova</span></span>
+          </div>
+        </div>
+        <div id="view3phil" hidden>
+          <p class="hint">40 lähedast supernoovat tuntud kaugustelt: maksimumheledus nõrgenemise kiiruse ja värvuse järgi, paremal maksimumheleduste histogramm. Andmed on simuleeritud.</p>
+          <svg id="phil" class="scene" viewBox="0 0 760 400" role="img" aria-label="Maksimumheledus nõrgenemise ja värvuse järgi ning histogramm"></svg>
+          <div class="legend">
+            <span><i class="dot" style="background: var(--text-3)"></i>valimi supernoovad</span>
+            <span><i class="dot" style="background: var(--sn)"></i><span id="lg3b">valitud supernoova</span></span>
+            <span><i style="border-color: var(--sel)"></i>seos</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
+        <div class="views-btns" role="group" aria-label="Vaade">
+          <span>Vaade:</span>
+          <button type="button" data-view4="model">Mudel</button>
+          <button type="button" data-view4="real">Päris andmed</button>
+        </div>
+        <p class="hint" id="hint4"></p>
+        <p class="sub">Kiirus ja kaugus</p>
+        <svg id="hub" class="scene" viewBox="0 0 760 300" role="img" aria-label="Galaktikate kiirus kauguse järgi"></svg>
+        <p class="sub">Suhteline hälve</p>
+        <svg id="rel" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kiiruse suhteline hälve Hubble'i seadusest kauguse järgi"></svg>
+        <div class="legend" id="legend4"></div>
+      </div>
+    </section>
+
+    <section class="card controls" aria-label="Seaded">
+      <div class="group" data-tabs="tab2 tab3">
+        <div class="slider"><label for="ni">Nikli mass</label><input type="range" id="ni" min="0.4" max="0.8" step="0.01" value="0.6"><output for="ni" id="niOut"></output></div>
+        <div class="btnrow" id="presets" aria-label="Tuntud supernoovad"></div>
+        <p class="readout" id="snRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab1" data-views="sys">
+        <div class="slider"><label for="t1">Aeg</label><input type="range" id="t1" min="0" max="1000" step="1" value="0"><output for="t1" id="t1Out"></output></div>
+        <div class="btnrow"><button type="button" class="primary" id="play1">▶ Käivita</button></div>
+        <label class="toggle"><input type="checkbox" id="dd"> Kaks valget kääbust</label>
+      </div>
+      <div class="group" data-tabs="tab1" data-views="sys">
+        <h3>Etapid</h3>
+        <div class="btnrow" id="stages"></div>
+        <p class="formula" id="stageText"></p>
+        <p class="readout" id="wdRead"></p>
+      </div>
+      <div class="group" data-tabs="tab1" data-views="spec">
+        <h3 id="typeLbl">Tüüp</h3>
+        <div class="seg" role="radiogroup" aria-labelledby="typeLbl">
+          <button type="button" role="radio" data-type="Ia">Ia</button>
+          <button type="button" role="radio" data-type="Ib">Ib</button>
+          <button type="button" role="radio" data-type="Ic">Ic</button>
+          <button type="button" role="radio" data-type="II">II</button>
+        </div>
+        <p class="readout" id="specRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab2">
+        <div class="slider"><label for="day">Päevi pärast plahvatust</label><input type="range" id="day" min="0" max="120" step="0.5" value="18"><output for="day" id="dayOut"></output></div>
+        <div class="btnrow"><button type="button" class="primary" id="play2">▶ Käivita</button></div>
+        <p class="readout" id="lcRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab3">
+        <div class="toggles col">
+          <label class="toggle"><input type="checkbox" id="cStr"> Nõrgenemise korrektsioon</label>
+          <label class="toggle"><input type="checkbox" id="cCol"> Värvi korrektsioon</label>
+        </div>
+        <div class="slider"><label for="dust">Tolm galaktikates: keskmine E(B − V)</label><input type="range" id="dust" min="0" max="0.3" step="0.01" value="0.1"><output for="dust" id="dustOut"></output></div>
+        <div class="btnrow"><button type="button" id="newSample">Uus valim</button></div>
+      </div>
+      <div class="group" data-tabs="tab3">
+        <div id="sigRead"></div>
+        <p class="readout" id="corrRead"></p>
+        <p class="formula">m<sub>B,corr</sub> = m<sub>B</sub> + α x<sub>1</sub> − β c, α ≈ 0.15, β ≈ 3.1</p>
+      </div>
+
+      <div class="group" data-tabs="tab4">
+        <div class="slider"><label for="sv">Galaktikate omaliikumine σ<sub>v</sub></label><input type="range" id="sv" min="0" max="600" step="10" value="250"><output for="sv" id="svOut"></output></div>
+        <div class="slider"><label for="sm">Ühe kauguse viga σ<sub>μ</sub></label><input type="range" id="sm" min="0" max="0.5" step="0.01" value="0.13"><output for="sm" id="smOut"></output></div>
+      </div>
+      <div class="group" data-tabs="tab4" data-views="model">
+        <div class="btnrow">
+          <button type="button" class="small" data-preset4="p3">3. osa: tsefeiidid</button>
+          <button type="button" class="small" data-preset4="p4">4. osa: supernoovad</button>
+        </div>
+        <div class="slider"><label for="d1">Kaugusvahemik: alates</label><input type="range" id="d1" min="0" max="1000" step="1"><output for="d1" id="d1Out"></output></div>
+        <div class="slider"><label for="d2">kuni</label><input type="range" id="d2" min="0" max="1000" step="1"><output for="d2" id="d2Out"></output></div>
+        <div class="slider"><label for="nGal">Galaktikate arv</label><input type="range" id="nGal" min="5" max="200" step="1"><output for="nGal" id="nGalOut"></output></div>
+        <div class="btnrow"><button type="button" id="newGal">Uued galaktikad</button></div>
+        <p class="readout" id="modelRead"></p>
+      </div>
+      <div class="group" data-tabs="tab4" data-views="real">
+        <h3 id="mbLbl">Supernoovade heledus M<sub>B</sub></h3>
+        <div class="seg" role="radiogroup" aria-labelledby="mbLbl">
+          <button type="button" role="radio" data-mb="cal">Kalibraatorid</button>
+          <button type="button" role="radio" data-mb="sh0es">SH0ES</button>
+        </div>
+        <div class="toggles col">
+          <label class="toggle"><input type="checkbox" id="showGal" checked> 3. osa galaktikad</label>
+          <label class="toggle"><input type="checkbox" id="showSn" checked> 4. osa supernoovad</label>
+        </div>
+        <p class="readout" id="realRead"></p>
+      </div>
+    </section>
+  </div>
+
+  <section class="card explain">
+    <h2>Mida joonis näitab</h2>
+    <ul data-tab="tab1">
+      <li>Valge kääbus on tähe tuum, mis jääb järele, kui Päikese-taolisel tähel kütus otsa saab. Tema mass on Päikese massi lähedane, tavaliselt umbes 0.6 M☉, kuid ta on vaid Maa suurune. Ta enam ei põle. Gravitatsiooni vastu hoiab teda elektronide rõhk: kaks elektroni ei saa olla samas olekus
+        (<a href="https://et.wikipedia.org/wiki/Pauli_keeluprintsiip" target="_blank" rel="noopener">Pauli keeluprintsiip</a>), nii et nad ei lase end rohkem kokku suruda. Sellist ainet nimetatakse kõdunud aineks; teelusikatäis seda kaalub tonne.</li>
+      <li>Mida raskem on valge kääbus, seda väiksem ta on: suurem gravitatsioon surub elektronid tihedamalt kokku. Elektronide rõhk suudab kanda kõige rohkem 1.44 Päikese massi,
+        <a class="en" href="https://en.wikipedia.org/wiki/Chandrasekhar_limit" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Chandrasekhari massi</a>. Selle lähedal kahaneb raadius kiiresti nullini.</li>
+      <li>Kaaslaselt massi saav valge kääbus selle piirini ei jõua. Umbes 1.38 M☉ juures on tihedus keskel nii suur, et süsinik hakkab põlema. Kõdunud aine ei paisu kuumenedes, nii et miski ei pidurda põlemist
+        ja see kiireneb plahvatuseks. Umbes sekundiga muutub pool tähest raua rühma elementideks, peamiselt radioaktiivseks nikliks ⁵⁶Ni, ja täht paiskub laiali. Järele ei jää midagi.</li>
+      <li>Kõik valged kääbused plahvatavad peaaegu sama massi juures, nii et neil on peaaegu sama palju kütust ja plahvatus teeb peaaegu sama palju niklit. Seepärast on Ia tüüpi supernoovad peaaegu standardküünlad.</li>
+      <li>Teine võimalus on kahe valge kääbuse ühinemine (<b>Kaks valget kääbust</b>): nad kaotavad <a href="https://et.wikipedia.org/wiki/Gravitatsioonilained" target="_blank" rel="noopener">gravitatsioonilainetega</a>
+        energiat ja tiirlevad üha lähemal, kuni ühinevad. Kumb tee on sagedasem, pole veel teada. Mõni valge kääbus võib plahvatada ka allpool Chandrasekhari massi. See on üks põhjus, miks maksimumheledus pole iga kord
+        täpselt sama (vt <a href="#standardiseerimine" data-go="tab3">Standardiseerimine</a>).</li>
+      <li>Supernoovasid liigitatakse spektri järgi (vaade <b>Spekter</b>). II tüübi spektris on vesinik: see on massiivne täht, mille tuum kokku langes. Ib ja Ic tüübi spektris vesinikku pole, kuid needki on tuuma kollapsid,
+        tähtedest, mis olid oma välimised kihid kaotanud. Nende heledused on väga erinevad.</li>
+      <li>Ia tüübi spektris pole vesinikku, sest valges kääbuses seda pole, kuid on sügav räni joon. Räni tekib plahvatuse välimistes kihtides. Täht nimes tähistab ainult spektrit: Ia tüübi ja teiste tüüpide füüsika on täiesti erinev.
+        Kauguse mõõtmine algab spektrist: ainult Ia tüüpi supernoova sobib standardküünlaks.</li>
+    </ul>
+    <ul data-tab="tab2" hidden>
+      <li>Supernoova ei helenda plahvatuse kuumusest: paisuv pilv jahtub kiiresti. Valgus tuleb radioaktiivsest lagunemisest. ⁵⁶Ni laguneb poolestusajaga 6.1 päeva koobaltiks ⁵⁶Co ja see 77 päevaga stabiilseks rauaks ⁵⁶Fe.
+        Lagunemisel tekkivad gammakiired soojendavad pilve.</li>
+      <li>Alguses on pilv nii tihe, et valgus jääb sinna kinni ja heledus on väiksem kui lagunemise võimsus. Kui pilv on hõrenenud, umbes kolm nädalat pärast plahvatust, pääseb valgus välja: see on maksimum.
+        Maksimumis on heledus peaaegu võrdne lagunemise võimsusega (Arnetti reegel), nii et maksimumheledus näitab nikli massi, umbes 2·10⁴³ erg/s iga Päikese massi nikli kohta.</li>
+      <li>Pärast maksimumi järgib heledus koobalti lagunemist, seepärast on kõvera saba tähesuurustes peaaegu sirge. Saba langeb kiiremini kui koobalt laguneb, sest hõrenevast pilvest pääseb üha rohkem gammakiiri välja.</li>
+      <li>Mida rohkem niklit, seda heledam supernoova. Raua rühma elemendid on valgusele väga läbipaistmatud, nii et suurema nikli massiga pilvest pääseb valgus aeglasemalt välja: kõver on laiem ja nõrgeneb aeglasemalt.
+        Nikli hulk pole iga kord täpselt sama, nii et maksimumheledus ka mitte, kuid heleduskõver näitab, kui palju niklit oli. Sellest tuleb <a href="#standardiseerimine" data-go="tab3">Phillipsi seos</a>.</li>
+      <li>B vastab sinisele ja V rohelisele valgusele. Pärast maksimumi muutub supernoova kiiresti punasemaks, nii et B langeb kiiremini kui V. Δm₁₅ on B-tähesuuruse muutus 15 päeva jooksul pärast maksimumi.</li>
+      <li>Umbes pool Universumi rauast, ka raud meie veres, on tekkinud sellistes plahvatustes.</li>
+    </ul>
+    <ul data-tab="tab3" hidden>
+      <li>Ia tüüpi supernoovade maksimumheledus erineb umbes 40 %, kauguse mõõtmiseks liiga palju. Heleduskõver näitab, millised on heledamad: need, mis nõrgenevad aeglasemalt (vt <a href="#heleduskover" data-go="tab2">Heleduskõver</a>).
+        Seda märkas Mark Phillips 1993. aastal.</li>
+      <li><b>Nõrgenemise korrektsioon</b> lahutab maksimumi tähesuurusest 0.8 (Δm₁₅ − 1.1). Heleduskõverate vaates venitatakse samal ajal ajatelge: kiire kõver venitatakse laiemaks, aeglane surutakse kokku.
+        Nii tegi seda <a class="en" href="https://en.wikipedia.org/wiki/Supernova_Cosmology_Project" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Supernova Cosmology Project</a> (Perlmutter jt 1997).</li>
+      <li>Tolm supernoova galaktikas teeb supernoova nõrgemaks ja punasemaks. Tema värvus c maksimumis (B − V) annab paranduse, nagu W<sub>H</sub> tsefeiididel (vt <a href="tsefeiidid.html#tolm">tsefeiidide lehte</a>).
+        <b>Värvi korrektsioon</b> lahutab β c, kus β ≈ 3.1. See on väiksem kui Linnutee tolmu R<sub>B</sub> = 4.1: osa värvusest on supernoova enda oma ja teiste galaktikate tolm paistab olevat teistsugune.</li>
+      <li>Pärast mõlemat korrektsiooni annab üks supernoova kauguse umbes 6 % täpsusega (0.13 tähesuurust). Ükski teine nii kaugel nähtav üksik objekt pole nii täpne.</li>
+      <li>Päris mõõtmistes kasutatakse <a class="en" href="https://en.wikipedia.org/wiki/Phillips_relationship" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Trippi (1998) valemit</a>
+        m<sub>B,corr</sub> = m<sub>B</sub> + α x<sub>1</sub> − β c. Venitusparameeter x<sub>1</sub> on kogu heleduskõvera järgi sobitatud (SALT2): aeglasematel suurem, x<sub>1</sub> = 0 on umbes Δm₁₅ = 1.1, ja α x<sub>1</sub> on peaaegu sama mis 0.8 (1.1 − Δm₁₅).
+        Pantheon+ lisab ka paranduse valikuefektide ja supernoova galaktika massi jaoks (umbes 0.05 tähesuurust).</li>
+      <li>Just need standardiseeritud tähesuurused m_b_corr on harjutuse <a href="index.html#supernovae">4. osas</a> m<sub>B</sub>. 3. osa galaktikate supernoovade M<sub>B</sub> hajub avaldatud tsefeiidide seosega
+        0.125 tähesuurust keskmise −19.33 ümber.</li>
+      <li>Supernoovat, mis teistega ei sarnane, nagu SN 1991bg, ei kasutata. Pantheon+ jätab välja supernoovad, mille x<sub>1</sub> või c on liiga suur. Kauguse mõõtmine algab objektide valimisest, mille kohta seos kehtib.</li>
+    </ul>
+    <ul data-tab="tab4" hidden>
+      <li>Galaktika kiirus on Universumi paisumine pluss tema enda liikumine, mõnisada km/s, sest ta langeb oma naabrite poole. Harjutuses kasutatud punanihked z<sub>HD</sub> on selle jaoks juba parandatud,
+        kuid parandus eemaldab ainult osa: umbes 250 km/s jääb.</li>
+      <li>Lähedal on mõnisada km/s suur osa kiirusest: 10 Mpc juures ±36 %. 100 Mpc juures on see ainult ±3.6 %. Paisumist näevad puhtalt ainult kauged galaktikad.</li>
+      <li>Kauguse suhteline viga on aga igal kaugusel sama: ühe supernoova kaugus on täpne umbes ±6 %. Kahe vea ribad lõikuvad umbes 60 Mpc juures.
+        Seepärast algavad 4. osa kauged supernoovad punanihkest z = 0.023, umbes 100 Mpc.</li>
+      <li>Tsefeiide näeb ainult umbes 40–60 Mpc kaugusele, kus kiirused hajuvad veel palju. Supernoovasid näeb palju kaugemale, kus nad ei haju. Seepärast vajab redel kolmandat pulka
+        ja seepärast annab 4. osa täpsema H<sub>0</sub> kui 3. osa.</li>
+      <li>4. osa viga määrab kalibreerimine: 0.05 tähesuuruse viga M<sub>B</sub>-s muudab H<sub>0</sub>-i 2.3 %. 166 kauge supernoova keskmine on täpne umbes 0.01 tähesuurust, nii et nende arv on palju vähem tähtis.</li>
+      <li>4. osa lõpeb punanihkel z = 0.06. Kaugemal on Universum valguse teekonna ajal märgatavalt paisunud ja tegur (1 + 0.775 z) on ainult parenduse esimene liige.
+        Sellest ja Hubble'i pingest räägib Hubble'i seaduse leht <span class="badge">tulekul</span>.</li>
+    </ul>
+    <p class="src" data-tab="tab1">Valge kääbuse mass ja raadius: Nauenberg (1972). Siiriuse B: mass 1.02 M☉, raadius 0.0084 R☉ (Bond jt 2017). Spektrid on skemaatilised.
+      Kahe valge kääbuse (0.9 ja 0.7 M☉) vahekaugus kahaneb gravitatsioonilainete tõttu nii, et ühinemiseni jäänud aeg on võrdeline vahekauguse neljanda astmega.</p>
+    <p class="src" data-tab="tab2" hidden>Heledus on arvutatud Arnetti (1982) mudeliga, lagunemise võimsus Nadyozhini (1994) järgi ja gammakiirte neeldumine nagu Jeffery (1999).
+      B- ja V-kõverad on venitatud mallist; maksimum M<sub>B</sub> = −19.3 − 2.5 lg (M<sub>Ni</sub> / 0.6 M☉) ja Δm₁₅ Phillipsi seosest M<sub>B</sub> = −19.3 + 0.8 (Δm₁₅ − 1.1), nagu standardküünalde lehel.</p>
+    <p class="src" data-tab="tab3" hidden>Valim on simuleeritud: nikli mass 0.4–0.8 M☉, juhuslik hajuvus 0.10 tähesuurust, supernoova enda värvus σ = 0.05 ja tolm eksponentjaotusega, R<sub>B</sub> = 3.1.
+      SN 1991bg: Δm₁₅ = 1.93, M<sub>B</sub> ≈ −17.1. SN 2014J: E(B − V) ≈ 1.2 (Amanullah jt 2014).</p>
+    <p class="src" data-tab="tab4" hidden>Päris andmed: harjutuse 3. osa 29 galaktikat (Riess jt 2022, ApJL 934, L7), μ nende tsefeiididest avaldatud seosega (Cruz Reyes &amp; Anderson 2023) ja v = c z<sub>HD</sub>;
+      4. osa 166 kauget supernoovat, m_b_corr ja z<sub>HD</sub> Pantheon+ (Scolnic jt 2022; Brout jt 2022), v = c z (1 + 0.775 z). SH0ES M<sub>B</sub> = −19.253 (Riess jt 2022).</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, typeof attrs[k] === 'number' ? +attrs[k].toFixed(2) : attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  // SVG text; "M_B" or "m_{B,corr}" is drawn with a subscript.
+  function text(parent, x, y, s, cls, anchor) {
+    const e = el('text', { x, y, class: cls || 'lbl', 'text-anchor': anchor || 'start' }, parent);
+    let sub = false;
+    for (const part of s.split(/(_\{[^}]*\}|_[A-Za-z])/)) {
+      if (!part) continue;
+      const m = part.match(/^_\{?([^}]*)\}?$/);
+      const t = el('tspan', m ? { dy: 4, 'font-size': '0.78em' } : sub ? { dy: -4 } : {}, e);
+      t.textContent = m ? m[1] : part;
+      sub = !!m;
+    }
+    return e;
+  }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const minus = s => s.replace(/-/g, '−');
+  const fmt = (v, d) => minus((Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d));
+  const fmtS = (v, d) => (v >= 0.5 * 10 ** -d ? '+' : '') + fmt(v, d);
+  function sig(v, n = 3) {
+    if (!isFinite(v) || v === 0) return '0';
+    let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    return minus(s);
+  }
+  // 1.2·10⁴³
+  const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  function sci(v, n = 2) {
+    const e = Math.floor(Math.log10(v)), m = v / 10 ** e;
+    return `${sig(m, n)}·10${String(e).replace(/\d/g, d => SUP[d]).replace('-', '⁻')}`;
+  }
+  function seeded(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+  function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+  const std = a => { const m = mean(a); return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / Math.max(1, a.length - 1)); };
+  function mkScale(lo, hi, p0, p1, log) {
+    const f = log ? v => (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)) : v => (v - lo) / (hi - lo);
+    return v => p0 + f(v) * (p1 - p0);
+  }
+  function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), f = x / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
+  const decs = step => Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+  function ticks(lo, hi, step) {
+    const a = [], d = decs(step);
+    for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + 1e-9; k++) a.push([k * step, fmt(k * step, d)]);
+    return a;
+  }
+  // Plot frame with grid lines and tick labels; ticks are [value, label] pairs.
+  function frame(g, B, X, Y, xt, yt, xtitle, ytitle, yOff = 40) {
+    for (const [v, L] of xt) { const x = X(v); el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'gridline' }, g); if (L !== null) text(g, x, B.y1 + 15, L, 'tlbl', 'middle'); }
+    for (const [v, L] of yt) { const y = Y(v); el('line', { x1: B.x0, y1: y, x2: B.x1, y2: y, class: 'gridline' }, g); if (L !== null) text(g, B.x0 - 6, y + 4, L, 'tlbl', 'end'); }
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: 'axisline' }, g);
+    if (xtitle) text(g, (B.x0 + B.x1) / 2, B.y1 + 32, xtitle, 'lbl2', 'middle');
+    if (ytitle) text(g, 0, 0, ytitle, 'lbl2', 'middle').setAttribute('transform', `translate(${B.x0 - yOff} ${(B.y0 + B.y1) / 2}) rotate(-90)`);
+  }
+  function clipRect(svg, id, B) {
+    const cp = el('clipPath', { id }, svg);
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0 }, cp);
+    return `url(#${id})`;
+  }
+  function arrow(g, x1, y1, x2, y2, cls = 'arrow', L = 8, W = 4) {
+    el('line', { x1, y1, x2, y2, class: cls }, g);
+    const a = Math.atan2(y2 - y1, x2 - x1), bx = x2 - L * Math.cos(a), by = y2 - L * Math.sin(a);
+    el('polygon', { points: `${x2},${y2} ${bx - W * Math.sin(a)},${by + W * Math.cos(a)} ${bx + W * Math.sin(a)},${by - W * Math.cos(a)}`, class: cls + 'head' }, g);
+  }
+  const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  // A point outside the plot is drawn as an arrow at the edge, with its label.
+  function offscale(g, x, y, B, label, cls = 'snarr') {
+    const xe = clamp(x, B.x0 + 4, B.x1 - 4), ye = clamp(y, B.y0 + 4, B.y1 - 4);
+    if (xe === x && ye === y) return false;
+    const dx = Math.sign(x - xe), dy = Math.sign(y - ye);
+    arrow(g, xe - 16 * dx, ye - 16 * dy, xe, ye, cls, 7, 3.5);
+    const right = dx > 0 || (!dx && xe > (B.x0 + B.x1) / 2);
+    text(g, xe - 20 * dx + (dx ? 0 : right ? -6 : 6), ye - 20 * dy + (dy ? 0 : -4), label, 'slbl', right ? 'end' : 'start');
+    return true;
+  }
+  // Every Nth star of a fixed random sky, for the night scenes.
+  function skyStars(g, seed, n, w, h) {
+    const r = seeded(seed);
+    for (let i = 0; i < n; i++) el('circle', { cx: r() * w, cy: r() * h, r: 0.4 + 0.9 * r() ** 3, class: 'skystar', opacity: 0.3 + 0.5 * r() }, g);
+  }
+
+  const C_KMS = 299792.458, LSUN = 3.828e33, RSUN_KM = 695700, REARTH = 6371, AU_KM = 1.496e8;
+
+  /* ---------- White dwarfs ---------- */
+  // Radius of a cold white dwarf against its mass (Nauenberg 1972), in km.
+  const MCH = 1.44, M_IGN = 1.38;
+  const wdR = M => { const x = M / MCH; return x >= 1 ? 0 : 0.0126 * RSUN_KM * x ** (-1 / 3) * Math.sqrt(1 - x ** (4 / 3)); };
+  // Central density: the mean density times a concentration that grows from about 6 (an n = 1.5 polytrope) with the mass,
+  // set so that it is about 2·10⁹ g/cm³ at ignition.
+  const wdRho = M => { const R = wdR(M) * 1e5, x = M / MCH; return M * 1.989e33 / (4 / 3 * Math.PI * R ** 3) * (6 + 26 * x ** 4); };
+
+  // Single degenerate: 1.0 → 1.38 M☉ at 10⁻⁷ M☉ a year (3.8 million years), then the explosion over the last 5 % of the slider.
+  const T_EXP = 0.95, MDOT = 0.1;   // M☉ per million years
+  // Double degenerate: 0.9 and 0.7 M☉, merging in 100 million years from 0.905 R☉ (orbital period 1.9 h).
+  const DD = { m1: 0.9, m2: 0.7, a0: 0.905, T: 100, aMerge: 0.035 };
+  const ddA = tMyr => Math.max(DD.aMerge, DD.a0 * Math.max(0, 1 - tMyr / DD.T) ** 0.25);
+  const ddP = a => 2 * Math.PI * Math.sqrt((a * 6.957e10) ** 3 / (6.674e-8 * (DD.m1 + DD.m2) * 1.989e33));   // s
+  function sys1() {
+    const f = st.t1, e = f > T_EXP ? (f - T_EXP) / (1 - T_EXP) : 0, tf = Math.min(f, T_EXP) / T_EXP;
+    if (!st.dd) { const t = 3.8 * tf, M = 1.0 + MDOT * t; return { t, M, e }; }
+    const t = DD.T * tf;
+    return { t, a: tf >= 1 ? DD.aMerge : ddA(t), e };
+  }
+  const STAGES = {
+    sd: [
+      { name: '1. Kogub massi', f: 0.25, text: 'Valge kääbus saab kaaslaselt gaasi. Tema enda soojus teda üleval ei hoia, seda teeb elektronide rõhk: kaks elektroni ei saa olla samas olekus. Sellist ainet nimetatakse kõdunud aineks.' },
+      { name: '2. Tõmbub kokku', f: 0.7, text: 'Rohkem massi tähendab suuremat gravitatsiooni, mis surub elektronid tihedamalt kokku. Valge kääbus muutub kasvades väiksemaks ja tihedamaks.' },
+      { name: '3. Süttib', f: 0.948, text: 'Umbes 1.38 M☉ juures, veidi alla Chandrasekhari massi 1.44 M☉, on tihedus keskel umbes 2·10⁹ g/cm³ ja süsinik hakkab põlema. Kõdunud aine ei paisu kuumenedes, nii et miski ei pidurda põlemist.' },
+      { name: '4. Plahvatab', f: 0.985, text: 'Umbes sekundiga läbib põlemine tähe ja muudab poole sellest raua rühma elementideks, peamiselt radioaktiivseks nikliks ⁵⁶Ni. Energia paiskab tähe laiali kiirusega umbes 10 000 km/s. Järele ei jää midagi.' },
+    ],
+    dd: [
+      { name: '1. Kaks kääbust', f: 0.3, text: 'Kaks valget kääbust tiirlevad teineteise ümber, 0.9 ja 0.7 Päikese massi, kokku rohkem kui Chandrasekhari mass. Kumbki üksi plahvatada ei saa.' },
+      { name: '2. Spiraal', f: 0.88, text: 'Tiirlemine kiirgab gravitatsioonilaineid, mis viivad energiat ära. Kääbused tulevad üha lähemale ja tiirlevad üha kiiremini, lõpuks mõnekümne sekundiga.' },
+      { name: '3. Ühinevad', f: 0.949, text: 'Väiksem ja kergem kääbus rebitakse tükkideks ja tema aine langeb raskemale. Kuskil süttib süsinik ja algab plahvatus.' },
+      { name: '4. Plahvatab', f: 0.985, text: 'Ühinenud aine paiskub laiali nagu ühest valgest kääbusest. Kas see juhtub tihti ja kas plahvatus on sama hele, on veel lahtine küsimus.' },
+    ],
+  };
+  function stageOf() {
+    const s = sys1();
+    if (s.e > 0) return 3;
+    if (!st.dd) return s.M >= 1.37 ? 2 : s.M >= 1.2 ? 1 : 0;
+    return s.a < 0.06 ? 2 : st.t1 > 0.6 ? 1 : 0;
+  }
+
+  /* ---------- The simulated supernova ---------- */
+  // Arnett's rule: at the peak, the luminosity equals the power of the decay. The power of ⁵⁶Ni → ⁵⁶Co → ⁵⁶Fe per M☉ of
+  // nickel (Nadyozhin 1994), with mean lives of 8.8 and 111.3 days (half-lives 6.1 and 77.2 days).
+  const TAU_NI = 8.8, TAU_CO = 111.3, T0_GAMMA = 40;
+  const decayPow = t => 6.45e43 * Math.exp(-t / TAU_NI) + 1.45e43 * Math.exp(-t / TAU_CO);
+  // Fraction of the gamma rays that the cloud absorbs; the rest escape.
+  const deposit = t => (t <= 0 ? 1 : 1 - Math.exp(-((T0_GAMMA / t) ** 2)));
+  const niLeft = t => Math.exp(-t / TAU_NI);
+  const coLeft = t => TAU_CO / (TAU_CO - TAU_NI) * (Math.exp(-t / TAU_CO) - Math.exp(-t / TAU_NI));
+  // B light curve, in magnitudes below the peak, against τ, the days from the peak divided by the stretch s.
+  const TP = { rise: 18, P: 2.1, w: 14.3, k: 0.014 };
+  function tmpl(tau) {
+    if (tau < 0) { const u = clamp((tau + TP.rise) / TP.rise, 1e-3, 1); return -2.5 * Math.log10(u * u * (3 - 2 * u)); }
+    return TP.P * (1 - Math.exp(-tau * tau / (2 * TP.w * TP.w))) + TP.k * tau;
+  }
+  // B − V: about 0 at the peak, 1.1 mag redder a month later, then bluer again by 0.012 mag a day (the Lira law).
+  function bvOf(tau) {
+    if (tau <= 0) return 0;
+    if (tau <= 30) { const x = tau / 30; return 1.1 * x * x * (3 - 2 * x); }
+    return 1.1 - 0.0118 * (tau - 30);
+  }
+  // The stretch s that gives Δm₁₅: the light curve falls Δm₁₅ in 15 days, tmpl(15/s) = Δm₁₅.
+  function stretchOf(dm15) {
+    let a = 0.3, b = 3;
+    for (let i = 0; i < 50; i++) { const m = (a + b) / 2; if (tmpl(15 / m) > dm15) a = m; else b = m; }
+    return (a + b) / 2;
+  }
+  const PH = { a: 0.8, b: -19.3, ref: 1.1 }, ALPHA = 0.15, BETA = 3.1, RB_HOST = 3.1;
+  const mbOfNi = Ni => PH.b - 2.5 * Math.log10(Ni / 0.6);
+  const dm15OfMb = MB => PH.ref + (MB - PH.b) / PH.a;
+  function makeSN(Ni, over) {
+    const MB = over ? over.MB : mbOfNi(Ni), dm15 = over ? over.dm15 : dm15OfMb(MB), s = stretchOf(dm15);
+    const x1 = (PH.ref - dm15) * PH.a / ALPHA, tB = TP.rise * s, tm = 15.5 * s;
+    // Arnett (1982): L(t) = M_Ni e^(−x²) ∫₀ˣ 2z e^(z²) ε(z τ_m) dz, x = t / τ_m, with the gamma rays partly escaping.
+    const dt = 0.1, n = 1300, L = new Float64Array(n + 1);
+    let I = 0, prev = 0;
+    for (let k = 1; k <= n; k++) {
+      const t = k * dt, z = t / tm, f = 2 * z * Math.exp(z * z) * decayPow(t) * deposit(t);
+      I += (f + prev) / 2 * dt / tm; prev = f;
+      L[k] = Ni * Math.exp(-z * z) * I;
+    }
+    let kp = 1;
+    for (let k = 1; k <= n; k++) if (L[k] > L[kp]) kp = k;
+    return { Ni, MB, dm15, s, x1, tB, tm, L, dt, tpeak: kp * dt, Lpeak: L[kp] };
+  }
+  const lumAt = (sn, t) => { const k = clamp(Math.round(t / sn.dt), 0, sn.L.length - 1); return sn.L[k]; };
+  // Absolute B and V magnitudes t days after the explosion.
+  const bAt = (sn, t, MB = sn.MB) => MB + tmpl((t - sn.tB) / sn.s);
+  const vAt = (sn, t, MB = sn.MB) => bAt(sn, t, MB) - bvOf((t - sn.tB) / sn.s);
+
+  const PRESETS = [
+    { name: 'SN 2011fe', Ni: 0.55, E: 0, note: 'M101, lähim normaalne Ia tüüpi supernoova aastakümnete jooksul ja 3. osa esimene galaktika' },
+    { name: 'SN 1991T', Ni: 0.68, E: 0.14, note: 'hele ja aeglane' },
+    { name: 'SN 2014J', Ni: 0.6, E: 1.2, note: 'M82, paksu tolmu taga' },
+    { name: 'SN 1991bg', Ni: 0.1, E: 0, over: { MB: -17.1, dm15: 1.93 }, note: 'nõrk ja kiire erijuhtum, mida kosmoloogias ei kasutata' },
+  ];
+
+  const st = {
+    tab: 'tab1', view1: 'sys', view3: 'curves', view4: 'model',
+    t1: 0, dd: false, playing1: false, anim: 0, type: 'Ia',
+    Ni: 0.6, E: 0, name: null, over: null,
+    day: 18, playing2: false,
+    cStr: false, cCol: false, a1: 0, a2: 0, dust: 0.1, sampleSeed: 1,
+    sv: 250, sm: 0.13, d1: 7, d2: 60, nGal: 29, galSeed: 1, mb: 'cal', showGal: true, showSn: true,
+  };
+  let sn = makeSN(st.Ni);
+
+  /* ---------- Tab 1: Plahvatus ---------- */
+  const WD_COL = '#dfe8ff';
+  function glow(svg, id, stops) {
+    const defs = el('defs', {}, svg), g = el('radialGradient', { id }, defs);
+    for (const [o, c, a] of stops) el('stop', { offset: o, 'stop-color': c, 'stop-opacity': a }, g);
+    return `url(#${id})`;
+  }
+  function renderSys() {
+    const svg = $('sys'), s = sys1(), stage = stageOf();
+    svg.textContent = '';
+    el('rect', { x: 0, y: 0, width: 370, height: 370, rx: 6, class: 'night' }, svg);
+    skyStars(svg, 11, 70, 370, 370);
+    const gGiant = glow(svg, 'gGiant', [[0, '#ffc08a', 1], [0.7, '#e2703a', 1], [1, '#a8401e', 1]]);
+    const gBoom = glow(svg, 'gBoom', [[0, '#ffffff', 1], [0.35, '#fff1c4', 0.95], [0.7, '#ffa45c', 0.5], [1, '#ff6a2a', 0]]);
+    const gWd = glow(svg, 'gWd', [[0, '#ffffff', 0.9], [1, '#9fb8ff', 0]]);
+    const cy = 205;
+    if (!st.dd) {
+      const wx = 292, M = s.M, R = wdR(M) / REARTH;
+      // The companion fills its Roche lobe and loses gas through the inner Lagrange point.
+      el('ellipse', { cx: 112, cy, rx: 86, ry: 80, fill: gGiant }, svg);
+      text(svg, 112, cy + 104, 'kaaslane: punane hiid', 'nl2', 'middle');
+      if (s.e === 0) {
+        el('ellipse', { cx: wx, cy, rx: 34, ry: 8, fill: 'rgba(255, 196, 150, 0.35)', stroke: 'rgba(255, 196, 150, 0.6)' }, svg);
+        const P0 = [196, cy], P1 = [250, cy - 60], P2 = [wx - 10, cy - 7], bez = u => [(1 - u) ** 2 * P0[0] + 2 * u * (1 - u) * P1[0] + u * u * P2[0], (1 - u) ** 2 * P0[1] + 2 * u * (1 - u) * P1[1] + u * u * P2[1]];
+        el('path', { d: `M${P0} Q${P1} ${P2}`, fill: 'none', stroke: 'rgba(255, 196, 150, 0.35)', 'stroke-width': 3 }, svg);
+        for (let k = 0; k < 9; k++) { const p = bez((k / 9 + st.anim * 0.6) % 1); el('circle', { cx: p[0], cy: p[1], r: 1.8, fill: '#ffd2a8' }, svg); }
+        el('circle', { cx: wx, cy, r: 12, fill: gWd }, svg);
+        el('circle', { cx: wx, cy, r: 2 + 3 * R, fill: stage === 2 ? '#ffe6b0' : WD_COL }, svg);
+        text(svg, wx, cy + 30, 'valge kääbus', 'nl2', 'middle');
+        text(svg, wx, cy + 46, 'akretsiooniketas', 'nl2', 'middle');
+        // Inset: the white dwarf magnified, with the Earth.
+        const ix = 296, iy = 72, kp = 34;
+        el('rect', { x: ix - 66, y: iy - 56, width: 132, height: 122, rx: 6, class: 'inset' }, svg);
+        el('circle', { cx: ix, cy: iy, r: kp, fill: 'none', stroke: '#6f8fc8', 'stroke-dasharray': '4 3' }, svg);
+        el('circle', { cx: ix, cy: iy, r: Math.max(1.5, kp * R), fill: WD_COL }, svg);
+        if (stage === 2) el('circle', { cx: ix, cy: iy, r: Math.max(2, kp * R * 0.35), fill: '#ff9d3a' }, svg);
+        insetCaption(svg, ix, iy);
+      } else boom(svg, wx, cy, s.e, gBoom);
+    } else {
+      const C = [185, cy], aPx = 150 * s.a / DD.a0 + 4, M = DD.m1 + DD.m2;
+      const r1 = aPx * DD.m2 / M, r2 = aPx * DD.m1 / M, ph = st.anim * 2 * Math.PI;
+      if (s.e === 0) {
+        for (let k = 0; k < 5; k++) el('circle', { cx: C[0], cy: C[1], r: ((k + st.anim * 3) % 5) * 34 + aPx / 2, class: 'gwave', opacity: 0.45 - 0.08 * k }, svg);
+        for (const r of [r1, r2]) el('ellipse', { cx: C[0], cy: C[1], rx: r, ry: 0.45 * r, fill: 'none', stroke: '#3c4664', 'stroke-dasharray': '3 3' }, svg);
+        const p1 = [C[0] + r1 * Math.cos(ph), C[1] + 0.45 * r1 * Math.sin(ph)], p2 = [C[0] - r2 * Math.cos(ph), C[1] - 0.45 * r2 * Math.sin(ph)];
+        for (const [p, m] of [[p1, DD.m1], [p2, DD.m2]]) {
+          el('circle', { cx: p[0], cy: p[1], r: 12, fill: gWd }, svg);
+          el('circle', { cx: p[0], cy: p[1], r: 2 + 3 * wdR(m) / REARTH, fill: WD_COL }, svg);
+        }
+        text(svg, 185, cy + 110, 'gravitatsioonilained viivad energiat ära', 'nl2', 'middle');
+        const ix = 296, iy = 72, kp = 20;
+        el('rect', { x: ix - 66, y: iy - 56, width: 132, height: 122, rx: 6, class: 'inset' }, svg);
+        [[ix - 30, DD.m1], [ix + 30, DD.m2]].forEach(([x, m]) => {
+          el('circle', { cx: x, cy: iy - 14, r: kp, fill: 'none', stroke: '#6f8fc8', 'stroke-dasharray': '4 3' }, svg);
+          el('circle', { cx: x, cy: iy - 14, r: kp * wdR(m) / REARTH, fill: WD_COL }, svg);
+          text(svg, x, iy + 28, `${fmt(m, 1)} M☉`, 'nl2', 'middle');
+        });
+        insetCaption(svg, ix, iy);
+      } else boom(svg, C[0], cy, s.e, gBoom);
+    }
+    text(svg, 12, 20, STAGES[st.dd ? 'dd' : 'sd'][stage].name.replace(/^\d\. /, ''), 'nl');
+    text(svg, 12, 36, st.dd ? `vahekaugus ${sig(s.a, 2)} R☉` : `mass ${fmt(s.M, 2)} M☉`, 'nl2');
+  }
+  function insetCaption(svg, ix, iy) {
+    text(svg, ix, iy + 46, 'suurendatud,', 'nl2', 'middle');
+    text(svg, ix, iy + 58, 'Maa katkendjoonega', 'nl2', 'middle');
+  }
+  function boom(svg, x, y, e, fill) {
+    const r = 10 + 230 * Math.sqrt(e);
+    el('circle', { cx: x, cy: y, r, fill, opacity: clamp(1.3 - e, 0.25, 1) }, svg);
+    const rr = seeded(5);
+    for (let k = 0; k < 40; k++) {
+      const a = rr() * 2 * Math.PI, d = r * (0.5 + 0.5 * rr());
+      el('circle', { cx: x + d * Math.cos(a), cy: y + d * Math.sin(a), r: 1.6, fill: rr() < 0.5 ? '#ffe39a' : '#ff9a5a' }, svg);
+    }
+    text(svg, 185, 352, 'plahvatus: aine lendab laiali kiirusega ~10 000 km/s', 'nl2', 'middle');
+  }
+
+  function renderMR() {
+    const svg = $('mr'), s = sys1();
+    svg.textContent = '';
+    const B = { x0: 52, x1: 356, y0: 12, y1: 318 }, X = mkScale(0.2, 1.5, B.x0, B.x1), Y = mkScale(0, 2.8, B.y1, B.y0), g = el('g', {}, svg);
+    frame(g, B, X, Y, ticks(0.2, 1.5, 0.2), ticks(0, 2.8, 0.5).map(([v, l]) => [v, l]), 'mass (M☉)', 'raadius (Maa raadiustes)', 36);
+    const c = [];
+    for (let m = 0.2; m < MCH; m += 0.005) c.push([X(m), Y(wdR(m) / REARTH)]);
+    c.push([X(MCH), Y(0)]);
+    el('polyline', { points: pts(c), class: 'curve mr' }, g);
+    el('line', { x1: X(MCH), y1: B.y0, x2: X(MCH), y2: B.y1, class: 'guide' }, g);
+    text(g, X(MCH) - 4, B.y0 + 14, 'Chandrasekhari mass', 'lbl3', 'end');
+    el('line', { x1: X(M_IGN), y1: Y(1.1), x2: X(M_IGN), y2: B.y1, class: 'guide' }, g);
+    text(g, X(M_IGN) - 4, Y(1.1) - 4, 'süttimine', 'lbl3', 'end');
+    el('line', { x1: B.x0, y1: Y(1), x2: B.x1, y2: Y(1), class: 'guide' }, g);
+    text(g, B.x0 + 6, Y(1) - 5, 'Maa raadius', 'lbl3');
+    // Sirius B: 1.02 M☉, 0.0084 R☉ (Bond et al. 2017).
+    el('circle', { cx: X(1.02), cy: Y(0.0084 * RSUN_KM / REARTH), r: 4.5, class: 'ring' }, g);
+    text(g, X(1.02) - 8, Y(0.0084 * RSUN_KM / REARTH) + 16, 'Siiriuse B', 'lbl3', 'end');
+    if (s.e > 0) { text(g, (B.x0 + B.x1) / 2, Y(2.4), 'valget kääbust enam pole', 'lbl', 'middle'); return; }
+    const pt = m => { el('circle', { cx: X(m), cy: Y(wdR(m) / REARTH), r: 6, class: 'wdpt' }, g); };
+    if (!st.dd) pt(s.M);
+    else {
+      pt(DD.m1); pt(DD.m2);
+      text(g, X(0.8), Y(2.2), 'kokku 1.6 M☉ — üle piiri', 'lbl2', 'middle');
+    }
+  }
+
+  function readouts1() {
+    const s = sys1(), stage = stageOf(), list = STAGES[st.dd ? 'dd' : 'sd'];
+    $('t1').value = Math.round(st.t1 * 1000);
+    $('t1Out').textContent = s.e > 0 ? 'plahvatus' : `${sig(s.t, 2)} mln a`;
+    $('stageText').innerHTML = `<b>${list[stage].name}.</b> ${list[stage].text}`;
+    document.querySelectorAll('#stages button').forEach((b, i) => { b.textContent = list[i].name; b.setAttribute('aria-pressed', i === stage); });
+    if (s.e > 0) { $('wdRead').innerHTML = 'Tähest jääb järele ainult paisuv pilv, umbes 0.6 M☉ niklit. Vaata vahekaarti <b>Heleduskõver</b>.'; return; }
+    if (!st.dd) {
+      const R = wdR(s.M), rho = wdRho(s.M);
+      $('wdRead').innerHTML = `Aeg ${fmt(s.t, 2)} miljonit aastat, mass kasvab 10⁻⁷ M☉ aastas. Valge kääbuse mass <b>${fmt(s.M, 3)} M☉</b>, raadius <b>${sig(R, 3)} km</b> (${fmt(R / REARTH, 2)} Maa raadiust), ` +
+        `tihedus keskel ${sci(rho)} g/cm³: teelusikatäis (5 cm³) kaalub ${sig(rho * 5 / 1e6, 2)} tonni.`;
+    } else {
+      const P = ddP(s.a), left = DD.T - s.t;
+      $('wdRead').innerHTML = `Aeg ${sig(s.t, 3)} miljonit aastat. Vahekaugus <b>${sig(s.a, 2)} R☉</b> (${sig(s.a * RSUN_KM, 2)} km), tiirlemisperiood <b>${P > 3600 ? sig(P / 3600, 2) + ' h' : P > 120 ? sig(P / 60, 2) + ' min' : sig(P, 2) + ' s'}</b>; ` +
+        `ühinemiseni ${left > 0.01 ? sig(left, 2) + ' miljonit aastat' : 'vähem kui 10 000 aastat'}. Massid 0.9 + 0.7 = 1.6 M☉ > 1.44 M☉.`;
+    }
+  }
+  function render1sys() { renderSys(); renderMR(); readouts1(); }
+
+  // Schematic spectra near the peak: a blackbody with P Cygni lines [rest wavelength, velocity in km/s, absorption depth,
+  // width in Å, emission].
+  const SPECTRA = {
+    Ia: { T: 11000, desc: 'valge kääbuse termotuumaplahvatus', lines: [[6355, 9700, 0.7, 65, 0.22], [5972, 10000, 0.15, 45, 0.05], [5454, 10000, 0.25, 40, 0], [5640, 10000, 0.22, 40, 0], [4481, 11000, 0.45, 90, 0.1], [5169, 10000, 0.3, 110, 0.1]] },
+    Ib: { T: 9000, desc: 'massiivse tähe tuuma kollaps, vesinikuta', lines: [[5876, 9000, 0.5, 60, 0.25], [6678, 9000, 0.3, 50, 0.1], [7065, 9000, 0.3, 50, 0.1], [5016, 9000, 0.22, 45, 0], [5169, 9000, 0.3, 110, 0.1]] },
+    Ic: { T: 8000, desc: 'massiivse tähe tuuma kollaps, vesiniku ja heeliumita', lines: [[5169, 15000, 0.35, 200, 0.15], [5890, 15000, 0.3, 160, 0.15], [6355, 15000, 0.1, 150, 0], [4481, 15000, 0.3, 180, 0]] },
+    II: { T: 13000, desc: 'massiivse tähe tuuma kollaps, vesinikuga', lines: [[6563, 9000, 0.35, 70, 0.9], [4861, 9000, 0.35, 55, 0.3], [5169, 9000, 0.15, 70, 0], [5876, 9000, 0.1, 50, 0.05]] },
+  };
+  const planck = (lam, T) => 1 / (lam ** 5 * (Math.exp(1.4388e8 / (lam * T)) - 1));
+  function specFlux(type, lam) {
+    const S = SPECTRA[type], c = planck(lam, S.T) / planck(5500, S.T);
+    let f = 1;
+    for (const [l0, v, d, w, em] of S.lines) {
+      const la = l0 * (1 - v / C_KMS), we = w * 1.4;
+      f += -d * Math.exp(-(((lam - la) / w) ** 2) / 2) + em * Math.exp(-(((lam - l0 * (1 - v / C_KMS / 4)) / we) ** 2) / 2);
+    }
+    return c * f;
+  }
+  function renderSpec() {
+    const svg = $('spec');
+    svg.textContent = '';
+    const x0 = 70, x1 = 736, X = mkScale(4000, 7000, x0, x1), g = el('g', {}, svg), types = ['Ia', 'Ib', 'Ic', 'II'];
+    const marks = [[6563, 'Hα'], [5876, 'He I'], [6150, 'Si II']];
+    for (const [l, lab] of marks) {
+      el('line', { x1: X(l), y1: 24, x2: X(l), y2: 430, class: 'guide' }, g);
+      text(g, X(l), 16, lab, 'lbl3', 'middle');
+    }
+    types.forEach((ty, i) => {
+      const y0 = 32 + i * 100, y1 = y0 + 86, ls = [];
+      for (let l = 4000; l <= 7000; l += 5) ls.push([l, specFlux(ty, l)]);
+      const hi = Math.max(...ls.map(p => p[1])), Y = mkScale(0, hi * 1.05, y1, y0);
+      const grp = el('g', { class: ty === st.type ? '' : 'dim' }, g);
+      el('line', { x1: x0, y1, x2: x1, y2: y1, class: 'axisline' }, grp);
+      el('polyline', { points: pts(ls.map(([l, f]) => [X(l), Y(f)])), class: ty === st.type ? 'curve' : 'curve fitc' }, grp);
+      text(grp, 8, y0 + 34, ty, 'lbl');
+      text(grp, x1, y1 + 12, SPECTRA[ty].desc, 'lbl3', 'end');
+      el('rect', { x: 0, y: y0 - 6, width: 760, height: 98, class: 'hit', 'data-type': ty }, svg);
+    });
+    // The blueshift of the silicon line.
+    if (st.type === 'Ia') {
+      const y = 44;
+      arrow(g, X(6355), y, X(6150) + 2, y, 'snarr', 7, 3.5);
+      el('line', { x1: X(6355), y1: y - 6, x2: X(6355), y2: y + 6, class: 'snarr' }, g);
+      text(g, X(6355) + 6, y + 4, '6355 Å', 'slbl');
+    }
+    const ax = el('g', {}, svg);
+    for (let l = 4000; l <= 7000; l += 500) { el('line', { x1: X(l), y1: 430, x2: X(l), y2: 435, class: 'axisline' }, ax); text(ax, X(l), 448, String(l).replace(/(\d)(\d{3})$/, '$1 $2'), 'tlbl', 'middle'); }
+    text(ax, (x0 + x1) / 2, 466, 'lainepikkus (Å)', 'lbl2', 'middle');
+  }
+  function readoutsSpec() {
+    document.querySelectorAll('[data-type]').forEach(b => { if (b.tagName === 'BUTTON') b.setAttribute('aria-checked', b.dataset.type === st.type); });
+    const v = C_KMS * (6355 - 6150) / 6355;
+    $('specRead').innerHTML = {
+      Ia: `<b>Ia</b>: vesinikku pole, sügav räni joon. Räni joon on nihkunud 6355 Å-lt 6150 Å-ni: aine lendab meie poole kiirusega <b>${sig(v, 2)} km/s</b>.`,
+      Ib: '<b>Ib</b>: vesinikku pole, kuid on heeliumi jooned. Massiivne täht, mis oli oma vesinikukihi kaotanud.',
+      Ic: '<b>Ic</b>: pole vesinikku ega heeliumi, jooned on väga laiad. Massiivne täht, mis oli kaotanud ka heeliumikihi.',
+      II: '<b>II</b>: tugev vesiniku joon Hα. Massiivne täht, mille tuum kokku langes; heledused on väga erinevad.',
+    }[st.type];
+  }
+  function render1() {
+    $('view1sys').hidden = st.view1 !== 'sys'; $('view1spec').hidden = st.view1 !== 'spec';
+    document.querySelectorAll('[data-view1]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view1 === st.view1));
+    if (st.view1 === 'sys') render1sys(); else { renderSpec(); readoutsSpec(); }
+    updateGroups();
+  }
+
+  /* ---------- Tab 2: Heleduskõver ---------- */
+  const CLOUD_PTS = (() => {
+    const r = seeded(77), a = [];
+    for (let i = 0; i < 340; i++) a.push({ r: Math.sqrt(r()), a: 2 * Math.PI * r(), u: r() });
+    return a;
+  })();
+  const NI_COL = '#7bdc65', CO_COL = '#5aa9ff', FE_COL = '#d9875f', IME_COL = '#e8c25a', CO2_COL = '#7d8396';
+  function renderCloud() {
+    const svg = $('cloud'), t = st.day;
+    svg.textContent = '';
+    el('rect', { x: 0, y: 0, width: 370, height: 370, rx: 6, class: 'night' }, svg);
+    skyStars(svg, 23, 60, 370, 370);
+    const cx = 185, cy = 190, R = 14 + 136 * Math.sqrt(clamp(t / 120, 0, 1)), rNi = 0.2 + 0.45 * sn.Ni / 0.8;
+    const bright = clamp(lumAt(sn, t) / sn.Lpeak, 0, 1);
+    const gl = glow(svg, 'gCloud', [[0, '#fff6dc', 0.55 * bright + 0.05], [0.7, '#ffcf8a', 0.35 * bright], [1, '#ff9a4a', 0]]);
+    el('circle', { cx, cy, r: R * 1.35, fill: gl }, svg);
+    el('circle', { cx, cy, r: R, fill: 'rgba(255, 255, 255, 0.04)', stroke: '#4a5272' }, svg);
+    const ni = niLeft(t), co = coLeft(t);
+    for (const p of CLOUD_PTS) {
+      const col = p.r < rNi ? (p.u < ni ? NI_COL : p.u < ni + co ? CO_COL : FE_COL) : p.r < 0.85 ? IME_COL : CO2_COL;
+      el('circle', { cx: cx + R * p.r * Math.cos(p.a), cy: cy + R * p.r * Math.sin(p.a), r: R < 40 ? 1.2 : 1.9, fill: col, opacity: p.r < 0.85 ? 0.95 : 0.6 }, svg);
+    }
+    // Gamma rays from the decay: the escaping fraction leaves the cloud, the rest stop inside it.
+    const esc = 1 - deposit(t), n = 12, ne = Math.round(n * esc), rr = seeded(9);
+    for (let k = 0; k < n; k++) {
+      const a = 2 * Math.PI * (k + 0.3 * rr()) / n, r0 = R * rNi * 0.5 * rr(), r1 = k < ne ? R + 22 : R * (0.45 + 0.4 * rr());
+      if (r1 - r0 > 10) arrow(svg, cx + r0 * Math.cos(a), cy + r0 * Math.sin(a), cx + r1 * Math.cos(a), cy + r1 * Math.sin(a), 'gam', 6, 3);
+    }
+    const phase = t < sn.tpeak - 3 ? 'valgus jääb tihedasse pilve kinni' : t < sn.tpeak + 3 ? 'maksimum: valgus pääseb välja' : 'heledus järgib koobalti lagunemist';
+    text(svg, 12, 20, `päev ${fmt(t, 0)}: ${phase}`, 'nl');
+    text(svg, 12, 36, `raadius ${sig(t * 86400 * 1e4 / AU_KM, 2)} au (10 000 km/s)`, 'nl2');
+    const lg = [[NI_COL, '⁵⁶Ni'], [CO_COL, '⁵⁶Co'], [FE_COL, '⁵⁶Fe'], [IME_COL, 'Si, S, Ca'], [CO2_COL, 'C, O']];
+    lg.forEach(([c, l], i) => { el('circle', { cx: 18 + i * 70, cy: 356, r: 4, fill: c }, svg); text(svg, 26 + i * 70, 360, l, 'nl2'); });
+  }
+  function renderChain() {
+    const svg = $('chain'), t = st.day, ni = niLeft(t), co = coLeft(t), fe = 1 - ni - co;
+    svg.textContent = '';
+    const xs = [65, 185, 305], g = el('g', {}, svg);
+    [['⁵⁶Ni', NI_COL], ['⁵⁶Co', CO_COL], ['⁵⁶Fe', FE_COL]].forEach(([l, c], i) => {
+      el('rect', { x: xs[i] - 40, y: 18, width: 80, height: 34, rx: 6, class: 'chainbox' }, g);
+      el('circle', { cx: xs[i] - 24, cy: 35, r: 5, fill: c }, g);
+      text(g, xs[i] + 6, 40, l, 'lbl', 'middle');
+    });
+    arrow(g, 107, 35, 143, 35); arrow(g, 227, 35, 263, 35);
+    text(g, 125, 72, '6.1 p', 'lbl3', 'middle'); text(g, 245, 72, '77 p', 'lbl3', 'middle');
+    text(g, 125, 86, 'poolestusaeg', 'lbl3', 'middle'); text(g, 245, 86, 'poolestusaeg', 'lbl3', 'middle');
+    const B = { y0: 110, y1: 300 }, H = B.y1 - B.y0;
+    el('line', { x1: 20, y1: B.y1, x2: 350, y2: B.y1, class: 'axisline' }, g);
+    [[ni, NI_COL], [co, CO_COL], [fe, FE_COL]].forEach(([v, c], i) => {
+      el('rect', { x: xs[i] - 30, y: B.y1 - H * v, width: 60, height: H * v, fill: c, opacity: 0.85 }, g);
+      text(g, xs[i], B.y1 - H * v - 6, `${fmt(sn.Ni * v, 2)} M☉`, 'lbl2', 'middle');
+    });
+    text(g, 185, 324, `päev ${fmt(t, 0)}; algul ${fmt(sn.Ni, 2)} M☉ niklit`, 'lbl2', 'middle');
+    text(g, 185, 344, `gammakiirtest pääseb välja ${fmt(100 * (1 - deposit(t)), 0)} %`, 'lbl3', 'middle');
+  }
+  const TMAX = 120;
+  function renderLum() {
+    const svg = $('lum'), t = st.day;
+    svg.textContent = '';
+    const B = { x0: 70, x1: 748, y0: 10, y1: 200 }, X = mkScale(0, TMAX, B.x0, B.x1), Y = mkScale(1e41, 1e44, B.y1, B.y0, true), g = el('g', {}, svg);
+    frame(g, B, X, Y, ticks(0, TMAX, 10), [[1e41, '10⁴¹'], [1e42, '10⁴²'], [1e43, '10⁴³'], [1e44, '10⁴⁴']], 'päevi pärast plahvatust', 'heledus (erg/s)', 52);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'lumclip', B) }, g), dec = [], lum = [];
+    for (let k = 1; k <= TMAX * 2; k++) { const tt = k / 2; dec.push([X(tt), Y(sn.Ni * decayPow(tt))]); if (lumAt(sn, tt) > 1e41) lum.push([X(tt), Y(lumAt(sn, tt))]); }
+    el('polyline', { points: pts(dec), class: 'curve ref' }, inner);
+    el('polyline', { points: pts(lum), class: 'curve' }, inner);
+    const xp = X(sn.tpeak), yp = Y(sn.Lpeak);
+    el('circle', { cx: xp, cy: yp, r: 4, class: 'spt hollow' }, g);
+    text(g, xp + 8, yp - 8, 'maksimum: heledus ≈ lagunemise võimsus', 'lbl3');
+    el('line', { x1: X(t), y1: B.y0, x2: X(t), y2: B.y1, class: 'guide' }, g);
+    if (t > 0.5) el('circle', { cx: X(t), cy: Y(Math.max(1e41, lumAt(sn, t))), r: 5, class: 'spt' }, g);
+  }
+  function renderLC() {
+    const svg = $('lc'), t = st.day;
+    svg.textContent = '';
+    const B = { x0: 70, x1: 748, y0: 10, y1: 180 }, X = mkScale(0, TMAX, B.x0, B.x1), Y = mkScale(-20, -15, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, ticks(0, TMAX, 10), ticks(-20, -15, 1), 'päevi pärast plahvatust', 'absoluutne tähesuurus', 52);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'lcclip', B) }, g), b = [], v = [];
+    for (let k = 1; k <= TMAX * 2; k++) { const tt = k / 2; b.push([X(tt), Y(bAt(sn, tt))]); v.push([X(tt), Y(vAt(sn, tt))]); }
+    el('polyline', { points: pts(v), class: 'curve vband' }, inner);
+    el('polyline', { points: pts(b), class: 'curve' }, inner);
+    // Δm₁₅: from the peak to 15 days after it.
+    const xa = X(sn.tB), xb = X(sn.tB + 15), ya = Y(sn.MB), yb = Y(sn.MB + sn.dm15);
+    el('line', { x1: xa, y1: ya, x2: xb + 14, y2: ya, class: 'guide' }, g);
+    arrow(g, xb + 8, ya, xb + 8, yb, 'snarr', 6, 3);
+    text(g, xb + 14, (ya + yb) / 2 + 4, `Δm₁₅ = ${fmt(sn.dm15, 2)}`, 'slbl');
+    el('line', { x1: X(t), y1: B.y0, x2: X(t), y2: B.y1, class: 'guide' }, g);
+    if (t > 1) { el('circle', { cx: X(t), cy: Y(vAt(sn, t)), r: 4, fill: 'var(--sel)' }, inner); el('circle', { cx: X(t), cy: Y(bAt(sn, t)), r: 5, class: 'spt' }, inner); }
+  }
+  function readouts2() {
+    const t = st.day;
+    $('day').value = t; $('dayOut').textContent = `${fmt(t, 0)} p`;
+    $('lcRead').innerHTML = `Maksimum päeval ${fmt(sn.tpeak, 0)}: <b>L = ${sci(sn.Lpeak)} erg/s</b> = ${sci(sn.Lpeak / LSUN)} L☉, ${fmt(sn.Lpeak / sn.Ni / 1e43, 1)}·10⁴³ erg/s iga M☉ nikli kohta. ` +
+      `Päeval ${fmt(t, 0)}: heledus ${t > 0.5 ? sci(lumAt(sn, t)) : '0'} erg/s, lagunemise võimsus ${sci(sn.Ni * decayPow(Math.max(t, 0.01)))} erg/s; ` +
+      `alles ${fmt(sn.Ni * niLeft(t), 2)} M☉ niklit, ${fmt(sn.Ni * coLeft(t), 2)} M☉ koobaltit.`;
+  }
+  function render2() { renderCloud(); renderChain(); renderLum(); renderLC(); readouts2(); }
+
+  /* ---------- Tab 3: Standardiseerimine ---------- */
+  // Nearby supernovae at known distances: nickel mass 0.4–0.8 M☉, a random scatter of 0.10 mag, an intrinsic colour with σ = 0.05
+  // (which dims the supernova by 2.0 c, not β c) and host dust E(B − V) with an exponential distribution, R_B = 3.1.
+  let SAMPLE = [];
+  function makeSample() {
+    const r = seeded(st.sampleSeed * 613 + 1);
+    SAMPLE = Array.from({ length: 40 }, () => {
+      const Ni = 0.4 + 0.4 * r(), e = 0.10 * gauss(r), ci = 0.05 * gauss(r), E = -st.dust * Math.log(1 - r() * 0.999);
+      const MB0 = mbOfNi(Ni), dm15 = dm15OfMb(MB0);
+      return { MB: MB0 + e + RB_HOST * E + 2.0 * ci, dm15, s: stretchOf(dm15), c: E + ci };
+    });
+  }
+  const selSN = () => ({ MB: sn.MB + RB_HOST * st.E, dm15: sn.dm15, s: sn.s, c: st.E });
+  const corrOf = (o, a1, a2) => o.MB - a1 * PH.a * (o.dm15 - PH.ref) - a2 * BETA * o.c;
+  function renderCurves3() {
+    const svg = $('curves3');
+    svg.textContent = '';
+    const B = { x0: 70, x1: 748, y0: 12, y1: 350 }, X = mkScale(-15, 50, B.x0, B.x1), Y = mkScale(-20.3, -16.3, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, ticks(-15, 50, 5), ticks(-20.3, -16.3, 0.5), st.a1 > 0.5 ? 'päevi maksimumist, venitatud' : 'päevi maksimumist', 'M_B (absoluutne tähesuurus)', 52);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'c3clip', B) }, g);
+    const curve = (o, cls) => {
+      const st1 = 1 + st.a1 * (o.s - 1), M = corrOf(o, st.a1, st.a2), p = [];
+      for (let tt = -16; tt <= 52; tt += 0.5) p.push([X(tt), Y(M + tmpl(tt * st1 / o.s))]);
+      el('polyline', { points: pts(p), class: cls }, inner);
+    };
+    SAMPLE.slice(0, 12).forEach(o => curve(o, 'curve samp'));
+    const o = selSN();
+    curve(o, 'curve');
+    const M = corrOf(o, st.a1, st.a2);
+    if (!offscale(g, X(0), Y(M), B, `${st.name || 'valitud'}: ${fmt(M, 1)}`)) text(g, X(0) + 6, Y(M) - 8, st.name || 'valitud supernoova', 'slbl');
+  }
+  function renderPhil() {
+    const svg = $('phil');
+    svg.textContent = '';
+    const yLo = -20.3, yHi = -17.6, B1 = { x0: 70, x1: 330, y0: 12, y1: 350 }, B2 = { x0: 370, x1: 600, y0: 12, y1: 350 }, B3 = { x0: 620, x1: 748, y0: 12, y1: 350 };
+    const Y = mkScale(yLo, yHi, B1.y0, B1.y1), X1 = mkScale(0.6, 2.0, B1.x0, B1.x1), X2 = mkScale(-0.2, 0.6, B2.x0, B2.x1), g = el('g', {}, svg);
+    const yt = ticks(yLo, yHi, 0.5);
+    frame(g, B1, X1, Y, ticks(0.6, 2.0, 0.2), yt, 'Δm₁₅ (tähesuurust)', st.a1 || st.a2 ? 'M_B, parandatud' : 'M_B (maksimumis)', 46);
+    frame(g, B2, X2, Y, ticks(-0.2, 0.6, 0.2), yt.map(([v]) => [v, null]), 'värvus c = B − V', null);
+    frame(g, B3, mkScale(0, 1, B3.x0, B3.x1), Y, [], yt.map(([v]) => [v, null]), 'arv', null);
+    const in1 = el('g', { 'clip-path': clipRect(svg, 'p1clip', B1) }, g), in2 = el('g', { 'clip-path': clipRect(svg, 'p2clip', B2) }, g);
+    // The relations as they look after the corrections already applied.
+    const b1 = mean(SAMPLE.map(o => corrOf(o, st.a1, st.a2) - (1 - st.a1) * PH.a * (o.dm15 - PH.ref)));
+    const lineY1 = d => b1 + (1 - st.a1) * PH.a * (d - PH.ref);
+    el('line', { x1: X1(0.6), y1: Y(lineY1(0.6)), x2: X1(2.0), y2: Y(lineY1(2.0)), class: 'fitline' }, in1);
+    const b2 = mean(SAMPLE.map(o => corrOf(o, st.a1, st.a2) - (1 - st.a2) * BETA * o.c));
+    const lineY2 = c => b2 + (1 - st.a2) * BETA * c;
+    el('line', { x1: X2(-0.2), y1: Y(lineY2(-0.2)), x2: X2(0.6), y2: Y(lineY2(0.6)), class: 'fitline' }, in2);
+    const vals = SAMPLE.map(o => corrOf(o, st.a1, st.a2));
+    SAMPLE.forEach((o, i) => {
+      el('circle', { cx: X1(o.dm15), cy: Y(vals[i]), r: 3.6, class: 'fpt' }, in1);
+      el('circle', { cx: X2(o.c), cy: Y(vals[i]), r: 3.6, class: 'fpt' }, in2);
+    });
+    // SN 1991bg, outside the relation.
+    offscale(g, X1(1.93), Y(-17.1), B1, 'SN 1991bg: −17.1');
+    const o = selSN(), M = corrOf(o, st.a1, st.a2), nm = st.name || 'valitud';
+    if (!offscale(g, X1(o.dm15), Y(M), B1, `${nm}: ${fmt(M, 1)}`)) el('circle', { cx: X1(o.dm15), cy: Y(M), r: 5.5, class: st.over ? 'spt hollow' : 'spt' }, g);
+    if (!offscale(g, X2(o.c), Y(M), B2, `${nm}: c = ${fmt(o.c, 2)}`)) el('circle', { cx: X2(o.c), cy: Y(M), r: 5.5, class: 'spt' }, g);
+    // Histogram of the sample.
+    const bw = 0.1, nb = Math.round((yHi - yLo) / bw), cnt = new Array(nb).fill(0);
+    for (const v of vals) { const k = Math.floor((v - yLo) / bw); if (k >= 0 && k < nb) cnt[k]++; }
+    const cmax = Math.max(8, ...cnt), XH = mkScale(0, cmax, B3.x0, B3.x1);
+    cnt.forEach((c, k) => { if (c) el('rect', { x: B3.x0, y: Y(yLo + k * bw) + 0.5, width: XH(c) - B3.x0, height: Y(yLo + bw) - Y(yLo) - 1, class: 'hbar' }, g); });
+    text(g, B3.x1 - 4, B3.y1 - 8, `σ = ${fmt(std(vals), 2)}`, 'lbl', 'end');
+  }
+  function readouts3() {
+    document.querySelectorAll('[data-view3]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view3 === st.view3));
+    $('dustOut').textContent = fmt(st.dust, 2);
+    const sd = (a1, a2) => std(SAMPLE.map(o => corrOf(o, a1, a2)));
+    const rows = [['ilma korrektsioonita', 0, 0], ['nõrgenemise järgi', 1, 0], ['värvi järgi', 0, 1], ['mõlema järgi', 1, 1]];
+    const cur = [+st.cStr, +st.cCol];
+    $('sigRead').innerHTML = '<table class="res"><tr><th>korrektsioon</th><th>hajuvus σ</th><th>kauguse viga</th></tr>' +
+      rows.map(([l, a1, a2]) => { const s = sd(a1, a2); return `<tr${a1 === cur[0] && a2 === cur[1] ? ' class="hl"' : ''}><td>${l}</td><td>${fmt(s, 2)}</td><td>±${fmt(100 * (10 ** (s / 5) - 1), 0)} %</td></tr>`; }).join('') + '</table>';
+    const o = selSN();
+    $('corrRead').innerHTML = (st.over ? `<b>${st.name}</b> on erijuhtum: tema maksimumheledus ei sobi seosega ja teda ei kasutata. ` : '') +
+      `${st.name || 'Valitud supernoova'}: Δm₁₅ = ${fmt(o.dm15, 2)}, x<sub>1</sub> = ${fmtS(sn.x1, 1)}, c = ${fmt(o.c, 2)}. M<sub>B</sub> = ${fmt(o.MB, 2)}, ` +
+      `pärast nõrgenemise korrektsiooni ${fmt(corrOf(o, 1, 0), 2)}, pärast mõlemat <b>${fmt(corrOf(o, 1, 1), 2)}</b>.`;
+    $('lg3a').textContent = $('lg3b').textContent = st.name || 'valitud supernoova (nikli mass paremal)';
+  }
+  function render3() {
+    $('view3curves').hidden = st.view3 !== 'curves'; $('view3phil').hidden = st.view3 !== 'phil';
+    if (st.view3 === 'curves') renderCurves3(); else renderPhil();
+    readouts3();
+  }
+
+  /* ---------- Tab 4: Väike hajuvus ---------- */
+  // The 29 galaxies of part 3: name, supernova, m_b_corr, z_HD, μ from their Cepheids with the published relation
+  // M_H^W = −5.914 − 3.29 (log P − 1) and its error. Computed from the GALAXIES array of index.html.
+  const HOSTS = [
+    ["M101", "2011fe", 9.774, 0.00122, 29.192, 0.021],
+    ["NGC 4536", "1981B", 11.542, 0.00317, 30.880, 0.041],
+    ["NGC 5643", "2013aa, 2017cbv", 11.228, 0.00331, 30.532, 0.028],
+    ["NGC 3972", "2011by", 12.540, 0.00349, 31.718, 0.061],
+    ["NGC 3982", "1998aq", 12.244, 0.00349, 31.788, 0.063],
+    ["NGC 1448", "2001el, 2021pit", 11.998, 0.00359, 31.313, 0.029],
+    ["NGC 4639", "1990N", 12.444, 0.00359, 31.796, 0.069],
+    ["NGC 1559", "2005df", 12.140, 0.00407, 31.518, 0.041],
+    ["NGC 7250", "2013dy", 12.277, 0.00432, 31.754, 0.097],
+    ["NGC 3447", "2012ht", 12.729, 0.00465, 32.003, 0.027],
+    ["NGC 1365", "2012fr", 11.925, 0.00483, 31.393, 0.045],
+    ["NGC 2442", "2015F", 12.240, 0.00488, 31.482, 0.037],
+    ["NGC 4038", "2007sr", 12.402, 0.00571, 31.628, 0.090],
+    ["NGC 3370", "1994ae", 12.929, 0.00588, 32.214, 0.040],
+    ["NGC 2525", "2018gv", 12.719, 0.00602, 32.062, 0.060],
+    ["NGC 5584", "2007af", 12.798, 0.00625, 31.886, 0.033],
+    ["NGC 3254", "2019np", 13.194, 0.00648, 32.401, 0.057],
+    ["NGC 5861", "2017erp", 12.938, 0.00677, 32.246, 0.071],
+    ["NGC 1309", "2002fk", 13.200, 0.00719, 32.594, 0.048],
+    ["UGC 9391", "2003du", 13.515, 0.00747, 32.907, 0.055],
+    ["NGC 7541", "1998dh", 13.413, 0.00814, 32.543, 0.088],
+    ["NGC 2608", "2001bg", 13.440, 0.00855, 32.707, 0.110],
+    ["NGC 691", "2005W", 13.599, 0.00855, 32.825, 0.087],
+    ["NGC 3583", "ASASSN-15so", 13.500, 0.00857, 32.806, 0.060],
+    ["NGC 5468", "1999cp, 2002cr", 13.930, 0.00954, 33.128, 0.049],
+    ["NGC 5728", "2009Y", 13.511, 0.00996, 33.087, 0.131],
+    ["NGC 7329", "2006bh", 14.026, 0.01028, 33.323, 0.086],
+    ["NGC 3147", "1997bq, 2008fv, 2021hpr", 13.859, 0.01067, 33.190, 0.105],
+    ["NGC 976", "1999dq", 14.243, 0.01312, 33.851, 0.097],
+  ];
+  // The distant supernovae of part 4 (0.023 < z_HD < 0.06): pairs of z_HD and m_b_corr, a copy of FAR_SN in index.html.
+  const FAR_SN = [0.02343,15.605,0.02344,15.580,0.02352,15.586,0.02357,15.319,0.02357,15.743,0.02365,15.701,0.02369,15.690,0.02388,15.742,0.02391,15.646,0.02411,15.852,0.02412,15.625,0.02417,15.760,0.02432,15.717,0.02432,15.979,0.02434,15.757,0.02453,15.758,0.02457,15.925,0.02466,15.558,0.02491,15.833,0.02494,15.944,0.02509,15.962,0.0251,15.645,0.0251,15.826,0.02513,15.205,0.02517,15.659,0.02517,15.946,0.02525,15.653,0.02534,15.944,0.02556,15.930,0.02557,15.809,0.02591,15.865,0.02598,15.826,0.02598,16.058,0.02669,16.055,0.02691,16.026,0.02713,15.998,0.0273,16.036,0.02731,15.974,0.02731,16.014,0.02736,16.060,0.02748,15.873,0.02805,15.878,0.02816,16.108,0.02819,16.064,0.0282,16.034,0.02823,16.287,0.02844,16.104,0.02849,16.109,0.02866,16.092,0.02873,15.696,0.02902,15.803,0.02913,16.262,0.02915,16.442,0.02917,15.986,0.02938,16.219,0.02947,15.841,0.02949,16.355,0.0295,16.111,0.02978,16.248,0.0299,16.182,0.03012,16.240,0.03031,16.301,0.03083,16.212,0.03091,16.240,0.03114,16.352,0.03116,16.335,0.0312,16.267,0.03143,16.307,0.03143,16.393,0.03148,16.449,0.03148,16.454,0.03162,16.413,0.03166,16.475,0.03192,16.206,0.03201,16.237,0.03236,16.422,0.03255,16.323,0.03264,16.628,0.03264,16.655,0.03282,16.380,0.03289,16.585,0.0329,16.472,0.03296,16.559,0.03333,16.474,0.03335,16.563,0.03341,16.605,0.03371,16.527,0.03373,16.576,0.03375,16.770,0.03378,16.575,0.03393,16.656,0.03428,16.675,0.03437,16.531,0.03459,16.482,0.03479,16.604,0.03512,16.629,0.03515,16.641,0.03529,16.608,0.03568,16.981,0.03576,16.706,0.03583,16.680,0.03585,16.299,0.03599,16.738,0.03616,16.606,0.03624,16.931,0.03682,16.653,0.03705,16.711,0.03707,16.794,0.03725,16.747,0.0373,16.617,0.0374,16.726,0.03753,16.696,0.03756,17.023,0.03796,16.836,0.03818,16.625,0.03828,16.861,0.03848,17.003,0.03873,16.759,0.03884,16.773,0.04014,17.031,0.04035,17.296,0.04056,16.796,0.04089,16.873,0.04099,16.787,0.04101,17.062,0.04222,16.957,0.04258,17.258,0.04268,17.040,0.04285,16.977,0.04289,16.949,0.04369,17.006,0.04408,17.077,0.04438,17.294,0.04439,17.039,0.0444,17.298,0.04545,17.201,0.04575,17.236,0.04625,17.011,0.04643,17.072,0.04656,17.255,0.04682,17.229,0.04691,17.505,0.0476,17.348,0.04777,17.310,0.04777,17.342,0.04837,17.120,0.0486,17.077,0.0494,17.216,0.04944,17.330,0.04989,17.218,0.05023,17.605,0.05032,17.287,0.05106,17.627,0.05151,17.333,0.05202,17.615,0.05222,17.588,0.05262,17.661,0.05316,17.594,0.05346,17.610,0.05469,17.605,0.05541,17.615,0.05693,17.786,0.05708,17.737,0.05728,17.816,0.0583,17.701,0.05886,17.727];
+  const H0_TRUE = 70, MB_SH0ES = -19.253, EXPANSION = 0.775;
+  const MB_CAL = mean(HOSTS.map(h => h[2] - h[4]));
+  // Least-squares line through the origin, v = H d, with the error of H from the scatter about it.
+  function fitH(p) {
+    let sdv = 0, sdd = 0;
+    for (const q of p) { sdv += q.d * q.v; sdd += q.d * q.d; }
+    const H = sdv / sdd, res = p.map(q => q.v - H * q.d), s = Math.sqrt(res.reduce((a, r) => a + r * r, 0) / Math.max(1, p.length - 1));
+    return { H, e: s / Math.sqrt(sdd), rel: std(p.map(q => q.v / (H * q.d) - 1)), mag: std(p.map(q => 5 * Math.log10(q.v / (H * q.d)))), rms: Math.sqrt(res.reduce((a, r) => a + r * r, 0) / p.length) };
+  }
+  const galPts = () => HOSTS.map(h => ({ d: 10 ** (h[4] / 5 - 5), v: C_KMS * h[3] }));
+  const snPts = () => { const M = st.mb === 'cal' ? MB_CAL : MB_SH0ES, a = []; for (let k = 0; k < FAR_SN.length; k += 2) { const z = FAR_SN[k]; a.push({ d: 10 ** ((FAR_SN[k + 1] - M) / 5 - 5), v: C_KMS * z * (1 + EXPANSION * z) }); } return a; };
+  // Simulated galaxies: uniform in distance between d1 and d2, a peculiar velocity σ_v and a distance error σ_μ. The random
+  // numbers are kept, so that the sliders move the same galaxies.
+  let RND = [];
+  function makeRnd() { const r = seeded(st.galSeed * 389 + 5); RND = Array.from({ length: 200 }, () => [r(), gauss(r), gauss(r)]); }
+  const modelPts = () => RND.slice(0, st.nGal).map(([u, g1, g2]) => { const d = st.d1 + (st.d2 - st.d1) * u; return { d: d * 10 ** (0.2 * st.sm * g2), v: H0_TRUE * d + st.sv * g1 }; });
+  const DMAX = 300, VMAX = 22000;
+  const relBand = d => st.sv / (H0_TRUE * d), distBand = () => 10 ** (0.2 * st.sm) - 1;
+  function renderHub() {
+    const svg = $('hub');
+    svg.textContent = '';
+    const B = { x0: 70, x1: 748, y0: 10, y1: 250 }, X = mkScale(0, DMAX, B.x0, B.x1), Y = mkScale(0, VMAX, B.y1, B.y0), g = el('g', {}, svg);
+    frame(g, B, X, Y, ticks(0, DMAX, 25), ticks(0, VMAX, 2000).map(([v]) => [v, sig(v, 2)]), 'kaugus (Mpc)', 'kiirus (km/s)', 56);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'hubclip', B) }, g);
+    el('polygon', { points: pts([[X(0), Y(st.sv)], [X(DMAX), Y(H0_TRUE * DMAX + st.sv)], [X(DMAX), Y(H0_TRUE * DMAX - st.sv)], [X(0), Y(-st.sv)]]), class: 'vfill' }, inner);
+    el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(H0_TRUE * DMAX), class: 'truel' }, inner);
+    if (st.view4 === 'model') {
+      const p = modelPts(), f = fitH(p);
+      el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline' }, inner);
+      for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 3, class: 'mpt' }, inner);
+      text(g, B.x0 + 10, B.y0 + 18, `H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc (tõeline ${H0_TRUE})`, 'lbl');
+    } else {
+      let y = B.y0 + 18;
+      if (st.showSn) { const p = snPts(), f = fitH(p); el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline sn' }, inner); for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 2.6, class: 'npt' }, inner); text(g, B.x0 + 10, y, `supernoovad: H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)}`, 'slbl'); y += 18; }
+      if (st.showGal) { const p = galPts(), f = fitH(p); el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline cep' }, inner); for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 3.2, class: 'gpt' }, inner); text(g, B.x0 + 10, y, `3. osa galaktikad: H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)}`, 'lbl2'); }
+    }
+  }
+  function renderRel() {
+    const svg = $('rel');
+    svg.textContent = '';
+    const B = { x0: 70, x1: 748, y0: 10, y1: 250 }, X = mkScale(5, DMAX, B.x0, B.x1, true), Y = mkScale(-60, 60, B.y1, B.y0), g = el('g', {}, svg);
+    const xt = [5, 10, 20, 50, 100, 200, 300].map(v => [v, String(v)]);
+    frame(g, B, X, Y, xt, ticks(-60, 60, 20).map(([v]) => [v, fmtS(v, 0) + ' %']), 'kaugus (Mpc, logaritmiline)', 'kiiruse hälve', 56);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'relclip', B) }, g);
+    const db = 100 * distBand();
+    el('rect', { x: B.x0, y: Y(db), width: B.x1 - B.x0, height: Y(-db) - Y(db), class: 'dfill' }, inner);
+    const up = [], dn = [];
+    for (let k = 0; k <= 120; k++) { const d = 5 * (DMAX / 5) ** (k / 120); up.push([X(d), Y(100 * relBand(d))]); dn.push([X(d), Y(-100 * relBand(d))]); }
+    el('polygon', { points: pts(up.concat(dn.reverse())), class: 'vfill' }, inner);
+    el('line', { x1: B.x0, y1: Y(0), x2: B.x1, y2: Y(0), class: 'truel' }, inner);
+    // Where the two bands cross, and where part 4 starts (z = 0.023).
+    const dx = st.sv / (H0_TRUE * distBand());
+    if (st.sm > 0 && dx > 5 && dx < DMAX) { el('line', { x1: X(dx), y1: B.y0, x2: X(dx), y2: B.y1, class: 'guide' }, g); text(g, X(dx) - 4, B.y0 + 14, `ribad lõikuvad: ${fmt(dx, 0)} Mpc`, 'lbl3', 'end'); }
+    const d4 = C_KMS * 0.023 / H0_TRUE;
+    el('line', { x1: X(d4), y1: B.y0, x2: X(d4), y2: B.y1, class: 'guide' }, g);
+    text(g, X(d4) + 4, B.y0 + 14, '4. osa algab (z = 0.023)', 'lbl3');
+    if (st.view4 === 'model') {
+      for (const q of modelPts()) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (H0_TRUE * q.d) - 1)), r: 3, class: 'mpt' }, inner);
+    } else {
+      if (st.showSn) { const p = snPts(), f = fitH(p); for (const q of p) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (f.H * q.d) - 1)), r: 2.6, class: 'npt' }, inner); }
+      if (st.showGal) { const p = galPts(), f = fitH(p); for (const q of p) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (f.H * q.d) - 1)), r: 3.2, class: 'gpt' }, inner); }
+    }
+    text(g, B.x1 - 8, B.y1 - 24, `omaliikumine ±${st.sv} km/s`, 'lbl2', 'end');
+    text(g, B.x1 - 8, B.y1 - 8, `kauguse viga ±${fmt(db, 0)} %`, 'slbl', 'end');
+  }
+  const LOGD = v => +(5 * (DMAX / 5) ** (v / 1000)).toPrecision(2);
+  const DLOG = d => Math.round(1000 * Math.log(d / 5) / Math.log(DMAX / 5));
+  function readouts4() {
+    document.querySelectorAll('[data-view4]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view4 === st.view4));
+    document.querySelectorAll('[data-mb]').forEach(b => b.setAttribute('aria-checked', b.dataset.mb === st.mb));
+    $('svOut').textContent = `${st.sv} km/s`; $('smOut').textContent = fmt(st.sm, 2);
+    $('d1').value = DLOG(st.d1); $('d2').value = DLOG(st.d2); $('nGal').value = st.nGal;
+    $('d1Out').textContent = `${st.d1} Mpc`; $('d2Out').textContent = `${st.d2} Mpc`; $('nGalOut').textContent = st.nGal;
+    const model = st.view4 === 'model';
+    $('hint4').textContent = model
+      ? 'Simuleeritud galaktikad: kiirus on paisumine (H₀ = 70 km/s/Mpc) pluss galaktika oma liikumine, kaugusel on mõõtmisviga. Vali paremal kaugusvahemik või vajuta harjutuse osa nuppu.'
+      : 'Harjutuse andmed: 3. osa 29 galaktikat tsefeiidide kaugustega (punased) ja 4. osa 166 kauget supernoovat (oranžid). Muuda paremal omaliikumist ja kauguse viga, et ribad sobiksid punktidega.';
+    $('legend4').innerHTML = (model ? '<span><i class="dot" style="background: var(--sel)"></i>simuleeritud galaktikad</span><span><i style="border-color: var(--sel)"></i>sobitus</span>'
+      : '<span><i class="dot" style="background: var(--cep)"></i>3. osa galaktikad</span><span><i class="dot" style="background: var(--sn)"></i>4. osa supernoovad</span>') +
+      '<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>H₀ = 70</span><span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>omaliikumine</span>' +
+      '<span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i>kauguse viga</span>';
+    if (model) {
+      const p = modelPts(), f = fitH(p), vb = mean(p.map(q => relBand(q.d) ** 2)), dbb = distBand() ** 2, sh = vb / (vb + dbb || 1);
+      $('modelRead').innerHTML = `<b>H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc</b>. Kiirused hajuvad joone ümber ${fmt(100 * f.rel, 0)} %; sellest umbes ${fmt(100 * sh, 0)} % tuleb omaliikumisest ` +
+        `ja ${fmt(100 * (1 - sh), 0)} % kauguse veast.`;
+    } else {
+      const g3 = fitH(galPts()), s4 = fitH(snPts()), M = st.mb === 'cal' ? MB_CAL : MB_SH0ES;
+      $('realRead').innerHTML = `3. osa galaktikad (7–59 Mpc): H₀ = ${fmt(g3.H, 1)} ± ${fmt(g3.e, 1)}, kiirused hajuvad ${fmt(100 * g3.rel, 0)} % (${fmt(g3.mag, 2)} tähesuurust), umbes ${fmt(g3.rms, 0)} km/s.<br>` +
+        `Supernoovad (80–270 Mpc) M<sub>B</sub> = ${fmt(M, 3)}-ga: <b>H₀ = ${fmt(s4.H, 1)} ± ${fmt(s4.e, 1)}</b>, hajuvus ${fmt(100 * s4.rel, 0)} % (${fmt(s4.mag, 3)} tähesuurust).<br>` +
+        `Kalibraatorite keskmine M<sub>B</sub> = ${fmt(MB_CAL, 2)} ± ${fmt(std(HOSTS.map(h => h[2] - h[4])) / Math.sqrt(HOSTS.length), 2)}. Oma tulemuse saad <a href="index.html#snHubble">harjutuse 4. osas</a>.`;
+    }
+  }
+  function render4() { renderHub(); renderRel(); readouts4(); updateGroups(); }
+
+  /* ---------- Shared ---------- */
+  function readoutsShared() {
+    $('niOut').textContent = st.over ? '≈ 0.1 M☉' : `${fmt(st.Ni, 2)} M☉`;
+    $('ni').value = st.Ni;
+    document.querySelectorAll('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.name === st.name));
+    const p = PRESETS.find(q => q.name === st.name);
+    $('snRead').innerHTML = (p ? `<b>${p.name}</b>: ${p.note}. ` : '') + `Maksimumis <b>M<sub>B</sub> = ${fmt(sn.MB, 2)}</b>, Δm₁₅ = ${fmt(sn.dm15, 2)}, venitus s = ${fmt(sn.s, 2)}` +
+      (st.E ? `, tolm E(B − V) = ${fmt(st.E, 2)}, mis nõrgendab teda ${fmt(RB_HOST * st.E, 1)} tähesuurust.` : '.');
+  }
+  function render() {
+    readoutsShared();
+    if (st.tab === 'tab1') render1();
+    else if (st.tab === 'tab2') render2();
+    else if (st.tab === 'tab3') render3();
+    else render4();
+  }
+  function setSN(Ni, p) {
+    st.Ni = Ni; st.name = p ? p.name : null; st.E = p ? p.E : 0; st.over = p && p.over ? p.over : null;
+    sn = makeSN(Ni, st.over);
+    render();
+  }
+  const VIEW = { tab1: 'view1', tab3: 'view3', tab4: 'view4' };
+  function updateGroups() {
+    document.querySelectorAll('.controls .group').forEach(g => {
+      const d = g.dataset, v = VIEW[st.tab] && st[VIEW[st.tab]];
+      g.hidden = !d.tabs.split(' ').includes(st.tab) || !!(d.views && v && !d.views.split(' ').includes(v));
+    });
+  }
+
+  /* ---------- Controls ---------- */
+  for (const p of PRESETS) {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'small'; btn.dataset.name = p.name; btn.textContent = p.name;
+    btn.addEventListener('click', () => setSN(p.Ni, p));
+    $('presets').appendChild(btn);
+  }
+  $('ni').addEventListener('input', e => setSN(+e.target.value));
+
+  STAGES.sd.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'small';
+    b.addEventListener('click', () => { stop1(); st.t1 = STAGES[st.dd ? 'dd' : 'sd'][i].f; render1sys(); });
+    $('stages').appendChild(b);
+  });
+  $('t1').addEventListener('input', e => { stop1(); st.t1 = e.target.value / 1000; render1sys(); });
+  $('dd').addEventListener('change', e => { st.dd = e.target.checked; st.t1 = 0; render1sys(); });
+  document.querySelectorAll('[data-view1]').forEach(b => b.addEventListener('click', () => { st.view1 = b.dataset.view1; stop1(); render1(); }));
+  document.querySelectorAll('[data-type]').forEach(b => { if (b.tagName === 'BUTTON') b.addEventListener('click', () => { st.type = b.dataset.type; renderSpec(); readoutsSpec(); }); });
+  $('spec').addEventListener('click', e => { const t = e.target.closest('[data-type]'); if (t) { st.type = t.dataset.type; renderSpec(); readoutsSpec(); } });
+
+  $('day').addEventListener('input', e => { stop2(); st.day = +e.target.value; render2(); });
+
+  $('cStr').addEventListener('change', e => { st.cStr = e.target.checked; startLoop(); readouts3(); });
+  $('cCol').addEventListener('change', e => { st.cCol = e.target.checked; startLoop(); readouts3(); });
+  $('dust').addEventListener('input', e => { st.dust = +e.target.value; makeSample(); render3(); });
+  $('newSample').addEventListener('click', () => { st.sampleSeed++; makeSample(); render3(); });
+  document.querySelectorAll('[data-view3]').forEach(b => b.addEventListener('click', () => { st.view3 = b.dataset.view3; render3(); }));
+
+  $('sv').addEventListener('input', e => { st.sv = +e.target.value; render4(); });
+  $('sm').addEventListener('input', e => { st.sm = +e.target.value; render4(); });
+  $('d1').addEventListener('input', e => { st.d1 = Math.min(LOGD(+e.target.value), st.d2 - 1); render4(); });
+  $('d2').addEventListener('input', e => { st.d2 = Math.max(LOGD(+e.target.value), st.d1 + 1); render4(); });
+  $('nGal').addEventListener('input', e => { st.nGal = +e.target.value; render4(); });
+  $('newGal').addEventListener('click', () => { st.galSeed++; makeRnd(); render4(); });
+  const PRESETS4 = { p3: { d1: 7, d2: 60, nGal: 29, sm: 0.06 }, p4: { d1: 80, d2: 270, nGal: 166, sm: 0.13 } };
+  document.querySelectorAll('[data-preset4]').forEach(b => b.addEventListener('click', () => { Object.assign(st, PRESETS4[b.dataset.preset4]); $('sm').value = st.sm; render4(); }));
+  document.querySelectorAll('[data-view4]').forEach(b => b.addEventListener('click', () => { st.view4 = b.dataset.view4; render4(); }));
+  document.querySelectorAll('[data-mb]').forEach(b => b.addEventListener('click', () => { st.mb = b.dataset.mb; render4(); }));
+  $('showGal').addEventListener('change', e => { st.showGal = e.target.checked; render4(); });
+  $('showSn').addEventListener('change', e => { st.showSn = e.target.checked; render4(); });
+
+  // One animation loop: the white dwarf's time (the whole run in 12 s), the gas stream and the orbit, the days of the light
+  // curve (10 a second) and the corrections of tab 3 (each in 0.8 s).
+  let last = 0, raf = 0;
+  function tick(ts) {
+    const moving3 = st.a1 !== +st.cStr || st.a2 !== +st.cCol;
+    if (!st.playing1 && !st.playing2 && !moving3) { raf = 0; return; }
+    const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0;
+    last = ts;
+    if (st.playing1) {
+      const s = sys1();
+      st.t1 = Math.min(1, st.t1 + dt / 12 * (s.e > 0 ? 0.5 : 1));
+      st.anim = (st.anim + dt * (st.dd ? 0.3 * Math.min(8, (DD.a0 / (s.a || DD.a0)) ** 0.75) : 1)) % 1;
+      if (st.t1 >= 1) stop1();
+      render1sys();
+    }
+    if (st.playing2) { st.day = Math.min(TMAX, st.day + 10 * dt); if (st.day >= TMAX) stop2(); render2(); }
+    if (moving3) {
+      const step = dt / 0.8, mv = (a, b) => (a < b ? Math.min(b, a + step) : Math.max(b, a - step));
+      st.a1 = mv(st.a1, +st.cStr); st.a2 = mv(st.a2, +st.cCol);
+      if (st.tab === 'tab3') { if (st.view3 === 'curves') renderCurves3(); else renderPhil(); }
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function startLoop() { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } }
+  function stop1() { st.playing1 = false; $('play1').textContent = '▶ Käivita'; }
+  function stop2() { st.playing2 = false; $('play2').textContent = '▶ Käivita'; }
+  $('play1').addEventListener('click', () => {
+    if (st.playing1) { stop1(); return; }
+    if (st.t1 >= 1) st.t1 = 0;
+    st.playing1 = true; $('play1').textContent = '❚❚ Peata'; startLoop();
+  });
+  $('play2').addEventListener('click', () => {
+    if (st.playing2) { stop2(); return; }
+    if (st.day >= TMAX) st.day = 0;
+    st.playing2 = true; $('play2').textContent = '❚❚ Peata'; startLoop();
+  });
+
+  /* ---------- Tabs ---------- */
+  // Each tab has its own address, so that other pages can link to it.
+  const HASH = { tab1: 'plahvatus', tab2: 'heleduskover', tab3: 'standardiseerimine', tab4: 'hajuvus' };
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function selectTab(id, fromHash) {
+    st.tab = id;
+    if (id !== 'tab1') stop1();
+    if (id !== 'tab2') stop2();
+    for (const b of tabs) {
+      const on = b.id === id;
+      b.setAttribute('aria-selected', on);
+      b.tabIndex = on ? 0 : -1;
+      $(b.getAttribute('aria-controls')).hidden = !on;
+    }
+    updateGroups();
+    document.querySelectorAll('.explain [data-tab]').forEach(u => { u.hidden = u.dataset.tab !== id; });
+    if (!fromHash && location.hash.slice(1) !== HASH[id]) history.replaceState(null, '', '#' + HASH[id]);
+    render();
+  }
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => selectTab(b.id));
+    b.addEventListener('keydown', e => {
+      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!k) return;
+      const next = tabs[(i + k + tabs.length) % tabs.length];
+      selectTab(next.id);
+      next.focus();
+    });
+  });
+  document.querySelectorAll('.explain [data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); selectTab(a.dataset.go); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+  const fromHash = () => {
+    const id = Object.keys(HASH).find(k => HASH[k] === decodeURIComponent(location.hash.slice(1)));
+    selectTab(id || 'tab1', true);
+  };
+  window.addEventListener('hashchange', fromHash);
+
+  makeSample();
+  makeRnd();
+  fromHash();
+})();
+</script>
+</body>
+</html>

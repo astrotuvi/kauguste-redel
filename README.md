@@ -27,8 +27,8 @@ The page opens on the introduction and a table of contents. The table of
 contents has two groups: **Uuri lähemalt**, a row of cards that lead to background
 pages (parallax, open clusters, standard candles, Cepheids, type Ia supernovae
 and the Hubble law), and **Harjutus andmetega**, the four parts of the exercise.
-So far the parallax, open clusters, standard candles and Cepheids pages exist;
-the other cards are marked *tulekul* (coming). Clicking a part
+So far all pages except the Hubble law page exist; its card is marked *tulekul*
+(coming). Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
 contents and to the other parts, and below the title are its tabs. Buttons at
@@ -323,6 +323,47 @@ magnitude is set so that W_H follows the relation used in part 2.
    Cepheids behind patchy dust in a chosen band, with the shift and scatter
    in each band and the distance error the shift would cause.
 
+### Type Ia supernovae page
+
+`supernoovad.html` is linked from the table of contents, from the supernova
+rung of the ladder picture, from the word "supernoovadeni" in the
+introduction and "supernoova" in the lede of part 4, from the supernova table
+note and the distant supernova Hubble plot of part 4, and from the standard
+candles page. It has four tabs, and the address keeps the tab (`#plahvatus`,
+`#heleduskover`, `#standardiseerimine`, `#hajuvus`). Tabs 2 and 3 share one
+simulated supernova, set by its nickel mass (0.4–0.8 M☉) or by buttons for
+SN 2011fe, SN 1991T, SN 2014J (behind dust) and SN 1991bg (a special case off
+the relation). Its peak is M_B = −19.3 − 2.5 lg (M_Ni / 0.6 M☉), and its Δm₁₅
+follows from the Phillips relation of the standard candles page.
+
+1. **Plahvatus**: two views. **Kaksiktäht** shows a white dwarf that takes
+   gas from a red giant and shrinks as it grows, with a magnified inset beside
+   the Earth, and its radius against mass (Nauenberg 1972) up to the
+   Chandrasekhar mass, with Sirius B. A time slider, a play button and four
+   steps go from gaining mass to the explosion at 1.38 M☉. **Kaks valget
+   kääbust** shows two white dwarfs that spiral together by gravitational
+   waves instead. **Spekter** shows schematic spectra of types Ia, Ib, Ic and
+   II with the hydrogen, helium and silicon lines, and the speed from the
+   blueshift of the silicon line.
+2. **Heleduskõver**: the expanding cloud with nickel turning into cobalt and
+   iron and gamma rays that escape more and more; the decay chain as bars; the
+   luminosity from Arnett's (1982) model against the power of the decay, equal
+   at the peak; and the B and V light curves with Δm₁₅. A day slider and a play
+   button.
+3. **Standardiseerimine**: 40 simulated nearby supernovae with host dust
+   (R_B = 3.1, mean E(B − V) adjustable). **Heleduskõverad** shows 12 of their
+   light curves and **Phillipsi seos** the peak against Δm₁₅ and against the
+   colour, with a histogram. **Nõrgenemise korrektsioon** (which also stretches
+   the time axis) and **Värvi korrektsioon** (β = 3.1) move the curves and
+   points, and a table gives the scatter for each combination.
+4. **Väike hajuvus**: velocity against distance and the relative deviation
+   from H₀ d on a log distance axis, with bands for the peculiar velocities
+   (σ_v) and the distance error (σ_μ). **Mudel** simulates galaxies in a
+   chosen distance range, with buttons for the ranges of parts 3 and 4.
+   **Päris andmed** shows the 29 galaxies of part 3 (μ from their Cepheids
+   with the published relation) and the 166 distant supernovae of part 4,
+   with M_B from the calibrators or from SH0ES.
+
 ## Method
 
 - Only stars with RUWE < 1.4 and with a measured parallax and proper motion
@@ -422,8 +463,9 @@ service uses only that one. The choice is remembered in the browser.
 
 Everything is in `index.html`: the HTML, the CSS and the JavaScript. The
 parallax demonstration (`parallaks.html`), the open clusters page
-(`hajusparved.html`), the standard candles page (`standardkuunlad.html`) and
-the Cepheids page (`tsefeiidid.html`) are separate self-contained pages with no external dependencies. The only
+(`hajusparved.html`), the standard candles page (`standardkuunlad.html`), the
+Cepheids page (`tsefeiidid.html`) and the type Ia supernovae page
+(`supernoovad.html`) are separate self-contained pages with no external dependencies. The only
 external dependency is [Plotly.js](https://plotly.com/javascript/), loaded
 from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 

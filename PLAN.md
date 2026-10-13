@@ -4,8 +4,9 @@ The table of contents of `index.html` has a row of **Uuri lähemalt** cards
 that lead to background pages. Each page gives the wider picture behind a
 rung of the distance ladder or behind the result of the exercise. So far the
 parallax page (`parallaks.html`), the open clusters page (`hajusparved.html`),
-the standard candles page (`standardkuunlad.html`) and the Cepheids page
-(`tsefeiidid.html`) exist; the other cards are marked *tulekul* (coming).
+the standard candles page (`standardkuunlad.html`), the Cepheids page
+(`tsefeiidid.html`) and the type Ia supernovae page (`supernoovad.html`)
+exist; the Hubble law card is marked *tulekul* (coming).
 
 The cards, in reading order:
 
@@ -13,7 +14,7 @@ The cards, in reading order:
 2. Hajusparved
 3. Standardküünlad
 4. Tsefeiidid
-5. Ia supernoovad
+5. Ia tüüpi supernoovad
 6. Hubble'i seadus
 
 ## 1. Parallaks (exists, `parallaks.html`)
@@ -77,7 +78,7 @@ Related parts: 2 and 3.
 
 The design of the page, with its four tabs, is in `DESIGN-tsefeiidid.md`.
 
-## 4. Ia supernoovad (new)
+## 4. Ia tüüpi supernoovad (exists, `supernoovad.html`)
 
 - Why a white dwarf explodes near the Chandrasekhar mass, and why that makes
   the peak brightness nearly the same every time.
@@ -86,6 +87,8 @@ The design of the page, with its four tabs, is in `DESIGN-tsefeiidid.md`.
 - Why the scatter is much smaller than for the nearby galaxies of part 3.
 
 Related part: 4.
+
+The design of the page, with its four tabs, is in `DESIGN-supernoovad.md`.
 
 ## 5. Hubble'i seadus (new)
 
@@ -111,7 +114,7 @@ the parts could cover these better than a separate page.
 1. **Standardküünlad.** Done. The formulas in parts 2–4 depend on it.
 2. **Tsefeiidid**, with dust and W_H. Done. Parts 2 and 3.
 3. **Hubble'i seadus.** Parts 3 and 4.
-4. **Ia supernoovad.** Part 4.
+4. **Ia tüüpi supernoovad.** Done. Part 4.
 5. **Hajusparved.** Done. Part 1.
 
 ## When a page is ready
