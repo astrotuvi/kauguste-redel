@@ -388,7 +388,7 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
 1. **Punanihe**: two views. **Spekter** shows a schematic galaxy spectrum
    above the same lines in the lab, joined line by line, for a redshift set
    by a log slider (0.001–1.5) or by buttons for Andromeda (a blueshift), the
-   Virgo cluster, NGC 5584 of part 3, a supernova host of part 4 and z = 1.
+   Virgo cluster, NGC 5584 of part 3, UGC 9612 (SN 2007O) of part 4 and z = 1.
    Clicking a line name reads z, v = cz and the distance from it.
    **Mõõda ise** hides a random redshift; the user drags the lab lines onto
    the galaxy's lines and presses **Kontrolli**. **Venitus** shows a light

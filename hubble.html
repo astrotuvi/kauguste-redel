@@ -486,7 +486,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
         1 + z näitab, mitu korda on Universum valguse teekonna ajal paisunud.</li>
       <li>Lähedal annavad mõlemad vaated samad arvud. Alates z ≈ 0.1 erinevad v = cz, erirelatiivsusteooria Doppleri valem ja tegelik eemaldumiskiirus märgatavalt. Tegelik kiirus ületab valguse kiiruse z ≈ 1.5 juures.
         See ei riku relatiivsusteooriat: galaktika ei liigu läbi ruumi kiiremini kui valgus, vaid ruum paisub.</li>
-      <li>Lähedased galaktikad, näiteks Andromeda, võivad olla ka sininihkega. Nende pekuliaarne kiirus on suurem kui paisumine (vt <a href="#paisumine" data-go="tab2">Paisumine</a>).</li>
+      <li>Lähedased galaktikad, näiteks Andromeeda, võivad olla ka sininihkega. Nende pekuliaarne kiirus on suurem kui paisumine (vt <a href="#paisumine" data-go="tab2">Paisumine</a>).</li>
     </ul>
     <ul data-tab="tab2" hidden>
       <li>Kui Universum paisub ühtlaselt, kasvab iga kaugus sama ajaga sama suhte võrra. Siis eemaldub kaks korda kaugem galaktika kaks korda kiiremini, ja nii iga galaktika vaatepunktist.
@@ -526,7 +526,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       <li>Harjutuse <a href="index.html#snHubble">4. osas</a> võrdled oma tulemust ise Plancki väärtusega. Avaldatud perioodi-heleduse seosega annab harjutus 3. osas H<sub>0</sub> ≈ 67.2 ja 4. osas 70.0 kalibraatorite M<sub>B</sub>-ga
         või 72.4 SH0ES-i M<sub>B</sub>-ga.</li>
     </ul>
-    <p class="src" data-tab="tab1">Spekter on skemaatiline: vana tähepopulatsiooni pidev spekter 4000 Å hüppega ning neeldumis- ja kiirgusjooned õhu lainepikkustel. Näidete punanihked: NED; NGC 5584 z<sub>HD</sub> Pantheon+ (Scolnic jt 2022).
+    <p class="src" data-tab="tab1">Spekter on skemaatiline: vana tähepopulatsiooni pidev spekter 4000 Å hüppega ning neeldumis- ja kiirgusjooned õhu lainepikkustel. Näidete punanihked: NED; NGC 5584 ja UGC 9612 z<sub>HD</sub> Pantheon+ (Scolnic jt 2022).
       Kaugused ja kiirused tasase mudeliga, H<sub>0</sub> = 70 km/s/Mpc, Ω<sub>m</sub> = 0.315.</p>
     <p class="src" data-tab="tab2" hidden>Hubble (1929, PNAS 15, 168), tabel 1. Tänapäevased kaugused on ümardatud tüüpilised väärtused (NED). Päikese kiirus taustkiirguse suhtes 370 km/s (Planck Collaboration 2020),
       Kohaliku grupi kiirus 620 km/s (Kogut jt 1993). Pekuliaarsete kiiruste parandus: Peterson jt (2022); Pantheon+ jääkhajuvus 250 km/s.</p>
@@ -700,10 +700,10 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   const zOfSlider = v => ZMIN * (ZMAX / ZMIN) ** (v / 1000);
   const sliderOfZ = z => Math.round(1000 * Math.log(clamp(z, ZMIN, ZMAX) / ZMIN) / Math.log(ZMAX / ZMIN));
   const ZPRE = [
-    { name: 'Andromeda', z: -0.001, note: 'Andromeda galaktika läheneb meile umbes 300 km/s: see on sininihe' },
+    { name: 'Andromeeda', z: -0.001, note: 'Andromeeda galaktika läheneb meile umbes 300 km/s: see on sininihe' },
     { name: 'Neitsi parv', z: 0.0036, note: 'Neitsi galaktikaparv, lähim suur galaktikaparv' },
     { name: 'NGC 5584', z: 0.00625, note: 'NGC 5584, üks 3. osa galaktikatest' },
-    { name: '4. osa', z: 0.04, note: 'tüüpiline 4. osa kauge supernoova galaktika' },
+    { name: 'UGC 9612', z: 0.0382, note: 'UGC 9612, kus plahvatas SN 2007O, üks 4. osa kaugetest supernoovadest' },
     { name: 'z = 1', z: 1, note: 'kauge galaktika, mille valgus on olnud teel umbes 8 miljardit aastat' },
   ];
   // The redshift that the spectrum shows: the slider, or the hidden one of "Mõõda ise".

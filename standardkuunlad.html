@@ -591,9 +591,9 @@ select { width: 100%; }
     lamp: { name: 'Lamp', short: 'Lamp', what: '100 W hõõglamp', lum: 'valgusvoog umbes 1700 luumenit', M: 68.1, lo: 1, hi: 1e9, d: 10,
       marks: [['Tallinn–Tartu', 1.6e5], ['Kuu', 3.844e8]], cal: 2, calHow: 'mõõdulindiga', hid: [4, 40], unit: ['m', 1], gen: 'lambi' },
     cep: { name: 'Tsefeiid', short: 'Tsefeiid', what: 'tsefeiid perioodiga 10 päeva', lum: 'umbes 3000 korda heledam kui Päike', M: -4.0, lo: 10 * PC, hi: 1e8 * PC, d: 1e3 * PC,
-      marks: [['Linnutee kese', 8.2e3 * PC], ['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', hid: [5e4 * PC, 2e7 * PC], unit: ['kpc', 1e3 * PC], gen: 'tsefeiidi' },
+      marks: [['Linnutee kese', 8.2e3 * PC], ['Andromeeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', hid: [5e4 * PC, 2e7 * PC], unit: ['kpc', 1e3 * PC], gen: 'tsefeiidi' },
     sn: { name: 'Ia supernoova', short: 'Supernoova', what: 'Ia tüüpi supernoova heleduse maksimumis', lum: 'umbes 5 miljardit korda heledam kui Päike', M: -19.3, lo: 10 * PC, hi: 5e9 * PC, d: 1e6 * PC,
-      marks: [['Andromeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e7 * PC, calHow: 'galaktikasse kuuluvate tsefeiidide järgi (3. osa)', hid: [4e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC], gen: 'supernoova' },
+      marks: [['Andromeeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e7 * PC, calHow: 'galaktikasse kuuluvate tsefeiidide järgi (3. osa)', hid: [4e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC], gen: 'supernoova' },
   };
   const KEYS = ['lamp', 'cep', 'sn'];
   const LIMITS = [{ m: 6, short: 'silm', slider: 'silm' }, { m: 24, short: 'suur teleskoop', slider: 'teleskoop' }, { m: 29, short: 'Hubble', slider: 'Hubble' }];
@@ -1197,7 +1197,7 @@ select { width: 100%; }
     for (let k = 0; k <= 10; k++) xt.push([10 ** k, k % 3 === 0 ? decadeLabel('cep', k) : null]);
     frame(g, B, X, Y, xt, [0, 0.4, 0.8, 1.2, 1.6].map(v => [v, v.toFixed(1)]), 'ulatus (kaugus, kuhu seda tüüpi küünlaid on mõõdetud)', 'hajuvus σ (mag)');
     // Reference distances along the top.
-    [['lähim täht', 1.3], ['Linnutee kese', 8.2e3], ['Andromeda', 7.8e5], ['Neitsi parv', 1.65e7], ['nähtava Universumi serv', 1.4e10]].forEach(([n, d], i) => {
+    [['lähim täht', 1.3], ['Linnutee kese', 8.2e3], ['Andromeeda', 7.8e5], ['Neitsi parv', 1.65e7], ['nähtava Universumi serv', 1.4e10]].forEach(([n, d], i) => {
       const x = X(d);
       el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'guide' }, g);
       text(g, x, B.y0 - 8 - (i % 2) * 14, n, 'lbl3', i === 4 ? 'end' : 'middle');
