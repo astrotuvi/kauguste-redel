@@ -44,9 +44,10 @@ follow from the same stars:
 - **Cluster:** about 150 members at a distance d_c, in a small sphere (a few
   pc). They share one space velocity, with an internal spread of about
   1 km/s. Their absolute magnitudes and colours lie along the main sequence
-  (table below). About a third are unresolved binaries, up to 0.75 mag
+  (table below), with relatively more bright stars than the field, as in
+  a young cluster. About a third are unresolved binaries, up to 0.75 mag
   brighter than the main sequence.
-- **Field:** about 600 stars in the same cone of sky, between 50 pc and
+- **Field:** about 1200 stars in the same cone of sky, between 50 pc and
   10 kpc, with density growing as d² and cut by a limiting magnitude
   G ≈ 20. A random main-sequence star, or one in ten a red giant. Velocities
   are the Sun's reflex motion plus a Gaussian scatter of about 30 km/s.
@@ -86,7 +87,8 @@ between tabs.
 The idea behind the lasso step. The scene has two panels side by side.
 
 - **Taevas** (the sky): a field about 30′ across with all the stars, their
-  size set by G as on star charts. Under the **Aeg** slider and its play
+  size and brightness set by G as on star charts, so that faint stars are
+  small and dim and the cluster's bright members stand out. Under the **Aeg** slider and its play
   button, the stars drift with their proper motions. The time scale is real:
   the slider runs to the time in which the cluster crosses a quarter of the
   field, a few hundred thousand years, so no exaggeration is needed. The parallax ellipses are far too small to see at
@@ -96,6 +98,21 @@ The idea behind the lasso step. The scene has two panels side by side.
 - **Omaliikumised** (the proper-motion diagram): μ_α* against μ_δ, with the
   same axes and orientation as in part 1. The cluster is a dense clump and the
   field a broad cloud. Hovering over a star highlights it in both panels.
+
+**3D vaade.** A button row above the scene switches between **Taevas ja
+omaliikumised** (the two panels above, the default) and **3D vaade**, which
+replaces them. The 3D view is the schematic of the parallax page, seen at an
+angle as the parallax page's default view, without preset views (dragging
+turns it; from above, the cluster's motion across the line of sight shows)
+and without quasars: the
+Sun, the Earth's orbit, and in place of the single star a small clump of all
+the cluster's members in the query, drawn as small dots. The sky is a
+transparent plane at 6 kpc, and a sixth of the query's field stars are scattered through the
+cone up to it, also at the cluster's distance. Their depths are random,
+except that field stars picked with the lasso are placed on their true side
+of the cluster. Lines from the Sun to the sky's corners show the edges of the
+view, and a dashed line the direction from the Sun through the cluster. The
+sky has no label. The hint says what is not to scale.
 
 **Lasso.** Dragging in the proper-motion diagram draws a lasso, as in part 1.
 The stars inside it are highlighted in the sky. Each lasso replaces the

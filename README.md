@@ -214,7 +214,17 @@ cluster. The address keeps the tab (`#liikmed`, `#varvus-heledus`,
    their real proper motions over a few hundred thousand years (with optional
    tracks), and the proper-motion diagram, where a lasso selects stars. The
    readout gives the members found, the field stars taken in and the distance
-   of the selection. **Näita tõde** marks the true members.
+   of the selection. **Näita tõde** marks the true members. The **3D vaade**
+   button replaces the two panels with a schematic 3D view built like the one
+   on the parallax page, seen at an angle as the parallax page's default
+   view (drag to turn it; from above, the cluster's motion across the line of
+   sight shows): the Sun and the Earth's orbit,
+   the cluster as a small clump of all its members in place of the single
+   star, a sixth of the query's field stars scattered up to a transparent sky at 6 kpc, the
+   edges of the view from the Sun to the sky's corners, and the direction from
+   the Sun through the cluster. The field stars' depths are random, also around the
+   cluster's distance, except that those picked with the lasso are on their
+   true side of the cluster.
 2. **Värvus-heledusdiagramm**: all stars, the lasso selection or the true
    members; **Absoluutne M_G** with the distance from the mean parallax,
    **Iga täht oma kaugusega** (each star at its true distance), binaries and

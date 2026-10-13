@@ -24,6 +24,9 @@
   --good: #1f8a4c;
   --bad: #c62828;
   --night: #070912;
+  --sun: #f2b01e;
+  --sky: #e9edf4;
+  --earth: #2a78d6;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -44,6 +47,9 @@
     --good: #4cc27a;
     --bad: #f06a6a;
     --night: #05060c;
+    --sun: #f5c04a;
+    --sky: #161a24;
+    --earth: #4f9cf0;
   }
 }
 :root[data-theme="dark"] {
@@ -64,6 +70,9 @@
   --good: #4cc27a;
   --bad: #f06a6a;
   --night: #05060c;
+  --sun: #f5c04a;
+  --sky: #161a24;
+  --earth: #4f9cf0;
 }
 
 * { box-sizing: border-box; }
@@ -104,6 +113,14 @@ h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
 
 svg.scene { display: block; width: 100%; height: auto; margin-top: 8px; user-select: none; -webkit-user-select: none; font-family: inherit; }
 #pm { touch-action: none; cursor: crosshair; }
+#space { touch-action: none; cursor: grab; }
+#space.dragging { cursor: grabbing; }
+.sun { fill: var(--sun); stroke: var(--surface); stroke-width: 1.5; }
+.plane { fill: none; stroke: var(--axis); stroke-width: 1; }
+.orbit { fill: none; stroke: var(--axis); stroke-width: 1.5; }
+.earth { fill: var(--earth); stroke: var(--surface); stroke-width: 1.5; }
+.edge { stroke: var(--axis); stroke-width: 1; }
+.ref { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 4 4; fill: none; }
 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .duo > div { min-width: 0; }
 .sub { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 10px 0 0; }
@@ -161,6 +178,8 @@ table.res td.n { text-align: right; color: var(--text-1); }
 .skyhov { fill: none; stroke: #ffe066; stroke-width: 1.5; }
 .skytrack { stroke: #9aa3b5; stroke-width: 0.8; opacity: 0.5; }
 .skytrack.sel { stroke: #8fbcff; opacity: 0.8; }
+.trail3 { stroke: var(--text-3); stroke-width: 0.8; opacity: 0.5; }
+.trail3.sel { stroke: var(--sel); opacity: 0.7; }
 .tlbl { fill: var(--text-2); font-size: 11px; }
 .lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 .lbl2 { fill: var(--text-2); font-size: 12px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
@@ -230,21 +249,39 @@ table.res td.n { text-align: right; color: var(--text-1); }
       </div>
 
       <div id="pane1" role="tabpanel" aria-labelledby="tab1">
-        <p class="hint">Vasakul on päringu ala taevas, paremal tähtede omaliikumised. Käivita aeg ja vaata, kuidas tähed liiguvad. Lohista omaliikumiste joonisel, et märkida lassoga tihe kogum.</p>
-        <div class="duo">
-          <div>
-            <p class="sub">Taevas</p>
-            <svg id="sky" class="scene" viewBox="0 0 370 370" role="img" aria-label="Päringu ala taevas, tähed liiguvad oma omaliikumisega"></svg>
+        <div class="views-btns" role="group" aria-label="Joonis">
+          <span>Vaade:</span>
+          <button type="button" data-mode="main">Taevas ja omaliikumised</button>
+          <button type="button" data-mode="space">3D vaade</button>
+        </div>
+        <div id="modeMain">
+          <p class="hint">Vasakul on päringu ala taevas, paremal tähtede omaliikumised. Käivita aeg ja vaata, kuidas tähed liiguvad. Lohista omaliikumiste joonisel, et märkida lassoga tihe kogum.</p>
+          <div class="duo">
+            <div>
+              <p class="sub">Taevas</p>
+              <svg id="sky" class="scene" viewBox="0 0 370 370" role="img" aria-label="Päringu ala taevas, tähed liiguvad oma omaliikumisega"></svg>
+            </div>
+            <div>
+              <p class="sub">Omaliikumised</p>
+              <svg id="pm" class="scene" viewBox="0 0 370 370" role="img" aria-label="Tähtede omaliikumised; lohista, et märkida lassoga"></svg>
+            </div>
           </div>
-          <div>
-            <p class="sub">Omaliikumised</p>
-            <svg id="pm" class="scene" viewBox="0 0 370 370" role="img" aria-label="Tähtede omaliikumised; lohista, et märkida lassoga"></svg>
+          <p class="readout" id="hoverRead" aria-live="polite"></p>
+          <div class="legend">
+            <span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>
+            <span id="lgMem1" hidden><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>
           </div>
         </div>
-        <p class="readout" id="hoverRead" aria-live="polite"></p>
-        <div class="legend">
-          <span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>
-          <span id="lgMem1" hidden><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>
+        <div id="modeSpace" hidden>
+          <p class="hint">Käivita aeg, et näha, kuidas parv liigub risti vaatesuunaga. Lohista joonist, et seda pöörata.
+            Mõõtkava ei ole õige: Maa orbiit ja parv on suurendatud. Väljatähtede kaugused on juhuslikud.</p>
+          <svg id="space" class="scene" viewBox="0 0 760 520" role="img" aria-label="Ruumiline joonis: Päike, Maa orbiit, parv ja väljatähed"></svg>
+          <div class="legend">
+            <span id="lgMem3" hidden><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>
+            <span><i class="dot" style="background: var(--text-3); width: 5px; height: 5px"></i>väljatäht</span>
+            <span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>
+            <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>suund Päikesest</span>
+          </div>
         </div>
       </div>
 
@@ -347,6 +384,9 @@ table.res td.n { text-align: right; color: var(--text-1); }
       <li>Väljatähed on igal kaugusel ja liiguvad eri suundades, nii et nende omaliikumised on laiali. Lähedased väljatähed liiguvad taevas kiiresti, kauged aeglaselt.</li>
       <li>Omaliikumine sõltub kiirusest ja kaugusest: μ [mas/a] = v<sub>t</sub> [km/s] / (4.74 · d [kpc]), kus v<sub>t</sub> on kiiruse taevatasandiline komponent. Sama kiirus annab kaugemal väiksema omaliikumise,
         mis jääb väljatähtede tiheda keskosa lähedale. Kaugemad tähed on ka nõrgemad ja nende omaliikumiste vead on suuremad. Seepärast on kauget parve raskem eraldada ja parallaksi redelipulk lõpeb mõne kiloparseki juures.</li>
+      <li><b>3D vaade</b> näitab, mida taevas ja omaliikumistes näha ei ole: parve tähed on kõik peaaegu ühel kaugusel, väljatähed aga kogu vaatesuuna ulatuses.
+        Lassoga valitud väljatähed (sinised täpid väljaspool parve) on parvest ees või taga, nii et nende parallaksid nihutavad keskmist.
+        Kui pöörad joonise ülalt vaatamiseks, on näha, et parv liigub risti vaatesuunaga: see liikumine paistab taevas omaliikumisena.</li>
       <li>Lähedane parv võib katta kogu vaatevälja, nii et taevas pole seda tähtede tiheduse järgi näha, omaliikumiste joonisel aga küll.</li>
       <li>Aeg on joonisel päris: nii palju liiguvad tähed alles kümnete või sadade tuhandete aastatega. <a href="parallaks.html">Parallaksi</a> ellipsid on selles mõõtkavas liiga väikesed, et neid näha.</li>
       <li>Kui <b>Näita tõde</b> on sees, on tegelikud parve liikmed rõngaga. Kitsas lasso jätab osa liikmeid välja, lai lasso võtab kaasa väljatähti, mis nihutavad keskmist parallaksi.</li>
@@ -462,7 +502,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
   const VREF = [-12, -8];           // km/s, the mean motion of the field stars relative to the Sun (α*, δ)
   const SIGV = 25, VREL = 25;       // km/s, the field's velocity scatter and the cluster's offset from the field mean
   const RC = 2;                     // pc, the cluster's radius (Gaussian σ per axis)
-  const N_MEM = 220, N_FIELD = 2000;
+  const N_MEM = 220, N_FIELD = 4000;
   const DMIN = 20, DMAX = 8000;     // pc, the field stars' distance range
 
   // Gaia DR3 parallax and proper-motion errors by G magnitude, interpolated in log σ.
@@ -486,7 +526,9 @@ table.res td.n { text-align: right; color: var(--text-1); }
     return MS[MS.length - 1][0];
   }
   // Absolute magnitudes from about B8 V to M5 V, with more faint stars than bright ones.
-  const lumFn = r => -0.3 + 12.3 * r() ** 0.6;
+  // The cluster is young and rich in bright stars; the field, mostly old, has relatively more faint ones.
+  const lumFn = (r, k) => -0.3 + 12.3 * r() ** k;
+  const K_MEM = 0.85, K_FIELD = 0.45;
   // An unresolved companion adds a fraction f of the light, up to 0.75 mag for an equal twin.
   const binary = r => -2.5 * Math.log10(1 + r() ** 2);
 
@@ -499,7 +541,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const errs = () => ({ za: gauss(r), zd: gauss(r), zp: gauss(r) });
     const mem = [], fld = [];
     for (let i = 0; i < N_MEM; i++) {
-      const M = lumFn(r), bin = r() < 0.3 ? binary(r) : 0;
+      const M = lumFn(r, K_MEM), bin = r() < 0.3 ? binary(r) : 0;
       mem.push({ M, bin, col: msColour(M) + 0.015 * gauss(r), ox: RC * gauss(r), oy: RC * gauss(r), dz: RC * gauss(r),
         v: [vc[0] + gauss(r), vc[1] + gauss(r)], rank: r(), ...errs() });
     }
@@ -509,15 +551,15 @@ table.res td.n { text-align: right; color: var(--text-1); }
       if (r() < 0.06) {  // giants: the red clump and the red giant branch
         if (r() < 0.4) { col = 1.2 + 0.05 * gauss(r); M = 0.45 + 0.15 * gauss(r); }
         else { col = 1.0 + 0.8 * r(); M = 1.0 - 4.5 * (col - 1.0) + 0.2 * gauss(r); }
-      } else { M = lumFn(r); col = msColour(M) + 0.05 * gauss(r); }
-      fld.push({ d, M, col, bin: r() < 0.3 ? binary(r) : 0, fx: r() - 0.5, fy: r() - 0.5,
+      } else { M = lumFn(r, K_FIELD); col = msColour(M) + 0.05 * gauss(r); }
+      fld.push({ d, M, col, bin: r() < 0.3 ? binary(r) : 0, fx: r() - 0.5, fy: r() - 0.5, u3: r(),
         v: [VREF[0] + SIGV * gauss(r), VREF[1] + SIGV * gauss(r)], ...errs() });
     }
     return { seed, vc, corr: gauss(r), mem, fld };
   }
 
   const st = {
-    tab: 'tab1', d: 1000, glim: 19, seed: 1,
+    tab: 'tab1', mode: 'main', d: 1000, glim: 19, seed: 1,
     t: 0, playing: false, tracks: false, truth: false, poly: null, drawing: null, hover: -1,
     valik: 'all', abs: false, own: false, bin: true, ebv: 0,
     N: 50, weighted: true, zp: true, zpcorr: true, corr: true, view3: 'bias',
@@ -533,7 +575,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const add = (o, mem, dist, x, y, G, col) => {
       const sig = gaiaErr(G), pa = o.v[0] / (K * dist / 1000), pd = o.v[1] / (K * dist / 1000);
       S.push({ mem, dist, x, y, G, col, bin: o.bin, sig, pa, pd, ma: pa + o.za * sig, md: pd + o.zd * sig,
-        p: 1000 / dist, pm: 1000 / dist + o.zp * sig, rank: o.rank || 0 });
+        p: 1000 / dist, pm: 1000 / dist + o.zp * sig, rank: o.rank || 0, u3: o.u3 || 0 });
     };
     for (const m of cl.mem) {
       const dist = d + m.dz, x = m.ox / dist * ARCMIN, y = m.oy / dist * ARCMIN;
@@ -580,8 +622,12 @@ table.res td.n { text-align: right; color: var(--text-1); }
   const skyX = x => (SB.x0 + SB.x1) / 2 - x / W * (SB.x1 - SB.x0);   // east to the left
   const skyY = y => (SB.y0 + SB.y1) / 2 - y / W * (SB.y1 - SB.y0);
   const posAt = (s, t) => [s.x + s.pa * t / 60000, s.y + s.pd * t / 60000];
-  const starR = G => clamp(3.4 - 0.32 * (G - 10), 0.6, 3.4);
+  // Stars are drawn by their brightness, as on star charts: the bright ones large, the faint ones small and dim, so that a
+  // cluster's many bright members stand out from the mostly faint field.
+  const starR = G => clamp(4.4 - 0.55 * (G - 9), 0.45, 4.4);
+  const starOp = G => clamp(1 - 0.14 * (G - 13), 0.3, 1);
   const tYears = () => st.t * tmax;
+  const TRAIL_G = 19;  // stars fainter than this get no tracks, which would only slow down the drawing
 
   function renderSky() {
     sky.textContent = '';
@@ -591,13 +637,16 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const t = tYears(), sel = new Set(selected());
     if (st.tracks && t > 0) {
       S.forEach((s, i) => {
+        if (s.G > TRAIL_G) return;
         const [x, y] = posAt(s, t);
-        el('line', { x1: skyX(s.x), y1: skyY(s.y), x2: skyX(x), y2: skyY(y), class: 'skytrack' + (sel.has(i) ? ' sel' : '') }, g);
+        // The track is as wide as about a third of the star's dot, so that bright stars leave wide tracks.
+        el('line', { x1: skyX(s.x), y1: skyY(s.y), x2: skyX(x), y2: skyY(y), class: 'skytrack' + (sel.has(i) ? ' sel' : ''),
+          style: `stroke-width: ${clamp(0.4 * starR(s.G), 0.5, 1.8).toFixed(2)}px` }, g);
       });
     }
     S.forEach((s, i) => {
       const [x, y] = posAt(s, t), cx = skyX(x), cy = skyY(y), r = starR(s.G);
-      el('circle', { cx, cy, r: sel.has(i) ? r + 0.4 : r, class: sel.has(i) ? 'skysel' : 'skystar', opacity: sel.has(i) ? 1 : 0.85 }, g);
+      el('circle', { cx, cy, r: sel.has(i) ? r + 0.4 : r, class: sel.has(i) ? 'skysel' : 'skystar', opacity: sel.has(i) ? Math.max(0.6, starOp(s.G)) : starOp(s.G) }, g);
       if (st.truth && s.mem) el('circle', { cx, cy, r: r + 2.2, class: 'skymem' }, g);
     });
     if (st.hover >= 0 && S[st.hover]) {
@@ -691,6 +740,121 @@ table.res td.n { text-align: right; color: var(--text-1); }
     setHover(nearest(p.x, p.y, s => { const [x, y] = posAt(s, t); return [skyX(x), skyY(y)]; }));
   });
   sky.addEventListener('pointerleave', () => setHover(-1));
+
+  /* ---------- Tab 1: the 3D view ---------- */
+  // A schematic as on the parallax page: the Earth's orbit has radius 1 and the query cone ends at a background plane at
+  // distance D from the Sun, perpendicular to the direction of the cluster, spanning ±H. The cluster lies at ecliptic
+  // latitude β. A real distance r from the Sun is drawn at 2 + (D − 2) r / CUT, so that the stars stay clear of the orbit;
+  // the plane, the sky, is at CUT = 6 kpc. The cluster is a small clump of all its members in the query. A sixth (F3) of
+  // the query's field stars are scattered at random depths through the cone, also at the cluster's distance. Field stars picked with the lasso go
+  // on their true side of the cluster, in front of it or between it and the plane, so that the view shows where the
+  // lasso's field stars are.
+  const space = $('space'), VW = 760, VH = 520, D = 13, H = 5, BETA = 50, F3 = 1 / 6, CLR = 0.35, GAP = 0.8, rad = Math.PI / 180;
+  // The view starts at an angle, from behind the Sun turned towards the east, as the oblique view of the parallax page.
+  // Dragging turns the view.
+  const cam3 = { az: 36, el: 0 };
+  const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const mul3 = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const cross3 = (p, q) => [p[1] * q[2] - p[2] * q[1], p[2] * q[0] - p[0] * q[2], p[0] * q[1] - p[1] * q[0]];
+  // n points to the cluster, u to the east and N to the north on the sky, as on the parallax page.
+  const B3 = { n: [Math.cos(BETA * rad), 0, Math.sin(BETA * rad)], u: [0, 1, 0], N: [-Math.sin(BETA * rad), 0, Math.cos(BETA * rad)] };
+  const at = (a, e, nn) => add3(mul3(B3.n, a), add3(mul3(B3.u, e), mul3(B3.N, nn)));
+  const CUT = () => 6000;
+  const along = r => 2 + (D - 2) * r / CUT();
+  const EARTH = [1, 0, 0];  // as at the start of the year on the parallax page
+  // A field star on the cone, from its sky offset at time t: the field of view widens to ±H at the plane. The stars get
+  // sparser towards the Sun, but not as much as the cone narrows. A star picked with the lasso keeps a gap of ±GAP from
+  // the cluster, on its true side.
+  function fieldAt(s, t, chosen) {
+    const ac = along(st.d);
+    let [lo, hi] = [2, D];
+    if (chosen) [lo, hi] = s.dist < st.d ? [2, Math.max(2, ac - GAP)] : [Math.min(D, ac + GAP), D];
+    const a = Math.sqrt(lo ** 2 + s.u3 * (hi ** 2 - lo ** 2));
+    const [x, y] = posAt(s, t);
+    return at(a, x / W * 2 * H * a / D, y / W * 2 * H * a / D);
+  }
+  // The cluster's centre drifts with the cluster's proper motion; a member is placed around it by its offset in parsecs.
+  function centreAt(t) {
+    const a = along(st.d), k = t / 60000 / W * 2 * H * a / D, mc = cl.vc.map(v => v / (K * st.d / 1000));
+    return at(a, mc[0] * k, mc[1] * k);
+  }
+  function memberAt(s, c) {
+    const ox = s.x * s.dist / ARCMIN, oy = s.y * s.dist / ARCMIN, dz = s.dist - st.d, k = CLR / RC;
+    return add3(c, at(dz * k, ox * k, oy * k));
+  }
+  function camera3() {
+    const a = cam3.az * rad, e = cam3.el * rad;
+    const f = add3(mul3(add3(mul3(B3.n, -Math.cos(a)), mul3(B3.u, -Math.sin(a))), Math.cos(e)), mul3(B3.N, Math.sin(e)));  // towards the viewer
+    // The screen's right is set from the horizontal direction alone, so that it is defined also when looking straight down.
+    const h = add3(mul3(B3.n, Math.cos(a)), mul3(B3.u, Math.sin(a))), r0 = cross3(h, B3.N), r = mul3(r0, 1 / Math.hypot(...r0)), up = cross3(f, r);
+    const box = [[-H, -H], [H, -H], [H, H], [-H, H]].map(([p, q]) => at(D, p, q));
+    for (let i = 0; i < 24; i++) box.push([Math.cos(2 * Math.PI * i / 24), Math.sin(2 * Math.PI * i / 24), 0]);
+    const xs = box.map(P => dot3(P, r)), ys = box.map(P => dot3(P, up));
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const sc = Math.min(60, (VW - 60) / (x1 - x0), (VH - 70) / (y1 - y0)), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    return { p: P => [VW / 2 + sc * (dot3(P, r) - cx), VH / 2 + 6 - sc * (dot3(P, up) - cy)], depth: P => dot3(P, f) };
+  }
+  function render3D() {
+    space.textContent = '';
+    const cam = camera3(), t = tYears(), sel = new Set(selected()), C = centreAt(t);
+    const line = (g, P, Q, cls) => { const [a, b] = [cam.p(P), cam.p(Q)]; el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: cls }, g); };
+    const back = el('g', {}), front = el('g', {});
+    // The sky and the edges of the view from the Sun to its corners.
+    const corners3 = [[-H, -H], [H, -H], [H, H], [-H, H]].map(([p, q]) => at(D, p, q)), corners = corners3.map(cam.p);
+    const planeBehind = cam.depth(at(D, 0, 0)) < cam.depth(C);
+    el('polygon', { points: corners.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' '), class: 'plane' }, back);
+    for (const P of corners3) line(back, [0, 0, 0], P, 'edge');
+    // The direction from the Sun through the cluster's centre, up to the sky.
+    const hitS = mul3(C, D / dot3(C, B3.n));
+
+    const orbit = [];
+    for (let i = 0; i <= 96; i++) orbit.push(cam.p([Math.cos(2 * Math.PI * i / 96), Math.sin(2 * Math.PI * i / 96), 0]));
+    el('polyline', { points: orbit.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' '), class: 'orbit' }, front);
+    line(front, [0, 0, 0], hitS, 'ref');
+    // The stars from far to near: the field stars, and the members of the cluster, which are ringed, as in the sky
+    // view, only with the truth shown. With the tracks on, the path of each star brighter than TRAIL_G from the start is
+    // drawn under the stars.
+    const items = [], C0 = centreAt(0);
+    S.forEach((s, i) => {
+      // A fixed sixth of the field stars, chosen by a number of each star's own, so that a fainter limit only adds stars.
+      if (s.mem || ((s.u3 * 1000) % 1 >= F3 && !sel.has(i))) return;
+      items.push([fieldAt(s, t, sel.has(i)), fieldAt(s, 0, sel.has(i)), sel.has(i), sel.has(i) ? 'spt' : 'fpt dark', sel.has(i) ? 2 : 1.5, false, s.G]);
+    });
+    mems.forEach(i => items.push([memberAt(S[i], C), memberAt(S[i], C0), sel.has(i), sel.has(i) ? 'spt' : 'fpt dark', 1.7, st.truth, S[i].G]));
+    if (st.tracks && t > 0) for (const [P, P0, chosen, , , , G] of items) if (G <= TRAIL_G) line(front, P0, P, chosen ? 'trail3 sel' : 'trail3');
+    items.map(([P, , , cls, r, ring]) => [cam.depth(P), cam.p(P), cls, r, ring]).sort((a, b) => a[0] - b[0])
+      .forEach(([, [x, y], cls, r, ring]) => {
+        el('circle', { cx: x, cy: y, r, class: cls }, front);
+        if (ring) el('circle', { cx: x, cy: y, r: r + 2.2, class: 'mring' }, front);
+      });
+    const pSun = cam.p([0, 0, 0]), pE = cam.p(EARTH), pC = cam.p(C);
+    const sun = () => el('circle', { cx: pSun[0], cy: pSun[1], r: 9, class: 'sun' }, front);
+    const earthDot = () => el('circle', { cx: pE[0], cy: pE[1], r: 6, class: 'earth' }, front);
+    if (cam.depth(EARTH) > cam.depth([0, 0, 0])) { sun(); earthDot(); } else { earthDot(); sun(); }
+    // The Earth's label goes on the far side of the Earth from the Sun, the Sun's below it.
+    const dx = pE[0] - pSun[0], dy = pE[1] - pSun[1], L = Math.hypot(dx, dy);
+    const [ux, uy] = L > 4 ? [dx / L, dy / L] : [0, -1];
+    text(front, pE[0] + ux * 16, pE[1] + uy * 16 + 4, 'Maa', 'lbl', ux > 0.35 ? 'start' : ux < -0.35 ? 'end' : 'middle');
+    text(front, pSun[0], pSun[1] + 26, 'Päike', 'lbl', 'middle');
+    text(front, pC[0] + 14, pC[1] - 14, `parv, ${fmtPc(st.d)}`, 'lbl');
+    if (planeBehind) space.append(back, front); else space.append(front, back);
+
+  }
+  let drag3 = null;
+  space.addEventListener('pointerdown', e => { drag3 = [e.clientX, e.clientY]; space.setPointerCapture(e.pointerId); space.classList.add('dragging'); });
+  space.addEventListener('pointermove', e => {
+    if (!drag3) return;
+    const k = 360 / space.getBoundingClientRect().width * 0.6;
+    cam3.az += (e.clientX - drag3[0]) * k;
+    cam3.el = clamp(cam3.el + (e.clientY - drag3[1]) * k, -90, 90);
+    drag3 = [e.clientX, e.clientY];
+    if (!st.playing) render3D();
+  });
+  const endDrag3 = () => { drag3 = null; space.classList.remove('dragging'); };
+  space.addEventListener('pointerup', endDrag3);
+  space.addEventListener('pointercancel', endDrag3);
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => { st.mode = b.dataset.mode; st.hover = -1; render(); }));
 
   /* ---------- Tab 2: the colour–magnitude diagram ---------- */
   const CB = { x0: 64, x1: 740, y0: 12, y1: 448 };
@@ -939,7 +1103,10 @@ table.res td.n { text-align: right; color: var(--text-1); }
     $('clear').disabled = !st.poly;
     const label = st.playing ? '❚❚ Peata' : '▶ Käivita';
     if ($('play').textContent !== label) $('play').textContent = label;
-    $('lgMem1').hidden = !st.truth;
+    $('lgMem1').hidden = $('lgMem3').hidden = !st.truth;
+    document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === st.mode));
+    $('modeMain').hidden = st.mode !== 'main';
+    $('modeSpace').hidden = st.mode !== 'space';
     document.querySelectorAll('[data-valik]').forEach(b => b.setAttribute('aria-checked', b.dataset.valik === st.valik));
     $('own').disabled = !st.abs;
     $('ownLbl').classList.toggle('dis', !st.abs);
@@ -955,7 +1122,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
   }
   function render() {
     readouts();
-    if (st.tab === 'tab1') { renderSky(); renderPM(); }
+    if (st.tab === 'tab1') { if (st.mode === 'main') { renderSky(); renderPM(); } else render3D(); }
     if (st.tab === 'tab2') renderCMD();
     if (st.tab === 'tab3') { if (st.view3 === 'bias') renderBias(); else renderSys(); }
   }
@@ -989,7 +1156,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
     $('time').value = Math.round(st.t * SL);
     if (st.t >= 1) st.playing = false;
     readouts();
-    renderSky();
+    if (st.mode === 'main') renderSky(); else render3D();
     if (st.playing) raf = requestAnimationFrame(frameTick);
   }
   function stop() { st.playing = false; cancelAnimationFrame(raf); }
