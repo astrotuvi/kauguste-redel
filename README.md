@@ -27,8 +27,7 @@ The page opens on the introduction and a table of contents. The table of
 contents has two groups: **Uuri lähemalt**, a row of cards that lead to background
 pages (parallax, open clusters, standard candles, Cepheids, type Ia supernovae
 and the Hubble law), and **Harjutus andmetega**, the four parts of the exercise.
-So far all pages except the Hubble law page exist; its card is marked *tulekul*
-(coming). Clicking a part
+Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
 contents and to the other parts, and below the title are its tabs. Buttons at
@@ -364,6 +363,48 @@ follows from the Phillips relation of the standard candles page.
    with the published relation) and the 166 distant supernovae of part 4,
    with M_B from the calibrators or from SH0ES.
 
+### Hubble law page
+
+`hubble.html` is linked from the table of contents, from the words "Hubble'i
+seaduseni" in the introduction, from the H₀ texts of parts 3 and 4 and the
+expansion note of the distant supernova plot, from the supernovae page and
+from the sentence on Edwin Hubble on the Cepheids page. It has five tabs, and
+the address keeps the tab (`#punanihe`, `#paisumine`, `#kaugemale`, `#vanus`,
+`#pinge`). Distances and ages come from a flat model with matter and dark
+energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
+
+1. **Punanihe**: two views. **Spekter** shows a schematic galaxy spectrum
+   above the same lines in the lab, joined line by line, for a redshift set
+   by a log slider (0.001–1.5) or by buttons for Andromeda (a blueshift), the
+   Virgo cluster, NGC 5584 of part 3, a supernova host of part 4 and z = 1.
+   Clicking a line name reads z, v = cz and the distance from it.
+   **Mõõda ise** hides a random redshift; the user drags the lab lines onto
+   the galaxy's lines and presses **Kontrolli**. **Venitus** shows a light
+   wave that travels to the Milky Way while the space between galaxies grows,
+   and compares cz, the special relativity Doppler formula and the true
+   recession velocity up to z = 1.5.
+2. **Paisumine**: three views. **Paisuv Universum** shows galaxies on a plane
+   that grows, with their velocity against distance; clicking a galaxy makes
+   it "us", and a slider adds peculiar velocities. **Kohalik liikumine**
+   compares our own motions with the expansion at a few distances, and shows
+   the correction to the frame of the microwave background for a galaxy in a
+   chosen direction. **Hubble 1929** shows Hubble's 24 galaxies with his
+   distances or today's.
+3. **Kaugemale**: the distance modulus against z for an empty universe, a
+   universe of matter only and the chosen Ω_m, with simulated supernovae; the
+   difference from the empty universe; and the error in H₀ when the distance
+   comes from cz or from cz (1 + 0.775 z), with the range of part 4 shaded.
+4. **Hubble'i aeg**: the distance to a galaxy now 100 Mpc away against time,
+   for a constant velocity, matter only and the chosen model, and the age of
+   the Universe against H₀ with the oldest stars. Sliders for H₀ and Ω_m, and
+   a time slider with a play button.
+5. **Hubble'i pinge**: two views. **Mõõtmised** plots published H₀ values
+   from the early Universe, the distance ladder and other methods, with
+   fields for the user's own results of parts 3 and 4, and a schematic of
+   the two routes to H₀. **Redeli vead** puts a systematic error into the
+   Gaia parallaxes, the galaxy Cepheids or the supernovae and shows the H₀
+   that SH0ES would then have found.
+
 ## Method
 
 - Only stars with RUWE < 1.4 and with a measured parallax and proper motion
@@ -464,8 +505,8 @@ service uses only that one. The choice is remembered in the browser.
 Everything is in `index.html`: the HTML, the CSS and the JavaScript. The
 parallax demonstration (`parallaks.html`), the open clusters page
 (`hajusparved.html`), the standard candles page (`standardkuunlad.html`), the
-Cepheids page (`tsefeiidid.html`) and the type Ia supernovae page
-(`supernoovad.html`) are separate self-contained pages with no external dependencies. The only
+Cepheids page (`tsefeiidid.html`), the type Ia supernovae page
+(`supernoovad.html`) and the Hubble law page (`hubble.html`) are separate self-contained pages with no external dependencies. The only
 external dependency is [Plotly.js](https://plotly.com/javascript/), loaded
 from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 

@@ -5,8 +5,8 @@ that lead to background pages. Each page gives the wider picture behind a
 rung of the distance ladder or behind the result of the exercise. So far the
 parallax page (`parallaks.html`), the open clusters page (`hajusparved.html`),
 the standard candles page (`standardkuunlad.html`), the Cepheids page
-(`tsefeiidid.html`) and the type Ia supernovae page (`supernoovad.html`)
-exist; the Hubble law card is marked *tulekul* (coming).
+(`tsefeiidid.html`), the type Ia supernovae page (`supernoovad.html`) and
+the Hubble law page (`hubble.html`) exist.
 
 The cards, in reading order:
 
@@ -90,7 +90,7 @@ Related part: 4.
 
 The design of the page, with its four tabs, is in `DESIGN-supernoovad.md`.
 
-## 5. Hubble'i seadus (new)
+## 5. Hubble'i seadus (exists, `hubble.html`)
 
 - Redshift and recession velocity.
 - Why nearby galaxies scatter (peculiar velocities of a few hundred km/s) and
@@ -101,6 +101,8 @@ The design of the page, with its four tabs, is in `DESIGN-supernoovad.md`.
   compares.
 
 Related parts: 3 and 4.
+
+The design of the page, with its five tabs, is in `DESIGN-hubble.md`.
 
 ## Optional: fits and errors
 
@@ -113,7 +115,7 @@ the parts could cover these better than a separate page.
 
 1. **Standardküünlad.** Done. The formulas in parts 2–4 depend on it.
 2. **Tsefeiidid**, with dust and W_H. Done. Parts 2 and 3.
-3. **Hubble'i seadus.** Parts 3 and 4.
+3. **Hubble'i seadus.** Done. Parts 3 and 4.
 4. **Ia tüüpi supernoovad.** Done. Part 4.
 5. **Hajusparved.** Done. Part 1.
 

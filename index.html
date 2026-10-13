@@ -426,7 +426,7 @@ footer a { color: inherit; }
     mis tekib Maa liikumisest ümber Päikese. Kaugemal on parallaks liiga väike ja appi tulevad <i><a href="standardkuunlad.html">standardküünlad</a></i>: objektid, mille
     tegelikku heledust me teame, nii et nende näiv heledus annab kauguse. Iga uus meetod kalibreeritakse eelmise abil, nii et meetodid
     moodustavad <a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">redeli</a>, mille iga pulk ulatub kaugemale. Sellel lehel ronid redelil neli pulka: <a href="hajusparved.html">hajusparvede</a> kaugustest <a href="https://et.wikipedia.org/wiki/Gaia_(kosmoseteleskoop)" target="_blank" rel="noopener">Gaia</a> parallaksidega
-    (1. osa) <a href="tsefeiidid.html">tsefeiidide</a> <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seoseni</a> (2. osa), sealt tsefeiididega <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> kaugusteni ja <a href="https://et.wikipedia.org/wiki/Hubble'i_seadus" target="_blank" rel="noopener">Hubble'i seaduseni</a> (3. osa)
+    (1. osa) <a href="tsefeiidid.html">tsefeiidide</a> <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seoseni</a> (2. osa), sealt tsefeiididega <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> kaugusteni ja <a href="hubble.html">Hubble'i seaduseni</a> (3. osa)
     ning lõpuks Ia tüüpi <a href="supernoovad.html">supernoovadeni</a>, mis näitavad <a href="https://et.wikipedia.org/wiki/Universumi_paisumine" target="_blank" rel="noopener">Universumi paisumist</a> sadade <a href="https://et.wikipedia.org/wiki/Parsek" target="_blank" rel="noopener">megaparsekite</a> kaugusel (4. osa).</p>
   </div>
     <figure class="ladder-art" aria-labelledby="artTitle">
@@ -493,8 +493,8 @@ footer a { color: inherit; }
         <p>Miks valge kääbus plahvatab, mis paneb supernoova helendama, kuidas maksimumheledust standardiseeritakse ja miks kaugete supernoovade hajuvus on väike.</p>
         <span class="rel">Seotud: <a href="#osa-4">4. osa</a></span>
       </li>
-      <li class="mh soon">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" r="3"/><path class="arrow" d="M0 -6 V-14 M-3 -11 L0 -14 L3 -11 M0 6 V14 M-3 11 L0 14 L3 11 M-6 0 H-14 M-11 -3 L-14 0 L-11 3 M6 0 H14 M11 -3 L14 0 L11 3"/></svg><span class="toc-part">Hubble'i seadus <span class="badge">tulekul</span></span></div>
+      <li class="mh">
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" r="3"/><path class="arrow" d="M0 -6 V-14 M-3 -11 L0 -14 L3 -11 M0 6 V14 M-3 11 L0 14 L3 11 M-6 0 H-14 M-11 -3 L-14 0 L-11 3 M6 0 H14 M11 -3 L14 0 L11 3"/></svg><a class="toc-part" href="hubble.html">Hubble'i seadus</a></div>
         <p>Punanihe, eemaldumiskiirus ja Hubble'i konstant; miks lähedased galaktikad hajuvad ja mis on Hubble'i pinge.</p>
         <span class="rel">Seotud: <a href="#osa-3">3. osa</a>, <a href="#osa-4">4. osa</a></span>
       </li>
@@ -931,7 +931,7 @@ footer a { color: inherit; }
         <div>
           <h2>Kaugete supernoovade kiirus ja kaugus</h2>
           <p class="hint">Iga punkt on üks supernoova kuni umbes 250 Mpc kaugusel. Kaugus tuleb näivast tähesuurusest ja ülal leitud M<sub>B</sub>-st. Kiirus on v = cz väikese parandusega
-            (1 + 0,775 z): valgus on nii kaugelt tulnud kaua ja Universum on selle aja jooksul paisunud.
+            (1 + 0,775 z): valgus on nii kaugelt tulnud kaua ja <a href="hubble.html#kaugemale">Universum on selle aja jooksul paisunud</a>.
             Joon: v = H<sub>0</sub> · d. <a class="more" href="supernoovad.html#hajuvus">Loe lähemalt →</a></p>
         </div>
       </div>
@@ -2270,7 +2270,7 @@ function drawHubble() {
     </div>
     <p class="formula">${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
     (fit.eCal ? `, perioodi-heleduse seose nullpunkt ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, liidetud ruutudena.
-    Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus.</p>`;
+    Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus. <a class="more" href="hubble.html#vanus">Loe lähemalt →</a></p>`;
 }
 
 // rows first..last of a paged table (S.pages[key]) with n rows; updates its pager
@@ -2369,7 +2369,7 @@ function drawSupernovae(gals) {
       <div class="tile"><div class="label">Hubble'i aeg 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">miljardit aastat</div></div>
     </div>
     <p class="formula">${fmt(pts.length)} supernoovat. Võrdluseks: ${local}Plancki satelliit (kosmiline taustkiirgus) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
-    Kauguste redeli ja kosmilise taustkiirguse põhjal leitud H<sub>0</sub> erinevus on tuntud kui Hubble'i pinge.</p>`;
+    Kauguste redeli ja kosmilise taustkiirguse põhjal leitud H<sub>0</sub> erinevus on tuntud kui Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a></p>`;
 }
 
 function drawGalaxyPL(g, cal) {
