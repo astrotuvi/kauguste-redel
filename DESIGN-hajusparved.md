@@ -86,7 +86,8 @@ between tabs.
 
 The idea behind the lasso step. The scene has two panels side by side.
 
-- **Taevas** (the sky): a field about 30′ across with all the stars, their
+- **Taevas** (the sky): a field 20′ to 4° across, eight times the cluster's
+  radius but within those limits, with all the stars, their
   size and brightness set by G as on star charts, so that faint stars are
   small and dim and the cluster's bright members stand out. Under the **Aeg** slider and its play
   button, the stars drift with their proper motions. The time scale is real:
@@ -104,8 +105,8 @@ omaliikumised** (the two panels above, the default) and **3D vaade**, which
 replaces them. The 3D view is the schematic of the parallax page, seen at an
 angle as the parallax page's default view, without preset views (dragging
 turns it; from above, the cluster's motion across the line of sight shows)
-and without quasars: the
-Sun, the Earth's orbit, and in place of the single star a small clump of all
+and without quasars or the Earth: the
+Sun, and in place of the single star a small clump of all
 the cluster's members in the query, drawn as small dots. The sky is a
 transparent plane at 6 kpc, and a sixth of the query's field stars are scattered through the
 cone up to it, also at the cluster's distance. Their depths are random,
@@ -113,6 +114,11 @@ except that field stars picked with the lasso are placed on their true side
 of the cluster. Lines from the Sun to the sky's corners show the edges of the
 view, and a dashed line the direction from the Sun through the cluster. The
 sky has no label. The hint says what is not to scale.
+
+**Kõik tähed**, a checkbox shared by tabs 1 and 2 as in part 1: with it off,
+the sky, the proper-motion plot, the 3D view and the colour–magnitude
+diagram show only the stars picked with the lasso. The lasso works only with
+all stars shown.
 
 **Lasso.** Dragging in the proper-motion diagram draws a lasso, as in part 1.
 The stars inside it are highlighted in the sky. Each lasso replaces the
@@ -156,14 +162,13 @@ Mida joonis näitab:
 The check after the lasso. The scene is a colour–magnitude diagram, BP−RP
 against G, with the bright end up. It uses the same stars as tab 1.
 
-**Valik** (selection), a segmented button:
-
-- **Kõik tähed**: the cluster's narrow main sequence lies inside a broad
-  smear of field stars.
-- **Lasso valik**: the stars selected in tab 1. Field stars that the lasso
-  took in usually lie off the sequence and are drawn as rings. This is the
-  check in part 1.
-- **Tõelised liikmed** (true members).
+Without a lasso selection, all stars are drawn alike: the cluster's narrow
+main sequence lies inside a broad smear of field stars. With one, the stars
+selected in tab 1 are drawn in blue on top of the paler rest. Field stars
+that the lasso took in usually lie off the sequence; this is the check in
+part 1. **Näita tõde** rings the true members, so selected field stars are
+the blue dots without a ring. **Kõik tähed** (shared with tab 1) hides the
+unselected stars; without a selection it is on and disabled.
 
 Toggles:
 
