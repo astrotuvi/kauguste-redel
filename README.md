@@ -25,9 +25,10 @@ queries the data services directly from the browser.
 
 The page opens on the introduction and a table of contents. The table of
 contents has two groups: **Uuri lähemalt**, a row of cards that lead to background
-pages (parallax, standard candles, Cepheids, type Ia supernovae and the Hubble
-law), and **Harjutus andmetega**, the four parts of the exercise. So far the parallax and standard candles pages exist; the other cards are marked
-*tulekul* (coming). Clicking a part
+pages (parallax, open clusters, standard candles, Cepheids, type Ia supernovae
+and the Hubble law), and **Harjutus andmetega**, the four parts of the exercise.
+So far the parallax, open clusters, standard candles and Cepheids pages exist;
+the other cards are marked *tulekul* (coming). Clicking a part
 or one of its tabs there shows that part on its own, filling the window, so
 the page does not scroll. Above each part's title are links to the table of
 contents and to the other parts, and below the title are its tabs. Buttons at
@@ -279,6 +280,49 @@ naked-eye, large-telescope and *Hubble* limits (m = 6, 24 and 29).
    axis below shows the ranges of parallax, Cepheids and supernovae, and links
    to the parts of the exercise.
 
+### Cepheids page
+
+`tsefeiidid.html` is linked from the table of contents, from the Cepheid rung
+of the ladder picture, from the word "tsefeiidide" in the introduction, from
+the W_H note in part 2's **Sissejuhatus**, from the hints of the
+period-luminosity plot of part 2 and of the galaxy table of part 3, and from
+the standard candles and open clusters pages. It has four tabs, and the
+address keeps the tab (`#pulsatsioon`, `#periood`, `#leavitt`, `#tolm`). The
+first, second and fourth share one simulated Cepheid, set by a log period
+slider (1–100 days) or by buttons for δ Cep, η Aql, S Nor, ℓ Car and SV Vul.
+Its mean V and I magnitudes follow Benedict et al. (2007), and its H
+magnitude is set so that W_H follows the relation used in part 2.
+
+1. **Pulsatsioon**: a cross-section of the star that swells and shrinks, with
+   the helium layer that traps heat when it is opaque, heat arrows and gas
+   arrows; the star's loop in the instability strip of an HR diagram; and its
+   magnitude, radius, temperature and radial velocity against phase. A phase
+   slider, a play button with three speeds, and four **Klapp** steps that
+   explain the κ mechanism.
+2. **Perioodi mõõtmine**: simulated observations of the star (ground-based,
+   *Gaia*-like or *Hubble*-like sampling, with the number of observations,
+   the time span and the error adjustable), the same points folded with a
+   trial period, and a periodogram: the fraction of the variance explained by
+   a one-harmonic fit at each trial period. **Leia periood** finds the highest
+   peak and gives the period with its error and whether it is an alias.
+3. **Leavitt'i seadus**: three steps.
+   - **Avastus**: Leavitt's 25 Small Magellanic Cloud variables (Leavitt &
+     Pickering 1912, Harvard College Observatory Circular 173), blinking with
+     their periods on a made-up picture of the cloud. Clicking a star adds its
+     maximum and minimum to the magnitude–log P plot, with its light curve.
+   - **Kalibreerimine**: the 12 field Cepheids of part 2 with their *Gaia*
+     parallaxes give a Milky Way W_H relation; a μ slider shifts simulated SMC
+     Cepheids onto it, and **Sobita** fits μ.
+   - **Kauge galaktika**: the same for a simulated galaxy at a hidden
+     distance, with **Kontrolli**, **Sobita** and **Uus galaktika**.
+4. **Tolm ja Wesenheit**: two views. **Üks täht** shows the star without and
+   behind dust (A_V 0–5), its V, I, H and W_H magnitudes, and H against V − I
+   with the reddening arrow and lines of equal W_H; a table shows that W_H
+   does not change. **Teistsugune tolm** uses dust with less extinction in
+   the red and infrared, and W_H then drifts a little. **Galaktika** shows 50
+   Cepheids behind patchy dust in a chosen band, with the shift and scatter
+   in each band and the distance error the shift would cause.
+
 ## Method
 
 - Only stars with RUWE < 1.4 and with a measured parallax and proper motion
@@ -378,8 +422,8 @@ service uses only that one. The choice is remembered in the browser.
 
 Everything is in `index.html`: the HTML, the CSS and the JavaScript. The
 parallax demonstration (`parallaks.html`), the open clusters page
-(`hajusparved.html`) and the standard candles page (`standardkuunlad.html`)
-are separate self-contained pages with no external dependencies. The only
+(`hajusparved.html`), the standard candles page (`standardkuunlad.html`) and
+the Cepheids page (`tsefeiidid.html`) are separate self-contained pages with no external dependencies. The only
 external dependency is [Plotly.js](https://plotly.com/javascript/), loaded
 from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 

@@ -49,16 +49,20 @@ pulsation, the light curve and the magnitudes in all bands agree:
   M_H − 0.386 (M_V − M_I) gives exactly the relation used in the app,
   M_H^W = −5.914 − 3.29 (log P − 1) (Cruz Reyes & Anderson 2023). The page
   and the exercise then agree.
-- **Radius** from the period-radius relation, log (R/R☉) ≈ 1.1 + 0.7 log P,
-  so about 60 R☉ at 10 days. It changes by about ±10 % over a cycle.
-- **Temperature** about 6000 K at 10 days, cooler for longer periods, and
-  changing by about ±600 K over a cycle.
-- **Light curve** from a Fourier template: a fast rise and a slow decline,
-  with an amplitude of about 0.8 mag in V. The amplitudes in I and H are
-  about 0.6 and 0.35 of that in V. Maximum light comes near minimum radius,
-  when the star is hottest.
-- **Radial velocity** from the change of radius, with the sign astronomers
-  use (positive away from us).
+- **Temperature** from the centre of the instability strip at the star's
+  luminosity, log T = 3.757 − 0.05 (log L − 3.5), so about 5700 K at
+  10 days and cooler for longer periods. It changes by about ±10 % over a
+  cycle.
+- **Radius** from L = 4π R² σ T⁴, about 60 R☉ at 10 days, close to the
+  period-radius relation log (R/R☉) ≈ 1.1 + 0.7 log P. It changes by ±8 %
+  over a cycle.
+- **Light curve**: a slow decline over 80 % of the period and a fast rise,
+  with an amplitude of 0.6 + 0.25 log P mag in V (0.85 mag at 10 days).
+  Maximum light comes when the star is hottest, shortly after minimum
+  radius.
+- **Radial velocity**: the outward velocity of the surface mirrors the light
+  curve, and the radius is its integral. The radial velocity has the sign
+  astronomers use (positive away from us), about ±22 km/s at 10 days.
 
 Controls at the top of the panel, shared by tabs 1, 2 and 4:
 
@@ -71,7 +75,8 @@ Controls at the top of the panel, shared by tabs 1, 2 and 4:
 
 ## Tab 1: Pulsatsioon (pulsation)
 
-Why a Cepheid pulsates. The scene has two panels side by side.
+Why a Cepheid pulsates. The scene has the star and the HR diagram side by
+side, and the curves below them.
 
 - **Täht** (the star): a cross-section that swells and shrinks with the
   phase, coloured by its temperature. Inside it, a thin layer is marked: the
@@ -102,7 +107,7 @@ The analogy in the text is a lid on a pot that lifts when the pressure
 builds and falls back when the steam has escaped. This is the κ mechanism,
 named after the opacity κ.
 
-**HR-diagramm**, a small inset: the main sequence, the instability strip as a
+**HR-diagramm**: the main sequence, the instability strip as a
 narrow band, and the Cepheid as a point that moves along a small loop during
 the cycle. The **Periood** slider moves the star up the strip: longer periods
 are higher, larger and more luminous. Stars only pulsate inside the strip.
@@ -141,29 +146,37 @@ has three plots stacked.
   wrong period the points scatter; with the right one they form a clean
   light curve. Each point keeps its colour from the time axis above, so the
   user can follow the cycles.
-- **Periodogramm**: a measure of how well the folded curve fits, for every
-  trial period (phase dispersion minimisation, which is easy to explain: the
-  scatter of neighbouring points in phase). The true period is the deepest
-  minimum. A marker shows the current P_test, and dragging it moves the
-  slider. Smaller minima at simple fractions and at 1-day aliases come from
-  the nightly sampling, and the hint says so.
+- **Periodogramm**: how well a sinusoid fits the folded points, as the
+  fraction of the variance it explains, for every trial period from 0.8 to
+  150 days. The true period is the highest peak. One harmonic is used,
+  because with two, twice the period fits as well as the period itself; the
+  curve drawn in the folded plot has two harmonics when there are at least
+  12 points. A marker shows the current P_test, and dragging on the plot
+  moves it. Smaller peaks at 1-day aliases come from the nightly sampling,
+  and the text says so.
 
 Controls:
 
-- **Proovi periood** P_test, a fine slider with arrow buttons;
+- **Prooviperiood** P_test, a fine slider with arrow buttons;
 - **Leia periood**, which jumps to the deepest minimum;
-- **Vaatlusi** (number of nights, 10–200) and **Vaatlusperiood** (time span,
-  10–1000 days);
-- **Mõõtmisviga** (0.01–0.2 mag);
+- **Vaatlused**, a segmented button that sets the sampling and the sliders
+  below: **Maapealne** (one observation on each of 60 random nights in 120
+  days, 0.03 mag), **Gaia** (40 at random times in 1000 days, 0.01 mag) and
+  **Hubble** (12 in 60 days, 0.05 mag);
+- **Vaatluste arv** (5–200) and **Vaatlusperiood** (time span, 10–1000 days,
+  a log slider);
+- **Mõõtmisviga** (0.005–0.2 mag);
 - **Uued vaatlused**, which draws new times and errors.
 
-Readouts: the period found, its error, and the number of cycles in the time
-span. The error of the period is about P² δφ / T, where T is the time span
-and δφ the phase error, so a longer span gives a more precise period. A
-small table compares two real cases: *Gaia* observed each Cepheid about 40
-times over almost three years (the periods of part 2), and *Hubble*
-observed the galaxy Cepheids of part 3 about a dozen times over a couple of
-months (to check against Riess et al. 2016 when building).
+Readouts: the true period, the number of cycles in the time span, how well
+P_test fits, and after **Leia periood** the period found with its error and
+whether it is the true period or an alias. The error of the period is
+P² σ_f with σ_f = √(6/N) σ / (π a T), where T is the time span and a the
+semi-amplitude, so a longer span gives a more precise period. The
+explanation compares the two real cases: *Gaia* observed each Cepheid a few
+dozen times over almost three years (the periods of part 2), and *Hubble*
+observed the galaxy Cepheids of part 3 about a dozen times over a few
+months.
 
 Mida joonis näitab:
 
@@ -179,21 +192,23 @@ Mida joonis näitab:
 ## Tab 3: Leavitt'i seadus (Leavitt's law)
 
 The discovery of the period-luminosity relation and how it gives distances.
-The scene has a sky panel on the left and a plot on the right, and three
-steps, set by step buttons as on the standard candles calibration tab:
-**1. Avastus**, **2. Kalibreerimine** and **3. Kauge galaktika**.
+Three steps, set by a segmented button: **1. Avastus**,
+**2. Kalibreerimine** and **3. Kauge galaktika**. Step 1 has a sky panel on
+the left and a plot on the right; steps 2 and 3 share one wide plot.
 
 ### Step 1: Avastus (the discovery)
 
-- **Taevas**: a field in the Small Magellanic Cloud with about 25 Cepheids
-  that blink with their periods (sped up), among non-variable stars. The
-  periods and magnitudes are those of Leavitt's 1912 table (Harvard College
-  Observatory Circular 173, 25 stars, P = 1.25–127 days), taken from the
-  circular when building.
-- **Periood-tähesuurus**: the apparent magnitude m against log P. Clicking a
-  star in the sky shows its light curve in a small box and lights up its
-  point. **Kõik korraga** puts all points on the plot. The brighter stars
-  have the longer periods.
+- **Taevas**: a made-up picture of the Small Magellanic Cloud with the 25
+  Cepheids of Leavitt's 1912 table (Harvard College Observatory Circular
+  173, P = 1.25–127 days), which blink with their periods, two days a
+  second, among faint non-variable stars. Their positions are made up.
+- **Periood ja tähesuurus**: the photographic magnitude at maximum and at
+  minimum against log P, joined by a line, as in Leavitt's figure 2.
+  Clicking a star in the sky adds it to the plot and shows its light curve
+  in a small box. **Kõik korraga** puts all 25 on the plot, and **Sirged**
+  draws a straight line through the maxima and one through the minima. The
+  readout gives the slope as Leavitt did: log P grows by 0.49 for each
+  magnitude (Leavitt: 0.48).
 
 The text is about Henrietta Swan Leavitt, who measured the variable stars on
 photographic plates at Harvard College Observatory and found 1777 variables
@@ -207,10 +222,13 @@ external files; a link to the Wikipedia article is.
 
 The relation of step 1 gives only relative luminosities. To make it a ruler,
 the absolute magnitude of a few Cepheids with known distances is needed. The
-plot gets a second y-axis, M, and the Milky Way cluster Cepheids of part 2,
-placed by their published cluster distances. Sliding the SMC points down by
-a **μ** slider until they lie on the cluster Cepheids gives the distance
-modulus of the SMC (about 19, 60 kpc). The readout shows μ and the distance.
+plot shows M_H^W against log P for the 12 field Cepheids of part 2, from their
+W_H and their *Gaia* DR3 parallaxes with the zero-point correction, with a
+weighted straight line through them. About 40 simulated SMC Cepheids in W_H
+are drawn at W_H − μ, and a right-hand axis shows W_H = M + μ. Sliding the
+**μ** slider until they lie on the line gives the distance modulus of the
+SMC. **Sobita** fits it (about 19.0, 64 kpc) and compares it with 18.98 from
+eclipsing binaries (Graczyk et al. 2020).
 
 The text gives the history briefly: Hertzsprung made the first calibration in
 1913. Hubble found Cepheids in the Andromeda galaxy in 1923–24, which showed
@@ -221,16 +239,17 @@ cluster distances.
 
 ### Step 3: Kauge galaktika (a distant galaxy)
 
-The calibrated relation, as a line in M, and the Cepheids of a simulated
-galaxy at a hidden distance, as points in m. The user slides the line with
-the **μ** slider until it runs through the points, then presses
-**Kontrolli**. **Sobita** does it with a least-squares fit. This is exactly
-what part 3 does for its 29 galaxies, with a link to `index.html#galaxies`.
-**Uus galaktika** draws a new distance (5–40 Mpc) and a new number of
-Cepheids.
+The same plot with the Milky Way line and the Cepheids of a simulated
+galaxy at a hidden distance (μ = 29.5–33, 8–40 Mpc; 25–60 Cepheids with
+P = 10–80 days and a scatter of 0.3 mag). The user slides them with the **μ**
+slider until they lie on the line, then presses **Kontrolli**, which accepts
+an answer within 2σ (at least 0.1 mag) of the fitted μ. **Sobita** fits μ.
+This is what part 3 does for its 29 galaxies, with a link to
+`index.html#galaxies`. **Uus galaktika** draws a new galaxy.
 
-Readouts in the panel: μ, the distance, and, in step 3, the error of μ from
-the scatter of the points, σ/√N.
+Readouts in the panel: the Milky Way relation, μ and the distance, and after
+**Sobita** the fitted μ with its error, from the scatter of the points, σ/√N,
+and the error of the line's zero point.
 
 Mida joonis näitab:
 
@@ -254,11 +273,12 @@ star) and **Galaktika** (a galaxy), switched by a segmented button above it.
 - **Vaade** (the view): the Cepheid seen through a dust cloud. As the
   **Tolm** slider, A_V from 0 to 5 mag, grows, the cloud thickens and the
   star gets fainter and redder.
-- **Ribad** (bands): bars of the magnitude in V, I and H, without dust
-  (outline) and with dust (filled). The dust dims V the most and H the
-  least. The extinction ratios are those of a Fitzpatrick (1999) law with
-  R_V = 3.3, about A_I ≈ 0.55 A_V and A_H ≈ 0.18 A_V, chosen to satisfy
-  A_H = 0.386 (A_V − A_I) exactly.
+- **Tähesuurused ribades** (bands): the magnitude in V, I, H and W_H,
+  without dust (ring) and with dust (dot), with an arrow and the
+  difference. The dust dims V the most and H the least. The extinction
+  ratios are A_I = 0.55 A_V and A_H = 0.174 A_V, close to a Fitzpatrick
+  (1999) law with R_V = 3.3 and chosen to satisfy A_H = 0.386 (A_V − A_I)
+  exactly.
 - **Värvus-tähesuurus**: H against V − I. The star moves down and to the
   right along the reddening arrow as dust grows. Dashed lines of constant
   W_H run parallel to the arrow, and the star never leaves its line. W_H is
@@ -269,17 +289,21 @@ Readouts in the panel, a small table: V, I, H, V − I and
 W_H = H − 0.386 (V − I), without dust and with it, and the difference. The
 difference is 0.000 mag in the W_H row and grows in all the others.
 
-**Vale tolmuseadus** (a wrong dust law), a toggle: the dust follows
-R_V = 2.5 instead. W_H then drifts slightly with the dust. The coefficient
-0.386 assumes a known law, and the readout shows by how much.
+**Teistsugune tolm** (different dust), a toggle: the dust has less
+extinction in the red and infrared, A_I = 0.50 A_V and A_H = 0.15 A_V. W_H
+then drifts by −0.04 mag for each magnitude of A_V, still much less than in
+the single bands. The coefficient 0.386 assumes a known law.
 
 ### View 2: Galaktika
 
-About 50 Cepheids of a simulated galaxy behind patchy dust, each with its
-own random A_V (mean and spread set by the slider). The plot is the
-period-luminosity relation in one band, chosen with a segmented button:
-**V**, **I**, **H** and **W_H**. A histogram on the side shows the scatter
-around the line.
+50 Cepheids of a simulated galaxy at 10 Mpc behind patchy dust, each with
+its own A_V, 0.3–1.7 times the mean set by the slider. A Cepheid that is
+hotter than average is brighter and bluer: a colour offset dc (σ = 0.08 mag)
+moves V, I and H by 2.5, 1.0 and 1.5 dc… more exactly by 2.5 dc, 1.5 dc and
+1.0 dc, and a common offset of 0.06 mag is added to all bands. The plot is
+the period-luminosity relation in one band, chosen with a segmented button:
+**V**, **I**, **H** and **W_H**, with the Cepheids without dust in grey and
+the relation without dust as a dashed line.
 
 - In V the scatter is large, and the whole relation is shifted down. A
   distance from it would come out too large.
@@ -288,8 +312,10 @@ around the line.
   only that of the instability strip. W_H also reduces part of that, because
   a Cepheid that is hotter than average is also bluer.
 
-The readouts give the scatter σ and the shift of the mean in each band, and
-the distance error that the shift would cause, in %.
+A table gives the shift of the mean and the scatter σ in each band, and
+the distance error that the shift would cause, in %. With A_V = 1.5 the
+shifts are about +1.5, +0.8, +0.26 and 0.0 mag, so V would put the galaxy
+almost twice as far.
 
 Mida joonis näitab:
 
@@ -318,11 +344,10 @@ Mida joonis näitab:
      parallax rung is;
    - the word "tsefeiidide" in the main introduction points to the new page
      instead of Wikipedia;
-   - the hint about W_H at the end of part 2's **Sissejuhatus** ends with
-     *Loe lähemalt →* to `tsefeiidid.html#tolm`;
-   - the hint of the **Perioodi-heleduse seos** plot of part 2 links to
-     `tsefeiidid.html#leavitt`, and the note under the galaxy table of part 3
-     (about the distance modulus μ) links to `tsefeiidid.html#leavitt` too.
+   - the hint about W_H at the end of part 2's **Sissejuhatus**, the hint of
+     the **Perioodi-heleduse seos** plot of part 2 and the note under the
+     galaxy table of part 3 end with *Loe lähemalt →* to
+     `tsefeiidid.html#tolm`, `#leavitt` and `#leavitt`.
 2. `parallaks.html`, `hajusparved.html` and `standardkuunlad.html`: the top
    rows get the Tsefeiidid link.
 3. `hajusparved.html`: the note "Tolmust ja Wesenheiti tähesuurusest räägib

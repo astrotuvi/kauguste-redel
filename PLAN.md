@@ -3,9 +3,9 @@
 The table of contents of `index.html` has a row of **Uuri lähemalt** cards
 that lead to background pages. Each page gives the wider picture behind a
 rung of the distance ladder or behind the result of the exercise. So far the
-parallax page (`parallaks.html`), the open clusters page (`hajusparved.html`)
-and the standard candles page (`standardkuunlad.html`) exist; the other cards
-are marked *tulekul* (coming).
+parallax page (`parallaks.html`), the open clusters page (`hajusparved.html`),
+the standard candles page (`standardkuunlad.html`) and the Cepheids page
+(`tsefeiidid.html`) exist; the other cards are marked *tulekul* (coming).
 
 The cards, in reading order:
 
@@ -62,7 +62,7 @@ Related parts: 2, 3 and 4.
 The design of the page, with its tabs and interactive plots, is in
 `DESIGN-standardkuunlad.md`.
 
-## 3. Tsefeiidid (new)
+## 3. Tsefeiidid (exists, `tsefeiidid.html`)
 
 - Why Cepheids pulsate (the κ mechanism), light curves, and how the period is
   measured.
@@ -74,6 +74,8 @@ Interactive idea: a slider that adds dust, making the star fainter and redder
 while W_H stays the same.
 
 Related parts: 2 and 3.
+
+The design of the page, with its four tabs, is in `DESIGN-tsefeiidid.md`.
 
 ## 4. Ia supernoovad (new)
 
@@ -106,8 +108,8 @@ the parts could cover these better than a separate page.
 
 ## Suggested order of work
 
-1. **Standardküünlad.** The formulas in parts 2–4 depend on it.
-2. **Tsefeiidid**, with dust and W_H. Parts 2 and 3.
+1. **Standardküünlad.** Done. The formulas in parts 2–4 depend on it.
+2. **Tsefeiidid**, with dust and W_H. Done. Parts 2 and 3.
 3. **Hubble'i seadus.** Parts 3 and 4.
 4. **Ia supernoovad.** Part 4.
 5. **Hajusparved.** Done. Part 1.

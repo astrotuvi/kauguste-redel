@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tsefeiidid</title>
+<meta name="description" content="Interaktiivsed joonised tsefeiididest: miks nad pulseerivad, kuidas mõõta perioodi, Leavitt'i perioodi-heleduse seos ning tolm ja Wesenheiti tähesuurus.">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4;
+  --surface: #fcfcfb;
+  --border: #e3e2dd;
+  --text-1: #0b0b0b;
+  --text-2: #52514e;
+  --text-3: #75746e;
+  --grid: #ecebe7;
+  --axis: #c4c3bd;
+  --sel: #2a78d6;
+  --accent: #eb6834;
+  --cep: #d32f2f;
+  --btn: #2a78d6;
+  --btn-text: #ffffff;
+  --chip: #eeede9;
+  --good: #1f8a4c;
+  --bad: #c62828;
+  --night: #070912;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1a1a19;
+    --border: #2f2f2c;
+    --text-1: #ffffff;
+    --text-2: #c3c2b7;
+    --text-3: #959489;
+    --grid: #282826;
+    --axis: #4a4a46;
+    --sel: #3987e5;
+    --accent: #d95926;
+    --cep: #f05454;
+    --btn: #3987e5;
+    --btn-text: #ffffff;
+    --chip: #262624;
+    --good: #4cc27a;
+    --bad: #f06a6a;
+    --night: #05060c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211;
+  --surface: #1a1a19;
+  --border: #2f2f2c;
+  --text-1: #ffffff;
+  --text-2: #c3c2b7;
+  --text-3: #959489;
+  --grid: #282826;
+  --axis: #4a4a46;
+  --sel: #3987e5;
+  --accent: #d95926;
+  --cep: #f05454;
+  --btn: #3987e5;
+  --btn-text: #ffffff;
+  --chip: #262624;
+  --good: #4cc27a;
+  --bad: #f06a6a;
+  --night: #05060c;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.back a { color: var(--text-2); text-decoration: none; }
+.back a:hover { color: var(--sel); }
+.back .sep { margin: 0 6px; }
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; letter-spacing: -0.01em; }
+.byline { color: var(--text-2); font-size: 0.9rem; margin: -4px 0 16px; }
+.intro a, .explain a, .links a, .hint a, .readout a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+.intro a:hover, .explain a:hover, .links a:hover, .hint a:hover, .readout a:hover { color: var(--sel); text-decoration-style: solid; }
+.intro { margin: 0 0 24px; max-width: 75ch; }
+h2 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+.hint { color: var(--text-3); font-size: 0.82rem; margin: 2px 0 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; align-items: start; }
+.tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; border-bottom: 1px solid var(--border); margin: -4px 0 10px; }
+.tabs button {
+  border: none; border-radius: 0; background: none; padding: 8px 14px; margin-bottom: -1px;
+  color: var(--text-2); font-weight: 550; border-bottom: 2px solid transparent;
+}
+.tabs button:hover { color: var(--text-1); }
+.tabs button[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--btn); }
+
+svg.scene { display: block; width: 100%; height: auto; margin-top: 8px; user-select: none; -webkit-user-select: none; font-family: inherit; }
+#pgram { touch-action: none; cursor: ew-resize; }
+#smc .hit { cursor: pointer; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.duo > div { min-width: 0; }
+.sub { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 10px 0 0; }
+.badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0 6px; border-radius: 999px; background: var(--chip); color: var(--text-3); }
+
+/* Controls */
+.controls { display: flex; flex-direction: column; gap: 12px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.controls .group:not([hidden]) ~ .group:not([hidden]) { border-top: 1px solid var(--border); padding-top: 12px; }
+.group h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 0; }
+.slider { display: grid; grid-template-columns: 1fr 5.5em; align-items: center; gap: 2px 10px; font-size: 0.85rem; color: var(--text-2); }
+.slider label { grid-column: 1 / -1; }
+.slider output { font-variant-numeric: tabular-nums; text-align: right; color: var(--text-1); }
+input[type="range"] { accent-color: var(--btn); width: 100%; min-width: 0; }
+.toggle { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; color: var(--text-1); font-weight: 550; }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.toggles.col { flex-direction: column; }
+.toggle input { accent-color: var(--btn); width: 16px; height: 16px; margin: 0; }
+button {
+  font: inherit; cursor: pointer; border-radius: 7px; padding: 7px 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text-1);
+}
+button:disabled { cursor: default; opacity: 0.5; }
+button.primary { background: var(--btn); color: var(--btn-text); border-color: transparent; font-weight: 600; }
+button.small { padding: 4px 10px; font-size: 0.85rem; }
+button[aria-pressed="true"]:not(.chip) { background: var(--chip); border-color: var(--btn); }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { flex: 1; border: none; border-radius: 0; padding: 6px 4px; font-size: 0.86rem; white-space: nowrap; color: var(--text-2); background: var(--surface); }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-checked="true"] { background: var(--btn); color: var(--btn-text); font-weight: 600; }
+.views-btns { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 8px; font-size: 0.82rem; color: var(--text-3); }
+.views-btns button { font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.views-btns button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); }
+.numin { font: inherit; font-size: 0.88rem; padding: 5px 8px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text-1); width: 7em; font-variant-numeric: tabular-nums; }
+.inrow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.85rem; color: var(--text-2); }
+.readout { margin: 0; font-size: 0.85rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.readout b { color: var(--text-1); font-weight: 600; }
+.readout:empty { display: none; }
+.formula { font-size: 0.82rem; color: var(--text-2); background: var(--chip); border-radius: 6px; padding: 6px 8px; margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.formula:empty { display: none; }
+.formula b { color: var(--text-1); }
+.ok { color: var(--good); }
+.off { color: var(--bad); }
+table.res { border-collapse: collapse; font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--text-2); }
+table.res th { font-weight: 600; text-align: right; padding: 2px 0 2px 12px; color: var(--text-3); font-size: 0.78rem; }
+table.res td { padding: 2px 0 2px 12px; text-align: right; color: var(--text-1); }
+table.res td:first-child, table.res th:first-child { text-align: left; padding-left: 0; color: var(--text-2); }
+table.res tr.hl td { font-weight: 650; }
+
+/* Scenes and plots */
+.night { fill: var(--night); }
+.nl { fill: #e8ecf5; font-size: 12px; font-weight: 600; paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.nl2 { fill: #9aa3b5; font-size: 11px; paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.tlbl { fill: var(--text-2); font-size: 11px; }
+.lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl2 { fill: var(--text-2); font-size: 12px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.lbl3 { fill: var(--text-3); font-size: 11px; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.clbl { fill: var(--cep); font-size: 12px; font-weight: 650; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.axisline { stroke: var(--axis); stroke-width: 1; fill: none; }
+.guide { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.curve { stroke: var(--cep); stroke-width: 2; fill: none; }
+.curve.thin { stroke-width: 1.5; }
+.curve.ref { stroke: var(--text-3); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.curve.fitc { stroke: var(--text-1); stroke-width: 1.5; }
+.cpt { fill: var(--cep); stroke: var(--surface); stroke-width: 1.5; }
+.cpt.hollow { fill: var(--surface); stroke: var(--cep); stroke-width: 2; }
+.fpt { fill: var(--text-3); opacity: 0.45; }
+.mwpt { fill: var(--sel); stroke: var(--surface); stroke-width: 1.2; }
+.ebar { stroke: var(--sel); stroke-width: 1.2; }
+.galpt { fill: var(--accent); opacity: 0.85; }
+.fitline { stroke: var(--sel); stroke-width: 2; }
+.rbar { stroke: var(--accent); stroke-width: 1.5; }
+.maxpt { fill: var(--accent); }
+.minpt { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+.rbar.sel { stroke: var(--text-1); stroke-width: 2.5; }
+.lmax { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.inset { fill: var(--surface); stroke: var(--border); }
+.msline { stroke: var(--text-3); stroke-width: 6; stroke-linecap: round; opacity: 0.35; fill: none; }
+.strip { fill: color-mix(in srgb, var(--cep) 16%, transparent); stroke: color-mix(in srgb, var(--cep) 45%, transparent); stroke-width: 1; }
+.pmark { fill: var(--text-3); }
+.sun { fill: #f2b01e; stroke: var(--surface); stroke-width: 1.5; }
+.arrow { stroke: var(--text-1); stroke-width: 1.5; fill: none; }
+.arrowhead { fill: var(--text-1); }
+.redden { stroke: var(--bad); stroke-width: 2; fill: none; }
+.reddenhead { fill: var(--bad); }
+.wline { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 5 4; opacity: 0.7; }
+.wline.cur { stroke: var(--sel); stroke-width: 2; opacity: 1; }
+.wmark { fill: var(--sel); }
+.ptest { stroke: var(--accent); stroke-width: 2; }
+.pgline { stroke: var(--sel); stroke-width: 1.3; fill: none; }
+.pgfill { fill: color-mix(in srgb, var(--sel) 16%, transparent); }
+.heat { stroke: #d9481c; stroke-width: 2.2; fill: none; }
+.heathead { fill: #d9481c; }
+.gas { stroke: #9fc4ff; stroke-width: 2.5; fill: none; }
+.gashead { fill: #9fc4ff; }
+.core { fill: #ffffff; }
+.skystar { fill: #c9d0e6; }
+.skyvar { fill: #fff2c8; }
+.skyshown { fill: none; stroke: #ffa060; stroke-width: 1.2; }
+.skypick { fill: none; stroke: #ffe066; stroke-width: 1.8; }
+.hit { fill: transparent; }
+.band-lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+.legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
+.legend .lt { font-style: normal; }
+.legend i.ring { width: 8px; height: 8px; border: 1.5px solid; border-radius: 50%; }
+
+.explain { margin-top: 14px; }
+.explain ul { margin: 8px 0 0; padding-left: 20px; max-width: 80ch; }
+.explain li { margin: 4px 0; }
+.explain .src { color: var(--text-3); font-size: 0.82rem; margin: 10px 0 0; max-width: 80ch; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .duo { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span>Tsefeiidid</p>
+  <h1>Tsefeiidid</h1>
+  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
+  <p class="intro"><a class="en" href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidid</a> on noored massiivsed hiidtähed, mis paisuvad ja tõmbuvad kokku mõnest päevast mõne kuuni kestva perioodiga, ja koos sellega muutub nende heledus.
+    Mida pikem on periood, seda heledam on täht. Periood annab seega tähe tegeliku heleduse ja tsefeiidid on <a href="standardkuunlad.html#tsefeiidid-ja-supernoovad">standardküünlad</a>, mida on näha ka teistes galaktikates.
+    Nimi tuleb tähest δ Cephei, mille heleduse muutumise avastas John Goodricke 1784. aastal. Harjutuse <a href="index.html#osa-2">2. osas</a> kalibreerid tsefeiidide perioodi-heleduse seose
+    ja <a href="index.html#osa-3">3. osas</a> mõõdad sellega galaktikate kaugusi.</p>
+
+  <div class="layout">
+    <section class="card">
+      <div class="tabs" role="tablist" aria-label="Teema">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Pulsatsioon</button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Perioodi mõõtmine</button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Leavitt'i seadus</button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Tolm ja Wesenheit</button>
+      </div>
+
+      <div id="pane1" role="tabpanel" aria-labelledby="tab1">
+        <p class="hint">Vasakul on tsefeiidi läbilõige, paremal tema koht Hertzsprungi-Russelli diagrammil, all heledus, raadius, temperatuur ja kiirus faasi järgi.
+          Käivita pulsatsioon või vali paremal klapi samm.</p>
+        <div class="duo">
+          <div>
+            <p class="sub">Täht</p>
+            <svg id="star" class="scene" viewBox="0 0 370 370" role="img" aria-label="Pulseeriva tsefeiidi läbilõige heeliumi kihiga"></svg>
+          </div>
+          <div>
+            <p class="sub">HR-diagramm</p>
+            <svg id="hr" class="scene" viewBox="0 0 370 370" role="img" aria-label="Hertzsprungi-Russelli diagramm peajada ja ebastabiilsuse ribaga"></svg>
+          </div>
+        </div>
+        <p class="sub">Kõverad</p>
+        <svg id="curves" class="scene" viewBox="0 0 760 330" role="img" aria-label="Heledus, raadius, temperatuur ja radiaalkiirus faasi järgi"></svg>
+      </div>
+
+      <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
+        <p class="hint">Ülal on vaatlused aja järgi, keskel samad vaatlused prooviperioodiga kokku volditud, all periodogramm: kui hästi sobib iga prooviperiood.
+          Muuda paremal prooviperioodi või lohista periodogrammil, kuni punktid moodustavad puhta kõvera.</p>
+        <p class="sub">Vaatlused</p>
+        <svg id="obs" class="scene" viewBox="0 0 760 210" role="img" aria-label="Tsefeiidi vaatlused aja järgi"></svg>
+        <p class="sub">Kokkuvolditud</p>
+        <svg id="fold" class="scene" viewBox="0 0 760 210" role="img" aria-label="Vaatlused prooviperioodiga kokku volditud"></svg>
+        <p class="sub">Periodogramm</p>
+        <svg id="pgram" class="scene" viewBox="0 0 760 210" role="img" aria-label="Periodogramm; lohista, et valida prooviperiood"></svg>
+        <div class="legend">
+          <span><i class="dot" style="background: hsl(210 70% 50%)"></i>varasemad vaatlused</span>
+          <span><i class="dot" style="background: hsl(30 70% 50%)"></i>hilisemad vaatlused</span>
+          <span><i style="border-color: var(--text-1)"></i>sobitatud kõver</span>
+          <span><i style="border-color: var(--accent)"></i>prooviperiood</span>
+        </div>
+      </div>
+
+      <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
+        <p class="hint" id="leavHint"></p>
+        <div class="duo" id="step1scene">
+          <div>
+            <p class="sub">Väike Magalhãesi pilv</p>
+            <svg id="smc" class="scene" viewBox="0 0 370 370" role="img" aria-label="Väikese Magalhãesi pilve muutlikud tähed; klõpsa tähel"></svg>
+          </div>
+          <div>
+            <p class="sub">Periood ja tähesuurus</p>
+            <svg id="leav" class="scene" viewBox="0 0 370 370" role="img" aria-label="Leavitt'i tähtede tähesuurus perioodi logaritmi järgi"></svg>
+          </div>
+        </div>
+        <div class="legend" id="leavLegend">
+          <span><i class="dot" style="background: var(--accent)"></i>maksimum</span>
+          <span><i class="ring" style="border-color: var(--accent)"></i>miinimum</span>
+          <span><i style="border-color: var(--accent); border-top-style: dashed"></i>sirged</span>
+        </div>
+        <div id="calibScene" hidden>
+          <svg id="calib" class="scene" viewBox="0 0 760 450" role="img" aria-label="Perioodi-heleduse seos: Linnutee tsefeiidid ja teise galaktika tsefeiidid"></svg>
+          <div class="legend">
+            <span><i class="dot" style="background: var(--sel)"></i>Linnutee tsefeiidid Gaia parallaksidega</span>
+            <span><i style="border-color: var(--sel)"></i>nende seos</span>
+            <span><i class="dot" style="background: var(--accent)"></i><span id="lgGal">SMC tsefeiidid, nihutatud μ võrra</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
+        <div class="views-btns" role="group" aria-label="Vaade">
+          <span>Vaade:</span>
+          <button type="button" data-view4="star">Üks täht</button>
+          <button type="button" data-view4="gal">Galaktika</button>
+        </div>
+        <div id="view4star">
+          <p class="hint">Sama tsefeiid ilma tolmuta ja tolmupilve taga. Lisa paremal tolmu: täht muutub nõrgemaks ja punasemaks, kuid W<sub>H</sub> jääb samaks.</p>
+          <svg id="dustview" class="scene" viewBox="0 0 760 250" role="img" aria-label="Täht ilma tolmuta ja tolmuga ning tähesuurused eri ribades"></svg>
+          <p class="sub">Värvus ja tähesuurus</p>
+          <svg id="dustcmd" class="scene" viewBox="0 0 760 330" role="img" aria-label="H tähesuurus värvuse V − I järgi koos punanemise noolega"></svg>
+          <div class="legend">
+            <span><i class="ring" style="border-color: var(--cep)"></i>ilma tolmuta</span>
+            <span><i class="dot" style="background: var(--cep)"></i>tolmuga</span>
+            <span><i style="border-color: var(--bad)"></i>punanemine</span>
+            <span><i style="border-color: var(--sel)"></i><em class="lt">sama W<sub>H</sub></em></span>
+          </div>
+        </div>
+        <div id="view4gal" hidden>
+          <p class="hint">Galaktika 10 Mpc kaugusel, 50 tsefeiidi, igaüks erineva tolmukihi taga. Vali paremal riba ja vaata, kui palju tolm seost nihutab ja hajutab.</p>
+          <svg id="dustpl" class="scene" viewBox="0 0 760 420" role="img" aria-label="Tolmuga tsefeiidide perioodi-heleduse seos valitud ribas"></svg>
+          <div class="legend">
+            <span><i class="dot" style="background: var(--text-3)"></i>ilma tolmuta</span>
+            <span><i class="dot" style="background: var(--cep)"></i>tolmuga</span>
+            <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>seos ilma tolmuta</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card controls" aria-label="Seaded">
+      <div class="group" data-tabs="tab1 tab2 tab4" data-views="star">
+        <div class="slider"><label for="per">Periood</label><input type="range" id="per" min="0" max="1000" step="1"><output for="per" id="perOut"></output></div>
+        <div class="btnrow" id="presets" aria-label="Tuntud tsefeiidid"></div>
+        <p class="readout" id="cepRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab1">
+        <div class="slider"><label for="phase">Faas</label><input type="range" id="phase" min="0" max="1000" step="1" value="0"><output for="phase" id="phaseOut"></output></div>
+        <div class="btnrow"><button type="button" class="primary" id="play">▶ Käivita</button></div>
+        <div class="seg" role="radiogroup" aria-label="Kiirus">
+          <button type="button" role="radio" data-speed="8">Aeglane</button>
+          <button type="button" role="radio" data-speed="4">Tavaline</button>
+          <button type="button" role="radio" data-speed="2">Kiire</button>
+        </div>
+      </div>
+      <div class="group" data-tabs="tab1">
+        <h3>Klapp</h3>
+        <div class="btnrow" id="stages"></div>
+        <p class="formula" id="stageText"></p>
+        <p class="readout" id="pulsRead"></p>
+      </div>
+
+      <div class="group" data-tabs="tab2">
+        <h3 id="modeLbl">Vaatlused</h3>
+        <div class="seg" role="radiogroup" aria-labelledby="modeLbl">
+          <button type="button" role="radio" data-mode="ground">Maapealne</button>
+          <button type="button" role="radio" data-mode="gaia">Gaia</button>
+          <button type="button" role="radio" data-mode="hst">Hubble</button>
+        </div>
+        <div class="slider"><label for="nobs">Vaatluste arv</label><input type="range" id="nobs" min="5" max="200" step="1"><output for="nobs" id="nobsOut"></output></div>
+        <div class="slider"><label for="span">Vaatlusperiood</label><input type="range" id="span" min="0" max="1000" step="1"><output for="span" id="spanOut"></output></div>
+        <div class="slider"><label for="noise">Mõõtmisviga</label><input type="range" id="noise" min="0.005" max="0.2" step="0.005"><output for="noise" id="noiseOut"></output></div>
+        <div class="btnrow"><button type="button" id="newObs">Uued vaatlused</button></div>
+      </div>
+      <div class="group" data-tabs="tab2">
+        <div class="slider"><label for="ptest">Prooviperiood</label><input type="range" id="ptest" min="0" max="10000" step="1"><output for="ptest" id="ptestOut"></output></div>
+        <div class="btnrow">
+          <button type="button" class="small" id="pDown" aria-label="Lühem prooviperiood">◀</button>
+          <button type="button" class="small" id="pUp" aria-label="Pikem prooviperiood">▶</button>
+          <button type="button" class="primary" id="findP">Leia periood</button>
+        </div>
+        <p class="readout" id="perRead" aria-live="polite"></p>
+      </div>
+
+      <div class="group" data-tabs="tab3">
+        <h3 id="stepLbl">Samm</h3>
+        <div class="seg" role="radiogroup" aria-labelledby="stepLbl">
+          <button type="button" role="radio" data-step="avastus">1. Avastus</button>
+          <button type="button" role="radio" data-step="kalib">2. Kalibreerimine</button>
+          <button type="button" role="radio" data-step="galaktika">3. Kauge galaktika</button>
+        </div>
+      </div>
+      <div class="group" data-tabs="tab3" data-steps="avastus">
+        <div class="btnrow"><button type="button" class="primary" id="blink">▶ Käivita</button></div>
+        <div class="toggles col">
+          <label class="toggle"><input type="checkbox" id="allLeav"> Kõik korraga</label>
+          <label class="toggle"><input type="checkbox" id="leavLine" checked> Sirged</label>
+        </div>
+        <p class="readout" id="leavRead"></p>
+      </div>
+      <div class="group" data-tabs="tab3" data-steps="kalib">
+        <div class="slider"><label for="mu2">SMC kaugusmoodul μ</label><input type="range" id="mu2" min="15" max="22" step="0.01" value="17"><output for="mu2" id="mu2Out"></output></div>
+        <div class="btnrow"><button type="button" id="fit2">Sobita</button></div>
+        <p class="readout" id="calRead" aria-live="polite"></p>
+      </div>
+      <div class="group" data-tabs="tab3" data-steps="galaktika">
+        <div class="slider"><label for="mu3">Galaktika kaugusmoodul μ</label><input type="range" id="mu3" min="27" max="35" step="0.01" value="30"><output for="mu3" id="mu3Out"></output></div>
+        <div class="btnrow">
+          <button type="button" class="primary" id="check3">Kontrolli</button>
+          <button type="button" id="fit3">Sobita</button>
+          <button type="button" id="newGal">Uus galaktika</button>
+        </div>
+        <p class="readout" id="galRead" aria-live="polite"></p>
+      </div>
+
+      <div class="group" data-tabs="tab4">
+        <div class="slider"><label for="av" id="avLbl">Tolm: neeldumine A<sub>V</sub> (tähesuurustes)</label><input type="range" id="av" min="0" max="5" step="0.05" value="1.5"><output for="av" id="avOut"></output></div>
+        <label class="toggle"><input type="checkbox" id="alt"> Teistsugune tolm</label>
+      </div>
+      <div class="group" data-tabs="tab4" data-views="star">
+        <div id="dustRead"></div>
+        <p class="formula">W<sub>H</sub> = H − 0.386 (V − I)</p>
+      </div>
+      <div class="group" data-tabs="tab4" data-views="gal">
+        <h3 id="bandLbl">Riba</h3>
+        <div class="seg" role="radiogroup" aria-labelledby="bandLbl">
+          <button type="button" role="radio" data-band="V">V</button>
+          <button type="button" role="radio" data-band="I">I</button>
+          <button type="button" role="radio" data-band="H">H</button>
+          <button type="button" role="radio" data-band="W">W<sub>H</sub></button>
+        </div>
+        <div id="galDustRead"></div>
+        <div class="btnrow"><button type="button" id="newDust">Uued tsefeiidid</button></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card explain">
+    <h2>Mida joonis näitab</h2>
+    <ul data-tab="tab1">
+      <li>Tsefeiid on hiidtäht, mis on <a href="https://et.wikipedia.org/wiki/Peajada" target="_blank" rel="noopener">peajadalt</a> lahkunud. Mõne miljoni aasta jooksul ületab ta HR-diagrammil kitsa
+        ebastabiilsuse riba ja pulseerib, kuni on selle sees. Mida pikem on periood, seda kõrgemal ribas täht on: seda suurem ja heledam ta on.</li>
+      <li>Pulsatsiooni mootor on heeliumi kiht tähe välisosas. Kokkusurumisel kiht kuumeneb ja heelium ioniseerub teist korda (He⁺ → He⁺⁺). Ioniseeritud heelium on läbipaistmatum ja peab kinni seest tulevat soojust,
+        nii et rõhk kasvab ja surub kihid välja. Paisudes kiht jahtub, heelium rekombineerub, muutub läbipaistvaks ja soojus pääseb välja. Siis tõmbab gravitatsioon kihid tagasi ja kõik kordub.</li>
+      <li>See on nagu potikaas, mis tõuseb, kui aur koguneb, ja langeb, kui aur on välja pääsenud. Mehhanismi nimetatakse κ-mehhanismiks läbipaistmatuse κ järgi.</li>
+      <li>Ribast kuumematel tähtedel on heeliumi kiht pinnale liiga lähedal, et midagi liigutada, jahedamatel summutab pulsatsiooni konvektsioon. Seepärast pulseerivad ainult riba tähed.</li>
+      <li>Täht on kõige heledam siis, kui ta on kõige kuumem: peaaegu kõige väiksemana, mitte kõige suuremana. Heledus sõltub temperatuurist rohkem kui raadiusest, sest L = 4π R² σ T⁴.
+        Heledus tõuseb kiiresti ja langeb aeglaselt.</li>
+      <li>Kiirus on mõõdetud spektrijoonte <a href="https://et.wikipedia.org/wiki/Doppleri_efekt" target="_blank" rel="noopener">Doppleri nihkest</a>. Positiivne radiaalkiirus tähendab, et pind liigub meist eemale: täht tõmbub kokku.</li>
+      <li>Perioodi määrab tähe keskmine tihedus, ligikaudu aeg, mille jooksul helilaine läbib tähe. Suurem täht on hõredam ja pulseerib aeglasemalt, kuid on ka heledam.
+        Sellest tuleb <a href="#leavitt" data-go="tab3">perioodi-heleduse seos</a>.</li>
+      <li>Joonis on simulatsioon: keskmine heledus tuleb perioodi-heleduse seosest, temperatuur ebastabiilsuse riba keskelt ja raadius neist kahest. Raadius muutub ±8 %, temperatuur umbes ±10 %.</li>
+    </ul>
+    <ul data-tab="tab2" hidden>
+      <li>Tähte saab vaadelda ainult selgetel öödel, nii et ühtki tsüklit ei näe tervikuna. Kui vaatlused perioodiga kokku voltida (faas on aja ja perioodi jagatise murdosa),
+        liituvad paljud tsüklid üheks heleduskõveraks.</li>
+      <li>Ainult õige periood annab puhta kõvera. Arvuti proovib läbi tuhandeid perioode, sobitab igaühega sujuva kõvera ja leiab selle, millega punktid kõverast kõige vähem hajuvad: periodogrammi kõrgeima tipu.</li>
+      <li>Väiksemad tipud on varjud. Maapealsed vaatlused tehakse umbes ööpäevase sammuga, nii et periood, mille sagedus erineb ühe tsükli võrra ööpäevas, sobib peaaegu sama hästi. Kui vaatlusi on vähe,
+        võib vari olla isegi kõrgem kui õige tipp.</li>
+      <li>Mida pikem on vaatlusperiood T, seda rohkem tsükleid sinna mahub ja seda täpsem on periood: väike viga perioodis kasvab iga tsükliga. Perioodi viga on umbes P² δφ / T, kus δφ on faasi viga.
+        Seepärast on tsefeiidi periood teada palju täpsemini kui tema heledus.</li>
+      <li>Harjutuse <a href="index.html#cepCluster">2. osa</a> perioodid on Gaia DR3-st: Gaia mõõtis iga tähte mõnikümmend korda ligi kolme aasta jooksul. <a href="index.html#galaxies">3. osa</a> galaktikate tsefeiidide perioodid
+        on Hubble'i kosmoseteleskoobi vaatlustest, umbes tosin vaatlust mõne kuu jooksul.</li>
+    </ul>
+    <ul data-tab="tab3" hidden>
+      <li><a class="en" href="https://en.wikipedia.org/wiki/Henrietta_Swan_Leavitt" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Henrietta Swan Leavitt</a> (1868–1921) mõõtis Harvardi observatooriumis fotoplaatidelt muutlike tähtede heledusi.
+        1908. aastal avaldas ta 1777 muutliku tähe kataloogi Magalhãesi pilvedes ja märkis, et heledamatel tähtedel on pikemad perioodid. 1912. aastal näitas ta 25 tähe põhjal, et seos on täpne:
+        perioodi logaritm kasvab umbes 0.48 võrra iga tähesuuruse kohta.</li>
+      <li>Kõik Väikese Magalhãesi pilve tähed on meist umbes ühel kaugusel, nii et nende näivad tähesuurused erinevad samapalju kui nende tegelikud heledused. Leavitt'il polnud vaja kaugusi teada.</li>
+      <li>Seos annab aga ainult suhtelised heledused. Mõõdupuuks saab see siis, kui mõne tsefeiidi kaugus on teada muul viisil. Esimese kalibreerimise tegi Ejnar Hertzsprung 1913. aastal.
+        Edwin Hubble leidis 1923.–1924. aastal tsefeiide Andromeeda udukogus ja näitas sellega, et see on teine galaktika kaugel väljaspool Linnuteed.
+        1952. aastal leidis Walter Baade, et kalibreerimine oli segi ajanud kaks eri tüüpi pulseerivaid tähti, ja galaktikate kaugused kahekordistusid.</li>
+      <li>Tänapäeval kalibreeritakse seos Gaia parallaksidega: üksikute tsefeiidide parallaksidest nagu 2. sammus või nende parvede kaugustest nagu harjutuse <a href="index.html#cepPL">2. osas</a>.</li>
+      <li>Kauges galaktikas on tsefeiidid jälle kõik ühel kaugusel. Nende näivate tähesuuruste nihe kalibreeritud seosest on galaktika kaugusmoodul μ = m − M. Täpselt seda teeb harjutuse <a href="index.html#galaxies">3. osa</a>
+        29 galaktika jaoks.</li>
+      <li>Leavitt'i tähesuurused on fotograafilised, sinises valguses, ja neid mõjutab tolm. 2. ja 3. sammu joonised kasutavad Wesenheiti tähesuurust W<sub>H</sub>, nagu harjutuski
+        (vt <a href="#tolm" data-go="tab4">Tolm ja Wesenheit</a>).</li>
+      <li>Miks seos üldse on: suurem tsefeiid on heledam ja hõredam, seepärast pulseerib ta aeglasemalt (vt <a href="#pulsatsioon" data-go="tab1">Pulsatsioon</a>).</li>
+    </ul>
+    <ul data-tab="tab4" hidden>
+      <li>Tähtedevaheline tolm neelab ja hajutab sinist valgust rohkem kui punast, nii et tolmu taga olev täht paistab nõrgem ja punasem.</li>
+      <li>Kui palju nõrgem täht igas ribas paistab, on ette teada sellest, kui palju punasem ta paistab: värvuse ja tähesuuruse muutus on võrdelised. W<sub>H</sub> = H − 0.386 (V − I) lahutab heledusest
+        just nii palju, kui värvus ennustab. Mis jääb, ei sõltu tolmu hulgast.</li>
+      <li>Joonisel liigub täht tolmuga mööda punanemise noolt ja jääb kogu aeg samale sinisele joonele. W<sub>H</sub> on koht, kus see joon lõikab värvust V − I = 0: tähe H-heledus ilma tema värvuseta.</li>
+      <li>H-riba (1.6 μm, infrapuna) on valitud, sest tolm nõrgendab seda vähe ja parandus on väike. Värvus V − I tuleb nähtavast valgusest.</li>
+      <li>Kordaja 0.386 eeldab teatud tolmu. <b>Teistsugune tolm</b> neelab punast ja infrapunast valgust suhteliselt vähem. Siis ei jää W<sub>H</sub> enam täpselt samaks, kuid viga on palju väiksem kui V-, I- või H-ribas.</li>
+      <li>W<sub>H</sub> vähendab ka osa ebastabiilsuse riba laiusest tulevast hajuvusest: tsefeiid, mis on keskmisest kuumem ja heledam, on ka sinisem.</li>
+      <li>Harjutuse <a href="index.html#cepCluster">2. osa</a> Linnutee tsefeiidid on eri hulga tolmu taga, samuti <a href="index.html#galaxies">3. osa</a> tolmuste spiraalgalaktikate tsefeiidid.
+        W<sub>H</sub>-ga on seos kõigi jaoks sama, seepärast kasutab harjutus ainult W<sub>H</sub>-d.</li>
+      <li>Harjutuse 1. osa värvus-heledusdiagramm tolmu ei arvesta (vt <a href="hajusparved.html#varvus-heledus">hajusparvede lehte</a>).</li>
+    </ul>
+    <p class="src" data-tab="tab3" hidden>Andmed: 1. samm Leavitt &amp; Pickering (1912, Harvard College Observatory Circular 173), tähtede asukohad joonisel on välja mõeldud.
+      2. samm: harjutuse 2. osa väljatsefeiidid, W<sub>H</sub> Riess jt (2021), parallaksid Gaia DR3 nullpunkti parandusega. SMC kaugusmoodul 18.98 (62 kpc): Graczyk jt (2020).
+      SMC ja kauge galaktika tsefeiidid on simuleeritud seosest M<sub>H</sub><sup>W</sup> = −5.914 − 3.29 (log P − 1) (Cruz Reyes &amp; Anderson 2023).</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, typeof attrs[k] === 'number' ? +attrs[k].toFixed(2) : attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  // SVG text; "W_H" or "M_{bol}" is drawn with a subscript.
+  function text(parent, x, y, s, cls, anchor) {
+    const e = el('text', { x, y, class: cls || 'lbl', 'text-anchor': anchor || 'start' }, parent);
+    let sub = false;
+    for (const part of s.split(/(_\{[^}]*\}|_[A-Za-z])/)) {
+      if (!part) continue;
+      const m = part.match(/^_\{?([^}]*)\}?$/);
+      const t = el('tspan', m ? { dy: 4, 'font-size': '0.78em' } : sub ? { dy: -4 } : {}, e);
+      t.textContent = m ? m[1] : part;
+      sub = !!m;
+    }
+    return e;
+  }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const minus = s => s.replace(/-/g, '−');
+  const fmt = (v, d) => minus((Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d));
+  const fmtS = (v, d) => (v >= 0.5 * 10 ** -d ? '+' : '') + fmt(v, d);
+  function sig(v, n = 3) {
+    if (!isFinite(v) || v === 0) return '0';
+    let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    return minus(s);
+  }
+  function seeded(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+  function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+  const std = a => { const m = mean(a); return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / Math.max(1, a.length - 1)); };
+  function mkScale(lo, hi, p0, p1, log) {
+    const f = log ? v => (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)) : v => (v - lo) / (hi - lo);
+    return v => p0 + f(v) * (p1 - p0);
+  }
+  function svgPoint(svg, e) {
+    const p = svg.createSVGPoint();
+    p.x = e.clientX; p.y = e.clientY;
+    return p.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), f = x / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
+  const decs = step => Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+  function ticks(lo, hi, step) {
+    const a = [], d = decs(step);
+    for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + 1e-9; k++) a.push([k * step, fmt(k * step, d)]);
+    return a;
+  }
+  // Plot frame with grid lines and tick labels; ticks are [value, label] pairs.
+  function frame(g, B, X, Y, xt, yt, xtitle, ytitle, yOff = 40) {
+    for (const [v, L] of xt) { const x = X(v); el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'gridline' }, g); if (L !== null) text(g, x, B.y1 + 15, L, 'tlbl', 'middle'); }
+    for (const [v, L] of yt) { const y = Y(v); el('line', { x1: B.x0, y1: y, x2: B.x1, y2: y, class: 'gridline' }, g); if (L !== null) text(g, B.x0 - 6, y + 4, L, 'tlbl', 'end'); }
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: 'axisline' }, g);
+    if (xtitle) text(g, (B.x0 + B.x1) / 2, B.y1 + 32, xtitle, 'lbl2', 'middle');
+    if (ytitle) text(g, 0, 0, ytitle, 'lbl2', 'middle').setAttribute('transform', `translate(${B.x0 - yOff} ${(B.y0 + B.y1) / 2}) rotate(-90)`);
+  }
+  function clipRect(svg, id, B) {
+    const cp = el('clipPath', { id }, svg);
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0 }, cp);
+    return `url(#${id})`;
+  }
+  function arrow(g, x1, y1, x2, y2, cls = 'arrow', L = 8, W = 4) {
+    el('line', { x1, y1, x2, y2, class: cls }, g);
+    const a = Math.atan2(y2 - y1, x2 - x1), bx = x2 - L * Math.cos(a), by = y2 - L * Math.sin(a);
+    el('polygon', { points: `${x2},${y2} ${bx - W * Math.sin(a)},${by + W * Math.cos(a)} ${bx + W * Math.sin(a)},${by - W * Math.cos(a)}`, class: cls + 'head' }, g);
+  }
+  const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  // Weighted straight line y = a x + b, with the errors of a and b.
+  function linfit(x, y, w) {
+    let S = 0, Sx = 0, Sy = 0, Sxx = 0, Sxy = 0;
+    x.forEach((xi, i) => { const wi = w ? w[i] : 1; S += wi; Sx += wi * xi; Sy += wi * y[i]; Sxx += wi * xi * xi; Sxy += wi * xi * y[i]; });
+    const D = S * Sxx - Sx * Sx;
+    return { a: (S * Sxy - Sx * Sy) / D, b: (Sxx * Sy - Sx * Sxy) / D, ea: Math.sqrt(S / D), eb: Math.sqrt(Sxx / D) };
+  }
+  const fmtDist = pc => (pc < 1e3 ? sig(pc, 3) + ' pc' : pc < 1e6 ? sig(pc / 1e3, 3) + ' kpc' : sig(pc / 1e6, 3) + ' Mpc');
+  const muToPc = mu => 10 ** (mu / 5 + 1);
+  const round10 = v => String(Math.round(v / 10) * 10);
+
+  /* ---------- The simulated Cepheid ---------- */
+  // Mean absolute magnitudes in V (F555W), I (F814W) and H (F160W). V and I are from Benedict et al. (2007); H is set so that
+  // H − 0.386 (V − I) gives the W_H relation of Cruz Reyes & Anderson (2023), the one used in part 2.
+  const RW = 0.386;
+  const PLV = lp => -2.43 * (lp - 1) - 4.05;
+  const PLI = lp => -2.81 * (lp - 1) - 4.76;
+  const PLW = lp => -3.29 * (lp - 1) - 5.914;
+  const PLH = lp => PLW(lp) + RW * (PLV(lp) - PLI(lp));
+  const PLB = { V: PLV, I: PLI, H: PLH, W: PLW };
+  const TSUN = 5772, RSUN = 695700, DAY = 86400, BC = -0.1;
+  const EPS = 0.08;    // the radius changes by ±8 %
+  const MU2 = 11.5;    // the star of tabs 2 and 4 is 2 kpc away
+  // log T at the centre of the instability strip, which is about 0.07 dex wide.
+  const stripT = logL => 3.757 - 0.05 * (logL - 3.5);
+  function cepheid(P) {
+    const lp = Math.log10(P), Mv = PLV(lp), logL = (4.74 - Mv - BC) / 2.5, T = 10 ** stripT(logL);
+    return { P, lp, Mv, Mi: PLI(lp), Mh: PLH(lp), Mw: PLW(lp), logL, T, R: Math.sqrt(10 ** logL) * (TSUN / T) ** 2, A: clamp(0.6 + 0.25 * lp, 0.5, 1.1) };
+  }
+  // The light curve: a slow decline over 80 % of the period and a fast rise. −0.5 at maximum light (phase 0), +0.5 at minimum.
+  function dmT(phi) {
+    phi = ((phi % 1) + 1) % 1;
+    const u = phi < 0.8 ? 0.5 * phi / 0.8 : 0.5 + 0.5 * (phi - 0.8) / 0.2;
+    return -Math.cos(2 * Math.PI * u) / 2;
+  }
+  // The surface moves outwards fastest at maximum light, so its outward velocity mirrors the light curve; the radius is its integral.
+  const NT = 400, RTAB = new Float64Array(NT + 1);
+  let RNORM = 1;
+  {
+    let s = 0;
+    for (let i = 0; i <= NT; i++) { RTAB[i] = s; s += -dmT((i + 0.5) / NT) / NT; }
+    const m = RTAB.reduce((a, v) => a + v, 0) / (NT + 1);
+    for (let i = 0; i <= NT; i++) RTAB[i] -= m;
+    RNORM = Math.max(...RTAB.map(Math.abs));
+    for (let i = 0; i <= NT; i++) RTAB[i] /= RNORM;
+  }
+  function rShape(phi) { phi = ((phi % 1) + 1) % 1; const x = phi * NT, i = Math.min(NT - 1, Math.floor(x)); return RTAB[i] + (x - i) * (RTAB[i + 1] - RTAB[i]); }
+  const vOut = phi => -dmT(phi) / RNORM;                       // d(rShape)/dφ
+  const radiusAt = (c, phi) => c.R * (1 + EPS * rShape(phi));
+  const tempAt = (c, phi) => c.T * (1 - 0.24 * c.A * dmT(phi));
+  const vradAt = (c, phi) => -c.R * RSUN * EPS * vOut(phi) / (c.P * DAY);   // km/s, positive away from us
+  const mvAt = (c, phi) => c.Mv + c.A * dmT(phi);
+  const logLAt = (c, phi) => 2 * Math.log10(radiusAt(c, phi)) + 4 * Math.log10(tempAt(c, phi) / TSUN);
+  // The opacity of the helium layer: largest when the star is compressed.
+  const kappa = phi => clamp(0.5 + 0.8 * Math.cos(2 * Math.PI * (phi - 0.98)), 0, 1);
+
+  const PRESETS = [['δ Cep', 5.366], ['η Aql', 7.177], ['S Nor', 9.754], ['ℓ Car', 35.55], ['SV Vul', 44.91]];
+  const STAGES = [
+    { name: '1. Kokkusurutud', phi: 0.92, text: 'Täht on kokku surutud. Heeliumi kiht kuumeneb ja ioniseerub teist korda (He⁺ → He⁺⁺). Ioniseeritud heelium on läbipaistmatu ja peab seest tulevat soojust kinni.' },
+    { name: '2. Paisub', phi: 0.12, text: 'Kinni jäänud soojus tõstab rõhku ja surub kihid välja. Täht on kõige kuumem ja heledam.' },
+    { name: '3. Paisunud', phi: 0.42, text: 'Täht on kõige suurem. Kiht on jahtunud, heelium on rekombineerunud ja läbipaistev, nii et soojus pääseb välja.' },
+    { name: '4. Langeb', phi: 0.7, text: 'Lisarõhku enam pole ja gravitatsioon tõmbab kihid tagasi. Täht tõmbub kokku ja kõik kordub.' },
+  ];
+  const stageOf = phi => (phi >= 0.85 || phi < 0.03 ? 0 : phi < 0.3 ? 1 : phi < 0.55 ? 2 : 3);
+
+  const st = {
+    tab: 'tab1', P: 10, name: null, phase: 0, playing: false, speed: 4,
+    mode: 'ground', N: 60, span: 120, noise: 0.03, obsSeed: 1, Ptest: 7, found: null,
+    step: 'avastus', blink: false, tDays: 0, allLeav: false, leavLine: true, picked: -1, shown: new Set(),
+    mu2: 17, fitted2: false, mu3: 30, galSeed: 1, checked: null, fitted3: false,
+    Av: 1.5, alt: false, view4: 'star', band: 'W', dustSeed: 1,
+  };
+  let cep = cepheid(st.P);
+
+  // Colour of a star of temperature T, and of a star of colour V − I.
+  function lerpColour(stops, v) {
+    if (v <= stops[0][0]) return `rgb(${stops[0][1].join(',')})`;
+    for (let i = 1; i < stops.length; i++) {
+      const [v0, c0] = stops[i - 1], [v1, c1] = stops[i];
+      if (v <= v1) { const f = (v - v0) / (v1 - v0); return `rgb(${c0.map((c, k) => Math.round(c + f * (c1[k] - c))).join(',')})`; }
+    }
+    return `rgb(${stops[stops.length - 1][1].join(',')})`;
+  }
+  const tColour = T => lerpColour([[4000, [255, 160, 80]], [5000, [255, 200, 130]], [6000, [255, 230, 195]], [7000, [250, 246, 255]]], T);
+  const ciColour = c => lerpColour([[0.3, [235, 240, 255]], [0.8, [255, 236, 200]], [1.4, [255, 190, 120]], [2.2, [255, 130, 70]], [3.2, [190, 60, 35]]], c);
+
+  /* ---------- Tab 1: Pulsatsioon ---------- */
+  function renderStar() {
+    const svg = $('star'), phi = st.phase, c = cep, k = kappa(phi), v = vOut(phi) / vOut(0);
+    svg.textContent = '';
+    el('rect', { x: 0, y: 0, width: 370, height: 370, rx: 6, class: 'night' }, svg);
+    const cx = 185, cy = 192, R = 112 * (1 + EPS * rShape(phi)), T = tempAt(c, phi), col = tColour(T);
+    el('circle', { cx, cy, r: R + 10, fill: col, opacity: 0.18 }, svg);
+    el('circle', { cx, cy, r: R, fill: col }, svg);
+    el('circle', { cx, cy, r: 12, class: 'core' }, svg);
+    // The helium layer: dark when it is opaque.
+    const rl = 0.8 * R;
+    el('circle', { cx, cy, r: rl, fill: 'none', stroke: `rgba(110, 55, 25, ${(0.15 + 0.8 * k).toFixed(2)})`, 'stroke-width': 4 + 6 * k }, svg);
+    // Heat flows out from the core; the layer lets it through only when it is transparent.
+    for (let i = 0; i < 8; i++) {
+      const a = (i + 0.5) * Math.PI / 4, ca = Math.cos(a), sa = Math.sin(a);
+      arrow(svg, cx + 20 * ca, cy + 20 * sa, cx + (rl - 10) * ca, cy + (rl - 10) * sa, 'heat', 7, 3.5);
+      if (k < 0.6) {
+        const g = el('g', { opacity: (1 - k / 0.6).toFixed(2) }, svg);
+        arrow(g, cx + (rl + 8) * ca, cy + (rl + 8) * sa, cx + (R + 26) * ca, cy + (R + 26) * sa, 'heat', 7, 3.5);
+      }
+    }
+    // The gas moves out or in.
+    if (Math.abs(v) > 0.08) {
+      for (let i = 0; i < 4; i++) {
+        const a = i * Math.PI / 2, ca = Math.cos(a), sa = Math.sin(a), r0 = R + 8, r1 = r0 + 34 * Math.abs(v);
+        if (v > 0) arrow(svg, cx + r0 * ca, cy + r0 * sa, cx + r1 * ca, cy + r1 * sa, 'gas', 8, 4.5);
+        else arrow(svg, cx + r1 * ca, cy + r1 * sa, cx + r0 * ca, cy + r0 * sa, 'gas', 8, 4.5);
+      }
+    }
+    text(svg, 12, 20, k > 0.5 ? 'heeliumi kiht: läbipaistmatu (He⁺⁺)' : 'heeliumi kiht: läbipaistev (He⁺)', 'nl');
+    text(svg, 12, 36, Math.abs(v) <= 0.08 ? 'pind peaaegu seisab' : v > 0 ? 'pind liigub välja' : 'pind liigub sisse', 'nl2');
+    text(svg, 12, 356, `R = ${sig(radiusAt(c, phi), 3)} R☉`, 'nl2');
+    text(svg, 358, 356, `T = ${round10(T)} K`, 'nl2', 'end');
+  }
+
+  let hrDyn = null, hrS = null;
+  function renderHR() {
+    const svg = $('hr'), c = cep;
+    svg.textContent = '';
+    const B = { x0: 52, x1: 358, y0: 10, y1: 326 };
+    const X = mkScale(4.45, 3.55, B.x0, B.x1), Y = mkScale(-1.5, 5.4, B.y1, B.y0);
+    hrS = { X, Y };
+    const g = el('g', {}, svg);
+    const xt = [20000, 10000, 7000, 5000].map(t => [Math.log10(t), sig(t, 2).replace(/^(\d+)(\d{3})$/, '$1 $2')]);
+    const yt = [-1, 0, 1, 2, 3, 4, 5].map(v => [v, ['0.1', '1', '10', '100', '1000', '10⁴', '10⁵'][v + 1]]);
+    frame(g, B, X, Y, xt, yt, 'temperatuur (K)', 'heledus (L☉)', 36);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'hrclip', B) }, g);
+    const ms = [[4.45, 4.4], [4.2, 2.8], [4.0, 1.5], [3.88, 0.7], [3.8, 0.2], [3.762, 0], [3.7, -0.5], [3.6, -1.3]];
+    el('polyline', { points: pts(ms.map(([t, l]) => [X(t), Y(l)])), class: 'msline' }, inner);
+    text(g, X(4.14), Y(1.85), 'peajada', 'lbl3', 'middle');
+    const blue = [], red = [];
+    for (let l = 2.0; l <= 5.3001; l += 0.1) { blue.push([X(stripT(l) + 0.035), Y(l)]); red.push([X(stripT(l) - 0.035), Y(l)]); }
+    el('polygon', { points: pts(blue.concat(red.reverse())), class: 'strip' }, inner);
+    text(g, X(stripT(2.0)) + 6, Y(2.0) + 16, 'ebastabiilsuse riba', 'clbl', 'middle');
+    for (const P of [1, 3, 10, 30, 100]) {
+      const q = cepheid(P), x = X(stripT(q.logL) - 0.035), y = Y(q.logL);
+      el('line', { x1: x, y1: y, x2: x + 6, y2: y, class: 'axisline' }, g);
+      text(g, x + 8, y + 4, `${P} p`, 'lbl3');
+    }
+    el('circle', { cx: X(Math.log10(TSUN)), cy: Y(0), r: 5, class: 'sun' }, g);
+    text(g, X(Math.log10(TSUN)) + 8, Y(0) + 15, 'Päike', 'lbl3');
+    const loop = [];
+    for (let i = 0; i <= 100; i++) { const p = i / 100; loop.push([X(Math.log10(tempAt(c, p))), Y(logLAt(c, p))]); }
+    el('polyline', { points: pts(loop), class: 'curve thin' }, g);
+    hrDyn = el('g', {}, g);
+    drawHRDyn();
+  }
+  function drawHRDyn() {
+    if (!hrDyn) return;
+    hrDyn.textContent = '';
+    const { X, Y } = hrS, p = st.phase;
+    el('circle', { cx: X(Math.log10(tempAt(cep, p))), cy: Y(logLAt(cep, p)), r: 5.5, class: 'cpt' }, hrDyn);
+  }
+
+  let crvDyn = null, crvS = null;
+  function renderCurves() {
+    const svg = $('curves'), c = cep;
+    svg.textContent = '';
+    const x0 = 110, x1 = 748, X = mkScale(0, 2, x0, x1), g = el('g', {}, svg);
+    const n = 240, ph = Array.from({ length: n + 1 }, (_, i) => 2 * i / n);
+    const rows = [
+      { f: p => mvAt(c, p), lab: 'M_V', unit: 'tähesuurus', rev: true, d: 1 },
+      { f: p => radiusAt(c, p), lab: 'R', unit: 'R☉', d: 0 },
+      { f: p => tempAt(c, p), lab: 'T', unit: 'K', d: 0 },
+      { f: p => vradAt(c, p), lab: 'v', unit: 'km/s', d: 0 },
+    ];
+    crvS = { X, rows: [] };
+    rows.forEach((r, i) => {
+      const y0 = 6 + i * 72, y1 = y0 + 58, v = ph.map(r.f);
+      let lo = Math.min(...v), hi = Math.max(...v);
+      const pad = 0.12 * (hi - lo);
+      lo -= pad; hi += pad;
+      const Y = r.rev ? mkScale(lo, hi, y0, y1) : mkScale(lo, hi, y1, y0);
+      const step = niceStep((hi - lo) / 2.5);
+      frame(g, { x0, x1, y0, y1 }, X, Y, [0, 0.5, 1, 1.5, 2].map(p => [p, i === 3 ? fmt(p, 1) : null]), ticks(lo, hi, step).map(([t]) => [t, fmt(t, decs(step))]), null, null);
+      text(g, 8, (y0 + y1) / 2 - 2, r.lab, 'lbl');
+      text(g, 8, (y0 + y1) / 2 + 13, r.unit, 'lbl3');
+      if (i === 3) { const yz = Y(0); el('line', { x1: x0, y1: yz, x2: x1, y2: yz, class: 'guide' }, g); }
+      el('polyline', { points: pts(ph.map((p, k) => [X(p), Y(v[k])])), class: 'curve' }, g);
+      crvS.rows.push({ Y, f: r.f });
+    });
+    text(g, (x0 + x1) / 2, 322, 'faas (tsüklid)', 'lbl2', 'middle');
+    crvDyn = el('g', {}, svg);
+    drawCurvesDyn();
+  }
+  function drawCurvesDyn() {
+    if (!crvDyn) return;
+    crvDyn.textContent = '';
+    const { X, rows } = crvS;
+    for (const p of [st.phase, st.phase + 1]) {
+      el('line', { x1: X(p), y1: 6, x2: X(p), y2: 280, class: 'guide' }, crvDyn);
+      for (const r of rows) el('circle', { cx: X(p), cy: r.Y(r.f(p)), r: 4, class: 'cpt' }, crvDyn);
+    }
+  }
+
+  function readouts1() {
+    const c = cep, s = stageOf(st.phase);
+    $('phaseOut').textContent = fmt(st.phase, 2);
+    $('stageText').innerHTML = `<b>${STAGES[s].name}.</b> ${STAGES[s].text}`;
+    document.querySelectorAll('#stages button').forEach((b, i) => b.setAttribute('aria-pressed', i === s));
+    const rs = Array.from({ length: 100 }, (_, i) => radiusAt(c, i / 100)), ts = Array.from({ length: 100 }, (_, i) => tempAt(c, i / 100));
+    const vs = Array.from({ length: 100 }, (_, i) => vradAt(c, i / 100));
+    $('pulsRead').innerHTML = `Raadius ${sig(Math.min(...rs), 3)}–${sig(Math.max(...rs), 3)} R☉, temperatuur ${round10(Math.min(...ts))}–${round10(Math.max(...ts))} K, ` +
+      `radiaalkiirus ${fmt(Math.min(...vs), 0)}…${fmtS(Math.max(...vs), 0)} km/s. Keskmine heledus <b>${sig(10 ** c.logL, 2)} L☉</b>, M<sub>V</sub> = ${fmt(c.Mv, 2)}, amplituud ${fmt(c.A, 2)} tähesuurust.`;
+  }
+  function render1() { renderStar(); renderHR(); renderCurves(); readouts1(); }
+  function phaseMoved() { renderStar(); drawHRDyn(); drawCurvesDyn(); readouts1(); $('phase').value = Math.round(st.phase * 1000) % 1000; }
+
+  /* ---------- Tab 2: Perioodi mõõtmine ---------- */
+  const PMIN = 0.8, PMAX = 150;
+  const MODES = { ground: { N: 60, span: 120, noise: 0.03 }, gaia: { N: 40, span: 1000, noise: 0.01 }, hst: { N: 12, span: 60, noise: 0.05 } };
+  let obs = [], pg = null;
+  function makeObs() {
+    const r = seeded(st.obsSeed * 4243 + 7), c = cep, phi0 = r(), span = st.span, t = [];
+    if (st.mode === 'ground') {
+      // Clear nights, one observation per night at a random hour.
+      const nights = Math.floor(span);
+      if (st.N <= nights) {
+        const used = new Set();
+        while (used.size < st.N) used.add(Math.floor(r() * nights));
+        for (const d of used) t.push(d + 0.1 + 0.3 * r());
+      } else for (let i = 0; i < st.N; i++) t.push(Math.floor(r() * span) + 0.1 + 0.3 * r());
+    } else for (let i = 0; i < st.N; i++) t.push(r() * span);
+    t.sort((a, b) => a - b);
+    obs = t.map(ti => ({ t: ti, m: MU2 + c.Mv + c.A * dmT(ti / c.P + phi0) + st.noise * gauss(r) }));
+    st.found = null;
+    computePg();
+  }
+  // Least-squares fit of a mean and one harmonic (nb = 3) or two (nb = 5) at frequency f; returns the coefficients and the
+  // fraction of the variance that the curve explains. The search uses one harmonic: with two, twice the period fits as
+  // well as the period itself.
+  const NB = 5, MA = new Float64Array(25), MB = new Float64Array(5), BS = new Float64Array(5);
+  let TSS = 1, YM = 0;
+  function fitAt(f, nb = 3) {
+    MA.fill(0); MB.fill(0);
+    for (const o of obs) {
+      const w = 2 * Math.PI * f * o.t, c = Math.cos(w), s = Math.sin(w), y = o.m - YM;
+      BS[0] = 1; BS[1] = c; BS[2] = s; BS[3] = c * c - s * s; BS[4] = 2 * c * s;
+      for (let i = 0; i < nb; i++) { MB[i] += BS[i] * y; for (let j = 0; j <= i; j++) MA[i * NB + j] += BS[i] * BS[j]; }
+    }
+    for (let i = 0; i < nb; i++) for (let j = i + 1; j < nb; j++) MA[i * NB + j] = MA[j * NB + i];
+    // Gaussian elimination on a copy.
+    const a = Array.from({ length: nb }, (_, i) => Array.from({ length: nb + 1 }, (_, j) => (j < nb ? MA[i * NB + j] : MB[i])));
+    for (let i = 0; i < nb; i++) {
+      let p = i;
+      for (let k = i + 1; k < nb; k++) if (Math.abs(a[k][i]) > Math.abs(a[p][i])) p = k;
+      [a[i], a[p]] = [a[p], a[i]];
+      if (Math.abs(a[i][i]) < 1e-12) return { pw: 0, beta: new Array(nb).fill(0) };
+      for (let k = i + 1; k < nb; k++) { const q = a[k][i] / a[i][i]; for (let j = i; j <= nb; j++) a[k][j] -= q * a[i][j]; }
+    }
+    const beta = new Array(nb).fill(0);
+    for (let i = nb - 1; i >= 0; i--) { let s = a[i][nb]; for (let j = i + 1; j < nb; j++) s -= a[i][j] * beta[j]; beta[i] = s / a[i][i]; }
+    let expl = 0;
+    for (let i = 0; i < nb; i++) expl += beta[i] * MB[i];
+    return { pw: clamp(expl / TSS, 0, 1), beta };
+  }
+  function computePg() {
+    YM = mean(obs.map(o => o.m));
+    TSS = obs.reduce((s, o) => s + (o.m - YM) ** 2, 0) || 1;
+    const fmin = 1 / PMAX, fmax = 1 / PMIN, df = 1 / (10 * st.span), n = Math.ceil((fmax - fmin) / df);
+    const f = new Float64Array(n + 1), pw = new Float64Array(n + 1);
+    let best = 0;
+    for (let i = 0; i <= n; i++) { f[i] = fmin + i * df; pw[i] = fitAt(f[i]).pw; if (pw[i] > pw[best]) best = i; }
+    pg = { f, pw, best, df };
+  }
+  function findPeak() {
+    // Refine the highest point of the grid with a golden-section search.
+    let a = pg.f[pg.best] - pg.df, b = pg.f[pg.best] + pg.df;
+    const gr = (Math.sqrt(5) - 1) / 2;
+    for (let i = 0; i < 40; i++) {
+      const c = b - gr * (b - a), d = a + gr * (b - a);
+      if (fitAt(c).pw > fitAt(d).pw) b = d; else a = c;
+    }
+    const fb = (a + b) / 2, P = 1 / fb;
+    // Period error for N points with noise σ over a time span T, for a curve of semi-amplitude A/2.
+    const sf = Math.sqrt(6 / obs.length) * st.noise / (Math.PI * (cep.A / 2) * st.span);
+    st.found = { P, e: P * P * sf };
+    st.Ptest = P;
+  }
+  const tCol = t => `hsl(${(210 - 180 * t / st.span).toFixed(0)} 70% 50%)`;
+  function renderObs() {
+    const svg = $('obs');
+    svg.textContent = '';
+    const B = { x0: 60, x1: 750, y0: 10, y1: 166 }, ms = obs.map(o => o.m);
+    const lo = Math.min(...ms) - 0.1, hi = Math.max(...ms) + 0.1;
+    const X = mkScale(0, st.span, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
+    const ys = niceStep((hi - lo) / 3);
+    frame(g, B, X, Y, ticks(0, st.span, niceStep(st.span / 8)), ticks(lo, hi, ys), 'aeg (päevades)', 'V (tähesuurus)', 44);
+    for (const o of obs) el('circle', { cx: X(o.t), cy: Y(o.m), r: 3, fill: tCol(o.t) }, g);
+  }
+  function renderFold() {
+    const svg = $('fold');
+    svg.textContent = '';
+    const B = { x0: 60, x1: 750, y0: 10, y1: 166 }, ms = obs.map(o => o.m);
+    const lo = Math.min(...ms) - 0.1, hi = Math.max(...ms) + 0.1;
+    const X = mkScale(0, 2, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(v => [v, fmt(v, 2)]), ticks(lo, hi, niceStep((hi - lo) / 3)),
+      `faas, kui periood on ${sig(st.Ptest, 4)} päeva`, 'V (tähesuurus)', 44);
+    const f = 1 / st.Ptest, fit = fitAt(f, obs.length >= 12 ? 5 : 3), b = fit.beta, c = [];
+    for (let i = 0; i <= 300; i++) {
+      const p = 2 * i / 300, w = 2 * Math.PI * p;
+      let m = YM + b[0] + b[1] * Math.cos(w) + b[2] * Math.sin(w);
+      if (b.length > 3) m += b[3] * Math.cos(2 * w) + b[4] * Math.sin(2 * w);
+      c.push([X(p), Y(clamp(m, lo, hi))]);
+    }
+    el('polyline', { points: pts(c), class: 'curve fitc' }, g);
+    for (const o of obs) {
+      const p = ((o.t * f) % 1 + 1) % 1;
+      for (const q of [p, p + 1]) el('circle', { cx: X(q), cy: Y(o.m), r: 3, fill: tCol(o.t) }, g);
+    }
+  }
+  const PB = { x0: 60, x1: 750, y0: 10, y1: 166 };
+  const pgX = mkScale(PMIN, PMAX, PB.x0, PB.x1, true);
+  const pgInv = x => PMIN * (PMAX / PMIN) ** ((x - PB.x0) / (PB.x1 - PB.x0));
+  function renderPg() {
+    const svg = $('pgram');
+    svg.textContent = '';
+    const Y = mkScale(0, 1, PB.y1, PB.y0), g = el('g', {}, svg);
+    frame(g, PB, pgX, Y, [1, 2, 5, 10, 20, 50, 100].map(v => [v, String(v)]), [0, 0.5, 1].map(v => [v, fmt(v, 1)]), 'prooviperiood (päevades, logaritmiline skaala)', 'sobivus', 40);
+    // The highest value in each pixel column, so that narrow peaks are not lost; columns without a trial period are skipped.
+    const cols = new Float64Array(PB.x1 - PB.x0 + 1).fill(-1);
+    for (let i = 0; i < pg.f.length; i++) { const x = Math.round(pgX(1 / pg.f[i]) - PB.x0); if (x >= 0 && x < cols.length && pg.pw[i] > cols[x]) cols[x] = pg.pw[i]; }
+    const line = [];
+    cols.forEach((v, i) => { if (v >= 0) line.push([PB.x0 + i, Y(v)]); });
+    el('polygon', { points: pts([[PB.x0, Y(0)], ...line, [PB.x1, Y(0)]]), class: 'pgfill' }, g);
+    el('polyline', { points: pts(line), class: 'pgline' }, g);
+    const x = pgX(st.Ptest);
+    el('line', { x1: x, y1: PB.y0, x2: x, y2: PB.y1, class: 'ptest' }, g);
+    text(g, x + (x > 600 ? -6 : 6), PB.y0 + 14, `${sig(st.Ptest, 4)} p`, 'lbl2', x > 600 ? 'end' : 'start');
+  }
+  function readouts2() {
+    $('nobsOut').textContent = st.N;
+    $('spanOut').textContent = sig(st.span, 3) + ' p';
+    $('noiseOut').textContent = fmt(st.noise, 3);
+    $('ptestOut').textContent = sig(st.Ptest, 4) + ' p';
+    $('ptest').value = Math.round(10000 * Math.log(st.Ptest / PMIN) / Math.log(PMAX / PMIN));
+    $('nobs').value = st.N; $('span').value = Math.round(1000 * Math.log10(st.span / 10) / 2); $('noise').value = st.noise;
+    document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-checked', b.dataset.mode === st.mode));
+    let s = `Tegelik periood <b>${sig(cep.P, 4)} p</b>, vaatlusperioodi sisse mahub ${sig(st.span / cep.P, 2)} tsüklit. ` +
+      `Prooviperioodi sobivus ${fmt(fitAt(1 / st.Ptest).pw, 2)}.`;
+    if (st.found) {
+      const off = Math.abs(st.found.P - cep.P) > Math.max(3 * st.found.e, 0.001 * cep.P);
+      s += `<br>Leitud periood: <b>${sig(st.found.P, 5)} ± ${sig(st.found.e, 1)} p</b>. ` +
+        (off ? '<span class="off">See ei ole õige periood, vaid vari: lisa vaatlusi või pikenda vaatlusperioodi.</span>' : '<span class="ok">Õige.</span>');
+    }
+    $('perRead').innerHTML = s;
+  }
+  function render2() { renderObs(); renderFold(); renderPg(); readouts2(); }
+  function ptestMoved() { renderFold(); renderPg(); readouts2(); }
+
+  /* ---------- Tab 3: Leavitt'i seadus ---------- */
+  // Leavitt & Pickering (1912), Harvard College Observatory Circular 173, table I: Harvard number, photographic magnitude
+  // at maximum and minimum, period in days.
+  const LEAVITT = [
+    [1505, 14.8, 16.1, 1.25336], [1436, 14.8, 16.4, 1.6637], [1446, 14.8, 16.4, 1.7620], [1506, 15.1, 16.3, 1.87502],
+    [1413, 14.7, 15.6, 2.17352], [1460, 14.4, 15.7, 2.913], [1422, 14.7, 15.9, 3.501], [842, 14.6, 16.1, 4.2897],
+    [1425, 14.3, 15.3, 4.547], [1742, 14.3, 15.5, 4.9866], [1646, 14.4, 15.4, 5.311], [1649, 14.3, 15.2, 5.323],
+    [1492, 13.8, 14.8, 6.2926], [1400, 14.1, 14.8, 6.650], [1355, 14.0, 14.8, 7.483], [1374, 13.9, 15.2, 8.397],
+    [818, 13.6, 14.7, 10.336], [1610, 13.4, 14.6, 11.645], [1365, 13.8, 14.8, 12.417], [1351, 13.4, 14.4, 13.08],
+    [827, 13.4, 14.3, 13.47], [822, 13.0, 14.6, 16.75], [823, 12.2, 14.1, 31.94], [824, 11.4, 12.8, 65.8], [821, 11.2, 12.1, 127.0],
+  ].map(([h, mx, mn, P]) => ({ h, mx, mn, P, lp: Math.log10(P) }));
+  // A made-up picture of the Small Magellanic Cloud: a tilted cloud of faint stars with the variables among them.
+  const smcPos = r => {
+    const u = 80 * gauss(r), v = 38 * gauss(r), a = -0.5;
+    return [185 + u * Math.cos(a) - v * Math.sin(a), 190 + u * Math.sin(a) + v * Math.cos(a)];
+  };
+  const SMC_BG = (() => { const r = seeded(77); return Array.from({ length: 1400 }, () => [...smcPos(r), 0.5 + 0.7 * r() ** 3]); })();
+  (() => {
+    const r = seeded(91);
+    for (const s of LEAVITT) {
+      let p;
+      do p = smcPos(r); while (p[0] < 20 || p[0] > 350 || p[1] < 45 || p[1] > 340);
+      [s.x, s.y] = p;
+      s.ph = r();
+    }
+  })();
+  const leavMag = (s, t) => (s.mx + s.mn) / 2 + (s.mn - s.mx) * dmT(t / s.P + s.ph);
+
+  let smcDyn = null;
+  function renderSMC() {
+    const svg = $('smc');
+    svg.textContent = '';
+    el('rect', { x: 0, y: 0, width: 370, height: 370, rx: 6, class: 'night' }, svg);
+    const g = el('g', {}, svg);
+    for (const [x, y, r] of SMC_BG) if (x > 4 && x < 366 && y > 4 && y < 366) el('circle', { cx: x, cy: y, r, class: 'skystar', opacity: 0.35 }, g);
+    smcDyn = el('g', {}, svg);
+    drawSMCDyn();
+    const hits = el('g', {}, svg);
+    LEAVITT.forEach((s, i) => el('circle', { cx: s.x, cy: s.y, r: 9, class: 'hit', 'data-i': i }, hits));
+    text(svg, 12, 20, 'muutlikud tähed vilguvad', 'nl');
+  }
+  function drawSMCDyn() {
+    if (!smcDyn) return;
+    smcDyn.textContent = '';
+    LEAVITT.forEach((s, i) => {
+      const m = leavMag(s, st.tDays), r = clamp(1.2 + 0.6 * (16.6 - m), 1.2, 4.6);
+      el('circle', { cx: s.x, cy: s.y, r, class: 'skyvar' }, smcDyn);
+      if (st.shown.has(i) || st.allLeav) el('circle', { cx: s.x, cy: s.y, r: 6, class: 'skyshown' }, smcDyn);
+      if (i === st.picked) el('circle', { cx: s.x, cy: s.y, r: 9, class: 'skypick' }, smcDyn);
+    });
+    text(smcDyn, 12, 358, `päev ${Math.floor(st.tDays)}`, 'nl2');
+  }
+  const leavShown = () => LEAVITT.filter((s, i) => st.allLeav || st.shown.has(i));
+  let leavDyn = null;
+  function renderLeav() {
+    const svg = $('leav');
+    svg.textContent = '';
+    const B = { x0: 52, x1: 360, y0: 10, y1: 320 };
+    const X = mkScale(0, 2.2, B.x0, B.x1), Y = mkScale(11, 16.8, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, [0, 0.5, 1, 1.5, 2].map(v => [v, fmt(v, 1)]), [11, 12, 13, 14, 15, 16].map(v => [v, String(v)]), 'log P (P päevades)', 'fotograafiline tähesuurus', 36);
+    const sh = leavShown();
+    if (st.leavLine && sh.length >= 3) {
+      for (const k of ['mx', 'mn']) {
+        const f = linfit(sh.map(s => s.lp), sh.map(s => s[k]));
+        el('line', { x1: X(0), y1: Y(f.b), x2: X(2.2), y2: Y(f.b + 2.2 * f.a), class: 'lmax' }, g);
+      }
+    }
+    LEAVITT.forEach((s, i) => {
+      if (!(st.allLeav || st.shown.has(i))) return;
+      const x = X(s.lp);
+      el('line', { x1: x, y1: Y(s.mx), x2: x, y2: Y(s.mn), class: 'rbar' + (i === st.picked ? ' sel' : '') }, g);
+      el('circle', { cx: x, cy: Y(s.mx), r: 3.2, class: 'maxpt' }, g);
+      el('circle', { cx: x, cy: Y(s.mn), r: 3.2, class: 'minpt' }, g);
+    });
+    if (!sh.length) text(g, (B.x0 + B.x1) / 2, (B.y0 + B.y1) / 2, 'klõpsa tähel vasakul', 'lbl3', 'middle');
+    leavDyn = el('g', {}, svg);
+    drawLeavDyn();
+  }
+  // A small light curve of the picked star, with the current time.
+  function drawLeavDyn() {
+    if (!leavDyn) return;
+    leavDyn.textContent = '';
+    const s = LEAVITT[st.picked];
+    if (!s) return;
+    const I = { x0: 62, x1: 200, y0: 34, y1: 104 };
+    el('rect', { x: I.x0 - 6, y: I.y0 - 22, width: I.x1 - I.x0 + 12, height: I.y1 - I.y0 + 30, rx: 6, class: 'inset' }, leavDyn);
+    text(leavDyn, I.x0, I.y0 - 8, `HV ${s.h}: P = ${sig(s.P, 3)} p`, 'lbl3');
+    const X = mkScale(0, 2 * s.P, I.x0, I.x1), Y = mkScale(s.mx - 0.15, s.mn + 0.15, I.y0, I.y1), c = [];
+    const t0 = st.tDays - ((st.tDays / s.P + s.ph) % 1) * s.P;   // start of the current cycle
+    for (let i = 0; i <= 120; i++) { const t = 2 * s.P * i / 120; c.push([X(t), Y(leavMag(s, t0 + t))]); }
+    el('polyline', { points: pts(c), class: 'curve thin', style: 'stroke: var(--accent)' }, leavDyn);
+    const tt = st.tDays - t0;
+    el('circle', { cx: X(tt), cy: Y(leavMag(s, st.tDays)), r: 3.5, class: 'maxpt' }, leavDyn);
+  }
+  function readoutsLeav() {
+    const sh = leavShown(), s = LEAVITT[st.picked];
+    let t = `Joonisel ${sh.length} tähte 25-st.`;
+    if (s) t += ` Valitud HV ${s.h}: periood <b>${sig(s.P, 4)} p</b>, tähesuurus ${fmt(s.mx, 1)}–${fmt(s.mn, 1)}.`;
+    if (sh.length >= 3) {
+      const f = linfit(sh.map(s => s.lp), sh.map(s => (s.mx + s.mn) / 2));
+      t += ` Sirge järgi kasvab log P <b>${fmt(-1 / f.a, 2)}</b> võrra iga tähesuuruse kohta (Leavitt: 0.48).`;
+    }
+    $('leavRead').innerHTML = t;
+  }
+
+  // Step 2: Milky Way Cepheids with Gaia DR3 parallaxes (the field Cepheids of part 2), with the zero-point correction.
+  const MW = [
+    ['R TrA', 3.38927, 4.668, 1.5432, 0.0161], ['V386 Cyg', 5.25766, 5.146, 0.8638, 0.0125], ['R Mus', 7.50988, 4.222, 1.0656, 0.0175],
+    ['DR Vel', 11.19846, 5.433, 0.5047, 0.0134], ['U Car', 38.791, 3.226, 0.5530, 0.0226], ['WZ Sgr', 21.84748, 4.196, 0.5742, 0.0277],
+    ['RY Sco', 20.3295, 3.639, 0.7279, 0.0321], ['VY Car', 18.88145, 4.467, 0.5535, 0.0167], ['X Cyg', 16.37655, 3.583, 0.8842, 0.0199],
+    ['SZ Cyg', 15.1144, 5.283, 0.4186, 0.0124], ['TX Cyg', 14.7122, 3.816, 0.7954, 0.0186], ['SV Vel', 14.09568, 5.471, 0.4211, 0.0175],
+  ].map(([name, P, WH, plx, e]) => {
+    const p = plx + 0.017;
+    return { name, lp: Math.log10(P), M: WH + 5 * Math.log10(p) - 10, eM: 5 / Math.LN10 * e / p };
+  });
+  const MWFIT = linfit(MW.map(c => c.lp - 1), MW.map(c => c.M), MW.map(c => 1 / (c.eM ** 2 + 0.08 ** 2)));
+  const mwM = lp => MWFIT.a * (lp - 1) + MWFIT.b;
+  const MU_SMC = 18.977;   // Graczyk et al. (2020)
+  const SMC = (() => { const r = seeded(31); return Array.from({ length: 40 }, () => { const lp = 0.35 + 1.25 * r(); return { lp, W: PLW(lp) + MU_SMC + 0.12 * gauss(r) }; }); })();
+  let GAL = null;
+  function makeGal() {
+    const r = seeded(st.galSeed * 613 + 5), n = 25 + Math.floor(35 * r()), mu = 29.5 + 3.5 * r();
+    GAL = { mu, c: Array.from({ length: n }, () => { const lp = 1.0 + 0.9 * r(); return { lp, W: PLW(lp) + mu + 0.3 * gauss(r) }; }) };
+    st.checked = null; st.fitted3 = false;
+  }
+  // The distance modulus that puts the Cepheids on the calibrated relation, with its error.
+  function fitMu(list) {
+    const d = list.map(c => c.W - mwM(c.lp)), m = mean(d);
+    return { mu: m, e: Math.hypot(std(d) / Math.sqrt(d.length), MWFIT.eb) };
+  }
+  function renderCalib() {
+    const svg = $('calib'), two = st.step === 'kalib', mu = two ? st.mu2 : st.mu3, list = two ? SMC : GAL.c;
+    svg.textContent = '';
+    const B = { x0: 62, x1: 690, y0: 12, y1: 400 };
+    const X = mkScale(0.2, 2.0, B.x0, B.x1), Y = mkScale(-9.6, -2.2, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8].map(v => [v, fmt(v, 1)]), ticks(-9.6, -2.2, 1), 'log P (P päevades)', 'M (absoluutne Wesenheiti tähesuurus)', 40);
+    for (let v = -9; v <= -3; v++) text(g, B.x1 + 6, Y(v) + 4, fmt(v + mu, 1), 'tlbl');
+    text(g, 0, 0, 'W_H (näiv tähesuurus) = M + μ', 'lbl2', 'middle').setAttribute('transform', `translate(${B.x1 + 56} ${(B.y0 + B.y1) / 2}) rotate(90)`);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'calclip', B) }, g);
+    el('line', { x1: X(0.2), y1: Y(mwM(0.2)), x2: X(2), y2: Y(mwM(2)), class: 'fitline' }, inner);
+    for (const c of list) el('circle', { cx: X(c.lp), cy: Y(c.W - mu), r: 3.6, class: 'galpt' }, inner);
+    for (const c of MW) {
+      el('line', { x1: X(c.lp), y1: Y(c.M - c.eM), x2: X(c.lp), y2: Y(c.M + c.eM), class: 'ebar' }, inner);
+      const p = el('circle', { cx: X(c.lp), cy: Y(c.M), r: 4.5, class: 'mwpt' }, inner);
+      el('title', {}, p).textContent = c.name;
+    }
+    const off = mean(list.map(c => c.W - mu - mwM(c.lp)));
+    text(g, B.x0 + 10, B.y0 + 18, two ? 'Väike Magalhãesi pilv' : `galaktika, ${list.length} tsefeiidi`, 'lbl');
+    if (Math.abs(off) > 0.08) text(g, B.x0 + 10, B.y0 + 36, `punktid on seosest keskmiselt ${fmt(Math.abs(off), 2)} tähesuurust ${off > 0 ? 'allpool' : 'ülalpool'}`, 'lbl3');
+  }
+  function readoutsCalib() {
+    $('mu2Out').textContent = fmt(st.mu2, 2);
+    $('mu3Out').textContent = fmt(st.mu3, 2);
+    const lin = `Linnutee seos: M = ${fmt(MWFIT.b, 2)} ${MWFIT.a < 0 ? '−' : '+'} ${fmt(Math.abs(MWFIT.a), 2)} (log P − 1).`;
+    if (st.step === 'kalib') {
+      const f = fitMu(SMC);
+      let s = `${lin}<br>Sinu μ = <b>${fmt(st.mu2, 2)}</b> annab kauguse <b>${fmtDist(muToPc(st.mu2))}</b>.`;
+      if (st.fitted2) s += `<br>Parim μ = ${fmt(f.mu, 2)} ± ${fmt(f.e, 2)}, kaugus ${fmtDist(muToPc(f.mu))}. Kaksiktähtede järgi on SMC kaugusmoodul 18.98, kaugus 62 kpc (Graczyk jt 2020).`;
+      $('calRead').innerHTML = s;
+    } else {
+      const f = fitMu(GAL.c);
+      let s = `${lin}<br>Sinu μ = <b>${fmt(st.mu3, 2)}</b> annab kauguse <b>${fmtDist(muToPc(st.mu3))}</b>.`;
+      if (st.fitted3) s += `<br>Parim μ = ${fmt(f.mu, 2)} ± ${fmt(f.e, 2)}, kaugus ${fmtDist(muToPc(f.mu))}.`;
+      if (st.checked) {
+        const tol = Math.max(2 * f.e, 0.1), d = st.checked.mu - f.mu;
+        s += Math.abs(d) <= tol
+          ? `<br><span class="ok">Õige!</span> Galaktika tegelik kaugusmoodul on ${fmt(GAL.mu, 2)}, kaugus ${fmtDist(muToPc(GAL.mu))}.`
+          : `<br><span class="off">Veel mitte:</span> ${d < 0 ? 'galaktika on kaugemal, suurenda μ' : 'galaktika on lähemal, vähenda μ'}.`;
+      }
+      $('galRead').innerHTML = s;
+    }
+  }
+  const HINTS = {
+    avastus: 'Väikese Magalhãesi pilve muutlikud tähed vilguvad, igaüks oma perioodiga. Käivita aeg ja klõpsa tähtedel: iga klõpsatud täht lisandub joonisele oma perioodi ja heledusega, nagu Leavitt\'i 1912. aasta tabelis.',
+    kalib: 'Sinised punktid on Linnutee tsefeiidid, mille kauguse annab Gaia parallaks; nende absoluutne tähesuurus on vasakul teljel. Oranžid on SMC tsefeiidid. Nihuta neid paremal μ-liuguriga, kuni nad on sinisel sirgel.',
+    galaktika: 'Kauge galaktika tsefeiidid. Nihuta neid μ-liuguriga, kuni nad on kalibreeritud sirgel, ja vajuta „Kontrolli“. See on sama, mida teeb harjutuse 3. osa.',
+  };
+  function render3() {
+    const one = st.step === 'avastus';
+    $('step1scene').hidden = !one; $('leavLegend').hidden = !one; $('calibScene').hidden = one;
+    $('leavHint').textContent = HINTS[st.step];
+    $('lgGal').textContent = st.step === 'kalib' ? 'SMC tsefeiidid, nihutatud μ võrra' : 'galaktika tsefeiidid, nihutatud μ võrra';
+    document.querySelectorAll('[data-step]').forEach(b => b.setAttribute('aria-checked', b.dataset.step === st.step));
+    if (one) { renderSMC(); renderLeav(); readoutsLeav(); } else { renderCalib(); readoutsCalib(); }
+    updateGroups();
+  }
+
+  /* ---------- Tab 4: Tolm ja Wesenheit ---------- */
+  // Extinction in I and H relative to V. The default dust gives exactly A_H = 0.386 (A_V − A_I); the other has less
+  // extinction in the red and the infrared.
+  const LAWS = { std: { I: 0.55, H: RW * 0.45 }, alt: { I: 0.50, H: 0.15 } };
+  const law = () => (st.alt ? LAWS.alt : LAWS.std);
+  function bandsOf(V, I, H, Av) {
+    const L = law(), v = V + Av, i = I + L.I * Av, h = H + L.H * Av;
+    return { V: v, I: i, H: h, W: h - RW * (v - i), C: v - i };
+  }
+  function renderDustView() {
+    const svg = $('dustview'), c = cep;
+    svg.textContent = '';
+    const b0 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, 0), b1 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, st.Av);
+    const defs = el('defs', {}, svg);
+    [[b0, 0, 'ilma tolmuta'], [b1, 1, 'tolmuga']].forEach(([b, k, lab]) => {
+      const x0 = 10 + k * 220, y0 = 26, cx = x0 + 100, cy = y0 + 100;
+      text(svg, cx, 16, lab, 'lbl2', 'middle');
+      el('rect', { x: x0, y: y0, width: 200, height: 200, rx: 6, class: 'night' }, svg);
+      const gr = el('radialGradient', { id: 'sg' + k }, defs);
+      el('stop', { offset: '0%', 'stop-color': '#ffffff' }, gr);
+      el('stop', { offset: '25%', 'stop-color': ciColour(b.C) }, gr);
+      el('stop', { offset: '100%', 'stop-color': ciColour(b.C), 'stop-opacity': 0 }, gr);
+      const f = 10 ** (-0.4 * (b.V - b0.V));
+      el('circle', { cx, cy, r: Math.max(4, 70 * Math.sqrt(f)), fill: `url(#sg${k})`, opacity: clamp(0.35 + 0.65 * Math.sqrt(f), 0.35, 1) }, svg);
+      if (k && st.Av > 0) {
+        const r = seeded(5), o = Math.min(0.7, 0.14 * st.Av);
+        for (let i = 0; i < 9; i++) el('ellipse', { cx: x0 + 30 + 140 * r(), cy: y0 + 30 + 140 * r(), rx: 40 + 30 * r(), ry: 22 + 18 * r(), fill: '#6b4a2b', opacity: (o * (0.5 + 0.5 * r())).toFixed(2) }, svg);
+      }
+      text(svg, x0 + 8, y0 + 192, `V = ${fmt(b.V, 2)}, V − I = ${fmt(b.C, 2)}`, 'nl2');
+    });
+    // The magnitudes in each band, without and with dust.
+    const B = { x0: 500, x1: 750, y0: 26, y1: 220 }, keys = ['V', 'I', 'H', 'W'];
+    const lo = Math.min(...keys.map(k => b0[k])) - 0.4, hi = Math.max(b0.V + 5.2, b1.V) + 0.2;
+    const X = k => B.x0 + (keys.indexOf(k) + 0.5) * (B.x1 - B.x0) / 4, Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
+    for (const [v, L] of ticks(lo, hi, 1)) { el('line', { x1: B.x0, y1: Y(v), x2: B.x1, y2: Y(v), class: 'gridline' }, g); text(g, B.x0 - 6, Y(v) + 4, L, 'tlbl', 'end'); }
+    el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: 'axisline' }, g);
+    text(g, (B.x0 + B.x1) / 2, 16, 'tähesuurused ribades', 'lbl2', 'middle');
+    for (const k of keys) {
+      const x = X(k), d = b1[k] - b0[k];
+      text(g, x, B.y1 + 18, k === 'W' ? 'W_H' : k, 'band-lbl', 'middle');
+      if (Math.abs(d) > 0.03) arrow(g, x, Y(b0[k]) + 6, x, Y(b1[k]) - 5, d > 0 ? 'redden' : 'arrow', 7, 3.5);
+      el('circle', { cx: x, cy: Y(b0[k]), r: 5, class: 'cpt hollow' }, g);
+      el('circle', { cx: x, cy: Y(b1[k]), r: 5, class: 'cpt' }, g);
+      text(g, k === 'W' ? x - 9 : x + 9, Y(b1[k]) + 4, fmtS(d, 2), 'lbl3', k === 'W' ? 'end' : 'start');
+    }
+  }
+  function renderDustCMD() {
+    const svg = $('dustcmd'), c = cep;
+    svg.textContent = '';
+    const b0 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, 0), b1 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, st.Av);
+    const bmax = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, 5);
+    const B = { x0: 62, x1: 740, y0: 12, y1: 288 };
+    const xhi = Math.max(3, bmax.C + 0.2), lo = b0.W - 0.35, hi = Math.max(bmax.H, b0.H + 1) + 0.15;
+    const X = mkScale(-0.2, xhi, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, ticks(-0.2, xhi, 0.5), ticks(lo, hi, 0.2), 'värvus V − I', 'H', 40);
+    const inner = el('g', { 'clip-path': clipRect(svg, 'cmdclip', B) }, g);
+    // Lines of equal W_H: H = W + 0.386 (V − I).
+    for (let k = -4; k <= 8; k++) {
+      const w = b0.W + 0.2 * k;
+      el('line', { x1: X(-0.2), y1: Y(w + RW * -0.2), x2: X(xhi), y2: Y(w + RW * xhi), class: 'wline' + (k === 0 ? ' cur' : '') }, inner);
+    }
+    el('line', { x1: X(0), y1: B.y0, x2: X(0), y2: B.y1, class: 'guide' }, inner);
+    el('circle', { cx: X(0), cy: Y(b0.W), r: 5, class: 'wmark' }, inner);
+    text(g, X(0) + 8, Y(b0.W) + (st.alt ? 16 : -6), `W_H = ${fmt(b0.W, 2)}`, 'lbl2');
+    if (st.alt && st.Av > 0) {
+      el('circle', { cx: X(0), cy: Y(b1.W), r: 4, class: 'cpt hollow' }, inner);
+      text(g, X(0) + 8, Y(b1.W) - 6, `tolmuga W_H = ${fmt(b1.W, 2)}`, 'lbl3');
+    }
+    // The reddening arrow over the whole slider range, and the star's path so far.
+    el('line', { x1: X(b0.C), y1: Y(b0.H), x2: X(bmax.C), y2: Y(bmax.H), class: 'guide' }, inner);
+    if (st.Av > 0.05) arrow(inner, X(b0.C), Y(b0.H), X(b1.C), Y(b1.H), 'redden', 9, 4.5);
+    el('circle', { cx: X(b0.C), cy: Y(b0.H), r: 5.5, class: 'cpt hollow' }, inner);
+    el('circle', { cx: X(b1.C), cy: Y(b1.H), r: 5.5, class: 'cpt' }, inner);
+    text(g, X(b0.C) - 9, Y(b0.H) + 4, 'ilma tolmuta', 'lbl3', 'end');
+    if (st.Av > 0.3) text(g, X(b1.C) + 9, Y(b1.H) + 4, `A_V = ${fmt(st.Av, 1)}`, 'lbl3');
+  }
+  function readoutsDust() {
+    $('avOut').textContent = fmt(st.Av, 2);
+    $('avLbl').innerHTML = st.view4 === 'gal' ? 'Tolm: keskmine neeldumine A<sub>V</sub> (tähesuurustes)' : 'Tolm: neeldumine A<sub>V</sub> (tähesuurustes)';
+    const c = cep, b0 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, 0), b1 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, st.Av);
+    const rows = [['V', 'V'], ['I', 'I'], ['H', 'H'], ['C', 'V − I'], ['W', 'W<sub>H</sub>']];
+    $('dustRead').innerHTML = '<table class="res"><tr><th></th><th>ilma tolmuta</th><th>tolmuga</th><th>vahe</th></tr>' +
+      rows.map(([k, l]) => `<tr${k === 'W' ? ' class="hl"' : ''}><td>${l}</td><td>${fmt(b0[k], 3)}</td><td>${fmt(b1[k], 3)}</td><td>${fmtS(b1[k] - b0[k], 3)}</td></tr>`).join('') + '</table>';
+  }
+
+  // A galaxy at 10 Mpc with 50 Cepheids. Hotter Cepheids are brighter and bluer: the colour offset dc moves V, I and H by
+  // 2.5, 1.5 and 1.0 times dc, and e is a common offset in all bands.
+  const MUG = 30;
+  let DUST = null;
+  function makeDust() {
+    const r = seeded(st.dustSeed * 977 + 3);
+    DUST = Array.from({ length: 50 }, () => {
+      const lp = 0.4 + 1.5 * r(), dc = 0.08 * gauss(r), e = 0.06 * gauss(r);
+      return { lp, V: PLV(lp) + 2.5 * dc + e + MUG, I: PLI(lp) + 1.5 * dc + e + MUG, H: PLH(lp) + 1.0 * dc + e + MUG, u: 0.3 + 1.4 * r() };
+    });
+  }
+  function dustStats() {
+    const res = { V: [], I: [], H: [], W: [] };
+    for (const c of DUST) {
+      const b = bandsOf(c.V, c.I, c.H, st.Av * c.u);
+      for (const k in res) res[k].push(b[k] - PLB[k](c.lp) - MUG);
+    }
+    const out = {};
+    for (const k in res) out[k] = { shift: mean(res[k]), sd: std(res[k]) };
+    return out;
+  }
+  function renderDustPL() {
+    const svg = $('dustpl'), k = st.band;
+    svg.textContent = '';
+    const B = { x0: 62, x1: 740, y0: 12, y1: 370 };
+    const pts0 = DUST.map(c => { const b = bandsOf(c.V, c.I, c.H, 0); return [c.lp, b[k]]; });
+    const pts1 = DUST.map(c => { const b = bandsOf(c.V, c.I, c.H, st.Av * c.u); return [c.lp, b[k]]; });
+    const all = pts0.concat(pts1).map(p => p[1]);
+    const lo = Math.floor((Math.min(...all) - 0.3) * 2) / 2, hi = Math.ceil((Math.max(...all) + 0.3) * 2) / 2;
+    const X = mkScale(0.3, 2.0, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
+    frame(g, B, X, Y, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8].map(v => [v, fmt(v, 1)]), ticks(lo, hi, niceStep((hi - lo) / 6)), 'log P (P päevades)',
+      k === 'W' ? 'W_H (näiv tähesuurus)' : `${k} (näiv tähesuurus)`, 40);
+    el('line', { x1: X(0.3), y1: Y(PLB[k](0.3) + MUG), x2: X(2), y2: Y(PLB[k](2) + MUG), class: 'curve ref' }, g);
+    for (const [lp, m] of pts0) el('circle', { cx: X(lp), cy: Y(m), r: 2.6, class: 'fpt' }, g);
+    for (const [lp, m] of pts1) el('circle', { cx: X(lp), cy: Y(m), r: 3.8, class: 'cpt' }, g);
+    const s = dustStats()[k];
+    text(g, B.x1 - 10, B.y1 - 12, `${k === 'W' ? 'W_H' : k}: nihe ${fmtS(s.shift, 2)}, hajuvus σ = ${fmt(s.sd, 2)} tähesuurust`, 'lbl', 'end');
+  }
+  function readoutsDustGal() {
+    document.querySelectorAll('[data-band]').forEach(b => b.setAttribute('aria-checked', b.dataset.band === st.band));
+    const S = dustStats(), lab = { V: 'V', I: 'I', H: 'H', W: 'W<sub>H</sub>' };
+    $('galDustRead').innerHTML = '<table class="res"><tr><th>riba</th><th>nihe</th><th>hajuvus σ</th><th>kauguse viga</th></tr>' +
+      ['V', 'I', 'H', 'W'].map(k => `<tr${k === st.band ? ' class="hl"' : ''}><td>${lab[k]}</td><td>${fmtS(S[k].shift, 2)}</td><td>${fmt(S[k].sd, 2)}</td><td>${fmtS(100 * (10 ** (S[k].shift / 5) - 1), 0)} %</td></tr>`).join('') +
+      '</table>';
+  }
+  function render4() {
+    $('view4star').hidden = st.view4 !== 'star'; $('view4gal').hidden = st.view4 !== 'gal';
+    document.querySelectorAll('[data-view4]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view4 === st.view4));
+    readoutsDust();
+    if (st.view4 === 'star') { renderDustView(); renderDustCMD(); } else { renderDustPL(); readoutsDustGal(); }
+    updateGroups();
+  }
+
+  /* ---------- Shared ---------- */
+  function readoutsShared() {
+    $('perOut').textContent = sig(st.P, 3) + ' p';
+    $('per').value = Math.round(500 * Math.log10(st.P));
+    document.querySelectorAll('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.name === st.name));
+    $('cepRead').innerHTML = (st.name ? `<b>${st.name}</b>: ` : '') + `periood <b>${sig(st.P, 4)} päeva</b>, keskmine M<sub>V</sub> = ${fmt(cep.Mv, 2)}, M<sub>H</sub><sup>W</sup> = ${fmt(cep.Mw, 2)}.`;
+  }
+  function render() {
+    readoutsShared();
+    if (st.tab === 'tab1') render1();
+    else if (st.tab === 'tab2') render2();
+    else if (st.tab === 'tab3') render3();
+    else render4();
+  }
+  function setP(P, name) {
+    st.P = P; st.name = name || null; cep = cepheid(P);
+    makeObs();
+    render();
+  }
+  function updateGroups() {
+    document.querySelectorAll('.controls .group').forEach(g => {
+      const d = g.dataset;
+      g.hidden = !d.tabs.split(' ').includes(st.tab) || (st.tab === 'tab3' && d.steps && !d.steps.split(' ').includes(st.step)) ||
+        (st.tab === 'tab4' && d.views && !d.views.split(' ').includes(st.view4));
+    });
+  }
+
+  /* ---------- Controls ---------- */
+  for (const [name, P] of PRESETS) {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'small'; btn.dataset.name = name; btn.textContent = name;
+    btn.addEventListener('click', () => setP(P, name));
+    $('presets').appendChild(btn);
+  }
+  $('per').addEventListener('input', e => setP(+(10 ** (e.target.value / 500)).toPrecision(3)));
+  STAGES.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'small'; b.textContent = s.name;
+    b.addEventListener('click', () => { stop(); st.phase = s.phi; phaseMoved(); });
+    $('stages').appendChild(b);
+  });
+  $('phase').addEventListener('input', e => { stop(); st.phase = e.target.value / 1000; phaseMoved(); });
+  document.querySelectorAll('[data-speed]').forEach(b => b.addEventListener('click', () => { st.speed = +b.dataset.speed; speedButtons(); }));
+  const speedButtons = () => document.querySelectorAll('[data-speed]').forEach(b => b.setAttribute('aria-checked', +b.dataset.speed === st.speed));
+  speedButtons();
+
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
+    st.mode = b.dataset.mode; Object.assign(st, MODES[st.mode]); makeObs(); render2();
+  }));
+  $('nobs').addEventListener('input', e => { st.N = +e.target.value; makeObs(); render2(); });
+  $('span').addEventListener('input', e => { st.span = +(10 * 10 ** (2 * e.target.value / 1000)).toPrecision(3); makeObs(); render2(); });
+  $('noise').addEventListener('input', e => { st.noise = +e.target.value; makeObs(); render2(); });
+  $('newObs').addEventListener('click', () => { st.obsSeed++; makeObs(); render2(); });
+  $('ptest').addEventListener('input', e => { st.Ptest = PMIN * (PMAX / PMIN) ** (e.target.value / 10000); ptestMoved(); });
+  const nudge = k => { st.Ptest = 1 / (1 / st.Ptest - k / (40 * st.span)); st.Ptest = clamp(st.Ptest, PMIN, PMAX); ptestMoved(); };
+  $('pDown').addEventListener('click', () => nudge(-1));
+  $('pUp').addEventListener('click', () => nudge(1));
+  $('findP').addEventListener('click', () => { findPeak(); ptestMoved(); });
+  const pgSvg = $('pgram');
+  let pgDrag = false;
+  const pgSet = e => { const p = svgPoint(pgSvg, e); st.Ptest = clamp(pgInv(p.x), PMIN, PMAX); ptestMoved(); };
+  pgSvg.addEventListener('pointerdown', e => { pgDrag = true; pgSvg.setPointerCapture(e.pointerId); pgSet(e); e.preventDefault(); });
+  pgSvg.addEventListener('pointermove', e => { if (pgDrag) pgSet(e); });
+  pgSvg.addEventListener('pointerup', () => { pgDrag = false; });
+  pgSvg.addEventListener('pointercancel', () => { pgDrag = false; });
+
+  document.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => { st.step = b.dataset.step; if (st.step !== 'avastus') stopBlink(); render3(); }));
+  $('smc').addEventListener('click', e => {
+    const t = e.target.closest('[data-i]');
+    if (!t) return;
+    st.picked = +t.dataset.i; st.shown.add(st.picked);
+    drawSMCDyn(); renderLeav(); readoutsLeav();
+  });
+  $('allLeav').addEventListener('change', e => { st.allLeav = e.target.checked; drawSMCDyn(); renderLeav(); readoutsLeav(); });
+  $('leavLine').addEventListener('change', e => { st.leavLine = e.target.checked; renderLeav(); });
+  $('mu2').addEventListener('input', e => { st.mu2 = +e.target.value; renderCalib(); readoutsCalib(); });
+  $('fit2').addEventListener('click', () => { st.mu2 = +fitMu(SMC).mu.toFixed(2); st.fitted2 = true; $('mu2').value = st.mu2; renderCalib(); readoutsCalib(); });
+  $('mu3').addEventListener('input', e => { st.mu3 = +e.target.value; st.checked = null; renderCalib(); readoutsCalib(); });
+  $('check3').addEventListener('click', () => { st.checked = { mu: st.mu3 }; readoutsCalib(); });
+  $('fit3').addEventListener('click', () => { st.mu3 = +fitMu(GAL.c).mu.toFixed(2); st.fitted3 = true; $('mu3').value = st.mu3; renderCalib(); readoutsCalib(); });
+  $('newGal').addEventListener('click', () => { st.galSeed++; makeGal(); renderCalib(); readoutsCalib(); });
+
+  $('av').addEventListener('input', e => { st.Av = +e.target.value; render4(); });
+  $('alt').addEventListener('change', e => { st.alt = e.target.checked; render4(); });
+  document.querySelectorAll('[data-view4]').forEach(b => b.addEventListener('click', () => { st.view4 = b.dataset.view4; render4(); }));
+  document.querySelectorAll('[data-band]').forEach(b => b.addEventListener('click', () => { st.band = b.dataset.band; render4(); }));
+  $('newDust').addEventListener('click', () => { st.dustSeed++; makeDust(); render4(); });
+
+  // One animation loop for the pulsating star (one cycle in st.speed seconds) and the blinking variables (two days a second).
+  let last = 0, raf = 0;
+  function tick(ts) {
+    if (!st.playing && !st.blink) { raf = 0; return; }
+    const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0;
+    last = ts;
+    if (st.playing) { st.phase = (st.phase + dt / st.speed) % 1; phaseMoved(); }
+    if (st.blink) { st.tDays += 2 * dt; drawSMCDyn(); drawLeavDyn(); }
+    raf = requestAnimationFrame(tick);
+  }
+  function startLoop() { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } }
+  function stop() { st.playing = false; $('play').textContent = '▶ Käivita'; }
+  function stopBlink() { st.blink = false; $('blink').textContent = '▶ Käivita'; }
+  $('play').addEventListener('click', () => {
+    if (st.playing) { stop(); return; }
+    st.playing = true; $('play').textContent = '❚❚ Peata'; startLoop();
+  });
+  $('blink').addEventListener('click', () => {
+    if (st.blink) { stopBlink(); return; }
+    st.blink = true; $('blink').textContent = '❚❚ Peata'; startLoop();
+  });
+
+  /* ---------- Tabs ---------- */
+  // Each tab has its own address, so that other pages can link to it.
+  const HASH = { tab1: 'pulsatsioon', tab2: 'periood', tab3: 'leavitt', tab4: 'tolm' };
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function selectTab(id, fromHash) {
+    st.tab = id;
+    if (id !== 'tab1') stop();
+    if (id !== 'tab3') stopBlink();
+    for (const b of tabs) {
+      const on = b.id === id;
+      b.setAttribute('aria-selected', on);
+      b.tabIndex = on ? 0 : -1;
+      $(b.getAttribute('aria-controls')).hidden = !on;
+    }
+    updateGroups();
+    document.querySelectorAll('.explain [data-tab]').forEach(u => { u.hidden = u.dataset.tab !== id; });
+    if (!fromHash && location.hash.slice(1) !== HASH[id]) history.replaceState(null, '', '#' + HASH[id]);
+    render();
+  }
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => selectTab(b.id));
+    b.addEventListener('keydown', e => {
+      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!k) return;
+      const next = tabs[(i + k + tabs.length) % tabs.length];
+      selectTab(next.id);
+      next.focus();
+    });
+  });
+  document.querySelectorAll('.explain [data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); selectTab(a.dataset.go); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+  const fromHash = () => {
+    const id = Object.keys(HASH).find(k => HASH[k] === decodeURIComponent(location.hash.slice(1)));
+    selectTab(id || 'tab1', true);
+  };
+  window.addEventListener('hashchange', fromHash);
+
+  Object.assign(st, MODES.ground);
+  makeObs();
+  st.Ptest = 7;
+  makeGal();
+  makeDust();
+  fromHash();
+})();
+</script>
+</body>
+</html>
