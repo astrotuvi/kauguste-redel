@@ -815,7 +815,7 @@ footer a { color: inherit; }
       </div>
       <p class="fit" id="calibInfo"></p>
       <p class="hint table-note" id="galNote">Kauguse moodul μ on galaktika tsefeiidide W<sub>H</sub> − M<sub>H</sub><sup>W</sup>(P) kaalutud keskmine. Kiirus v = cz,
-        kus z on galaktikas plahvatanud supernoova punanihe, mis on parandatud galaktika omaliikumise jaoks. Klõpsa galaktika real, et näha selle tsefeiide; uus klõps peidab need. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+        kus z on galaktikas plahvatanud supernoova punanihe, mis on parandatud galaktika pekuliaarse kiiruse jaoks. Klõpsa galaktika real, et näha selle tsefeiide; uus klõps peidab need. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
       <div id="galWrap">
         <div class="table-wrap">
           <table class="data-table">
@@ -879,7 +879,7 @@ footer a { color: inherit; }
     <div role="tabpanel" class="pane" id="paneSnIntro" aria-labelledby="tabSnIntro">
     <p class="lede">Ia tüüpi <a href="supernoovad.html">supernoova</a> on plahvatav <a href="https://et.wikipedia.org/wiki/Valge_k%C3%A4%C3%A4bus" target="_blank" rel="noopener">valge kääbus</a>. Kõik need plahvatused on maksimumis peaaegu ühesuguse heledusega, nii et supernoova sobib
       kauguse mõõtmiseks ja on nähtav ka väga kaugelt. Kõigepealt leia 3. osa galaktikate abil, kui hele on supernoova tegelikult, ja seejärel mõõda
-      kaugete supernoovade abil <a href="https://et.wikipedia.org/wiki/Hubble'i_konstant" target="_blank" rel="noopener">Hubble'i konstant</a>. Nii kaugel ei sega galaktikate <a class="en" href="https://en.wikipedia.org/wiki/Peculiar_velocity" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">omaliikumine</a> enam palju.</p>
+      kaugete supernoovade abil <a href="https://et.wikipedia.org/wiki/Hubble'i_konstant" target="_blank" rel="noopener">Hubble'i konstant</a>. Nii kaugel ei sega galaktikate <a class="en" href="https://en.wikipedia.org/wiki/Peculiar_velocity" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">pekuliaarsed kiirused</a> enam palju.</p>
     <p class="fit" id="snInfo"></p>
 
     <ol class="steps">
@@ -2270,7 +2270,7 @@ function drawHubble() {
     </div>
     <p class="formula">${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
     (fit.eCal ? `, perioodi-heleduse seose nullpunkt ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, liidetud ruutudena.
-    Lähedaste galaktikate omaliikumised (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus.</p>`;
+    Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus.</p>`;
 }
 
 // rows first..last of a paged table (S.pages[key]) with n rows; updates its pager

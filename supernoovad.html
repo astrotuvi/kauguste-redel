@@ -389,7 +389,7 @@ table.res tr.hl td { font-weight: 650; }
       </div>
 
       <div class="group" data-tabs="tab4">
-        <div class="slider"><label for="sv">Galaktikate omaliikumine σ<sub>v</sub></label><input type="range" id="sv" min="0" max="600" step="10" value="250"><output for="sv" id="svOut"></output></div>
+        <div class="slider"><label for="sv">Galaktikate pekuliaarne kiirus σ<sub>v</sub></label><input type="range" id="sv" min="0" max="600" step="10" value="250"><output for="sv" id="svOut"></output></div>
         <div class="slider"><label for="sm">Ühe kauguse viga σ<sub>μ</sub></label><input type="range" id="sm" min="0" max="0.5" step="0.01" value="0.13"><output for="sm" id="smOut"></output></div>
       </div>
       <div class="group" data-tabs="tab4" data-views="model">
@@ -1154,7 +1154,7 @@ table.res tr.hl td { font-weight: 650; }
       if (st.showSn) { const p = snPts(), f = fitH(p); for (const q of p) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (f.H * q.d) - 1)), r: 2.6, class: 'npt' }, inner); }
       if (st.showGal) { const p = galPts(), f = fitH(p); for (const q of p) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (f.H * q.d) - 1)), r: 3.2, class: 'gpt' }, inner); }
     }
-    text(g, B.x1 - 8, B.y1 - 24, `omaliikumine ±${st.sv} km/s`, 'lbl2', 'end');
+    text(g, B.x1 - 8, B.y1 - 24, `pekuliaarne kiirus ±${st.sv} km/s`, 'lbl2', 'end');
     text(g, B.x1 - 8, B.y1 - 8, `kauguse viga ±${fmt(db, 0)} %`, 'slbl', 'end');
   }
   const LOGD = v => +(5 * (DMAX / 5) ** (v / 1000)).toPrecision(2);
@@ -1168,14 +1168,14 @@ table.res tr.hl td { font-weight: 650; }
     const model = st.view4 === 'model';
     $('hint4').textContent = model
       ? 'Simuleeritud galaktikad: kiirus on paisumine (H₀ = 70 km/s/Mpc) pluss galaktika oma liikumine, kaugusel on mõõtmisviga. Vali paremal kaugusvahemik või vajuta harjutuse osa nuppu.'
-      : 'Harjutuse andmed: 3. osa 29 galaktikat tsefeiidide kaugustega (punased) ja 4. osa 166 kauget supernoovat (oranžid). Muuda paremal omaliikumist ja kauguse viga, et ribad sobiksid punktidega.';
+      : 'Harjutuse andmed: 3. osa 29 galaktikat tsefeiidide kaugustega (punased) ja 4. osa 166 kauget supernoovat (oranžid). Muuda paremal pekuliaarset kiirust ja kauguse viga, et ribad sobiksid punktidega.';
     $('legend4').innerHTML = (model ? '<span><i class="dot" style="background: var(--sel)"></i>simuleeritud galaktikad</span><span><i style="border-color: var(--sel)"></i>sobitus</span>'
       : '<span><i class="dot" style="background: var(--cep)"></i>3. osa galaktikad</span><span><i class="dot" style="background: var(--sn)"></i>4. osa supernoovad</span>') +
-      '<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>H₀ = 70</span><span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>omaliikumine</span>' +
+      '<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>H₀ = 70</span><span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>pekuliaarne kiirus</span>' +
       '<span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i>kauguse viga</span>';
     if (model) {
       const p = modelPts(), f = fitH(p), vb = mean(p.map(q => relBand(q.d) ** 2)), dbb = distBand() ** 2, sh = vb / (vb + dbb || 1);
-      $('modelRead').innerHTML = `<b>H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc</b>. Kiirused hajuvad joone ümber ${fmt(100 * f.rel, 0)} %; sellest umbes ${fmt(100 * sh, 0)} % tuleb omaliikumisest ` +
+      $('modelRead').innerHTML = `<b>H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc</b>. Kiirused hajuvad joone ümber ${fmt(100 * f.rel, 0)} %; sellest umbes ${fmt(100 * sh, 0)} % tuleb pekuliaarsest kiirusest ` +
         `ja ${fmt(100 * (1 - sh), 0)} % kauguse veast.`;
     } else {
       const g3 = fitH(galPts()), s4 = fitH(snPts()), M = st.mb === 'cal' ? MB_CAL : MB_SH0ES;
