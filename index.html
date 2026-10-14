@@ -1414,8 +1414,9 @@ const FIELD_CEPHEIDS = [
 ];
 const FIELD_KEY = "kauguste-redel:valjatsefeiidid-seoses";
 
-// published period-luminosity relation in W_H, M = a (log P - 1) + b, for comparison
-const PL_PUB = { a: -3.29, b: -5.914, ref: "Cruz Reyes &amp; Anderson (2023)" };
+// published period-luminosity relation in W_H, M = a (log P - 1) + b, for comparison; the errors are those of
+// their eq. 17, where the intercept is fitted with the slope fixed to -3.299 +- 0.015 of SH0ES
+const PL_PUB = { a: -3.29, b: -5.914, ea: 0.015, eb: 0.017, ref: "Cruz Reyes &amp; Anderson (2023)" };
 const STORE_KEY = "kauguste-redel:parvede-kaugused";
 const MATCH_DEG = 0.1;               // a query centred this close to a listed cluster measures that cluster
 
@@ -2315,7 +2316,7 @@ function fitPL(pts) {
   }
   const det = sw * sxx - sx * sx;
   if (!(det > 0)) return null;
-  return { a: (sw * sxy - sx * sy) / det, b: (sxx * sy - sx * sxy) / det, ea: Math.sqrt(sw / det), eb: Math.sqrt(sxx / det) };
+  return { a: (sw * sxy - sx * sy) / det, b: (sxx * sy - sx * sxy) / det, ea: Math.sqrt(sw / det), eb: Math.sqrt(sxx / det), cov: -sx / det };
 }
 
 // "M = a (log P - 1) + b" as HTML, with errors when given
@@ -2438,7 +2439,7 @@ function onFieldClick() {
 // the W_H period-luminosity relation chosen for the galaxies, or null when it cannot be formed
 function calibration() {
   const pub = PL_PUB;
-  if (S.calibUsed === "pub") return { a: pub.a, b: pub.b, ea: 0, eb: 0 };
+  if (S.calibUsed === "pub") return { a: pub.a, b: pub.b, ea: pub.ea, eb: pub.eb, cov: 0 };
   const pts = cepheidPoints();
   return pts.length >= 2 ? fitPL(pts) : null;
 }
@@ -2459,8 +2460,28 @@ function galaxyFit(g, cal) {
   return { ...g, ceph, mu, eMu, d, eD: d * (Math.LN10 / 5) * eMu, v: C_KMS * g.z };
 }
 
+// mean log P - 1 of the Cepheids in the galaxies, weighted as in galaxyFit and averaged over the
+// galaxies. The relation is used there, well above its pivot log P = 1, so its slope error matters too.
+const HOST_X = GALAXIES.reduce((sum, g) => {
+  let sw = 0, swx = 0;
+  for (let k = 0; k < g.c.length; k += 4) { const w = 1 / g.c[k + 3] ** 2; sw += w; swx += w * (Math.log10(g.c[k]) - 1); }
+  return sum + swx / sw;
+}, 0) / GALAXIES.length;
+
+// Systematic error of the galaxy distance moduli (mag). The page applies one relation to W_H and leaves out
+// the metallicity term and photometric corrections (such as count-rate nonlinearity) that SH0ES fits: with
+// the SH0ES relation, these host distance moduli are on average 0.037 mag larger than those of SH0ES.
+// Like the error of the relation, it shifts all the galaxies together.
+const MU_SYS = 0.04;
+
+// error of the period-luminosity relation at HOST_X (mag); it shifts all galaxy distances together,
+// so it does not average out over the galaxies
+function calError(cal) {
+  return Math.sqrt(cal.eb ** 2 + HOST_X ** 2 * cal.ea ** 2 + 2 * HOST_X * (cal.cov || 0));
+}
+
 // least squares v = H0 d through the origin; the error combines the scatter about the line
-// and the zero-point error of the period-luminosity relation, which scales all distances
+// the error of the period-luminosity relation and the systematic error MU_SYS, which scale all distances
 function fitHubble(gals, cal) {
   const n = gals.length;
   let sdd = 0, sdv = 0;
@@ -2469,8 +2490,8 @@ function fitHubble(gals, cal) {
   let rss = 0;
   for (const g of gals) rss += (g.v - H * g.d) ** 2;
   const eStat = n > 1 ? Math.sqrt(rss / (n - 1) / sdd) : NaN;
-  const eCal = H * (Math.LN10 / 5) * cal.eb;
-  return { H, eStat, eCal, e: Math.hypot(eStat, eCal), n };
+  const eCal = H * (Math.LN10 / 5) * calError(cal), eSys = H * (Math.LN10 / 5) * MU_SYS;
+  return { H, eStat, eCal, eSys, e: Math.hypot(eStat, eCal, eSys), n };
 }
 
 // The Hubble law, and the choice of relation, appear only once the user has fitted an own
@@ -2560,7 +2581,7 @@ function drawHubbleParts() {
   });
 
   S.h0Local = fit ? fit.H : null;
-  drawSupernovae(gals);
+  drawSupernovae(gals, cal);
   if (!fit) { $("h0").innerHTML = `<p class="empty">${L("Vali sobitusse vähemalt üks galaktika.", "Choose at least one galaxy for the fit.")}</p>`; return; }
   const [hV, hE] = valErr(fit.H, fit.e);
   const tH = 977.8 / fit.H;                              // 1/H0 in Gyr
@@ -2570,10 +2591,14 @@ function drawHubbleParts() {
       <div class="tile"><div class="label">${L("Hubble'i aeg", "Hubble time")} 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">${L("miljardit aastat", "billion years")}</div></div>
     </div>
     <p class="formula">` + L(`${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
-    (fit.eCal ? `, perioodi-heleduse seose nullpunkt ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, liidetud ruutudena.
+    (fit.eCal ? `, perioodi-heleduse seos (nullpunkt ja tõus) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `,
+    süstemaatiline viga ${fmtN(fit.eSys, 1)} km/s/Mpc, liidetud ruutudena. Süstemaatiline viga (${fmtN(MU_SYS, 2)} mag kauguse moodulis) tuleb lihtsustustest:
+    siin ei arvestata tsefeiidide metallilisuse mõju ega fotomeetria parandusi, mida SH0ES kasutab.
     Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus. <a class="more" href="hubble.html#vanus">Loe lähemalt →</a>`,
     `${fmt(fit.n)} galaxies. Error: scatter about the line ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
-    (fit.eCal ? `, zero point of the period–luminosity relation ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, added in quadrature.
+    (fit.eCal ? `, period–luminosity relation (zero point and slope) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `,
+    systematic error ${fmtN(fit.eSys, 1)} km/s/Mpc, added in quadrature. The systematic error (${fmtN(MU_SYS, 2)} mag in the distance modulus) comes from simplifications:
+    the effect of the Cepheids' metallicity and the photometric corrections that SH0ES uses are left out here.
     The peculiar velocities of nearby galaxies (a few hundred km/s) cause scatter. The Hubble time is roughly the age of the Universe. <a class="more" href="hubble.html#vanus">Read more →</a>`) + `</p>`;
 }
 
@@ -2593,19 +2618,21 @@ function pageRange(key, n) {
 /* ---------- Part 4: type Ia supernovae ---------- */
 
 // absolute peak magnitude of the supernovae from the selected Cepheid galaxies, then H0 from the
-// distant supernovae; errors are the standard error of the mean and the scatter about the line
+// distant supernovae; errors are those of M_B and the scatter about the line
 // Until "Kasuta heledust" is pressed only the supernova magnitudes are shown; afterwards the derived
 // quantities, the plot and H0 follow the current results of part 3, with the supernova luminosity
 // chosen in the menu: the mean M_B of the part 3 galaxies or the SH0ES value.
-// mean absolute peak magnitude of the supernovae in the given galaxies, with its standard error and the
-// scatter; null for fewer than two galaxies
-function meanMB(gals) {
+// mean absolute peak magnitude of the supernovae in the given galaxies, whose distances come from the
+// relation cal, and the scatter; null for fewer than two galaxies. The error e combines the standard error
+// of the mean eMean, the error of the relation eCal and MU_SYS; the mean reduces neither of the last two.
+function meanMB(gals, cal) {
   const n = gals.length;
   if (n < 2) return null;
   const Ms = gals.map((g) => g.mb - g.mu);
   const M = Ms.reduce((a, b) => a + b, 0) / n;
   const sd = Math.sqrt(Ms.reduce((a, v) => a + (v - M) ** 2, 0) / (n - 1));
-  return { M, e: sd / Math.sqrt(n), sd, n };
+  const eMean = sd / Math.sqrt(n), eCal = calError(cal);
+  return { M, e: Math.hypot(eMean, eCal, MU_SYS), eMean, eCal, sd, n };
 }
 
 // H0 from the distant supernovae with the luminosity { M, e }: the fit through the origin, with the
@@ -2626,7 +2653,7 @@ function fitFarSN(cal) {
   return { pts, H, eH: Math.hypot(eStat, eCal) };
 }
 
-function drawSupernovae(gals) {
+function drawSupernovae(gals, rel) {
   $("snInfo").textContent = "";
   const used = gals.filter((g) => !S.galOff.has(g.name));
   const dash = `<td class="muted">—</td>`;
@@ -2643,14 +2670,17 @@ function drawSupernovae(gals) {
   }
 
   // the mean M_B of the selected galaxies is always shown; the chosen value is used below
-  const own = meanMB(used);
+  const own = meanMB(used, rel);
   let ownLine;
   if (own) {
-    const { M, sd, n } = own;
+    const { M, sd, n, eMean, eCal } = own;
     const [mV, mE] = valErr(M, own.e);
     ownLine = L(`Supernoovade keskmine absoluutne tähesuurus maksimumis 3. osa galaktikatest: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
-      (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag).`, `Mean absolute peak magnitude of the supernovae from the galaxies of part 3: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
-      (${fmt(n)} galaxies, scatter ${fmtN(sd, 2)} mag).`);
+      (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag). Viga: keskmise viga ${fmtN(eMean, 3)} mag, perioodi-heleduse seose viga ${fmtN(eCal, 3)} mag
+      ja süstemaatiline viga ${fmtN(MU_SYS, 3)} mag, liidetud ruutudena. Kaks viimast nihutavad kõiki galaktikaid koos, nii et need keskmistamisel ei vähene.`,
+      `Mean absolute peak magnitude of the supernovae from the galaxies of part 3: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
+      (${fmt(n)} galaxies, scatter ${fmtN(sd, 2)} mag). Error: error of the mean ${fmtN(eMean, 3)} mag, error of the period–luminosity relation ${fmtN(eCal, 3)} mag
+      and systematic error ${fmtN(MU_SYS, 3)} mag, added in quadrature. The last two shift all the galaxies together, so averaging does not reduce them.`);
   } else ownLine = L("Oma M<sub>B</sub> leidmiseks vali 3. osas sobitusse vähemalt kaks galaktikat.", "To find your own M<sub>B</sub>, choose at least two galaxies for the fit in part 3.");
   const cal = S.snUsed === "pub" ? MB_SH0ES : own;
   const [uV, uE] = cal ? valErr(cal.M, cal.e) : [];
@@ -2703,7 +2733,7 @@ function ownH0() {
   const keep = (cal) => GALAXIES.map((g) => galaxyFit(g, cal)).filter((g) => !S.galOff.has(g.name));
   const g3 = keep(own), g4 = rel === own ? g3 : keep(rel);
   if (!g3.length) return [];
-  const p3 = fitHubble(g3, own), mb = meanMB(g4), p4 = mb && fitFarSN(mb);
+  const p3 = fitHubble(g3, own), mb = meanMB(g4, rel), p4 = mb && fitFarSN(mb);
   return [
     { name: "Sinu 3. osa: tsefeiidid", en: "Your part 3: Cepheids", v: p3.H, e: p3.e, k: "u" },
     ...(p4 ? [{ name: "Sinu 4. osa: supernoovad", en: "Your part 4: supernovae", v: p4.H, e: p4.eH, k: "u",

@@ -469,12 +469,21 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
   or removes one. Clusters have few long-period Cepheids, so the field
   Cepheids pin down the slope.
 - The published relation is `M_H^W = −5.914 − 3.29 (log P − 1)` (Cruz Reyes &
-  Anderson 2023).
+  Anderson 2023), with the errors of their eq. 17: ±0.017 mag in the
+  intercept and ±0.015 in the slope, which they fix to the SH0ES value.
 - A galaxy distance modulus is the weighted mean of `W_H − M_H^W(P)` over its
   Cepheids. The galaxy velocity is `v = c z_HD`, from the Pantheon+ redshift
   of its supernova, which is corrected for peculiar velocities. H₀ is fitted
   through the origin. Its error combines the scatter about the line and the
-  zero-point error of the period-luminosity relation.
+  error of the period-luminosity relation at the mean log P of the galaxy
+  Cepheids (about 1.6, far above the pivot at log P = 1), from the errors of
+  the slope and intercept and their covariance. That error shifts all the
+  galaxy distances together, so it is also added in quadrature to the
+  standard error of the mean M_B in part 4. Both also include a systematic
+  error of 0.04 mag in the distance moduli: the page leaves out the
+  metallicity term and photometric corrections that SH0ES fits, and with the
+  SH0ES relation its host distance moduli are on average 0.037 mag larger
+  than those of SH0ES (`CEPH_DIST` in the Pantheon+SH0ES table).
 
 ## Data services
 
