@@ -817,8 +817,12 @@ table.res tr.hl td { font-weight: 650; }
       text(svg, 112, cy + 104, L('kaaslane: punane hiid', 'companion: red giant'), 'nl2', 'middle');
       if (s.e === 0) {
         el('ellipse', { cx: wx, cy, rx: 34, ry: 8, fill: 'rgba(255, 196, 150, 0.35)', stroke: 'rgba(255, 196, 150, 0.6)' }, svg);
-        const P0 = [196, cy], P1 = [250, cy - 60], P2 = [wx - 10, cy - 7], bez = u => [(1 - u) ** 2 * P0[0] + 2 * u * (1 - u) * P1[0] + u * u * P2[0], (1 - u) ** 2 * P0[1] + 2 * u * (1 - u) * P1[1] + u * u * P2[1]];
-        el('path', { d: `M${P0} Q${P1} ${P2}`, fill: 'none', stroke: 'rgba(255, 196, 150, 0.35)', 'stroke-width': 3 }, svg);
+        // The stream lies in the plane of the disc (the disc ellipse is that plane seen at a slant): it leaves L1, curves around the white dwarf and meets the disc rim on the near side.
+        const kv = 8 / 34, rim = 34, th = 100 * Math.PI / 180;
+        const P0 = [-(wx - 196), 0], P1 = [-40, 62], P2 = [rim * Math.cos(th), rim * Math.sin(th)];
+        const bez = u => { const x = (1 - u) ** 2 * P0[0] + 2 * u * (1 - u) * P1[0] + u * u * P2[0], v = (1 - u) ** 2 * P0[1] + 2 * u * (1 - u) * P1[1] + u * u * P2[1]; return [wx + x, cy + kv * v]; };
+        const pts = Array.from({ length: 25 }, (_, i) => bez(i / 24));
+        el('path', { d: 'M' + pts.map(q => q.join(',')).join(' L'), fill: 'none', stroke: 'rgba(255, 196, 150, 0.35)', 'stroke-width': 3 }, svg);
         for (let k = 0; k < 9; k++) { const p = bez((k / 9 + st.anim * 0.6) % 1); el('circle', { cx: p[0], cy: p[1], r: 1.8, fill: '#ffd2a8' }, svg); }
         el('circle', { cx: wx, cy, r: 12, fill: gWd }, svg);
         el('circle', { cx: wx, cy, r: 2 + 3 * R, fill: stage === 2 ? '#ffe6b0' : WD_COL }, svg);
