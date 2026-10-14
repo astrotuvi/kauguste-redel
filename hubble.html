@@ -812,6 +812,8 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     { name: 'NGC 5584', z: 0.00625, note: 'NGC 5584, üks harjutuse 3. osa galaktikatest', noteEn: 'NGC 5584, one of the galaxies of part 3 of the exercise' },
     { name: 'UGC 9612', z: 0.0382, note: 'UGC 9612, kus plahvatas SN 2007O, üks harjutuse 4. osa kaugetest supernoovadest',
       noteEn: 'UGC 9612, where SN 2007O exploded, one of the distant supernovae of part 4 of the exercise' },
+    { name: 'z = 0,5', en: 'z = 0.5', z: 0.5, note: 'kauge galaktika, mille valgus on olnud teel umbes 5 miljardit aastat',
+      noteEn: 'a distant galaxy whose light has been travelling for about 5 billion years' },
     { name: 'z = 1', z: 1, note: 'kauge galaktika, mille valgus on olnud teel umbes 8 miljardit aastat',
       noteEn: 'a distant galaxy whose light has been travelling for about 8 billion years' },
   ];
@@ -919,6 +921,8 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     $('quizBtn').textContent = q ? L('Lõpeta', 'Finish') : L('Mõõda ise', 'Measure');
     $('quizBtn').setAttribute('aria-pressed', !!q);
     $('quizNew').hidden = $('quizBtns').hidden = !q;
+    if (q) $('quizBtns').appendChild($('quizBtn'));
+    else $('quizNew').parentNode.insertBefore($('quizBtn'), $('quizNew'));
     $('zRead').hidden = !!q;
     if (!q) { $('quizRead').innerHTML = ''; return; }
     let r = `${L('Sinu', 'Your')} z = <b>${fmt(q.g, 4)}</b>, v = cz = ${fmtK(C_KMS * q.g)} km/s.`;
