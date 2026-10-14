@@ -361,8 +361,8 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <p class="hint" data-l="et">Kaugusmoodul punanihke järgi kolmes mudeluniversumis, punktid on simuleeritud supernoovad valitud mudelis (hajuvus 0.13 tähesuurust). Muuda paremal aine tihedust ja vali, kuidas punanihkest kaugus arvutatakse.</p>
-        <p class="hint" data-l="en">The distance modulus against redshift in three model universes; the points are simulated supernovae in the chosen model (scatter 0.13 magnitudes). Change the matter density on the right and choose how the distance is computed from the redshift.</p>
+        <p class="hint" data-l="et">Kaugusmoodul punanihke järgi kolmes mudeluniversumis, punktid on simuleeritud supernoovad valitud mudelis (hajuvus 0.13 tähesuurust). Alumisel joonisel on need keskmistatud punanihke vahemike kaupa, vearibaga. Muuda paremal aine tihedust ja vali, kuidas punanihkest kaugus arvutatakse.</p>
+        <p class="hint" data-l="en">The distance modulus against redshift in three model universes; the points are simulated supernovae in the chosen model (scatter 0.13 magnitudes). The lower plot averages them in redshift bins, with error bars. Change the matter density on the right and choose how the distance is computed from the redshift.</p>
         <p class="sub"><span data-l="et">Hubble'i diagramm</span><span data-l="en">Hubble diagram</span></p>
         <svg id="hd" class="scene" viewBox="0 0 760 290" role="img" aria-label="Kaugusmoodul punanihke järgi" data-en-aria-label="Distance modulus against redshift"></svg>
         <p class="sub"><span data-l="et">Erinevus tühjast Universumist</span><span data-l="en">Difference from an empty Universe</span></p>
@@ -372,13 +372,15 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
           <span><i style="border-color: var(--cep)"></i><span data-l="et">ainult aine (q₀ = 0.5)</span><span data-l="en">matter only (q₀ = 0.5)</span></span>
           <span><i style="border-color: var(--sn)"></i><span data-l="et">valitud mudel</span><span data-l="en">chosen model</span></span>
           <span><i style="border-color: var(--sel); border-top-style: dashed"></i><span id="lgForm">valitud valem</span></span>
+          <span><i class="dot" style="width: 5px; height: 5px; background: var(--sn); opacity: 0.5"></i><span data-l="et">simuleeritud supernoovad</span><span data-l="en">simulated supernovae</span></span>
+          <span><i class="dot" style="background: var(--sn)"></i><span data-l="et">nende keskmine igas punanihke vahemikus</span><span data-l="en">their mean in each redshift bin</span></span>
         </div>
         <p class="sub"><span data-l="et">H₀ viga</span><span data-l="en">Error in H₀</span></p>
         <svg id="h0err" class="scene" viewBox="0 0 760 240" role="img" aria-label="H₀ viga, kui kaugus arvutatakse lihtsama valemiga" data-en-aria-label="The error in H₀ when the distance is computed with a simpler formula"></svg>
         <div class="legend">
           <span><i style="border-color: var(--sel)"></i>v = cz</span>
           <span><i style="border-color: var(--sn)"></i>cz (1 + 0.775 z)</span>
-          <span><i style="border-color: var(--text-1)"></i><span data-l="et">täpne</span><span data-l="en">exact</span></span>
+          <span><i style="border-color: var(--text-1)"></i><span data-l="et">täielik valem</span><span data-l="en">full formula</span></span>
           <span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i><span data-l="et">harjutuse 4. osa</span><span data-l="en">part 4 of the exercise</span></span>
         </div>
       </div>
@@ -465,7 +467,8 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       </div>
 
       <div class="group" data-tabs="tab3">
-        <div class="slider"><label for="om3"><span data-l="et">Aine tihedus Ω<sub>m</sub> (ülejäänu on tume energia)</span><span data-l="en">Matter density Ω<sub>m</sub> (the rest is dark energy)</span></label><input type="range" id="om3" min="0" max="1" step="0.005" value="0.315"><output for="om3" id="om3Out"></output></div>
+        <div class="slider"><label for="om3"><span data-l="et">Aine tihedus Ω<sub>m</sub></span><span data-l="en">Matter density Ω<sub>m</sub></span></label><input type="range" id="om3" min="0" max="1" step="0.005" value="0.315"><output for="om3" id="om3Out"></output></div>
+        <div class="slider"><label for="ol3"><span data-l="et">Tume energia Ω<sub>Λ</sub> = 1 − Ω<sub>m</sub></span><span data-l="en">Dark energy Ω<sub>Λ</sub> = 1 − Ω<sub>m</sub></span></label><input type="range" id="ol3" min="0" max="1" step="0.005" value="0.685"><output for="ol3" id="ol3Out"></output></div>
         <div class="btnrow">
           <button type="button" class="small" data-om3="0.315">Planck: 0.315</button>
           <button type="button" class="small" data-om3="1"><span data-l="et">Ainult aine</span><span data-l="en">Matter only</span></button>
@@ -477,7 +480,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
         <div class="seg" role="radiogroup" aria-labelledby="formLbl">
           <button type="button" role="radio" data-form="cz">v = cz</button>
           <button type="button" role="radio" data-form="corr">cz (1 + 0.775 z)</button>
-          <button type="button" role="radio" data-form="exact"><span data-l="et">täpne</span><span data-l="en">exact</span></button>
+          <button type="button" role="radio" data-form="exact"><span data-l="et">Täielik valem</span><span data-l="en">Full formula</span></button>
         </div>
         <p class="readout" id="r3"></p>
         <p class="formula">D<sub>L</sub> = (cz / H<sub>0</sub>) [1 + (1 − q<sub>0</sub>) z / 2 + …], q<sub>0</sub> = Ω<sub>m</sub> / 2 − Ω<sub>Λ</sub></p>
@@ -486,6 +489,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       <div class="group" data-tabs="tab4">
         <div class="slider"><label for="h4"><span data-l="et">Hubble'i konstant</span><span data-l="en">Hubble constant</span> H<sub>0</sub></label><input type="range" id="h4" min="50" max="100" step="0.1" value="70"><output for="h4" id="h4Out"></output></div>
         <div class="slider"><label for="om4"><span data-l="et">Aine tihedus</span><span data-l="en">Matter density</span> Ω<sub>m</sub></label><input type="range" id="om4" min="0.05" max="1" step="0.005" value="0.315"><output for="om4" id="om4Out"></output></div>
+        <div class="slider"><label for="ol4"><span data-l="et">Tume energia Ω<sub>Λ</sub> = 1 − Ω<sub>m</sub></span><span data-l="en">Dark energy Ω<sub>Λ</sub> = 1 − Ω<sub>m</sub></span></label><input type="range" id="ol4" min="0" max="0.95" step="0.005" value="0.685"><output for="ol4" id="ol4Out"></output></div>
         <div class="btnrow">
           <button type="button" class="small" data-pre4="planck">Planck</button>
           <button type="button" class="small" data-pre4="sh0es">SH0ES</button>
@@ -1201,7 +1205,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   const FORMS = {
     cz: { name: 'v = cz', d: z => z, cls: 'curve blue' },
     corr: { name: 'cz (1 + 0.775 z)', d: z => z * (1 + EXPANSION * z), cls: 'curve' },
-    exact: { name: 'täpne', d: z => dlH(z, st.om3), cls: 'curve black' },
+    exact: { name: 'täielik valem', d: z => dlH(z, st.om3), cls: 'curve black' },
   };
   let RND3 = [];
   function makeRnd3() { const r = seeded(17); RND3 = Array.from({ length: 200 }, () => [0.01 * 150 ** r(), gauss(r)]); }
@@ -1267,17 +1271,18 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   }
   const errAt = (k, z) => 100 * (FORMS[k].d(z) / dlH(z, st.om3) - 1);
   function readouts3() {
-    $('om3').value = st.om3;
+    $('om3').value = st.om3; $('ol3').value = 1 - st.om3;
     $('om3Out').textContent = fmt(st.om3, 3);
+    $('ol3Out').textContent = fmt(1 - st.om3, 3);
     document.querySelectorAll('[data-form]').forEach(b => b.setAttribute('aria-checked', b.dataset.form === st.form));
     document.querySelectorAll('[data-om3]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.om3 === st.om3));
-    $('lgForm').textContent = st.form === 'exact' ? L('valem: täpne (sama mis valitud mudel)', 'formula: exact (the same as the chosen model)') : `${L('valem', 'formula')}: ${FORMS[st.form].name}`;
+    $('lgForm').textContent = st.form === 'exact' ? L('täielik valem (sama mis valitud mudel)', 'full formula (the same as the chosen model)') : `${L('valem', 'formula')}: ${FORMS[st.form].name}`;
     const q0 = q0Of(st.om3), z = st.zHover;
     const row = zz => `v = cz ${fmtS(errAt('cz', zz), 1)} %, ${L('parandusega', 'with the correction')} ${fmtS(errAt('corr', zz), 2)} %`;
-    $('r3').innerHTML = L(`Ω<sub>Λ</sub> = ${fmt(1 - st.om3, 3)}, aeglustusparameeter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
+    $('r3').innerHTML = L(`Aeglustusparameeter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
       ` (harjutuse 4. osa kasutab 0.775). ${q0 < 0 ? 'Paisumine kiireneb.' : q0 > 0 ? 'Paisumine aeglustub.' : ''}<br>` +
       `H₀ viga z = 0.04 juures: ${row(0.04)}.` + (z !== null ? `<br>z = ${fmt(z, 3)} juures: ${row(z)}.` : '<br>Vii kursor H₀ vea joonisele, et lugeda viga mõnel muul punanihkel.'),
-      `Ω<sub>Λ</sub> = ${fmt(1 - st.om3, 3)}, deceleration parameter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
+      `Deceleration parameter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
       ` (part 4 of the exercise uses 0.775). ${q0 < 0 ? 'The expansion is accelerating.' : q0 > 0 ? 'The expansion is slowing down.' : ''}<br>` +
       `Error in H₀ at z = 0.04: ${row(0.04)}.` + (z !== null ? `<br>At z = ${fmt(z, 3)}: ${row(z)}.` : '<br>Hover over the plot of the error in H₀ to read the error at another redshift.'));
   }
@@ -1337,9 +1342,10 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     text(g, B.x1 - 38, Y(2.2) + 4, 'Hubble 1929: H₀ ≈ 500, 1/H₀ ≈ 2', 'slbl', 'end');
   }
   function readouts4() {
-    $('h4').value = st.h4; $('om4').value = st.om4; $('t4').value = st.t4;
+    $('h4').value = st.h4; $('om4').value = st.om4; $('ol4').value = 1 - st.om4; $('t4').value = st.t4;
     $('h4Out').textContent = fmt(st.h4, 1);
     $('om4Out').textContent = fmt(st.om4, 3);
+    $('ol4Out').textContent = fmt(1 - st.om4, 3);
     $('t4Out').textContent = `${fmtS(st.t4, 1)} ${L('mld a', 'Gyr')}`;
     const tH = TH / st.h4, t0 = ageOf(st.h4, st.om4), lb = z => t0 - tOfA(1 / (1 + z), st.om4) * tH, dc = distAt(st.t4, st.h4, st.om4);
     const dLin = isFinite(100 * (1 + st.t4 / tH)) && st.t4 >= -tH ? fmt(100 * (1 + st.t4 / tH), 0) + ' Mpc' : '—';
@@ -1560,6 +1566,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   document.querySelectorAll('[data-view2]').forEach(b => b.addEventListener('click', () => { st.view2 = b.dataset.view2; stop2(); render2(); }));
 
   $('om3').addEventListener('input', e => { st.om3 = +e.target.value; render3(); });
+  $('ol3').addEventListener('input', e => { st.om3 = +(1 - e.target.value).toFixed(3); render3(); });
   document.querySelectorAll('[data-om3]').forEach(b => b.addEventListener('click', () => { st.om3 = +b.dataset.om3; render3(); }));
   document.querySelectorAll('[data-form]').forEach(b => b.addEventListener('click', () => { st.form = b.dataset.form; render3(); }));
   $('h0err').addEventListener('pointermove', e => {
@@ -1571,6 +1578,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
 
   $('h4').addEventListener('input', e => { st.h4 = +e.target.value; render4(); });
   $('om4').addEventListener('input', e => { st.om4 = +e.target.value; render4(); });
+  $('ol4').addEventListener('input', e => { st.om4 = +(1 - e.target.value).toFixed(3); render4(); });
   $('t4').addEventListener('input', e => { stop4(); st.t4 = +e.target.value; render4(); });
   const PRE4 = { planck: { h4: 67.4, om4: 0.315 }, sh0es: { h4: 73.04, om4: 0.315 }, matter: { om4: 1 } };
   document.querySelectorAll('[data-pre4]').forEach(b => b.addEventListener('click', () => { Object.assign(st, PRE4[b.dataset.pre4]); render4(); }));

@@ -404,14 +404,16 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
    the correction to the frame of the microwave background for a galaxy in a
    chosen direction. **Hubble 1929** shows Hubble's 24 galaxies with his
    distances or today's.
-3. **Kiirenev paisumine**: the distance modulus against z for an empty universe, a
-   universe of matter only and the chosen Ω_m, with simulated supernovae; the
-   difference from the empty universe; and the error in H₀ when the distance
-   comes from cz or from cz (1 + 0.775 z), with the range of part 4 shaded.
+3. **Kiirenev paisumine**: the distance modulus against z for an empty
+   universe, a universe of matter only and the chosen Ω_m, with simulated
+   supernovae; the difference from the empty universe, with the supernovae
+   averaged in redshift bins; and the error in H₀ when the distance comes
+   from cz or from cz (1 + 0.775 z), with the range of part 4 shaded.
+   Sliders for Ω_m and Ω_Λ = 1 − Ω_m.
 4. **Hubble'i aeg**: the distance to a galaxy now 100 Mpc away against time,
    for a constant velocity, matter only and the chosen model, and the age of
-   the Universe against H₀ with the oldest stars. Sliders for H₀ and Ω_m, and
-   a time slider with a play button.
+   the Universe against H₀ with the oldest stars. Sliders for H₀, Ω_m and
+   Ω_Λ = 1 − Ω_m, and a time slider with a play button.
 5. **Hubble'i pinge**: two views. **Mõõtmised** plots published H₀ values
    from the early Universe, the distance ladder and other methods, with
    fields for the user's own results of parts 3 and 4, and a schematic of
