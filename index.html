@@ -410,6 +410,8 @@ table.data-table tr.cur td { background: color-mix(in srgb, var(--accent) 12%, t
 .sky-pic.empty { background: var(--bg); border: 1px dashed var(--border); }
 .sky-pic.empty > * { display: none; }   /* before a query, and while the name box differs from the queried name */
 .sky-pic img, .sky-pic svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sky-pic .pic-wait { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #c9d0e6; font-size: 0.9rem; }
+.sky-pic.loaded .pic-wait { display: none; }
 .sky-pic circle { fill: none; stroke: rgba(255, 255, 255, 0.7); stroke-width: 1.2; stroke-dasharray: 4 4; }
 /* the queried cluster after a card title */
 .cluster-name { color: var(--text-2); font-weight: 500; }
@@ -3089,8 +3091,18 @@ async function queryCentre(target, coordText, current) {
 
 // The image of the field in the query tab, for the name in the name box when it was shown
 function setSkyPic(c, radius, target) {
-  $("skyPic").innerHTML = fieldPicture(c.ra, c.dec, radius);
-  $("skyPic").classList.remove("empty");
+  const pic = $("skyPic"), html = fieldPicture(c.ra, c.dec, radius);
+  if (S.picHtml !== html) {         // the same field keeps its image instead of loading it again
+    S.picHtml = html;
+    pic.innerHTML = html + `<span class="pic-wait">${L("Laen taevapilti…", "Loading the sky image…")}</span>`;
+    pic.classList.remove("loaded");
+    const img = pic.querySelector("img");
+    const done = () => { if (pic.querySelector("img") === img) pic.classList.add("loaded"); };
+    img.addEventListener("load", done);
+    img.addEventListener("error", () => { if (pic.querySelector("img") === img) pic.querySelector(".pic-wait").textContent = L("Taevapilti ei õnnestunud laadida.", "The sky image could not be loaded."); });
+    if (img.complete && img.naturalWidth) done();
+  }
+  pic.classList.remove("empty");
   S.picTarget = target;
 }
 
@@ -3130,6 +3142,7 @@ async function run() {
   try {
     const c = await queryCentre(target, coordText, () => token === S.token);
     if (!c) return;
+    setSkyPic(c, radius, target);     // show the sky while Gaia is queried
     setStatus(L("Pärin Gaia DR3 andmeid…", "Querying Gaia DR3 data…"));
     const t0 = performance.now();
     const { d, source } = await queryGaia(c, radius, gmax, (sec) => {
