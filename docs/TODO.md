@@ -38,7 +38,6 @@ kilometres, standardised, recognisable, neighbour. Check that this is wanted.
 | Maapealne (vaatlused) | Ground | Cepheids page |
 | nõrgenemise korrektsioon | fading correction | supernovae page |
 | venitus | stretch | supernovae page, Hubble law page |
-| Kaugemale | Farther | Hubble law page |
 | Mõõda ise / Lõpeta | Measure / Finish | Hubble law page |
 | taustkiirgus | microwave background, CMB in tight places | Hubble law page |
 | Sobitusse | In the fit | part 3 |
@@ -53,7 +52,7 @@ The English tab names are:
 - **Standard candles:** Inverse-square law, Magnitudes, Calibration, A good candle, Cepheids and supernovae.
 - **Cepheids:** Pulsation, Measuring the period, Leavitt's law, Dust and Wesenheit.
 - **Supernovae:** Explosion, Light curve, Standardisation, Small scatter.
-- **Hubble law:** Redshift, Expansion, Farther, Hubble time, Hubble tension.
+- **Hubble law:** Redshift, Expansion, Accelerating expansion, Hubble time, Hubble tension.
 - **Exercise:** Introduction, Query, Table, Plots, Distance; Cepheids in clusters, Field Cepheids, Period–luminosity; Galaxies, Hubble law; Supernovae.
 
 Links between pages name tabs by these English names (for example "Small

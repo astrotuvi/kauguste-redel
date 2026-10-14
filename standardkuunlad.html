@@ -141,6 +141,10 @@ svg.scene { display: block; width: 100%; height: auto; margin-top: 8px; user-sel
 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .duo > div { min-width: 0; }
 .sub { font-size: 0.82rem; font-weight: 600; color: var(--text-2); margin: 10px 0 0; }
+.subrow { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; margin-top: 10px; }
+.subrow .sub { margin: 0; }
+.toggle.small { font-size: 0.82rem; }
+.toggle.small input { width: 14px; height: 14px; }
 .links { font-size: 0.82rem; color: var(--text-2); margin: 4px 0 0; }
 .badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0 6px; border-radius: 999px; background: var(--chip); color: var(--text-3); }
 
@@ -335,7 +339,10 @@ select { width: 100%; }
             <svg id="eye" class="scene" viewBox="0 0 240 240" role="img" aria-label="Allikas taevas koos võrdlustähtedega" data-en-aria-label="The source on the sky with comparison stars"></svg>
           </div>
           <div>
-            <p class="sub"><span data-l="et">Voog ja kaugus</span><span data-l="en">Flux and distance</span></p>
+            <div class="subrow">
+              <p class="sub"><span data-l="et">Voog ja kaugus</span><span data-l="en">Flux and distance</span></p>
+              <label class="toggle small"><input type="checkbox" id="logAxes"><span data-l="et"> Logaritmteljed</span><span data-l="en"> Logarithmic axes</span></label>
+            </div>
             <svg id="flux" class="scene" viewBox="0 0 500 240" role="img" aria-label="Voo sõltuvus kaugusest" data-en-aria-label="Flux against distance"></svg>
           </div>
         </div>
@@ -432,7 +439,7 @@ select { width: 100%; }
       <div class="group" data-tabs="tab1">
         <div class="toggles">
           <label class="toggle"><input type="checkbox" id="squares"><span data-l="et"> Näita ruute</span><span data-l="en"> Show squares</span></label>
-          <label class="toggle"><input type="checkbox" id="logAxes"><span data-l="et"> Logaritmteljed</span><span data-l="en"> Logarithmic axes</span></label>
+          <label class="toggle"><input type="checkbox" id="anim" checked><span data-l="et"> Animatsioon</span><span data-l="en"> Animation</span></label>
         </div>
         <p class="readout" id="fluxRead"></p>
         <p class="formula" id="fluxFormula"></p>
@@ -716,7 +723,7 @@ select { width: 100%; }
     return L("Liiga nõrk ka <b>Hubble'ile</b>.", 'Too faint even for <b>Hubble</b>.');
   }
 
-  const st = { tab: 'tab1', src: 'lamp', d: {}, d0: {}, squares: false, logAxes: false, same: false, m1: 1, m2: 6, err: 0 };
+  const st = { tab: 'tab1', src: 'lamp', d: {}, d0: {}, squares: false, logAxes: false, anim: !reduced, same: false, m1: 1, m2: 6, err: 0 };
   for (const k of KEYS) st.d[k] = st.d0[k] = SRC[k].d;
 
   /* ---------- Shared drawing ---------- */
@@ -875,7 +882,7 @@ select { width: 100%; }
     el('rect', { x: 20, y: 40, width: 90, height: 8, rx: 2, class: 'bar-bg' }, g);
     el('rect', { x: 20, y: 40, width: 90 * f, height: 8, rx: 2, class: 'bar' }, g);
     text(g, 116, 48, fmtExp(N), 'lbl2');
-    if (reduced) {
+    if (!st.anim) {
       // Without animation, a still picture of the packets on their way, as many reaching the mirror as on average.
       const r = seeded(5);
       for (let i = 0; i < 18; i++) {
@@ -1451,9 +1458,16 @@ select { width: 100%; }
     $('distRead').innerHTML = (s === 'lamp' ? '' : `${fmtLy(d)}.<br>`) + `${L('Näiv tähesuurus', 'Apparent magnitude')} <b>m = ${fmt(m, 2)}</b>. ${visibility(m)}`;
     // Tab 1
     const r = d / st.d0[s], f = 1 / (r * r);
-    const rel = f >= 1 ? L(`${sig(f)} korda heledam`, `${sig(f)} times brighter`) : L(`${sig(1 / f)} korda nõrgem`, `${sig(1 / f)} times fainter`);
-    $('fluxRead').innerHTML = L(`Lähtekoht <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Praegu d/d₀ = ${sig(r)}, seega <b>F/F₀ = (d₀/d)² = ${sig(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'sama hele' : rel}.`,
-      `Starting point <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Now d/d₀ = ${sig(r)}, so <b>F/F₀ = (d₀/d)² = ${sig(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'equally bright' : rel}.`);
+    // Ratios outside 0.001 … 10⁶ in powers of ten, as plain decimals would show only zeros or long rows of digits.
+    const ratio = v => {
+      if (v >= 1e-3 && v < 1e6) return sig(v);
+      let e = Math.floor(Math.log10(v)), a = +(v / 10 ** e).toFixed(2);
+      if (a >= 10) { a /= 10; e++; }
+      return a.toFixed(2) + '·10' + sup(e);
+    };
+    const rel = f >= 1 ? L(`${ratio(f)} korda heledam`, `${ratio(f)} times brighter`) : L(`${ratio(1 / f)} korda nõrgem`, `${ratio(1 / f)} times fainter`);
+    $('fluxRead').innerHTML = L(`Lähtekoht <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Praegu d/d₀ = ${ratio(r)}, seega <b>F/F₀ = (d₀/d)² = ${ratio(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'sama hele' : rel}.`,
+      `Starting point <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Now d/d₀ = ${ratio(r)}, so <b>F/F₀ = (d₀/d)² = ${ratio(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'equally bright' : rel}.`);
     $('fluxFormula').textContent = L(`F = L / (4π d²). 1 m² peeglile jõuab umbes ${fmtExp(photons(m))} footonit sekundis.`,
       `F = L / (4π d²). About ${fmtExp(photons(m))} photons per second reach a 1 m² mirror.`);
     $('same').setAttribute('aria-pressed', st.same);
@@ -1599,6 +1613,9 @@ select { width: 100%; }
   for (const t of ['pointerup', 'pointercancel']) side.addEventListener(t, () => { dragging = false; });
   $('squares').addEventListener('change', e => { st.squares = e.target.checked; render(); });
   $('logAxes').addEventListener('change', e => { st.logAxes = e.target.checked; render(); });
+  // Animation is on by default, unless the browser asks for reduced motion; off, the packets stand still.
+  $('anim').checked = st.anim;
+  $('anim').addEventListener('change', e => { st.anim = e.target.checked; ph.list = []; ph.flash = 0; render(); });
   $('setD0').addEventListener('click', () => { st.d0[st.src] = st.d[st.src]; render(); });
   $('same').addEventListener('click', () => { st.same = !st.same; render(); });
   $('m1').addEventListener('input', e => { st.m1 = +e.target.value; render(); });
@@ -1689,8 +1706,8 @@ select { width: 100%; }
     const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0;
     last = ts;
     if (!document.hidden) {
-      if (st.tab === 'tab1') stepPhotons(dt);
-      if (st.tab === 'tab5') { T5.phase = (T5.phase + dt / 2.5) % 2; drawCepDyn(); }
+      if (st.tab === 'tab1' && st.anim) stepPhotons(dt);
+      if (st.tab === 'tab5' && !reduced) { T5.phase = (T5.phase + dt / 2.5) % 2; drawCepDyn(); }
     }
     requestAnimationFrame(loop);
   }
@@ -1726,7 +1743,7 @@ select { width: 100%; }
   syncTab4();
   applyLang();
   fromHash();
-  if (!reduced) requestAnimationFrame(loop);
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>

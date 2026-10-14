@@ -291,7 +291,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       <div class="tabs" role="tablist" aria-label="Teema" data-en-aria-label="Topic">
         <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true"><span data-l="et">Punanihe</span><span data-l="en">Redshift</span></button>
         <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1"><span data-l="et">Paisumine</span><span data-l="en">Expansion</span></button>
-        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Kaugemale</span><span data-l="en">Farther</span></button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Kiirenev paisumine</span><span data-l="en">Accelerating expansion</span></button>
         <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i aeg</span><span data-l="en">Hubble time</span></button>
         <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></button>
       </div>
@@ -1197,7 +1197,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     updateGroups();
   }
 
-  /* ---------- Tab 3: Kaugemale ---------- */
+  /* ---------- Tab 3: Kiirenev paisumine ---------- */
   const FORMS = {
     cz: { name: 'v = cz', d: z => z, cls: 'curve blue' },
     corr: { name: 'cz (1 + 0.775 z)', d: z => z * (1 + EXPANSION * z), cls: 'curve' },
@@ -1419,14 +1419,14 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       { t: ['Parallaks', 'Parallax'], s: ['Gaia, Linnutee tsefeiidid', 'Gaia, Milky Way Cepheids'], href: 'parallaks.html' },
       { t: ['Tsefeiidid', 'Cepheids'], s: ['perioodi-heleduse seos', 'period–luminosity relation'], href: 'tsefeiidid.html' },
       { t: ['Ia supernoovad', 'Ia supernovae'], s: ['kalibreeritud heledus', 'calibrated luminosity'], href: 'supernoovad.html' },
-      { t: ['H₀ täna', 'H₀ today'], s: ['kaugused ja kiirused', 'distances and velocities'], href: '#kaugemale' },
+      { t: ['H₀ täna', 'H₀ today'], s: ['kaugused ja kiirused', 'distances and velocities'], href: '#kiirenemine' },
     ], 'ladder', ['Kauguste redel: otse ja kohalikult, mudelit pole vaja', 'Distance ladder: direct and local, no model needed']);
     row(124, [
       { t: ['Helilained', 'Sound waves'], s: ['plasmas, 380 000 aastat', 'in plasma, 380,000 years'] },
       { t: ['Taustkiirgus', 'CMB'], s: ['laikude nurkmõõt', 'angular size of the spots'] },
       { t: ['Standardmudel', 'Standard model'], s: ['paisumine tänaseni', 'expansion to the present'] },
       { t: ['H₀', 'H₀'], s: ['kui mudel on õige', 'if the model is right'] },
-    ], 'early', ['Varane Universum: vajab mudelit (vt Kaugemale ja Hubble\'i aeg)', 'Early Universe: needs a model (see Farther and Hubble time)']);
+    ], 'early', ['Varane Universum: vajab mudelit (vt Kiirenev paisumine ja Hubble\'i aeg)', 'Early Universe: needs a model (see Accelerating expansion and Hubble time)']);
   }
   function readoutsMeas() {
     const d = H_SH0ES - H_PLANCK, s = Math.hypot(E_SH0ES, E_PLANCK);
@@ -1608,7 +1608,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
 
   /* ---------- Tabs ---------- */
   // Each tab has its own address, so that other pages can link to it.
-  const HASH = { tab1: 'punanihe', tab2: 'paisumine', tab3: 'kaugemale', tab4: 'vanus', tab5: 'pinge' };
+  const HASH = { tab1: 'punanihe', tab2: 'paisumine', tab3: 'kiirenemine', tab4: 'vanus', tab5: 'pinge' };
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   function selectTab(id, fromHash) {
     st.tab = id;

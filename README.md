@@ -252,9 +252,11 @@ naked-eye, large-telescope and *Hubble* limits (m = 6, 24 and 29).
    distance track (drag it or use the slider). Photon packets fly towards the
    telescope, and fewer of them reach the mirror as the source moves away;
    a bar gives the photons per second on a 1 m² mirror. **Näita ruute** draws
-   the squares at d, 2d and 3d. Below are the observer's view, with the source
-   between two comparison stars 5 magnitudes apart, and F/F₀ against d/d₀
-   (linear or log axes). **Määra lähtekohaks d₀** sets the reference distance,
+   the squares at d, 2d and 3d, and **Animatsioon** (on by default, off when
+   the browser asks for reduced motion) switches the moving packets for a
+   still picture of them. Below are the observer's view, with the source
+   between two comparison stars 5 magnitudes apart, and F/F₀ against d/d₀,
+   with a **Logaritmteljed** checkbox next to the plot title. **Määra lähtekohaks d₀** sets the reference distance,
    and **Sama heledus, eri kaugus** shows all three sources at the distances
    where they look equally bright.
 2. **Tähesuurused**: a magnitude scale with reference objects, with m, M and
@@ -381,7 +383,7 @@ follows from the Phillips relation of the standard candles page.
 seaduseni" in the introduction, from the H₀ texts of parts 3 and 4 and the
 expansion note of the distant supernova plot, from the supernovae page and
 from the sentence on Edwin Hubble on the Cepheids page. It has five tabs, and
-the address keeps the tab (`#punanihe`, `#paisumine`, `#kaugemale`, `#vanus`,
+the address keeps the tab (`#punanihe`, `#paisumine`, `#kiirenemine`, `#vanus`,
 `#pinge`). Distances and ages come from a flat model with matter and dark
 energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
 
@@ -402,7 +404,7 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
    the correction to the frame of the microwave background for a galaxy in a
    chosen direction. **Hubble 1929** shows Hubble's 24 galaxies with his
    distances or today's.
-3. **Kaugemale**: the distance modulus against z for an empty universe, a
+3. **Kiirenev paisumine**: the distance modulus against z for an empty universe, a
    universe of matter only and the chosen Ω_m, with simulated supernovae; the
    difference from the empty universe; and the error in H₀ when the distance
    comes from cz or from cz (1 + 0.775 z), with the range of part 4 shaded.
