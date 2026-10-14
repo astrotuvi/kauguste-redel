@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hubble'i seadus</title>
-<meta name="description" content="Interaktiivsed joonised Hubble'i seadusest: punanihe ja eemaldumiskiirus, paisuv Universum ja pekuliaarsed kiirused, paisumise parandus kaugetele supernoovadele, Hubble'i aeg ja Universumi vanus ning Hubble'i pinge.">
+<meta name="description" content="Interaktiivsed joonised Hubble'i seadusest: punanihe ja eemaldumiskiirus, paisuv Universum ja pekuliaarsed kiirused, paisumise parandus kaugetele supernoovadele, Hubble'i aeg ja Universumi vanus ning Hubble'i pinge."
+  data-en-content="Interactive drawings of the Hubble law: redshift and recession velocity, the expanding Universe and peculiar velocities, the expansion correction for distant supernovae, the Hubble time and the age of the Universe, and the Hubble tension.">
+<script>
+// The language is set before the page is drawn: ?lang=et or ?lang=en in the address (remembered), else the last
+// choice, else Estonian.
+(() => {
+  let l = new URLSearchParams(location.search).get('lang');
+  if (l === 'et' || l === 'en') { try { localStorage.setItem('lang', l); } catch (e) {} }
+  else { try { l = localStorage.getItem('lang'); } catch (e) {} }
+  document.documentElement.lang = l === 'en' ? 'en' : 'et';
+})();
+</script>
 <style>
 :root {
   color-scheme: light;
@@ -74,6 +85,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* The page has both languages side by side; data-l marks the text of one, and the other is hidden. */
+:root[lang="et"] [data-l="en"], :root[lang="en"] [data-l="et"] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--bg);
@@ -81,7 +94,11 @@ body {
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
-.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 14px; }
+.back { font-size: 0.88rem; margin: 0; color: var(--text-3); }
+.langs { display: flex; gap: 4px; }
+.langs button { font-size: 0.8rem; padding: 2px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.top .langs button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); border-color: transparent; }
 .back a { color: var(--text-2); text-decoration: none; }
 .back a:hover { color: var(--sel); }
 .back .sep { margin: 0 6px; }
@@ -224,7 +241,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
 .dim { opacity: 0.3; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
 .legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
 .legend i.box { width: 14px; height: 10px; border: none; border-radius: 2px; }
@@ -244,241 +261,264 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
 </head>
 <body>
 <main>
-  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span>Hubble'i seadus</p>
-  <h1>Hubble'i seadus</h1>
-  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
-  <p class="intro">Mida kaugemal on galaktika, seda kiiremini ta meist eemaldub. Kiirus on kaugusega võrdeline, v = H<sub>0</sub> d, ja võrdetegur H<sub>0</sub> on Hubble'i konstant.
+  <div class="top">
+    <p class="back" data-l="et"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span>Hubble'i seadus</p>
+    <p class="back" data-l="en"><a href="index.html">← The cosmic distance ladder</a><span class="sep">·</span><a href="parallaks.html">Parallax</a><span class="sep">·</span><a href="hajusparved.html">Open clusters</a><span class="sep">·</span><a href="standardkuunlad.html">Standard candles</a><span class="sep">·</span><a href="tsefeiidid.html">Cepheids</a><span class="sep">·</span><a href="supernoovad.html">Type Ia supernovae</a><span class="sep">·</span>Hubble's law</p>
+    <div class="langs" role="group" aria-label="Keel" data-en-aria-label="Language">
+      <button type="button" data-lang="et" lang="et">Eesti</button>
+      <button type="button" data-lang="en" lang="en">English</button>
+    </div>
+  </div>
+  <h1><span data-l="et">Hubble'i seadus</span><span data-l="en">The Hubble law</span></h1>
+  <p class="byline">Taavi Tuvikene<br><span data-l="et">TÜ Tartu observatoorium</span><span data-l="en">Tartu Observatory, University of Tartu</span></p>
+  <p class="intro" data-l="et">Mida kaugemal on galaktika, seda kiiremini ta meist eemaldub. Kiirus on kaugusega võrdeline, v = H<sub>0</sub> d, ja võrdetegur H<sub>0</sub> on Hubble'i konstant.
     Kiirust on lihtne mõõta: eemalduva galaktika valgus on nihkunud pikemate lainepikkuste poole, ja see <a href="https://et.wikipedia.org/wiki/Punanihe" target="_blank" rel="noopener">punanihe</a> on spektris otse näha.
     Kaugust on palju raskem mõõta, ja selleks ongi vaja kauguste redelit. Kui H<sub>0</sub> on kord teada, saab seadust kasutada ka teistpidi: punanihkest saab iga galaktika kauguse.
     H<sub>0</sub> määrab ka Universumi mõõtkava: kui kaugel on galaktikad ja kui vana on Universum.
     Seose leidsid <a class="en" href="https://en.wikipedia.org/wiki/Georges_Lema%C3%AEtre" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Georges Lemaître</a> (1927) ja <a href="https://et.wikipedia.org/wiki/Edwin_Hubble" target="_blank" rel="noopener">Edwin Hubble</a> (1929);
     Rahvusvaheline Astronoomiaunioon soovitab alates 2018. aastast nimetada seda Hubble'i–Lemaître'i seaduseks.
     Harjutuse <a href="index.html#osa-3">3.</a> ja <a href="index.html#osa-4">4. osas</a> mõõdad H<sub>0</sub> ise.</p>
+  <p class="intro" data-l="en">The farther away a galaxy is, the faster it recedes from us. The velocity is proportional to the distance, v = H<sub>0</sub> d, and the constant H<sub>0</sub> is the Hubble constant.
+    The velocity is easy to measure: the light of a receding galaxy is shifted towards longer wavelengths, and this <a href="https://en.wikipedia.org/wiki/Redshift" target="_blank" rel="noopener">redshift</a> can be seen directly in its spectrum.
+    The distance is much harder to measure, and that is what the distance ladder is for. Once H<sub>0</sub> is known, the law can also be used the other way round: the redshift gives the distance of any galaxy.
+    H<sub>0</sub> also sets the scale of the Universe: how far away the galaxies are and how old the Universe is.
+    The relation was found by <a href="https://en.wikipedia.org/wiki/Georges_Lema%C3%AEtre" target="_blank" rel="noopener">Georges Lemaître</a> (1927) and <a href="https://en.wikipedia.org/wiki/Edwin_Hubble" target="_blank" rel="noopener">Edwin Hubble</a> (1929);
+    since 2018 the International Astronomical Union has recommended calling it the Hubble–Lemaître law.
+    In parts <a href="index.html#osa-3">3</a> and <a href="index.html#osa-4">4</a> of the exercise you measure H<sub>0</sub> yourself.</p>
 
   <div class="layout">
     <section class="card">
-      <div class="tabs" role="tablist" aria-label="Teema">
-        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Punanihe</button>
-        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Paisumine</button>
-        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Kaugemale</button>
-        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Hubble'i aeg</button>
-        <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1">Hubble'i pinge</button>
+      <div class="tabs" role="tablist" aria-label="Teema" data-en-aria-label="Topic">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true"><span data-l="et">Punanihe</span><span data-l="en">Redshift</span></button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1"><span data-l="et">Paisumine</span><span data-l="en">Expansion</span></button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Kaugemale</span><span data-l="en">Farther</span></button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i aeg</span><span data-l="en">Hubble time</span></button>
+        <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></button>
       </div>
 
       <div id="pane1" role="tabpanel" aria-labelledby="tab1">
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view1="spec">Spekter</button>
-          <button type="button" data-view1="stretch">Venitus</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span data-l="et">Vaade:</span><span data-l="en">View:</span>
+          <button type="button" data-view1="spec"><span data-l="et">Spekter</span><span data-l="en">Spectrum</span></button>
+          <button type="button" data-view1="stretch"><span data-l="et">Venitus</span><span data-l="en">Stretch</span></button>
         </div>
         <div id="view1spec">
           <p class="hint" id="hint1"></p>
-          <svg id="spec" class="scene" viewBox="0 0 760 380" role="img" aria-label="Galaktika spekter punanihkega ja laboris"></svg>
+          <svg id="spec" class="scene" viewBox="0 0 760 380" role="img" aria-label="Galaktika spekter punanihkega ja laboris" data-en-aria-label="A galaxy spectrum with its redshift and in the lab"></svg>
         </div>
         <div id="view1stretch" hidden>
-          <p class="hint">Valguslaine liigub kaugest galaktikast Linnuteeni, samal ajal kui galaktikatevaheline ruum paisub. Laine venib koos ruumiga. Käivita aeg või muuda paremal punanihet. Joonis pole mõõtkavas.</p>
-          <svg id="stretch" class="scene" viewBox="0 0 760 230" role="img" aria-label="Valguslaine venib paisuvas Universumis"></svg>
-          <p class="sub">Kiirus ja punanihe</p>
-          <svg id="vz" class="scene" viewBox="0 0 760 270" role="img" aria-label="Kolm viisi punanihkest kiirust arvutada"></svg>
+          <p class="hint" data-l="et">Valguslaine liigub kaugest galaktikast Linnuteeni, samal ajal kui galaktikatevaheline ruum paisub. Laine venib koos ruumiga. Käivita aeg või muuda paremal punanihet. Joonis pole mõõtkavas.</p>
+          <p class="hint" data-l="en">A light wave travels from a distant galaxy to the Milky Way while the space between the galaxies expands. The wave stretches with space. Play the time or change the redshift on the right. The drawing is not to scale.</p>
+          <svg id="stretch" class="scene" viewBox="0 0 760 230" role="img" aria-label="Valguslaine venib paisuvas Universumis" data-en-aria-label="A light wave stretches in the expanding Universe"></svg>
+          <p class="sub"><span data-l="et">Kiirus ja punanihe</span><span data-l="en">Velocity and redshift</span></p>
+          <svg id="vz" class="scene" viewBox="0 0 760 270" role="img" aria-label="Kolm viisi punanihkest kiirust arvutada" data-en-aria-label="Three ways to compute the velocity from the redshift"></svg>
           <div class="legend">
             <span><i style="border-color: var(--sel)"></i>v = cz</span>
-            <span><i style="border-color: var(--cep)"></i>erirelatiivsusteooria Doppleri valem</span>
-            <span><i style="border-color: var(--sn)"></i>tegelik eemaldumiskiirus praegu</span>
+            <span><i style="border-color: var(--cep)"></i><span data-l="et">erirelatiivsusteooria Doppleri valem</span><span data-l="en">Doppler formula of special relativity</span></span>
+            <span><i style="border-color: var(--sn)"></i><span data-l="et">tegelik eemaldumiskiirus praegu</span><span data-l="en">true recession velocity now</span></span>
           </div>
         </div>
       </div>
 
       <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view2="uni">Paisuv Universum</button>
-          <button type="button" data-view2="local">Kohalik liikumine</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span data-l="et">Vaade:</span><span data-l="en">View:</span>
+          <button type="button" data-view2="uni"><span data-l="et">Paisuv Universum</span><span data-l="en">Expanding Universe</span></button>
+          <button type="button" data-view2="local"><span data-l="et">Kohalik liikumine</span><span data-l="en">Local motion</span></button>
           <button type="button" data-view2="h29">Hubble 1929</button>
         </div>
         <div id="view2uni">
-          <p class="hint">Vasakul on galaktikad tasandil, mis paisub ühtlaselt; paremal nende kiirus ja kaugus meie galaktikast. Käivita aeg ja klõpsa mõnel teisel galaktikal, et vaadata sealt.</p>
+          <p class="hint" data-l="et">Vasakul on galaktikad tasandil, mis paisub ühtlaselt; paremal nende kiirus ja kaugus meie galaktikast. Käivita aeg ja klõpsa mõnel teisel galaktikal, et vaadata sealt.</p>
+          <p class="hint" data-l="en">On the left are galaxies on a plane that expands uniformly; on the right, their velocities and distances from our galaxy. Play the time and click another galaxy to look from there.</p>
           <div class="duo">
             <div>
-              <p class="sub">Galaktikad</p>
-              <svg id="uni" class="scene" viewBox="0 0 370 370" role="img" aria-label="Galaktikad paisuval tasandil"></svg>
+              <p class="sub"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></p>
+              <svg id="uni" class="scene" viewBox="0 0 370 370" role="img" aria-label="Galaktikad paisuval tasandil" data-en-aria-label="Galaxies on an expanding plane"></svg>
             </div>
             <div>
-              <p class="sub">Kiirus ja kaugus</p>
-              <svg id="univd" class="scene" viewBox="0 0 370 370" role="img" aria-label="Galaktikate kiirus kauguse järgi"></svg>
+              <p class="sub"><span data-l="et">Kiirus ja kaugus</span><span data-l="en">Velocity and distance</span></p>
+              <svg id="univd" class="scene" viewBox="0 0 370 370" role="img" aria-label="Galaktikate kiirus kauguse järgi" data-en-aria-label="Velocities of the galaxies against distance"></svg>
             </div>
           </div>
           <div class="legend">
-            <span><i class="dot" style="background: #ffb27a"></i>meie galaktika</span>
-            <span><i style="border-color: #7fb0ff"></i>pekuliaarne kiirus (nool)</span>
+            <span><i class="dot" style="background: #ffb27a"></i><span data-l="et">meie galaktika</span><span data-l="en">our galaxy</span></span>
+            <span><i style="border-color: #7fb0ff"></i><span data-l="et">pekuliaarne kiirus (nool)</span><span data-l="en">peculiar velocity (arrow)</span></span>
             <span><i style="border-color: var(--text-1); border-top-style: dashed"></i>v = H₀ d</span>
-            <span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>± pekuliaarne kiirus</span>
+            <span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i><span data-l="et">± pekuliaarne kiirus</span><span data-l="en">± peculiar velocity</span></span>
           </div>
         </div>
         <div id="view2local" hidden>
-          <p class="hint">Kui kiiresti me ise liigume, võrreldes paisumisega eri kaugustel. All on punanihke parandus: Päikese liikumine taustkiirguse suhtes muudab galaktika mõõdetud kiirust olenevalt tema suunast.</p>
-          <svg id="local" class="scene" viewBox="0 0 760 450" role="img" aria-label="Meie liikumise kiirused ja punanihke parandus"></svg>
+          <p class="hint" data-l="et">Kui kiiresti me ise liigume, võrreldes paisumisega eri kaugustel. All on punanihke parandus: Päikese liikumine taustkiirguse suhtes muudab galaktika mõõdetud kiirust olenevalt tema suunast.</p>
+          <p class="hint" data-l="en">How fast we ourselves move, compared with the expansion at different distances. Below is the redshift correction: the motion of the Sun relative to the microwave background changes the measured velocity of a galaxy depending on its direction.</p>
+          <svg id="local" class="scene" viewBox="0 0 760 450" role="img" aria-label="Meie liikumise kiirused ja punanihke parandus" data-en-aria-label="The speeds of our own motion and the redshift correction"></svg>
         </div>
         <div id="view2h29" hidden>
-          <p class="hint">Hubble'i 1929. aasta 24 galaktikat. Vii kursor punktile, et näha galaktika nime, ja vaheta paremal tema kaugused tänapäevaste vastu.</p>
-          <svg id="h29" class="scene" viewBox="0 0 760 380" role="img" aria-label="Hubble'i 1929. aasta kiiruse ja kauguse diagramm"></svg>
+          <p class="hint" data-l="et">Hubble'i 1929. aasta 24 galaktikat. Vii kursor punktile, et näha galaktika nime, ja vaheta paremal tema kaugused tänapäevaste vastu.</p>
+          <p class="hint" data-l="en">Hubble's 24 galaxies of 1929. Hover over a point to see the name of the galaxy, and swap his distances for modern ones on the right.</p>
+          <svg id="h29" class="scene" viewBox="0 0 760 380" role="img" aria-label="Hubble'i 1929. aasta kiiruse ja kauguse diagramm" data-en-aria-label="Hubble's 1929 diagram of velocity and distance"></svg>
           <div class="legend" id="legend29"></div>
         </div>
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <p class="hint">Kaugusmoodul punanihke järgi kolmes mudeluniversumis, punktid on simuleeritud supernoovad valitud mudelis (hajuvus 0.13 tähesuurust). Muuda paremal aine tihedust ja vali, kuidas punanihkest kaugus arvutatakse.</p>
-        <p class="sub">Hubble'i diagramm</p>
-        <svg id="hd" class="scene" viewBox="0 0 760 290" role="img" aria-label="Kaugusmoodul punanihke järgi"></svg>
-        <p class="sub">Erinevus tühjast Universumist</p>
-        <svg id="hdiff" class="scene" viewBox="0 0 760 230" role="img" aria-label="Kaugusmooduli erinevus tühja Universumi omast"></svg>
+        <p class="hint" data-l="et">Kaugusmoodul punanihke järgi kolmes mudeluniversumis, punktid on simuleeritud supernoovad valitud mudelis (hajuvus 0.13 tähesuurust). Muuda paremal aine tihedust ja vali, kuidas punanihkest kaugus arvutatakse.</p>
+        <p class="hint" data-l="en">The distance modulus against redshift in three model universes; the points are simulated supernovae in the chosen model (scatter 0.13 magnitudes). Change the matter density on the right and choose how the distance is computed from the redshift.</p>
+        <p class="sub"><span data-l="et">Hubble'i diagramm</span><span data-l="en">Hubble diagram</span></p>
+        <svg id="hd" class="scene" viewBox="0 0 760 290" role="img" aria-label="Kaugusmoodul punanihke järgi" data-en-aria-label="Distance modulus against redshift"></svg>
+        <p class="sub"><span data-l="et">Erinevus tühjast Universumist</span><span data-l="en">Difference from an empty Universe</span></p>
+        <svg id="hdiff" class="scene" viewBox="0 0 760 230" role="img" aria-label="Kaugusmooduli erinevus tühja Universumi omast" data-en-aria-label="Difference of the distance modulus from that of an empty Universe"></svg>
         <div class="legend">
-          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>tühi Universum (q₀ = 0)</span>
-          <span><i style="border-color: var(--cep)"></i>ainult aine (q₀ = 0.5)</span>
-          <span><i style="border-color: var(--sn)"></i>valitud mudel</span>
+          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i><span data-l="et">tühi Universum (q₀ = 0)</span><span data-l="en">empty Universe (q₀ = 0)</span></span>
+          <span><i style="border-color: var(--cep)"></i><span data-l="et">ainult aine (q₀ = 0.5)</span><span data-l="en">matter only (q₀ = 0.5)</span></span>
+          <span><i style="border-color: var(--sn)"></i><span data-l="et">valitud mudel</span><span data-l="en">chosen model</span></span>
           <span><i style="border-color: var(--sel); border-top-style: dashed"></i><span id="lgForm">valitud valem</span></span>
         </div>
-        <p class="sub">H₀ viga</p>
-        <svg id="h0err" class="scene" viewBox="0 0 760 240" role="img" aria-label="H₀ viga, kui kaugus arvutatakse lihtsama valemiga"></svg>
+        <p class="sub"><span data-l="et">H₀ viga</span><span data-l="en">Error in H₀</span></p>
+        <svg id="h0err" class="scene" viewBox="0 0 760 240" role="img" aria-label="H₀ viga, kui kaugus arvutatakse lihtsama valemiga" data-en-aria-label="The error in H₀ when the distance is computed with a simpler formula"></svg>
         <div class="legend">
           <span><i style="border-color: var(--sel)"></i>v = cz</span>
           <span><i style="border-color: var(--sn)"></i>cz (1 + 0.775 z)</span>
-          <span><i style="border-color: var(--text-1)"></i>täpne</span>
-          <span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i>4. osa</span>
+          <span><i style="border-color: var(--text-1)"></i><span data-l="et">täpne</span><span data-l="en">exact</span></span>
+          <span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i><span data-l="et">4. osa</span><span data-l="en">part 4</span></span>
         </div>
       </div>
 
       <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
-        <p class="hint">Linnutee ja praegu 100 Mpc kaugusel oleva galaktika vahekaugus aja järgi, tagasi Suure Paugu ja edasi tulevikku. Muuda paremal H₀ ja aine tihedust.</p>
-        <p class="sub">Kahe galaktika kaugus</p>
-        <svg id="dist4" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kahe galaktika vahekaugus aja järgi kolmes mudelis"></svg>
+        <p class="hint" data-l="et">Linnutee ja praegu 100 Mpc kaugusel oleva galaktika vahekaugus aja järgi, tagasi Suure Paugu ja edasi tulevikku. Muuda paremal H₀ ja aine tihedust.</p>
+        <p class="hint" data-l="en">The distance between the Milky Way and a galaxy now 100 Mpc away, against time, back to the Big Bang and on into the future. Change H₀ and the matter density on the right.</p>
+        <p class="sub"><span data-l="et">Kahe galaktika kaugus</span><span data-l="en">Distance between two galaxies</span></p>
+        <svg id="dist4" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kahe galaktika vahekaugus aja järgi kolmes mudelis" data-en-aria-label="The distance between two galaxies against time in three models"></svg>
         <div class="legend">
-          <span><i style="border-color: var(--text-1)"></i>ühtlane kiirus (puutuja)</span>
-          <span><i style="border-color: var(--cep)"></i>ainult aine</span>
-          <span><i style="border-color: var(--sn)"></i>valitud mudel</span>
+          <span><i style="border-color: var(--text-1)"></i><span data-l="et">ühtlane kiirus (puutuja)</span><span data-l="en">constant velocity (tangent)</span></span>
+          <span><i style="border-color: var(--cep)"></i><span data-l="et">ainult aine</span><span data-l="en">matter only</span></span>
+          <span><i style="border-color: var(--sn)"></i><span data-l="et">valitud mudel</span><span data-l="en">chosen model</span></span>
         </div>
-        <p class="sub">Vanus ja H₀</p>
-        <svg id="age4" class="scene" viewBox="0 0 760 270" role="img" aria-label="Universumi vanus H₀ järgi"></svg>
+        <p class="sub"><span data-l="et">Vanus ja H₀</span><span data-l="en">Age and H₀</span></p>
+        <svg id="age4" class="scene" viewBox="0 0 760 270" role="img" aria-label="Universumi vanus H₀ järgi" data-en-aria-label="The age of the Universe against H₀"></svg>
         <div class="legend">
-          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>Hubble'i aeg 1/H₀</span>
-          <span><i style="border-color: var(--cep)"></i>ainult aine</span>
-          <span><i style="border-color: var(--sn)"></i>valitud mudel</span>
-          <span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>vanimad tähed</span>
+          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i><span data-l="et">Hubble'i aeg 1/H₀</span><span data-l="en">Hubble time 1/H₀</span></span>
+          <span><i style="border-color: var(--cep)"></i><span data-l="et">ainult aine</span><span data-l="en">matter only</span></span>
+          <span><i style="border-color: var(--sn)"></i><span data-l="et">valitud mudel</span><span data-l="en">chosen model</span></span>
+          <span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i><span data-l="et">vanimad tähed</span><span data-l="en">oldest stars</span></span>
         </div>
       </div>
 
       <div id="pane5" role="tabpanel" aria-labelledby="tab5" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view5="meas">Mõõtmised</button>
-          <button type="button" data-view5="err">Redeli vead</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span data-l="et">Vaade:</span><span data-l="en">View:</span>
+          <button type="button" data-view5="meas"><span data-l="et">Mõõtmised</span><span data-l="en">Measurements</span></button>
+          <button type="button" data-view5="err"><span data-l="et">Redeli vead</span><span data-l="en">Ladder errors</span></button>
         </div>
         <div id="view5meas">
-          <p class="hint">H₀ mõõtmised eri meetoditega, igaühel 1σ viga. Lisa paremal oma harjutuse tulemused.</p>
-          <svg id="meas" class="scene" viewBox="0 0 760 340" role="img" aria-label="H₀ mõõtmised eri meetoditega"></svg>
-          <p class="sub">Kaks teed H₀-ni</p>
-          <svg id="routes" class="scene" viewBox="0 0 760 190" role="img" aria-label="Kauguste redel ja varane Universum"></svg>
+          <p class="hint" data-l="et">H₀ mõõtmised eri meetoditega, igaühel 1σ viga. Lisa paremal oma harjutuse tulemused.</p>
+          <p class="hint" data-l="en">Measurements of H₀ with different methods, each with its 1σ error. Add your own results from the exercise on the right.</p>
+          <svg id="meas" class="scene" viewBox="0 0 760 340" role="img" aria-label="H₀ mõõtmised eri meetoditega" data-en-aria-label="Measurements of H₀ with different methods"></svg>
+          <p class="sub"><span data-l="et">Kaks teed H₀-ni</span><span data-l="en">Two roads to H₀</span></p>
+          <svg id="routes" class="scene" viewBox="0 0 760 190" role="img" aria-label="Kauguste redel ja varane Universum" data-en-aria-label="The distance ladder and the early Universe"></svg>
         </div>
         <div id="view5err" hidden>
-          <p class="hint">Harjutuse redel ahelana. Pane paremal redelisse süstemaatiline viga ja vaata, kuidas muutub H₀, mille SH0ES oleks pidanud saama.</p>
-          <svg id="errs" class="scene" viewBox="0 0 760 290" role="img" aria-label="Redeli vead ja H₀"></svg>
+          <p class="hint" data-l="et">Harjutuse redel ahelana. Pane paremal redelisse süstemaatiline viga ja vaata, kuidas muutub H₀, mille SH0ES oleks pidanud saama.</p>
+          <p class="hint" data-l="en">The ladder of the exercise as a chain. Put a systematic error into the ladder on the right and see how the H₀ that SH0ES should have found changes.</p>
+          <svg id="errs" class="scene" viewBox="0 0 760 290" role="img" aria-label="Redeli vead ja H₀" data-en-aria-label="Errors in the ladder and H₀"></svg>
         </div>
       </div>
     </section>
 
-    <section class="card controls" aria-label="Seaded">
+    <section class="card controls" aria-label="Seaded" data-en-aria-label="Settings">
       <div class="group" data-tabs="tab1">
-        <div class="slider"><label for="zs">Punanihe z</label><input type="range" id="zs" min="0" max="1000" step="1"><output for="zs" id="zOut"></output></div>
-        <div class="btnrow" id="zpre" aria-label="Näited"></div>
+        <div class="slider"><label for="zs"><span data-l="et">Punanihe z</span><span data-l="en">Redshift z</span></label><input type="range" id="zs" min="0" max="1000" step="1"><output for="zs" id="zOut"></output></div>
+        <div class="btnrow" id="zpre" aria-label="Näited" data-en-aria-label="Examples"></div>
       </div>
       <div class="group" data-tabs="tab1" data-views="spec">
         <p class="readout" id="zRead"></p>
-        <h3>Mõõda ise</h3>
+        <h3><span data-l="et">Mõõda ise</span><span data-l="en">Measure it yourself</span></h3>
         <div class="btnrow">
           <button type="button" id="quizBtn">Mõõda ise</button>
-          <button type="button" id="quizNew" hidden>Uus galaktika</button>
+          <button type="button" id="quizNew" hidden><span data-l="et">Uus galaktika</span><span data-l="en">New galaxy</span></button>
         </div>
         <p class="readout" id="quizRead"></p>
         <div class="btnrow" id="quizBtns" hidden>
-          <button type="button" class="primary" id="quizCheck">Kontrolli</button>
-          <button type="button" id="quizShow">Näita</button>
+          <button type="button" class="primary" id="quizCheck"><span data-l="et">Kontrolli</span><span data-l="en">Check</span></button>
+          <button type="button" id="quizShow"><span data-l="et">Näita</span><span data-l="en">Show</span></button>
         </div>
       </div>
       <div class="group" data-tabs="tab1" data-views="stretch">
-        <div class="slider"><label for="f1">Teekonna aeg</label><input type="range" id="f1" min="0" max="1000" step="1" value="0"><output for="f1" id="f1Out"></output></div>
+        <div class="slider"><label for="f1"><span data-l="et">Teekonna aeg</span><span data-l="en">Travel time</span></label><input type="range" id="f1" min="0" max="1000" step="1" value="0"><output for="f1" id="f1Out"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play1">▶ Käivita</button></div>
         <p class="readout" id="strRead"></p>
       </div>
 
       <div class="group" data-tabs="tab2" data-views="uni">
-        <div class="slider"><label for="f2">Aeg</label><input type="range" id="f2" min="0" max="1000" step="1" value="0"><output for="f2" id="f2Out"></output></div>
+        <div class="slider"><label for="f2"><span data-l="et">Aeg</span><span data-l="en">Time</span></label><input type="range" id="f2" min="0" max="1000" step="1" value="0"><output for="f2" id="f2Out"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play2">▶ Käivita</button></div>
-        <div class="slider"><label for="pec">Pekuliaarsed kiirused σ<sub>v</sub></label><input type="range" id="pec" min="0" max="600" step="10" value="0"><output for="pec" id="pecOut"></output></div>
-        <div class="btnrow"><button type="button" id="newUni">Uued galaktikad</button></div>
+        <div class="slider"><label for="pec"><span data-l="et">Pekuliaarsed kiirused</span><span data-l="en">Peculiar velocities</span> σ<sub>v</sub></label><input type="range" id="pec" min="0" max="600" step="10" value="0"><output for="pec" id="pecOut"></output></div>
+        <div class="btnrow"><button type="button" id="newUni"><span data-l="et">Uued galaktikad</span><span data-l="en">New galaxies</span></button></div>
         <p class="readout" id="uniRead"></p>
       </div>
       <div class="group" data-tabs="tab2" data-views="local">
-        <div class="slider"><label for="theta">Galaktika suund, nurk liikumissuunast θ</label><input type="range" id="theta" min="0" max="180" step="1" value="60"><output for="theta" id="thetaOut"></output></div>
+        <div class="slider"><label for="theta"><span data-l="et">Galaktika suund, nurk liikumissuunast θ</span><span data-l="en">Direction of the galaxy, angle θ from the direction of motion</span></label><input type="range" id="theta" min="0" max="180" step="1" value="60"><output for="theta" id="thetaOut"></output></div>
         <p class="readout" id="locRead"></p>
       </div>
       <div class="group" data-tabs="tab2" data-views="h29">
-        <label class="toggle"><input type="checkbox" id="now29"> Tänapäeva kaugused</label>
+        <label class="toggle"><input type="checkbox" id="now29"> <span data-l="et">Tänapäeva kaugused</span><span data-l="en">Modern distances</span></label>
         <p class="readout" id="h29Read"></p>
       </div>
 
       <div class="group" data-tabs="tab3">
-        <div class="slider"><label for="om3">Aine tihedus Ω<sub>m</sub> (ülejäänu on tume energia)</label><input type="range" id="om3" min="0" max="1" step="0.005" value="0.315"><output for="om3" id="om3Out"></output></div>
+        <div class="slider"><label for="om3"><span data-l="et">Aine tihedus Ω<sub>m</sub> (ülejäänu on tume energia)</span><span data-l="en">Matter density Ω<sub>m</sub> (the rest is dark energy)</span></label><input type="range" id="om3" min="0" max="1" step="0.005" value="0.315"><output for="om3" id="om3Out"></output></div>
         <div class="btnrow">
           <button type="button" class="small" data-om3="0.315">Planck: 0.315</button>
-          <button type="button" class="small" data-om3="1">Ainult aine</button>
-          <button type="button" class="small" data-om3="0">Ainult tume energia</button>
+          <button type="button" class="small" data-om3="1"><span data-l="et">Ainult aine</span><span data-l="en">Matter only</span></button>
+          <button type="button" class="small" data-om3="0"><span data-l="et">Ainult tume energia</span><span data-l="en">Dark energy only</span></button>
         </div>
       </div>
       <div class="group" data-tabs="tab3">
-        <h3 id="formLbl">Kauguse valem</h3>
+        <h3 id="formLbl"><span data-l="et">Kauguse valem</span><span data-l="en">Distance formula</span></h3>
         <div class="seg" role="radiogroup" aria-labelledby="formLbl">
           <button type="button" role="radio" data-form="cz">v = cz</button>
           <button type="button" role="radio" data-form="corr">cz (1 + 0.775 z)</button>
-          <button type="button" role="radio" data-form="exact">täpne</button>
+          <button type="button" role="radio" data-form="exact"><span data-l="et">täpne</span><span data-l="en">exact</span></button>
         </div>
         <p class="readout" id="r3"></p>
         <p class="formula">D<sub>L</sub> = (cz / H<sub>0</sub>) [1 + (1 − q<sub>0</sub>) z / 2 + …], q<sub>0</sub> = Ω<sub>m</sub> / 2 − Ω<sub>Λ</sub></p>
       </div>
 
       <div class="group" data-tabs="tab4">
-        <div class="slider"><label for="h4">Hubble'i konstant H<sub>0</sub></label><input type="range" id="h4" min="50" max="100" step="0.1" value="70"><output for="h4" id="h4Out"></output></div>
-        <div class="slider"><label for="om4">Aine tihedus Ω<sub>m</sub></label><input type="range" id="om4" min="0.05" max="1" step="0.005" value="0.315"><output for="om4" id="om4Out"></output></div>
+        <div class="slider"><label for="h4"><span data-l="et">Hubble'i konstant</span><span data-l="en">Hubble constant</span> H<sub>0</sub></label><input type="range" id="h4" min="50" max="100" step="0.1" value="70"><output for="h4" id="h4Out"></output></div>
+        <div class="slider"><label for="om4"><span data-l="et">Aine tihedus</span><span data-l="en">Matter density</span> Ω<sub>m</sub></label><input type="range" id="om4" min="0.05" max="1" step="0.005" value="0.315"><output for="om4" id="om4Out"></output></div>
         <div class="btnrow">
           <button type="button" class="small" data-pre4="planck">Planck</button>
           <button type="button" class="small" data-pre4="sh0es">SH0ES</button>
-          <button type="button" class="small" data-pre4="matter">Ainult aine</button>
+          <button type="button" class="small" data-pre4="matter"><span data-l="et">Ainult aine</span><span data-l="en">Matter only</span></button>
         </div>
       </div>
       <div class="group" data-tabs="tab4">
-        <div class="slider"><label for="t4">Aeg tänasest</label><input type="range" id="t4" min="-20" max="10" step="0.05" value="0"><output for="t4" id="t4Out"></output></div>
+        <div class="slider"><label for="t4"><span data-l="et">Aeg tänasest</span><span data-l="en">Time from today</span></label><input type="range" id="t4" min="-20" max="10" step="0.05" value="0"><output for="t4" id="t4Out"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play4">▶ Käivita</button></div>
         <p class="readout" id="r4"></p>
       </div>
 
       <div class="group" data-tabs="tab5" data-views="meas">
-        <h3>Sinu tulemused (km/s/Mpc)</h3>
-        <div class="inrow"><label for="my3">3. osa H₀</label><input type="text" inputmode="decimal" class="numin" id="my3" autocomplete="off"><span>±</span><input type="text" inputmode="decimal" class="numin" id="my3e" autocomplete="off"></div>
-        <div class="inrow"><label for="my4">4. osa H₀</label><input type="text" inputmode="decimal" class="numin" id="my4" autocomplete="off"><span>±</span><input type="text" inputmode="decimal" class="numin" id="my4e" autocomplete="off"></div>
-        <p class="hint">Tulemused on harjutuse <a href="index.html#hubble">3.</a> ja <a href="index.html#snHubble">4. osa</a> H₀ paanil.</p>
+        <h3><span data-l="et">Sinu tulemused</span><span data-l="en">Your results</span> (km/s/Mpc)</h3>
+        <div class="inrow"><label for="my3"><span data-l="et">3. osa H₀</span><span data-l="en">Part 3 H₀</span></label><input type="text" inputmode="decimal" class="numin" id="my3" autocomplete="off"><span>±</span><input type="text" inputmode="decimal" class="numin" id="my3e" autocomplete="off"></div>
+        <div class="inrow"><label for="my4"><span data-l="et">4. osa H₀</span><span data-l="en">Part 4 H₀</span></label><input type="text" inputmode="decimal" class="numin" id="my4" autocomplete="off"><span>±</span><input type="text" inputmode="decimal" class="numin" id="my4e" autocomplete="off"></div>
+        <p class="hint" data-l="et">Tulemused on harjutuse <a href="index.html#hubble">3.</a> ja <a href="index.html#snHubble">4. osa</a> H₀ paanil.</p>
+        <p class="hint" data-l="en">The results are on the H₀ panel of parts <a href="index.html#hubble">3</a> and <a href="index.html#snHubble">4</a> of the exercise.</p>
         <p class="readout" id="r5"></p>
       </div>
       <div class="group" data-tabs="tab5" data-views="err">
-        <div class="slider"><label for="dp">Gaia parallaksid liiga suured, δp (mas)</label><input type="range" id="dp" min="-0.06" max="0.06" step="0.001" value="0"><output for="dp" id="dpOut"></output></div>
-        <div class="slider"><label for="dc">Galaktikate tsefeiidid paistavad liiga heledad (mag)</label><input type="range" id="dc" min="-0.1" max="0.1" step="0.005" value="0"><output for="dc" id="dcOut"></output></div>
-        <div class="slider"><label for="ds">Lähedased supernoovad nõrgemad kui kauged (mag)</label><input type="range" id="ds" min="-0.1" max="0.1" step="0.005" value="0"><output for="ds" id="dsOut"></output></div>
-        <div class="btnrow"><button type="button" id="errReset">Nulli</button></div>
+        <div class="slider"><label for="dp"><span data-l="et">Gaia parallaksid liiga suured, δp (mas)</span><span data-l="en">Gaia parallaxes too large, δp (mas)</span></label><input type="range" id="dp" min="-0.06" max="0.06" step="0.001" value="0"><output for="dp" id="dpOut"></output></div>
+        <div class="slider"><label for="dc"><span data-l="et">Galaktikate tsefeiidid paistavad liiga heledad (mag)</span><span data-l="en">Cepheids in the galaxies look too bright (mag)</span></label><input type="range" id="dc" min="-0.1" max="0.1" step="0.005" value="0"><output for="dc" id="dcOut"></output></div>
+        <div class="slider"><label for="ds"><span data-l="et">Lähedased supernoovad nõrgemad kui kauged (mag)</span><span data-l="en">Nearby supernovae fainter than distant ones (mag)</span></label><input type="range" id="ds" min="-0.1" max="0.1" step="0.005" value="0"><output for="ds" id="dsOut"></output></div>
+        <div class="btnrow"><button type="button" id="errReset"><span data-l="et">Nulli</span><span data-l="en">Reset</span></button></div>
         <p class="readout" id="r5e"></p>
       </div>
     </section>
   </div>
 
   <section class="card explain">
-    <h2>Mida joonis näitab</h2>
-    <ul data-tab="tab1">
+    <h2><span data-l="et">Mida joonis näitab</span><span data-l="en">What the drawings show</span></h2>
+    <ul data-tab="tab1" data-l="et">
       <li>Iga keemiline element neelab ja kiirgab valgust ainult oma lainepikkustel. Galaktika spektris on tähtede neeldumisjooned (kaltsium, magneesium, naatrium) ja gaasi kiirgusjooned (vesinik, hapnik, lämmastik).
         Eemalduva galaktika spektris on kõik jooned nihkunud sama suhte võrra punase poole. See suhe on punanihe z = Δλ / λ.</li>
       <li>Väikese z korral on kiirus v = cz: punanihe 0.01 tähendab 3000 km/s. Kiiruse mõõtmiseks piisab spektrist, kaugust pole vaja teada. Nii on saadud ka harjutuse 3. ja 4. osa kiirused.</li>
@@ -488,7 +528,17 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
         See ei riku relatiivsusteooriat: galaktika ei liigu läbi ruumi kiiremini kui valgus, vaid ruum paisub.</li>
       <li>Lähedased galaktikad, näiteks Andromeeda, võivad olla ka sininihkega. Nende pekuliaarne kiirus on suurem kui paisumine (vt <a href="#paisumine" data-go="tab2">Paisumine</a>).</li>
     </ul>
-    <ul data-tab="tab2" hidden>
+    <ul data-tab="tab1" data-l="en">
+      <li>Every chemical element absorbs and emits light only at its own wavelengths. A galaxy spectrum has absorption lines of its stars (calcium, magnesium, sodium) and emission lines of its gas (hydrogen, oxygen, nitrogen).
+        In the spectrum of a receding galaxy, all lines are shifted towards the red by the same ratio. This ratio is the redshift z = Δλ / λ.</li>
+      <li>For a small z, the velocity is v = cz: a redshift of 0.01 means 3000 km/s. Measuring the velocity takes only a spectrum; the distance need not be known. This is also how the velocities of parts 3 and 4 of the exercise were found.</li>
+      <li>The redshift of distant galaxies is not a Doppler shift from motion through space. The space between the galaxies expands while the light travels, and the light waves stretch with it (the <b>Stretch</b> view):
+        1 + z tells how many times the Universe has expanded during the light's journey.</li>
+      <li>Nearby, both views give the same numbers. From z ≈ 0.1 on, v = cz, the Doppler formula of special relativity and the true recession velocity differ noticeably. The true velocity exceeds the speed of light at z ≈ 1.5.
+        This does not break relativity: the galaxy does not move through space faster than light; space itself expands.</li>
+      <li>Nearby galaxies, such as Andromeda, can even be blueshifted. Their peculiar velocity is larger than the expansion (see <a href="#paisumine" data-go="tab2">Expansion</a>).</li>
+    </ul>
+    <ul data-tab="tab2" data-l="et" hidden>
       <li>Kui Universum paisub ühtlaselt, kasvab iga kaugus sama ajaga sama suhte võrra. Siis eemaldub kaks korda kaugem galaktika kaks korda kiiremini, ja nii iga galaktika vaatepunktist.
         Hubble'i seadus tuleneb paisumisest endast ja Universumil pole keset: klõpsa mõnel teisel galaktikal ja vaata, et sealt paistab kõik samamoodi.</li>
       <li>Galaktikad liiguvad ka ise, mõnisada km/s, sest nad langevad oma naabrite poole. See on pekuliaarne kiirus. Lähedal on see suur osa kiirusest, kaugel väike.
@@ -500,7 +550,19 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       <li>Hubble'i enda galaktikad olid ainult kuni 2 Mpc kaugusel ja nende kiirused kuni 1000 km/s, kus pekuliaarsed kiirused on veel suured. Kaugused olid umbes 7 korda liiga väikesed: Hubble ei teadnud, et tsefeiide on kahte tüüpi
         (Walter Baade, 1952), ja kaugemates galaktikates pidas ta heledaid gaasipilvi üksikuteks tähtedeks. Sirge oli siiski olemas. Kaks aastat varem oli Georges Lemaître sama seose leidnud ja selle Universumi paisumisega seletanud.</li>
     </ul>
-    <ul data-tab="tab3" hidden>
+    <ul data-tab="tab2" data-l="en" hidden>
+      <li>If the Universe expands uniformly, every distance grows by the same ratio in the same time. Then a galaxy twice as far away recedes twice as fast, and this holds from the point of view of every galaxy.
+        The Hubble law follows from the expansion itself, and the Universe has no centre: click another galaxy and see that everything looks the same from there.</li>
+      <li>Galaxies also move on their own, by a few hundred km/s, as they fall towards their neighbours. This is the peculiar velocity. Nearby it is a large part of the velocity, far away a small one.
+        This is why part 3 scatters much more than part 4 (see <a href="supernoovad.html#hajuvus">Small scatter</a> on the supernovae page).</li>
+      <li>We move too: the Earth around the Sun, the Sun around the centre of the Milky Way, and the whole Local Group of galaxies at about 620 km/s towards the Hydra–Centaurus superclusters. We see this motion as the dipole of the
+        <a href="https://en.wikipedia.org/wiki/Cosmic_microwave_background" target="_blank" rel="noopener">cosmic microwave background</a>: on one side of the sky the radiation is slightly warmer than on the other.</li>
+      <li>This is why a redshift measured on the Earth is first converted to the frame of the microwave background (z<sub>CMB</sub>) and then corrected for the peculiar velocity of each galaxy, which is computed from the distribution of matter around it (z<sub>HD</sub>).
+        The exercise uses z<sub>HD</sub>. The correction removes only part of it: about 250 km/s remains.</li>
+      <li>Hubble's own galaxies were only up to 2 Mpc away, with velocities up to 1000 km/s, where peculiar velocities are still large. His distances were about 7 times too small: Hubble did not know that there are two types of Cepheids
+        (Walter Baade, 1952), and in the more distant galaxies he took bright gas clouds for single stars. Still, the straight line was there. Two years earlier, Georges Lemaître had found the same relation and explained it by the expansion of the Universe.</li>
+    </ul>
+    <ul data-tab="tab3" data-l="et" hidden>
       <li>Kaugest supernoovast tulnud valgus on olnud teel kaua ja Universum on vahepeal paisunud. Siis pole kaugus ja punanihe enam võrdelised ning erinevus sõltub sellest, kas paisumine aeglustub või kiireneb.</li>
       <li>4. osa supernoovade jaoks on erinevus väike, umbes 3 %. Tegur (1 + 0.775 z) eemaldab selle: 0.775 = (1 − q<sub>0</sub>) / 2, kus aeglustusparameeter q<sub>0</sub> = −0.55 on leitud kaugematest supernoovadest.</li>
       <li>q<sub>0</sub> &lt; 0 tähendab, et paisumine kiireneb: kauged supernoovad on nõrgemad, kui oleks Universumis, kus on ainult aine. Selle leidsid 1998. aastal Ia tüüpi supernoovadega kaks rühma,
@@ -508,7 +570,15 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       <li>Vahe on suurim z ≈ 0.5 ja suurema punanihke juures väheneb uuesti: siis oli Universum noorem, aine tihedam ja paisumine aeglustus veel. Tume energia hakkas domineerima alles umbes 5 miljardit aastat tagasi.</li>
       <li>4. osa lõpeb z = 0.06 juures, nii et H<sub>0</sub> peaaegu ei sõltu mudelist: parandus on seal väike ja hästi teada. Lähemal segavad pekuliaarsed kiirused, kaugemal mudel.</li>
     </ul>
-    <ul data-tab="tab4" hidden>
+    <ul data-tab="tab3" data-l="en" hidden>
+      <li>Light from a distant supernova has been travelling for a long time, and the Universe has expanded meanwhile. Then distance and redshift are no longer proportional, and the difference depends on whether the expansion slows down or speeds up.</li>
+      <li>For the supernovae of part 4 the difference is small, about 3 %. The factor (1 + 0.775 z) removes it: 0.775 = (1 − q<sub>0</sub>) / 2, where the deceleration parameter q<sub>0</sub> = −0.55 has been found from more distant supernovae.</li>
+      <li>q<sub>0</sub> &lt; 0 means that the expansion is accelerating: distant supernovae are fainter than they would be in a Universe with only matter. Two teams found this with type Ia supernovae in 1998,
+        and Saul Perlmutter, Brian Schmidt and Adam Riess received the 2011 Nobel Prize in Physics. The cause is <a href="https://en.wikipedia.org/wiki/Dark_energy" target="_blank" rel="noopener">dark energy</a>, about 70 % of the content of the Universe.</li>
+      <li>The difference is largest at z ≈ 0.5 and shrinks again at higher redshifts: the Universe was younger then, matter was denser, and the expansion was still slowing down. Dark energy began to dominate only about 5 billion years ago.</li>
+      <li>Part 4 ends at z = 0.06, so H<sub>0</sub> hardly depends on the model: the correction there is small and well known. Closer in, peculiar velocities get in the way; farther out, the model.</li>
+    </ul>
+    <ul data-tab="tab4" data-l="et" hidden>
       <li>H<sub>0</sub> ütleb, kui kiiresti kaugused praegu kasvavad: 70 km/s/Mpc juures 1 % 140 miljoni aastaga. Kui kasvukiirus oleks alati olnud sama, oleksid kõik kaugused olnud null 1/H<sub>0</sub> tagasi,
         H<sub>0</sub> = 70 korral 14 miljardit aastat. See on Hubble'i aeg, mida harjutuse 3. ja 4. osa näitavad H<sub>0</sub> kõrval.</li>
       <li>Paisumine pole olnud ühtlane. Varem pidurdas seda aine gravitatsioon, nii et paisumine oli kiirem ja Universum on noorem: ainult ainega Universumis 2/3 Hubble'i ajast. Nüüd kiirendab paisumist tume energia.
@@ -517,7 +587,16 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
         Hubble'i 1929. aasta väärtus andis vanuseks 2 miljardit aastat, vähem kui Maa vanus 4.5 miljardit aastat. See oli aastakümneid probleem.</li>
       <li>Harjutuse <a href="index.html#snHubble">4. osas</a> näed oma H<sub>0</sub> kõrval ka oma Hubble'i aega.</li>
     </ul>
-    <ul data-tab="tab5" hidden>
+    <ul data-tab="tab4" data-l="en" hidden>
+      <li>H<sub>0</sub> tells how fast distances grow now: at 70 km/s/Mpc, by 1 % in 140 million years. If the rate of growth had always been the same, all distances would have been zero 1/H<sub>0</sub> ago,
+        14 billion years for H<sub>0</sub> = 70. This is the Hubble time, which parts 3 and 4 of the exercise show next to H<sub>0</sub>.</li>
+      <li>The expansion has not been uniform. Earlier, the gravity of matter braked it, so the expansion was faster and the Universe is younger: 2/3 of the Hubble time in a Universe with only matter. Now dark energy accelerates the expansion.
+        The two nearly balance each other, so the true age, 13.8 billion years, is close to 1/H<sub>0</sub> (0.95 / H<sub>0</sub>). This is a coincidence of our epoch.</li>
+      <li>The age is a check on H<sub>0</sub>: the Universe must be older than its oldest stars, the stars of globular clusters, which are 12–13.5 billion years old. A larger H<sub>0</sub> means a younger Universe.
+        Hubble's 1929 value gave an age of 2 billion years, less than the age of the Earth, 4.5 billion years. This was a problem for decades.</li>
+      <li>In <a href="index.html#snHubble">part 4</a> of the exercise you also see your Hubble time next to your H<sub>0</sub>.</li>
+    </ul>
+    <ul data-tab="tab5" data-l="et" hidden>
       <li>Kauguste redel mõõdab H<sub>0</sub> praegu, samm-sammult, nagu selles harjutuses. Taustkiirgus annab H<sub>0</sub>, mida kosmoloogia standardmudel ennustab 380 000 aasta vanuse Universumi järgi. Need peaksid kokku langema, kuid erinevad umbes 8 %.</li>
       <li>Mõlema viga on nüüd umbes 1 %, nii et erinevus, umbes 5σ, pole juhuslik. See on kas tundmatu süstemaatiline viga ühes meetodis või märk, et standardmudelist puudub midagi, näiteks varane tume energia.</li>
       <li>Pinge kaotamiseks peaks redelis olema kuskil 0.17 tähesuuruse viga (vaade <b>Redeli vead</b>). Seda on otsinud paljud rühmad. James Webbi kosmoseteleskoop on tsefeiidid uuesti mõõtnud ja leidnud samad kaugused;
@@ -526,23 +605,45 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       <li>Harjutuse <a href="index.html#snHubble">4. osas</a> võrdled oma tulemust ise Plancki väärtusega. Avaldatud perioodi-heleduse seosega annab harjutus 3. osas H<sub>0</sub> ≈ 67.2 ja 4. osas 70.0 kalibraatorite M<sub>B</sub>-ga
         või 72.4 SH0ES-i M<sub>B</sub>-ga.</li>
     </ul>
-    <p class="src" data-tab="tab1">Spekter on skemaatiline: vana tähepopulatsiooni pidev spekter 4000 Å hüppega ning neeldumis- ja kiirgusjooned õhu lainepikkustel. Näidete punanihked: NED; NGC 5584 ja UGC 9612 z<sub>HD</sub> Pantheon+ (Scolnic jt 2022).
+    <ul data-tab="tab5" data-l="en" hidden>
+      <li>The distance ladder measures H<sub>0</sub> today, step by step, as in this exercise. The microwave background gives the H<sub>0</sub> that the standard model of cosmology predicts from the Universe at the age of 380,000 years. The two should agree, but they differ by about 8 %.</li>
+      <li>Both errors are now about 1 %, so the difference, about 5σ, is not chance. It is either an unknown systematic error in one of the methods or a sign that something is missing from the standard model, such as early dark energy.</li>
+      <li>Removing the tension would need an error of 0.17 magnitudes somewhere in the ladder (the <b>Ladder errors</b> view). Many teams have looked for one. The James Webb Space Telescope has measured the Cepheids again and found the same distances;
+        other standard candles, the tip of the red giant branch (TRGB) and J-region asymptotic giant branch stars (JAGB), give values in between.</li>
+      <li>Methods of the early Universe (the microwave background and baryon acoustic oscillations, BAO) give 66–69, local ones 70–74. Methods that use neither, gravitational lenses and gravitational waves, are not yet precise enough to decide.</li>
+      <li>In <a href="index.html#snHubble">part 4</a> of the exercise you compare your result with the Planck value yourself. With the published period–luminosity relation, the exercise gives H<sub>0</sub> ≈ 67.2 in part 3, and in part 4 70.0 with the M<sub>B</sub> of the calibrators
+        or 72.4 with the M<sub>B</sub> of SH0ES.</li>
+    </ul>
+    <p class="src" data-tab="tab1" data-l="et">Spekter on skemaatiline: vana tähepopulatsiooni pidev spekter 4000 Å hüppega ning neeldumis- ja kiirgusjooned õhu lainepikkustel. Näidete punanihked: NED; NGC 5584 ja UGC 9612 z<sub>HD</sub> Pantheon+ (Scolnic jt 2022).
       Kaugused ja kiirused tasase mudeliga, H<sub>0</sub> = 70 km/s/Mpc, Ω<sub>m</sub> = 0.315.</p>
-    <p class="src" data-tab="tab2" hidden>Hubble (1929, PNAS 15, 168), tabel 1. Tänapäevased kaugused on ümardatud tüüpilised väärtused (NED). Päikese kiirus taustkiirguse suhtes 370 km/s (Planck Collaboration 2020),
+    <p class="src" data-tab="tab1" data-l="en">The spectrum is schematic: the continuum of an old stellar population with the 4000 Å break, and absorption and emission lines at air wavelengths. Redshifts of the examples: NED; z<sub>HD</sub> of NGC 5584 and UGC 9612 from Pantheon+ (Scolnic et al. 2022).
+      Distances and velocities from a flat model, H<sub>0</sub> = 70 km/s/Mpc, Ω<sub>m</sub> = 0.315.</p>
+    <p class="src" data-tab="tab2" data-l="et" hidden>Hubble (1929, PNAS 15, 168), tabel 1. Tänapäevased kaugused on ümardatud tüüpilised väärtused (NED). Päikese kiirus taustkiirguse suhtes 370 km/s (Planck Collaboration 2020),
       Kohaliku grupi kiirus 620 km/s (Kogut jt 1993). Pekuliaarsete kiiruste parandus: Peterson jt (2022); Pantheon+ jääkhajuvus 250 km/s.</p>
-    <p class="src" data-tab="tab3" hidden>Tasane mudel, H<sub>0</sub> = 70 km/s/Mpc. Tühi Universum: D<sub>L</sub> = (c / H<sub>0</sub>) z (1 + z / 2). 4. osa tegur 0.775 ja q<sub>0</sub> = −0.55: Riess jt (2022).
+    <p class="src" data-tab="tab2" data-l="en" hidden>Hubble (1929, PNAS 15, 168), table 1. The modern distances are rounded typical values (NED). Velocity of the Sun relative to the microwave background 370 km/s (Planck Collaboration 2020),
+      of the Local Group 620 km/s (Kogut et al. 1993). Peculiar velocity correction: Peterson et al. (2022); residual scatter of Pantheon+ 250 km/s.</p>
+    <p class="src" data-tab="tab3" data-l="et" hidden>Tasane mudel, H<sub>0</sub> = 70 km/s/Mpc. Tühi Universum: D<sub>L</sub> = (c / H<sub>0</sub>) z (1 + z / 2). 4. osa tegur 0.775 ja q<sub>0</sub> = −0.55: Riess jt (2022).
       Kiireneva paisumise avastus: Riess jt (1998), Perlmutter jt (1999).</p>
-    <p class="src" data-tab="tab4" hidden>Tasase mudeli vanus t<sub>0</sub> = 2 / (3 H<sub>0</sub> √Ω<sub>Λ</sub>) arsinh √(Ω<sub>Λ</sub> / Ω<sub>m</sub>). 1/H<sub>0</sub> miljardites aastates on 977.8 / H<sub>0</sub>.
+    <p class="src" data-tab="tab3" data-l="en" hidden>Flat model, H<sub>0</sub> = 70 km/s/Mpc. Empty Universe: D<sub>L</sub> = (c / H<sub>0</sub>) z (1 + z / 2). The factor 0.775 of part 4 and q<sub>0</sub> = −0.55: Riess et al. (2022).
+      Discovery of the accelerating expansion: Riess et al. (1998), Perlmutter et al. (1999).</p>
+    <p class="src" data-tab="tab4" data-l="et" hidden>Tasase mudeli vanus t<sub>0</sub> = 2 / (3 H<sub>0</sub> √Ω<sub>Λ</sub>) arsinh √(Ω<sub>Λ</sub> / Ω<sub>m</sub>). 1/H<sub>0</sub> miljardites aastates on 977.8 / H<sub>0</sub>.
       Kerasparvede vanused: näiteks Valcin jt (2020), 13.5 ± 0.5 miljardit aastat.</p>
-    <p class="src" data-tab="tab5" hidden>Planck Collaboration (2020); Louis jt (2025, ACT DR6); Camphuis jt (2025, SPT-3G D1); DESI Collaboration (2025, DR2 BAO + BBN); Riess jt (2022, SH0ES); Riess jt (2024, JWST);
+    <p class="src" data-tab="tab4" data-l="en" hidden>Age of a flat model t<sub>0</sub> = 2 / (3 H<sub>0</sub> √Ω<sub>Λ</sub>) arsinh √(Ω<sub>Λ</sub> / Ω<sub>m</sub>). 1/H<sub>0</sub> in billions of years is 977.8 / H<sub>0</sub>.
+      Ages of globular clusters: for example Valcin et al. (2020), 13.5 ± 0.5 billion years.</p>
+    <p class="src" data-tab="tab5" data-l="et" hidden>Planck Collaboration (2020); Louis jt (2025, ACT DR6); Camphuis jt (2025, SPT-3G D1); DESI Collaboration (2025, DR2 BAO + BBN); Riess jt (2022, SH0ES); Riess jt (2024, JWST);
       Freedman jt (2025, CCHP TRGB, vead liidetud ruutudena); TDCOSMO Collaboration (2025); Pesce jt (2020, MCP); Abbott jt (2017, GW170817).
       Parallaksi vea mõju on arvutatud harjutuse 2. osa 12 väljatsefeiidi parallaksidest.</p>
+    <p class="src" data-tab="tab5" data-l="en" hidden>Planck Collaboration (2020); Louis et al. (2025, ACT DR6); Camphuis et al. (2025, SPT-3G D1); DESI Collaboration (2025, DR2 BAO + BBN); Riess et al. (2022, SH0ES); Riess et al. (2024, JWST);
+      Freedman et al. (2025, CCHP TRGB, errors added in quadrature); TDCOSMO Collaboration (2025); Pesce et al. (2020, MCP); Abbott et al. (2017, GW170817).
+      The effect of a parallax error is computed from the parallaxes of the 12 field Cepheids of part 2 of the exercise.</p>
   </section>
 </main>
 
 <script>
 (() => {
   const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+  // A text drawn by the script, in the language of the page.
+  const L = (et, en) => (document.documentElement.lang === 'en' ? en : et);
 
   function el(tag, attrs, parent) {
     const e = document.createElementNS(NS, tag);
@@ -570,11 +671,11 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   function sig(v, n = 3) {
     if (!isFinite(v) || v === 0) return '0';
     let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
-    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, L(' ', ',')));
     return minus(s);
   }
-  // Thousands separated by a space: 12 345.
-  const fmtK = v => minus(Math.round(v).toString().replace(/\B(?=(\d{3})+$)/g, ' '));
+  // Thousands separated by a space in Estonian, 12 345, and by a comma in English, 12,345.
+  const fmtK = v => minus(Math.round(v).toString().replace(/\B(?=(\d{3})+$)/g, L(' ', ',')));
   function seeded(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
   function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
   const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
@@ -665,7 +766,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     { id: 'K', name: 'Ca II K', l: 3934, d: 0.5, w: 8, lab: 'K H' },
     { id: 'H', name: 'Ca II H', l: 3969, d: 0.45, w: 8 },
     { id: 'Hd', name: 'Hδ', l: 4102, d: 0.12, w: 8 },
-    { id: 'G', name: 'G-riba', l: 4304, d: 0.25, w: 10, lab: 'G' },
+    { id: 'G', name: 'G-riba', en: 'G band', l: 4304, d: 0.25, w: 10, lab: 'G' },
     { id: 'Hb', name: 'Hβ', l: 4861, e: 0.25, w: 5, lab: 'Hβ' },
     { id: 'O3a', name: '[O III]', l: 4959, e: 0.12, w: 5 },
     { id: 'O3', name: '[O III]', l: 5007, e: 0.35, w: 5, lab: '[O III]' },
@@ -700,11 +801,15 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   const zOfSlider = v => ZMIN * (ZMAX / ZMIN) ** (v / 1000);
   const sliderOfZ = z => Math.round(1000 * Math.log(clamp(z, ZMIN, ZMAX) / ZMIN) / Math.log(ZMAX / ZMIN));
   const ZPRE = [
-    { name: 'Andromeeda', z: -0.001, note: 'Andromeeda galaktika läheneb meile umbes 300 km/s: see on sininihe' },
-    { name: 'Neitsi parv', z: 0.0036, note: 'Neitsi galaktikaparv, lähim suur galaktikaparv' },
-    { name: 'NGC 5584', z: 0.00625, note: 'NGC 5584, üks 3. osa galaktikatest' },
-    { name: 'UGC 9612', z: 0.0382, note: 'UGC 9612, kus plahvatas SN 2007O, üks 4. osa kaugetest supernoovadest' },
-    { name: 'z = 1', z: 1, note: 'kauge galaktika, mille valgus on olnud teel umbes 8 miljardit aastat' },
+    { name: 'Andromeeda', en: 'Andromeda', z: -0.001, note: 'Andromeeda galaktika läheneb meile umbes 300 km/s: see on sininihe',
+      noteEn: 'the Andromeda galaxy approaches us at about 300 km/s: this is a blueshift' },
+    { name: 'Neitsi parv', en: 'Virgo Cluster', z: 0.0036, note: 'Neitsi galaktikaparv, lähim suur galaktikaparv',
+      noteEn: 'the Virgo Cluster, the nearest large cluster of galaxies' },
+    { name: 'NGC 5584', z: 0.00625, note: 'NGC 5584, üks 3. osa galaktikatest', noteEn: 'NGC 5584, one of the galaxies of part 3' },
+    { name: 'UGC 9612', z: 0.0382, note: 'UGC 9612, kus plahvatas SN 2007O, üks 4. osa kaugetest supernoovadest',
+      noteEn: 'UGC 9612, where SN 2007O exploded, one of the distant supernovae of part 4' },
+    { name: 'z = 1', z: 1, note: 'kauge galaktika, mille valgus on olnud teel umbes 8 miljardit aastat',
+      noteEn: 'a distant galaxy whose light has been travelling for about 8 billion years' },
   ];
   // The redshift that the spectrum shows: the slider, or the hidden one of "Mõõda ise".
   const zShown = () => (st.quiz ? st.quiz.z : st.z);
@@ -734,9 +839,10 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       el('line', { x1: X(l), y1: LB.y1, x2: X(l), y2: LB.y1 + 4, class: 'axisline' }, g);
       if (!(l % 1000)) text(g, X(l), LB.y1 + 16, `${l} Å`, 'tlbl', 'middle');
     }
-    text(g, B.x0, 16, q ? 'Galaktika spekter: punanihe on peidetud' : `Galaktika spekter, z = ${z < 0.01 ? fmt(z, 4) : sig(z, 3)}`, 'lbl');
-    text(g, B.x0, LB.y0 - 8, 'Laboris (z = 0)', 'lbl');
-    text(g, B.x1, LB.y1 + 34, 'lainepikkus (Å); hall on silmale nähtamatu', 'lbl3', 'end');
+    text(g, B.x0, 16, q ? L('Galaktika spekter: punanihe on peidetud', 'Galaxy spectrum: the redshift is hidden')
+      : `${L('Galaktika spekter', 'Galaxy spectrum')}, z = ${z < 0.01 ? fmt(z, 4) : sig(z, 3)}`, 'lbl');
+    text(g, B.x0, LB.y0 - 8, L('Laboris (z = 0)', 'In the lab (z = 0)'), 'lbl');
+    text(g, B.x1, LB.y1 + 34, L('lainepikkus (Å); hall on silmale nähtamatu', 'wavelength (Å); grey is invisible to the eye'), 'lbl3', 'end');
     el('polyline', { points: pts(S.map(([l, f]) => [X(l), Y(f)])), class: 'spec' }, g);
     // The lines, at rest in the lab and shifted in the galaxy, joined.
     // Line names in up to three rows, so that close lines do not overlap.
@@ -767,7 +873,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
         text(g, X(lo), B.y0 - 14, L.lab, 'blbl', 'middle');
         if (L.l >= L0) el('line', { x1: X(L.l), y1: LB.y0, x2: X(lo), y2: OB.y1, class: 'conn' }, g);
       }
-      if (q.shown) text(g, B.x1, 16, `tõeline z = ${fmt(q.z, 4)}`, 'slbl', 'end');
+      if (q.shown) text(g, B.x1, 16, `${L('tõeline', 'true')} z = ${fmt(q.z, 4)}`, 'slbl', 'end');
     }
   }
   function markedLine() {
@@ -784,25 +890,37 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     $('zs').disabled = !!st.quiz;
     $('zOut').textContent = st.z < 0.01 ? fmt(st.z, 4) : sig(st.z, 3);
     $('hint1').textContent = st.quiz
-      ? 'Lohista spektril, kuni laborijooned (sinised) on galaktika joonte kohal. Siis vajuta paremal „Kontrolli“.'
-      : 'Üleval on galaktika spekter, all samad jooned laboris. Muuda paremal punanihet. Klõpsa joone nimel, et selle järgi lugeda.';
+      ? L('Lohista spektril, kuni laborijooned (sinised) on galaktika joonte kohal. Siis vajuta paremal „Kontrolli“.',
+          'Drag on the spectrum until the lab lines (blue) are over the lines of the galaxy. Then press “Check” on the right.')
+      : L('Üleval on galaktika spekter, all samad jooned laboris. Muuda paremal punanihet. Klõpsa joone nimel, et selle järgi lugeda.',
+          'At the top is the spectrum of a galaxy, below it the same lines in the lab. Change the redshift on the right. Click the name of a line to read off the redshift by it.');
     const z = st.z, p = ZPRE.find(q => q.name === st.zName), m = markedLine(), v = C_KMS * z;
-    let s = p ? `${p.note.charAt(0).toUpperCase() + p.note.slice(1)}. ` : '';
-    if (m) s += `${m.name}: laboris ${fmtK(m.l)} Å, galaktikas <b>${fmtK(m.l * (1 + z))} Å</b>, z = Δλ / λ = ${fmtK(m.l * z)} / ${fmtK(m.l)} = ${z < 0.01 ? fmt(z, 4) : sig(z, 3)}. `;
-    if (z < 0) s += `<b>v = cz = ${fmtK(v)} km/s</b>: galaktika läheneb. Hubble'i seadusest kaugust ei saa, sest pekuliaarne kiirus on paisumisest suurem.`;
-    else if (z <= 0.1) { const d = v / H0; s += `<b>v = cz = ${fmtK(v)} km/s</b>, kaugus Hubble'i seadusest d = v / H₀ = ${sig(d, 3)} Mpc (${sig(d * MLY, 3)} miljonit valgusaastat), kui H₀ = ${H0} km/s/Mpc.`; }
-    else { const d = dNow(z); s += `cz = ${fmtK(v)} km/s pole siin enam tegelik kiirus (vt vaade Venitus). Mudeli järgi on galaktika praegu ${fmtK(d)} Mpc (${sig(d * MLY / 1000, 3)} miljardit valgusaastat) kaugusel.`; }
+    const note = p && L(p.note, p.noteEn);
+    let s = p ? `${note.charAt(0).toUpperCase() + note.slice(1)}. ` : '';
+    if (m) s += L(`${m.name}: laboris ${fmtK(m.l)} Å, galaktikas <b>${fmtK(m.l * (1 + z))} Å</b>, z = Δλ / λ = ${fmtK(m.l * z)} / ${fmtK(m.l)} = ${z < 0.01 ? fmt(z, 4) : sig(z, 3)}. `,
+      `${m.en || m.name}: in the lab ${fmtK(m.l)} Å, in the galaxy <b>${fmtK(m.l * (1 + z))} Å</b>, z = Δλ / λ = ${fmtK(m.l * z)} / ${fmtK(m.l)} = ${z < 0.01 ? fmt(z, 4) : sig(z, 3)}. `);
+    if (z < 0) s += L(`<b>v = cz = ${fmtK(v)} km/s</b>: galaktika läheneb. Hubble'i seadusest kaugust ei saa, sest pekuliaarne kiirus on paisumisest suurem.`,
+      `<b>v = cz = ${fmtK(v)} km/s</b>: the galaxy is approaching. The Hubble law gives no distance, because the peculiar velocity is larger than the expansion.`);
+    else if (z <= 0.1) {
+      const d = v / H0;
+      s += L(`<b>v = cz = ${fmtK(v)} km/s</b>, kaugus Hubble'i seadusest d = v / H₀ = ${sig(d, 3)} Mpc (${sig(d * MLY, 3)} miljonit valgusaastat), kui H₀ = ${H0} km/s/Mpc.`,
+        `<b>v = cz = ${fmtK(v)} km/s</b>, distance from the Hubble law d = v / H₀ = ${sig(d, 3)} Mpc (${sig(d * MLY, 3)} million light years) for H₀ = ${H0} km/s/Mpc.`);
+    } else {
+      const d = dNow(z);
+      s += L(`cz = ${fmtK(v)} km/s pole siin enam tegelik kiirus (vt vaade Venitus). Mudeli järgi on galaktika praegu ${fmtK(d)} Mpc (${sig(d * MLY / 1000, 3)} miljardit valgusaastat) kaugusel.`,
+        `cz = ${fmtK(v)} km/s is no longer the true velocity here (see the Stretch view). In the model, the galaxy is now ${fmtK(d)} Mpc (${sig(d * MLY / 1000, 3)} billion light years) away.`);
+    }
     $('zRead').innerHTML = s;
     const q = st.quiz;
-    $('quizBtn').textContent = q ? 'Lõpeta' : 'Mõõda ise';
+    $('quizBtn').textContent = q ? L('Lõpeta', 'Finish') : L('Mõõda ise', 'Measure');
     $('quizBtn').setAttribute('aria-pressed', !!q);
     $('quizNew').hidden = $('quizBtns').hidden = !q;
     $('zRead').hidden = !!q;
     if (!q) { $('quizRead').innerHTML = ''; return; }
-    let r = `Sinu z = <b>${fmt(q.g, 4)}</b>, v = cz = ${fmtK(C_KMS * q.g)} km/s.`;
-    if (q.res === 'ok') r += ` <span class="ok">Õige!</span> Tõeline z = ${fmt(q.z, 4)}.`;
-    else if (q.res) r += ` <span class="off">Veel mitte: sinu z on liiga ${q.res === 'hi' ? 'suur' : 'väike'}.</span>`;
-    if (q.shown && q.res !== 'ok') r += ` Tõeline z = ${fmt(q.z, 4)}.`;
+    let r = `${L('Sinu', 'Your')} z = <b>${fmt(q.g, 4)}</b>, v = cz = ${fmtK(C_KMS * q.g)} km/s.`;
+    if (q.res === 'ok') r += ` <span class="ok">${L('Õige!', 'Correct!')}</span> ${L('Tõeline', 'The true')} z = ${fmt(q.z, 4)}.`;
+    else if (q.res) r += ` <span class="off">${L(`Veel mitte: sinu z on liiga ${q.res === 'hi' ? 'suur' : 'väike'}.`, `Not yet: your z is too ${q.res === 'hi' ? 'large' : 'small'}.`)}</span>`;
+    if (q.shown && q.res !== 'ok') r += ` ${L('Tõeline', 'The true')} z = ${fmt(q.z, 4)}.`;
     $('quizRead').innerHTML = r;
   }
   function newQuiz() { const r = Math.random; st.quiz = { z: +(0.02 * 25 ** r()).toFixed(4), g: 0, res: null, shown: false }; }
@@ -831,29 +949,29 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       }
     }
     el('ellipse', { cx: xR, cy: yC, rx: 9, ry: 4, class: 'gal us' }, svg);
-    text(svg, xR, yC + 24, 'Linnutee', 'nl', 'middle');
+    text(svg, xR, yC + 24, L('Linnutee', 'Milky Way'), 'nl', 'middle');
     const xE = xs(s.chi);
     el('ellipse', { cx: xE, cy: yC, rx: 8, ry: 4, class: 'gal' }, svg);
-    text(svg, xE, yC + 24, 'kiirgav galaktika', 'nl', xE < 80 ? 'start' : 'middle');
+    text(svg, xE, yC + 24, L('kiirgav galaktika', 'emitting galaxy'), 'nl', xE < 80 ? 'start' : 'middle');
     // The wave packet: three periods around the photon, its wavelength stretched by a / a_e.
     const xp = xR - s.a * s.left * S, lam = 16 * s.a / s.ae, nm = 450 * s.a / s.ae, col = wlColor(nm) || '#8a6f7a', P = [];
     for (let k = -60; k <= 60; k++) { const x = xp + k / 60 * 1.5 * lam, env = Math.exp(-((k / 60) ** 2) * 2.5); P.push([x, yC - 22 * env * Math.sin(2 * Math.PI * (x - xp) / lam)]); }
     if (st.f1 < 1) el('polyline', { points: pts(P), fill: 'none', stroke: col, 'stroke-width': 2.5 }, svg);
     else el('circle', { cx: xR, cy: yC, r: 14, fill: 'none', stroke: col, 'stroke-width': 2 }, svg);
-    text(svg, 14, 22, `a = ${fmt(s.a, 3)}: Universum on ${fmt(1 / s.a, 2)} korda väiksem kui praegu`, 'nl');
-    text(svg, 14, 38, `lainepikkus ${fmtK(nm)} nm${nm > 750 ? ' (infrapuna)' : ''}`, 'nl2');
+    text(svg, 14, 22, `a = ${fmt(s.a, 3)}: ${L(`Universum on ${fmt(1 / s.a, 2)} korda väiksem kui praegu`, `the Universe is ${fmt(1 / s.a, 2)} times smaller than now`)}`, 'nl');
+    text(svg, 14, 38, `${L('lainepikkus', 'wavelength')} ${fmtK(nm)} nm${nm > 750 ? L(' (infrapuna)', ' (infrared)') : ''}`, 'nl2');
   }
   function renderVz() {
     const svg = $('vz');
     svg.textContent = '';
     const B = { x0: 60, x1: 748, y0: 10, y1: 220 }, X = mkScale(0, ZMAX, B.x0, B.x1), Y = mkScale(0, 1.6, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, ZMAX, 0.25).map(([v]) => [v, fmt(v, 2)]), ticks(0, 1.6, 0.4), 'punanihe z', 'kiirus / c', 44);
+    frame(g, B, X, Y, ticks(0, ZMAX, 0.25).map(([v]) => [v, fmt(v, 2)]), ticks(0, 1.6, 0.4), L('punanihe z', 'redshift z'), L('kiirus / c', 'velocity / c'), 44);
     const inner = el('g', { 'clip-path': clipRect(svg, 'vzclip', B) }, g);
     el('rect', { x: X(0.0012), y: B.y0, width: X(0.014) - X(0.0012), height: B.y1 - B.y0, class: 'cfill' }, inner);
     el('rect', { x: X(0.023), y: B.y0, width: X(0.06) - X(0.023), height: B.y1 - B.y0, class: 'dfill' }, inner);
-    text(g, X(0.06) + 4, B.y0 + 14, '← 3. ja 4. osa', 'lbl3');
+    text(g, X(0.06) + 4, B.y0 + 14, L('← 3. ja 4. osa', '← parts 3 and 4'), 'lbl3');
     el('line', { x1: B.x0, y1: Y(1), x2: B.x1, y2: Y(1), class: 'guide' }, inner);
-    text(g, B.x1 - 6, Y(1) - 5, 'valguse kiirus', 'lbl3', 'end');
+    text(g, B.x1 - 6, Y(1) - 5, L('valguse kiirus', 'speed of light'), 'lbl3', 'end');
     curve(inner, z => z, 0, ZMAX, X, Y, 'curve blue');
     curve(inner, z => ((1 + z) ** 2 - 1) / ((1 + z) ** 2 + 1), 0, ZMAX, X, Y, 'curve red');
     curve(inner, z => dcH(z, OM), 0, ZMAX, X, Y, 'curve', 100);
@@ -866,12 +984,17 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   function readoutsStretch() {
     const s = stretchState(), tG = TH / H0;
     $('f1').value = Math.round(st.f1 * 1000);
-    $('f1Out').textContent = `${fmt(st.f1 * (s.t0 - s.te) * tG, 2)} mld a`;
+    $('f1Out').textContent = `${fmt(st.f1 * (s.t0 - s.te) * tG, 2)} ${L('mld a', 'Gyr')}`;
     const z = s.z, dop = ((1 + z) ** 2 - 1) / ((1 + z) ** 2 + 1), real = dcH(z, OM);
-    $('strRead').innerHTML = `Valgus lahkus, kui Universum oli ${fmt(s.te * tG, 2)} miljardit aastat vana ja ${fmt(1 + z, 2)} korda väiksem. Teekond kestab ${fmt((s.t0 - s.te) * tG, 2)} miljardit aastat.<br>` +
+    $('strRead').innerHTML = L(
+      `Valgus lahkus, kui Universum oli ${fmt(s.te * tG, 2)} miljardit aastat vana ja ${fmt(1 + z, 2)} korda väiksem. Teekond kestab ${fmt((s.t0 - s.te) * tG, 2)} miljardit aastat.<br>` +
       `Praegu on mõõtkava a = ${fmt(s.a, 3)}, laine on veninud ${fmt(s.a / s.ae, 2)} korda; kohale jõudes 1 + z = 1 / a<sub>e</sub> = <b>${fmt(1 + z, 3)}</b>.<br>` +
       `Kiirus z = ${sig(z, 3)} juures: cz = ${fmt(z, 3)} c, Doppleri valem ${fmt(dop, 3)} c, tegelik ${fmt(real, 3)} c = ${fmtK(real * C_KMS)} km/s.` +
-      (st.z < 0.05 ? ' (Väikseim punanihe siin on 0.05.)' : '');
+      (st.z < 0.05 ? ' (Väikseim punanihe siin on 0.05.)' : ''),
+      `The light left when the Universe was ${fmt(s.te * tG, 2)} billion years old and ${fmt(1 + z, 2)} times smaller. The journey takes ${fmt((s.t0 - s.te) * tG, 2)} billion years.<br>` +
+      `The scale factor is now a = ${fmt(s.a, 3)}, and the wave has stretched ${fmt(s.a / s.ae, 2)} times; on arrival 1 + z = 1 / a<sub>e</sub> = <b>${fmt(1 + z, 3)}</b>.<br>` +
+      `Velocity at z = ${sig(z, 3)}: cz = ${fmt(z, 3)} c, Doppler formula ${fmt(dop, 3)} c, true ${fmt(real, 3)} c = ${fmtK(real * C_KMS)} km/s.` +
+      (st.z < 0.05 ? ' (The smallest redshift here is 0.05.)' : ''));
   }
   function render1() {
     $('view1spec').hidden = st.view1 !== 'spec';
@@ -923,10 +1046,10 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       el('ellipse', { cx: x, cy: y, rx: 5 * g.s, ry: 2.2 * g.s, transform: `rotate(${g.rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})`, class: 'gal' + (us ? ' us' : '') }, svg);
       if (st.pec > 0) { const L = 22 / 600 * st.pec; arrow(svg, x, y, x + L * g.gx, y - L * g.gy, 'pecarr', 5, 2.5); }
       el('circle', { cx: x, cy: y, r: 9, class: 'hit', 'data-gal': i }, svg);
-      if (us) { el('circle', { cx: x, cy: y, r: 11, class: 'usring' }, svg); text(svg, x, y - 15, 'meie', 'nl', 'middle'); }
+      if (us) { el('circle', { cx: x, cy: y, r: 11, class: 'usring' }, svg); text(svg, x, y - 15, L('meie', 'us'), 'nl', 'middle'); }
     }
     text(svg, 10, 20, `a = ${fmt(aUni(st.f2), 2)}`, 'nl');
-    text(svg, 10, 36, `kaugused on kasvanud ${fmt(100 * (aUni(st.f2) - 1), 0)} %`, 'nl2');
+    text(svg, 10, 36, L(`kaugused on kasvanud ${fmt(100 * (aUni(st.f2) - 1), 0)} %`, `distances have grown by ${fmt(100 * (aUni(st.f2) - 1), 0)} %`), 'nl2');
   }
   function fitH(p) {
     let sdv = 0, sdd = 0;
@@ -938,7 +1061,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     const svg = $('univd');
     svg.textContent = '';
     const B = { x0: 56, x1: 360, y0: 10, y1: 320 }, X = mkScale(0, 90, B.x0, B.x1), Y = mkScale(-1500, 7000, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, 90, 20), ticks(-1000, 7000, 1000).map(([v]) => [v, v % 2000 ? null : fmtK(v)]), 'kaugus (Mpc)', 'kiirus (km/s)', 46);
+    frame(g, B, X, Y, ticks(0, 90, 20), ticks(-1000, 7000, 1000).map(([v]) => [v, v % 2000 ? null : fmtK(v)]), L('kaugus (Mpc)', 'distance (Mpc)'), L('kiirus (km/s)', 'velocity (km/s)'), 46);
     const inner = el('g', { 'clip-path': clipRect(svg, 'uvclip', B) }, g);
     if (st.pec > 0) el('polygon', { points: pts([[X(0), Y(st.pec)], [X(90), Y(H0 * 90 + st.pec)], [X(90), Y(H0 * 90 - st.pec)], [X(0), Y(-st.pec)]]), class: 'vfill' }, inner);
     el('line', { x1: X(0), y1: Y(0), x2: X(90), y2: Y(90 * H0), class: 'truel' }, inner);
@@ -947,21 +1070,25 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   }
   function readoutsUni() {
     $('f2').value = Math.round(st.f2 * 1000);
-    $('f2Out').textContent = `${fmt(Math.log(aUni(st.f2)) * TH / H0, 1)} mld a`;
+    $('f2Out').textContent = `${fmt(Math.log(aUni(st.f2)) * TH / H0, 1)} ${L('mld a', 'Gyr')}`;
     $('pecOut').textContent = `${st.pec} km/s`;
     const p = uniPoints(), f = fitH(p), rel = lim => { const a = p.filter(lim).map(q => q.v / (H0 * q.d) - 1); return a.length > 1 ? 100 * std(a) : NaN; };
     const near = rel(q => q.d < 20), far = rel(q => q.d > 40);
-    $('uniRead').innerHTML = `Iga galaktika vaatepunktist: <b>v = ${fmt(f.H, 1)} × d</b> (km/s/Mpc), ${p.length} galaktikat.` +
-      (st.pec > 0 ? ` Kiirused hajuvad sirge ümber lähemal kui 20 Mpc ${isFinite(near) ? fmt(near, 0) : '—'} %, kaugemal kui 40 Mpc ${isFinite(far) ? fmt(far, 0) : '—'} %.` : ' Lisa pekuliaarsed kiirused ja vaata, kus punktid hajuvad.');
+    const nearS = isFinite(near) ? fmt(near, 0) : '—', farS = isFinite(far) ? fmt(far, 0) : '—';
+    $('uniRead').innerHTML = L(`Iga galaktika vaatepunktist: <b>v = ${fmt(f.H, 1)} × d</b> (km/s/Mpc), ${p.length} galaktikat.`,
+      `From the point of view of any galaxy: <b>v = ${fmt(f.H, 1)} × d</b> (km/s/Mpc), ${p.length} galaxies.`) +
+      (st.pec > 0 ? L(` Kiirused hajuvad sirge ümber lähemal kui 20 Mpc ${nearS} %, kaugemal kui 40 Mpc ${farS} %.`,
+        ` The velocities scatter around the line by ${nearS} % closer than 20 Mpc and by ${farS} % farther than 40 Mpc.`)
+        : L(' Lisa pekuliaarsed kiirused ja vaata, kus punktid hajuvad.', ' Add peculiar velocities and see where the points scatter.'));
   }
 
   // Our own motion (km/s) and the expansion at a few distances.
   const MOTIONS = [
-    { name: 'Maa ümber Päikese', v: 30 },
-    { name: 'Päike ümber Linnutee keskme', v: 230 },
-    { name: 'Päike taustkiirguse suhtes', v: 370 },
-    { name: 'Kohalik grupp taustkiirguse suhtes', v: 620 },
-    { name: 'jääk pärast z_{HD} parandust', v: 250, us: true },
+    { name: 'Maa ümber Päikese', en: 'Earth around the Sun', v: 30 },
+    { name: 'Päike ümber Linnutee keskme', en: 'Sun around the centre of the Milky Way', v: 230 },
+    { name: 'Päike taustkiirguse suhtes', en: 'Sun relative to the CMB', v: 370 },
+    { name: 'Kohalik grupp taustkiirguse suhtes', en: 'Local Group relative to the CMB', v: 620 },
+    { name: 'jääk pärast z_{HD} parandust', en: 'residual after the z_{HD} correction', v: 250, us: true },
   ];
   const V_SUN = 370;
   function renderLocal() {
@@ -969,12 +1096,12 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     svg.textContent = '';
     const B = { x0: 230, x1: 740, y0: 24, y1: 214 }, X = mkScale(10, 30000, B.x0, B.x1, true), g = el('g', {}, svg);
     const xt = [10, 30, 100, 300, 1000, 3000, 10000, 30000].map(v => [v, fmtK(v)]);
-    frame(g, B, X, () => 0, xt, [], 'kiirus (km/s, logaritmiline)', null);
+    frame(g, B, X, () => 0, xt, [], L('kiirus (km/s, logaritmiline)', 'velocity (km/s, logarithmic)'), null);
     const h = (B.y1 - B.y0) / MOTIONS.length;
     MOTIONS.forEach((m, k) => {
       const y = B.y0 + k * h + 6;
       el('rect', { x: B.x0, y, width: X(m.v) - B.x0, height: h - 12, class: 'bar' + (m.us ? ' us' : '') }, g);
-      text(g, B.x0 - 8, y + h / 2, m.name, 'lbl2', 'end');
+      text(g, B.x0 - 8, y + h / 2, L(m.name, m.en), 'lbl2', 'end');
       text(g, X(m.v) + 5, y + h / 2, `${m.v} km/s`, 'lbl3');
     });
     for (const d of [10, 40, 100, 250]) {
@@ -982,31 +1109,41 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'guide' }, g);
       text(g, x, B.y0 - 6, `${d} Mpc`, 'lbl3', 'middle');
     }
-    text(g, B.x0, B.y0 - 6, 'paisumise kiirus kaugusel:', 'lbl3');
+    text(g, B.x0, B.y0 - 6, L('paisumise kiirus kaugusel:', 'expansion velocity at a distance of:'), 'lbl3');
     // The correction to the CMB frame: the Sun moves towards the apex, a galaxy lies at the angle θ from it.
-    const cy = 400, sx = 160, th = st.theta * Math.PI / 180, L = 120;
-    text(g, 20, 270, 'Punanihke parandus taustkiirguse süsteemi', 'lbl');
+    const cy = 400, sx = 160, th = st.theta * Math.PI / 180, len = 120;
+    text(g, 20, 270, L('Punanihke parandus taustkiirguse süsteemi', 'Redshift correction to the CMB frame'), 'lbl');
     el('circle', { cx: sx, cy, r: 7, fill: 'var(--sn)' }, g);
-    text(g, sx, cy + 24, 'Päike', 'lbl2', 'middle');
-    arrow(g, sx, cy, sx + L, cy, 'selarr');
-    text(g, sx + L + 6, cy + 4, '370 km/s', 'blbl');
+    text(g, sx, cy + 24, L('Päike', 'Sun'), 'lbl2', 'middle');
+    arrow(g, sx, cy, sx + len, cy, 'selarr');
+    text(g, sx + len + 6, cy + 4, '370 km/s', 'blbl');
     el('line', { x1: sx, y1: cy, x2: sx + 180 * Math.cos(th), y2: cy - 84 * Math.sin(th), class: 'guide' }, g);
     el('ellipse', { cx: sx + 180 * Math.cos(th), cy: cy - 84 * Math.sin(th), rx: 9, ry: 4, fill: 'var(--text-2)' }, g);
-    text(g, sx + 180 * Math.cos(th), cy - 84 * Math.sin(th) - 10, 'galaktika', 'lbl2', 'middle');
+    text(g, sx + 180 * Math.cos(th), cy - 84 * Math.sin(th) - 10, L('galaktika', 'galaxy'), 'lbl2', 'middle');
     const corr = V_SUN * Math.cos(th);
-    const lines = [
+    const p10 = fmt(100 * Math.abs(corr) / (H0 * 10), 0), p100 = fmt(100 * Math.abs(corr) / (H0 * 100), 1);
+    const lines = L([
       `Päike liigub galaktika suunas ${fmtS(corr, 0)} km/s.`,
       `Taustkiirguse süsteemis on kiirus seda võrra ${corr >= 0 ? 'suurem' : 'väiksem'}:`,
       `v_{CMB} = v_{hel} ${corr >= 0 ? '+' : '−'} ${fmt(Math.abs(corr), 0)} km/s.`,
-      `10 Mpc kaugusel on see ${fmt(100 * Math.abs(corr) / (H0 * 10), 0)} % kiirusest,`,
-      `100 Mpc kaugusel ${fmt(100 * Math.abs(corr) / (H0 * 100), 1)} %.`,
-    ];
+      `10 Mpc kaugusel on see ${p10} % kiirusest,`,
+      `100 Mpc kaugusel ${p100} %.`,
+    ], [
+      `The Sun moves towards the galaxy at ${fmtS(corr, 0)} km/s.`,
+      `In the CMB frame the velocity is ${corr >= 0 ? 'larger' : 'smaller'} by as much:`,
+      `v_{CMB} = v_{hel} ${corr >= 0 ? '+' : '−'} ${fmt(Math.abs(corr), 0)} km/s.`,
+      `At 10 Mpc this is ${p10} % of the velocity,`,
+      `at 100 Mpc ${p100} %.`,
+    ]);
     lines.forEach((s, k) => text(g, 420, 310 + 20 * k, s, k === 2 ? 'lbl' : 'lbl2'));
   }
   function readoutsLocal() {
     $('thetaOut').textContent = `${st.theta}°`;
-    $('locRead').innerHTML = `Taustkiirgus on Päikese liikumise suunas ${fmt(V_SUN / C_KMS * 2.7255 * 1000, 1)} mK soojem ja vastassuunas sama palju külmem: see on taustkiirguse dipool. ` +
-      `Galaktika punanihe viiakse taustkiirguse süsteemi (z<sub>CMB</sub>) ja siis parandatakse tema enda pekuliaarse kiiruse jaoks (z<sub>HD</sub>). Pärast seda jääb umbes 250 km/s, mis 3. osa galaktikate jaoks on veel 5–35 % kiirusest.`;
+    const dT = fmt(V_SUN / C_KMS * 2.7255 * 1000, 1);
+    $('locRead').innerHTML = L(`Taustkiirgus on Päikese liikumise suunas ${dT} mK soojem ja vastassuunas sama palju külmem: see on taustkiirguse dipool. ` +
+      `Galaktika punanihe viiakse taustkiirguse süsteemi (z<sub>CMB</sub>) ja siis parandatakse tema enda pekuliaarse kiiruse jaoks (z<sub>HD</sub>). Pärast seda jääb umbes 250 km/s, mis 3. osa galaktikate jaoks on veel 5–35 % kiirusest.`,
+      `The microwave background is ${dT} mK warmer in the direction of the Sun's motion and as much colder in the opposite direction: this is the CMB dipole. ` +
+      `The redshift of a galaxy is converted to the CMB frame (z<sub>CMB</sub>) and then corrected for the galaxy's own peculiar velocity (z<sub>HD</sub>). After that, about 250 km/s remains, which for the galaxies of part 3 is still 5–35 % of the velocity.`);
   }
 
   // Hubble (1929, PNAS 15, 168), table 1: name, distance (Mpc), velocity (km/s), and a rounded modern distance (Mpc, NED).
@@ -1022,7 +1159,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     const svg = $('h29');
     svg.textContent = '';
     const now = st.now29, dMax = now ? 20 : 2.2, B = { x0: 70, x1: 748, y0: 10, y1: 320 }, X = mkScale(0, dMax, B.x0, B.x1), Y = mkScale(-400, 1300, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, dMax, now ? 2 : 0.2), ticks(-400, 1200, 200), 'kaugus (Mpc)', 'kiirus (km/s)', 50);
+    frame(g, B, X, Y, ticks(0, dMax, now ? 2 : 0.2), ticks(-400, 1200, 200), L('kaugus (Mpc)', 'distance (Mpc)'), L('kiirus (km/s)', 'velocity (km/s)'), 50);
     const inner = el('g', { 'clip-path': clipRect(svg, 'h29clip', B) }, g);
     el('line', { x1: B.x0, y1: Y(0), x2: B.x1, y2: Y(0), class: 'axisline' }, inner);
     const p = h29Pts(), f = fitH(p);
@@ -1033,18 +1170,23 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       const c = el('circle', { cx: X(q.d), cy: Y(q.v), r: 4.5, class: 'gpt' }, inner);
       el('title', {}, c).textContent = `${q.name}: ${sig(q.d, 2)} Mpc, ${q.v} km/s`;
     }
-    text(g, B.x0 + 10, B.y0 + 18, `sobitus nullpunkti kaudu: ${fmt(f.H, 0)} km/s/Mpc`, 'blbl');
-    $('legend29').innerHTML = '<span><i class="dot" style="background: var(--cep)"></i>Hubble\'i galaktikad</span><span><i style="border-color: var(--sel)"></i>sobitus</span>' +
-      `<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>${now ? 'H₀ = 70' : 'Hubble\'i K = 465 km/s/Mpc'}</span>`;
+    text(g, B.x0 + 10, B.y0 + 18, `${L('sobitus nullpunkti kaudu', 'fit through the origin')}: ${fmt(f.H, 0)} km/s/Mpc`, 'blbl');
+    $('legend29').innerHTML = `<span><i class="dot" style="background: var(--cep)"></i>${L('Hubble\'i galaktikad', 'Hubble\'s galaxies')}</span><span><i style="border-color: var(--sel)"></i>${L('sobitus', 'fit')}</span>` +
+      `<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>${now ? 'H₀ = 70' : L('Hubble\'i', 'Hubble\'s') + ' K = 465 km/s/Mpc'}</span>`;
   }
   function readoutsH29() {
     const f = fitH(h29Pts()), t = TH / f.H;
     $('now29').checked = st.now29;
+    const slope = `<b>${fmt(f.H, 0)} ± ${fmt(f.e, 0)} km/s/Mpc</b>`;
     $('h29Read').innerHTML = (st.now29
-      ? `Tänapäeva kaugustega on tõus <b>${fmt(f.H, 0)} ± ${fmt(f.e, 0)} km/s/Mpc</b>, Hubble'i aeg ${fmt(t, 1)} miljardit aastat. See on alla 70, sest kõik need galaktikad on lähemal kui 20 Mpc ` +
-        `ja nende kiirustes on pekuliaarsed kiirused ning Päikese ja Linnutee liikumine; Neitsi parve galaktikad tõmbavad meid ka enda poole.`
-      : `Hubble'i kaugustega on tõus <b>${fmt(f.H, 0)} ± ${fmt(f.e, 0)} km/s/Mpc</b> (Hubble ise sai Päikese liikumist arvestades ${K_HUBBLE} ± 50). Hubble'i aeg 1/H₀ on siis vaid ${fmt(t, 1)} miljardit aastat, ` +
-        `vähem kui Maa vanus 4.5 miljardit aastat (vt <a href="#vanus" data-go="tab4">Hubble'i aeg</a>).`);
+      ? L(`Tänapäeva kaugustega on tõus ${slope}, Hubble'i aeg ${fmt(t, 1)} miljardit aastat. See on alla 70, sest kõik need galaktikad on lähemal kui 20 Mpc ` +
+        `ja nende kiirustes on pekuliaarsed kiirused ning Päikese ja Linnutee liikumine; Neitsi parve galaktikad tõmbavad meid ka enda poole.`,
+        `With modern distances the slope is ${slope}, and the Hubble time ${fmt(t, 1)} billion years. This is below 70, because all these galaxies are closer than 20 Mpc, ` +
+        `and their velocities include peculiar velocities and the motion of the Sun and the Milky Way; the galaxies of the Virgo Cluster also pull us towards them.`)
+      : L(`Hubble'i kaugustega on tõus ${slope} (Hubble ise sai Päikese liikumist arvestades ${K_HUBBLE} ± 50). Hubble'i aeg 1/H₀ on siis vaid ${fmt(t, 1)} miljardit aastat, ` +
+        `vähem kui Maa vanus 4.5 miljardit aastat (vt <a href="#vanus" data-go="tab4">Hubble'i aeg</a>).`,
+        `With Hubble's distances the slope is ${slope} (Hubble himself got ${K_HUBBLE} ± 50, taking the motion of the Sun into account). The Hubble time 1/H₀ is then only ${fmt(t, 1)} billion years, ` +
+        `less than the age of the Earth, 4.5 billion years (see <a href="#vanus" data-go="tab4">Hubble time</a>).`));
   }
   function render2() {
     for (const v of ['uni', 'local', 'h29']) $('view2' + v).hidden = st.view2 !== v;
@@ -1069,7 +1211,7 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     svg.textContent = '';
     const B = { x0: 60, x1: 748, y0: 10, y1: 240 }, X = mkScale(0.001, 2, B.x0, B.x1, true), Y = mkScale(28, 47, B.y1, B.y0), g = el('g', {}, svg);
     const xt = [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 2].map(v => [v, String(v)]);
-    frame(g, B, X, Y, xt, ticks(28, 46, 2), 'punanihe z (logaritmiline)', 'kaugusmoodul μ', 40);
+    frame(g, B, X, Y, xt, ticks(28, 46, 2), L('punanihe z (logaritmiline)', 'redshift z (logarithmic)'), L('kaugusmoodul μ', 'distance modulus μ'), 40);
     const inner = el('g', { 'clip-path': clipRect(svg, 'hdclip', B) }, g);
     el('rect', { x: X(0.023), y: B.y0, width: X(0.06) - X(0.023), height: B.y1 - B.y0, class: 'dfill' }, inner);
     const lz = (f, cls) => { const a = []; for (let k = 0; k <= 150; k++) { const z = 0.001 * 2000 ** (k / 150); a.push([X(z), Y(muOf(DH * f(z)))]); } el('polyline', { points: pts(a), class: cls }, inner); };
@@ -1078,13 +1220,13 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     lz(dlMatter, 'curve red');
     lz(z => dlH(z, st.om3), 'curve');
     if (st.form !== 'exact') lz(FORMS[st.form].d, 'curve blue dash');
-    text(g, X(0.024), B.y0 + 14, '4. osa', 'slbl');
+    text(g, X(0.024), B.y0 + 14, L('4. osa', 'part 4'), 'slbl');
   }
   function renderHdiff() {
     const svg = $('hdiff');
     svg.textContent = '';
     const B = { x0: 60, x1: 748, y0: 10, y1: 180 }, X = mkScale(0, 1.5, B.x0, B.x1), Y = mkScale(-0.8, 0.4, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, 1.5, 0.25).map(([v]) => [v, fmt(v, 2)]), ticks(-0.8, 0.4, 0.2), 'punanihe z', 'μ − μ(tühi)', 40);
+    frame(g, B, X, Y, ticks(0, 1.5, 0.25).map(([v]) => [v, fmt(v, 2)]), ticks(-0.8, 0.4, 0.2), L('punanihe z', 'redshift z'), L('μ − μ(tühi)', 'μ − μ(empty)'), 40);
     const inner = el('g', { 'clip-path': clipRect(svg, 'hdfclip', B) }, g);
     el('rect', { x: X(0.023), y: B.y0, width: X(0.06) - X(0.023), height: B.y1 - B.y0, class: 'dfill' }, inner);
     const dm = (f, z) => 5 * Math.log10(f(z) / dlEmpty(z));
@@ -1101,15 +1243,15 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     curve(inner, z => dm(dlMatter, z), 0.002, 1.5, X, Y, 'curve red', 100);
     curve(inner, z => dm(q => dlH(q, st.om3), z), 0.002, 1.5, X, Y, 'curve', 100);
     if (st.form !== 'exact') curve(inner, z => dm(FORMS[st.form].d, z), 0.002, 1.5, X, Y, 'curve blue dash', 100);
-    text(g, B.x0 + 8, B.y0 + 14, '↑ nõrgemad kui tühjas Universumis', 'lbl3');
-    text(g, B.x0 + 8, B.y1 - 8, '↓ heledamad', 'lbl3');
+    text(g, B.x0 + 8, B.y0 + 14, L('↑ nõrgemad kui tühjas Universumis', '↑ fainter than in an empty Universe'), 'lbl3');
+    text(g, B.x0 + 8, B.y1 - 8, L('↓ heledamad', '↓ brighter'), 'lbl3');
   }
   const ZE = 0.5;
   function renderH0err() {
     const svg = $('h0err');
     svg.textContent = '';
     const B = { x0: 60, x1: 748, y0: 10, y1: 190 }, X = mkScale(0, ZE, B.x0, B.x1), Y = mkScale(-30, 10, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, ZE, 0.05), ticks(-30, 10, 5).map(([v]) => [v, fmtS(v, 0) + ' %']), 'punanihe z', 'H₀ viga', 44);
+    frame(g, B, X, Y, ticks(0, ZE, 0.05), ticks(-30, 10, 5).map(([v]) => [v, fmtS(v, 0) + ' %']), L('punanihe z', 'redshift z'), L('H₀ viga', 'error in H₀'), 44);
     const inner = el('g', { 'clip-path': clipRect(svg, 'h0eclip', B) }, g);
     el('rect', { x: X(0.023), y: B.y0, width: X(0.06) - X(0.023), height: B.y1 - B.y0, class: 'dfill' }, inner);
     for (const k of ['cz', 'corr', 'exact']) {
@@ -1129,12 +1271,15 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     $('om3Out').textContent = fmt(st.om3, 3);
     document.querySelectorAll('[data-form]').forEach(b => b.setAttribute('aria-checked', b.dataset.form === st.form));
     document.querySelectorAll('[data-om3]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.om3 === st.om3));
-    $('lgForm').textContent = st.form === 'exact' ? 'valem: täpne (sama mis valitud mudel)' : `valem: ${FORMS[st.form].name}`;
+    $('lgForm').textContent = st.form === 'exact' ? L('valem: täpne (sama mis valitud mudel)', 'formula: exact (the same as the chosen model)') : `${L('valem', 'formula')}: ${FORMS[st.form].name}`;
     const q0 = q0Of(st.om3), z = st.zHover;
-    const row = zz => `v = cz ${fmtS(errAt('cz', zz), 1)} %, parandusega ${fmtS(errAt('corr', zz), 2)} %`;
-    $('r3').innerHTML = `Ω<sub>Λ</sub> = ${fmt(1 - st.om3, 3)}, aeglustusparameeter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
+    const row = zz => `v = cz ${fmtS(errAt('cz', zz), 1)} %, ${L('parandusega', 'with the correction')} ${fmtS(errAt('corr', zz), 2)} %`;
+    $('r3').innerHTML = L(`Ω<sub>Λ</sub> = ${fmt(1 - st.om3, 3)}, aeglustusparameeter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
       ` (4. osa kasutab 0.775). ${q0 < 0 ? 'Paisumine kiireneb.' : q0 > 0 ? 'Paisumine aeglustub.' : ''}<br>` +
-      `H₀ viga z = 0.04 juures: ${row(0.04)}.` + (z !== null ? `<br>z = ${fmt(z, 3)} juures: ${row(z)}.` : '<br>Vii kursor H₀ vea joonisele, et lugeda viga mõnel muul punanihkel.');
+      `H₀ viga z = 0.04 juures: ${row(0.04)}.` + (z !== null ? `<br>z = ${fmt(z, 3)} juures: ${row(z)}.` : '<br>Vii kursor H₀ vea joonisele, et lugeda viga mõnel muul punanihkel.'),
+      `Ω<sub>Λ</sub> = ${fmt(1 - st.om3, 3)}, deceleration parameter <b>q₀ = ${fmt(q0, 2)}</b>, (1 − q₀) / 2 = ${fmt((1 - q0) / 2, 3)}` +
+      ` (part 4 uses 0.775). ${q0 < 0 ? 'The expansion is accelerating.' : q0 > 0 ? 'The expansion is slowing down.' : ''}<br>` +
+      `Error in H₀ at z = 0.04: ${row(0.04)}.` + (z !== null ? `<br>At z = ${fmt(z, 3)}: ${row(z)}.` : '<br>Hover over the plot of the error in H₀ to read the error at another redshift.'));
   }
   function render3() { renderHd(); renderHdiff(); renderH0err(); readouts3(); }
 
@@ -1150,10 +1295,10 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     const svg = $('dist4');
     svg.textContent = '';
     const B = { x0: 60, x1: 748, y0: 10, y1: 250 }, X = mkScale(T4.t0, T4.t1, B.x0, B.x1), Y = mkScale(0, 220, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(T4.t0, T4.t1, 2), ticks(0, 200, 50), 'aeg tänasest (miljardit aastat)', 'kaugus (Mpc)', 40);
+    frame(g, B, X, Y, ticks(T4.t0, T4.t1, 2), ticks(0, 200, 50), L('aeg tänasest (miljardit aastat)', 'time from today (billion years)'), L('kaugus (Mpc)', 'distance (Mpc)'), 40);
     const inner = el('g', { 'clip-path': clipRect(svg, 'd4clip', B) }, g);
     el('line', { x1: X(0), y1: B.y0, x2: X(0), y2: B.y1, class: 'guide' }, g);
-    text(g, X(0) + 4, B.y0 + 14, 'täna', 'lbl3');
+    text(g, X(0) + 4, B.y0 + 14, L('täna', 'today'), 'lbl3');
     const tH = TH / st.h4, curves = [
       { f: t => 100 * (1 + t / tH), cls: 'curve black', age: tH, lc: 'lbl' },
       { f: t => distAt(t, st.h4, 1), cls: 'curve red', age: ageOf(st.h4, 1), lc: 'clbl' },
@@ -1167,18 +1312,18 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
       if (isFinite(v) && t >= -c.age) el('circle', { cx: X(t), cy: Y(v), r: 4.5, class: ['kpt', 'gpt', 'spt'][k] }, inner);
     });
     el('line', { x1: X(st.t4), y1: B.y0, x2: X(st.t4), y2: B.y1, class: 'guide' }, inner);
-    text(g, B.x0 + 8, B.y0 + 14, 'Suur Pauk: kaugus null (miljardit aastat tagasi)', 'lbl3');
+    text(g, B.x0 + 8, B.y0 + 14, L('Suur Pauk: kaugus null (miljardit aastat tagasi)', 'Big Bang: distance zero (billion years ago)'), 'lbl3');
   }
   function renderAge4() {
     const svg = $('age4');
     svg.textContent = '';
     const B = { x0: 60, x1: 748, y0: 10, y1: 220 }, X = mkScale(50, 100, B.x0, B.x1), Y = mkScale(0, 22, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(50, 100, 5), ticks(0, 20, 5), 'H₀ (km/s/Mpc)', 'vanus (miljardit aastat)', 40);
+    frame(g, B, X, Y, ticks(50, 100, 5), ticks(0, 20, 5), 'H₀ (km/s/Mpc)', L('vanus (miljardit aastat)', 'age (billion years)'), 40);
     const inner = el('g', { 'clip-path': clipRect(svg, 'a4clip', B) }, g);
     el('rect', { x: B.x0, y: Y(13.5), width: B.x1 - B.x0, height: Y(12) - Y(13.5), class: 'vfill' }, inner);
-    text(g, B.x1 - 6, Y(13.5) - 5, 'vanimad tähed 12–13.5', 'lbl3', 'end');
+    text(g, B.x1 - 6, Y(13.5) - 5, L('vanimad tähed 12–13.5', 'oldest stars 12–13.5'), 'lbl3', 'end');
     el('line', { x1: B.x0, y1: Y(4.5), x2: B.x1, y2: Y(4.5), class: 'guide' }, inner);
-    text(g, B.x1 - 6, Y(4.5) - 5, 'Maa 4.5', 'lbl3', 'end');
+    text(g, B.x1 - 6, Y(4.5) - 5, L('Maa 4.5', 'Earth 4.5'), 'lbl3', 'end');
     curve(inner, H => TH / H, 50, 100, X, Y, 'curve ref');
     curve(inner, H => ageOf(H, 1), 50, 100, X, Y, 'curve red');
     curve(inner, H => ageOf(H, st.om4), 50, 100, X, Y, 'curve');
@@ -1195,42 +1340,47 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     $('h4').value = st.h4; $('om4').value = st.om4; $('t4').value = st.t4;
     $('h4Out').textContent = fmt(st.h4, 1);
     $('om4Out').textContent = fmt(st.om4, 3);
-    $('t4Out').textContent = `${fmtS(st.t4, 1)} mld a`;
+    $('t4Out').textContent = `${fmtS(st.t4, 1)} ${L('mld a', 'Gyr')}`;
     const tH = TH / st.h4, t0 = ageOf(st.h4, st.om4), lb = z => t0 - tOfA(1 / (1 + z), st.om4) * tH, dc = distAt(st.t4, st.h4, st.om4);
-    $('r4').innerHTML = `Hubble'i aeg 1/H₀ = <b>${fmt(tH, 2)}</b> miljardit aastat. Valitud mudeli vanus <b>${fmt(t0, 2)}</b> miljardit aastat = ${fmt(t0 / tH, 3)} / H₀; ainult ainega ${fmt(ageOf(st.h4, 1), 2)} (2/3 / H₀).<br>` +
+    const dLin = isFinite(100 * (1 + st.t4 / tH)) && st.t4 >= -tH ? fmt(100 * (1 + st.t4 / tH), 0) + ' Mpc' : '—';
+    $('r4').innerHTML = L(`Hubble'i aeg 1/H₀ = <b>${fmt(tH, 2)}</b> miljardit aastat. Valitud mudeli vanus <b>${fmt(t0, 2)}</b> miljardit aastat = ${fmt(t0 / tH, 3)} / H₀; ainult ainega ${fmt(ageOf(st.h4, 1), 2)} (2/3 / H₀).<br>` +
       `Valgus punanihkelt z = 0.04 on olnud teel ${fmt(lb(0.04), 2)} miljardit aastat, z = 1 juurest ${fmt(lb(1), 2)} miljardit aastat (Universum oli siis ${fmt(t0 - lb(1), 1)} miljardit aastat vana).<br>` +
-      `Aeg ${fmtS(st.t4, 1)} miljardit aastat: kaugus ühtlase kiirusega ${isFinite(100 * (1 + st.t4 / tH)) && st.t4 >= -tH ? fmt(100 * (1 + st.t4 / tH), 0) + ' Mpc' : '—'}, valitud mudelis ${isFinite(dc) ? fmt(dc, 0) + ' Mpc' : 'Universumit veel polnud'}.` +
-      (t0 < 12 ? ' <span class="off">See Universum on noorem kui vanimad tähed.</span>' : '');
+      `Aeg ${fmtS(st.t4, 1)} miljardit aastat: kaugus ühtlase kiirusega ${dLin}, valitud mudelis ${isFinite(dc) ? fmt(dc, 0) + ' Mpc' : 'Universumit veel polnud'}.` +
+      (t0 < 12 ? ' <span class="off">See Universum on noorem kui vanimad tähed.</span>' : ''),
+      `Hubble time 1/H₀ = <b>${fmt(tH, 2)}</b> billion years. Age of the chosen model <b>${fmt(t0, 2)}</b> billion years = ${fmt(t0 / tH, 3)} / H₀; with matter only ${fmt(ageOf(st.h4, 1), 2)} (2/3 / H₀).<br>` +
+      `Light from redshift z = 0.04 has been travelling for ${fmt(lb(0.04), 2)} billion years, from z = 1 for ${fmt(lb(1), 2)} billion years (the Universe was then ${fmt(t0 - lb(1), 1)} billion years old).<br>` +
+      `Time ${fmtS(st.t4, 1)} billion years: distance at constant velocity ${dLin}, in the chosen model ${isFinite(dc) ? fmt(dc, 0) + ' Mpc' : 'the Universe did not exist yet'}.` +
+      (t0 < 12 ? ' <span class="off">This Universe is younger than the oldest stars.</span>' : ''));
   }
   function render4() { renderDist4(); renderAge4(); readouts4(); }
 
   /* ---------- Tab 5: Hubble'i pinge ---------- */
   const H0_DATA = [
-    { grp: 'Varane Universum' },
-    { name: 'Planck (taustkiirgus)', v: 67.4, e: 0.5, k: 'e' },
-    { name: 'ACT DR6 (taustkiirgus)', v: 66.11, e: 0.79, k: 'e' },
-    { name: 'SPT-3G (taustkiirgus)', v: 66.66, e: 0.6, k: 'e' },
-    { name: 'DESI: BAO + nukleosüntees', v: 68.51, e: 0.58, k: 'e' },
-    { grp: 'Kauguste redel' },
-    { name: 'SH0ES: tsefeiidid ja Ia (HST)', v: 73.04, e: 1.04, k: 'l' },
-    { name: 'SH0ES: JWST valim', v: 72.6, e: 2.0, k: 'l' },
-    { name: 'CCHP: TRGB ja Ia', v: 70.39, e: 1.94, k: 'l' },
-    { grp: 'Muud meetodid' },
-    { name: 'gravitatsiooniläätsed (TDCOSMO)', v: 71.6, lo: 3.3, hi: 3.9, k: 'o' },
-    { name: 'maserid (MCP)', v: 73.9, e: 3.0, k: 'o' },
-    { name: 'gravitatsioonilained (GW170817)', v: 70.0, lo: 8, hi: 12, k: 'o' },
+    { grp: 'Varane Universum', en: 'Early Universe' },
+    { name: 'Planck (taustkiirgus)', en: 'Planck (CMB)', v: 67.4, e: 0.5, k: 'e' },
+    { name: 'ACT DR6 (taustkiirgus)', en: 'ACT DR6 (CMB)', v: 66.11, e: 0.79, k: 'e' },
+    { name: 'SPT-3G (taustkiirgus)', en: 'SPT-3G (CMB)', v: 66.66, e: 0.6, k: 'e' },
+    { name: 'DESI: BAO + nukleosüntees', en: 'DESI: BAO + nucleosynthesis', v: 68.51, e: 0.58, k: 'e' },
+    { grp: 'Kauguste redel', en: 'Distance ladder' },
+    { name: 'SH0ES: tsefeiidid ja Ia (HST)', en: 'SH0ES: Cepheids and Ia (HST)', v: 73.04, e: 1.04, k: 'l' },
+    { name: 'SH0ES: JWST valim', en: 'SH0ES: JWST sample', v: 72.6, e: 2.0, k: 'l' },
+    { name: 'CCHP: TRGB ja Ia', en: 'CCHP: TRGB and Ia', v: 70.39, e: 1.94, k: 'l' },
+    { grp: 'Muud meetodid', en: 'Other methods' },
+    { name: 'gravitatsiooniläätsed (TDCOSMO)', en: 'gravitational lenses (TDCOSMO)', v: 71.6, lo: 3.3, hi: 3.9, k: 'o' },
+    { name: 'maserid (MCP)', en: 'masers (MCP)', v: 73.9, e: 3.0, k: 'o' },
+    { name: 'gravitatsioonilained (GW170817)', en: 'gravitational waves (GW170817)', v: 70.0, lo: 8, hi: 12, k: 'o' },
   ];
   const H_PLANCK = 67.4, E_PLANCK = 0.5, H_SH0ES = 73.04, E_SH0ES = 1.04;
   function myRows() {
     const a = [];
-    for (const [id, name] of [['my3', 'Sinu 3. osa'], ['my4', 'Sinu 4. osa']]) {
+    for (const [id, name, en] of [['my3', 'Sinu 3. osa', 'Your part 3'], ['my4', 'Sinu 4. osa', 'Your part 4']]) {
       const v = parseNum($(id).value), e = parseNum($(id + 'e').value);
-      if (v !== null && v > 0) a.push({ name, v, e: e !== null && e > 0 ? e : 0, k: 'u' });
+      if (v !== null && v > 0) a.push({ name, en, v, e: e !== null && e > 0 ? e : 0, k: 'u' });
     }
     return a;
   }
   function renderMeas() {
-    const svg = $('meas'), mine = myRows(), rows = H0_DATA.concat(mine.length ? [{ grp: 'Harjutus' }].concat(mine) : []);
+    const svg = $('meas'), mine = myRows(), rows = H0_DATA.concat(mine.length ? [{ grp: 'Harjutus', en: 'Exercise' }].concat(mine) : []);
     const RH = 21, H = 40 + rows.length * RH + 40;
     svg.setAttribute('viewBox', `0 0 760 ${H}`);
     svg.textContent = '';
@@ -1242,8 +1392,8 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     const COL = { e: 'var(--sel)', l: 'var(--cep)', o: 'var(--text-2)', u: 'var(--sn)' };
     rows.forEach((r, k) => {
       const y = B.y0 + 20 + k * RH;
-      if (r.grp) { text(g, 8, y + 4, r.grp, 'lbl'); return; }
-      text(g, 20, y + 4, r.name, 'lbl2');
+      if (r.grp) { text(g, 8, y + 4, L(r.grp, r.en), 'lbl'); return; }
+      text(g, 20, y + 4, L(r.name, r.en), 'lbl2');
       const lo = r.v - (r.lo ?? r.e), hi = r.v + (r.hi ?? r.e);
       el('line', { x1: X(lo), y1: y, x2: X(hi), y2: y, class: 'ebar', stroke: COL[r.k] }, inner);
       el('circle', { cx: X(r.v), cy: y, r: 4.5, fill: COL[r.k], stroke: 'var(--surface)', 'stroke-width': 1.5 }, inner);
@@ -1254,35 +1404,37 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     const svg = $('routes');
     svg.textContent = '';
     const row = (y, items, cls, lbl) => {
-      text(svg, 8, y - 8, lbl, 'lbl');
+      text(svg, 8, y - 8, L(...lbl), 'lbl');
       const w = 168, gap = 22;
       items.forEach((it, k) => {
         const x = 8 + k * (w + gap), par = it.href ? el('a', { href: it.href }, svg) : svg;
         el('rect', { x, y, width: w, height: 52, rx: 7, class: 'box ' + cls }, par);
-        text(par, x + w / 2, y + 22, it.t, 'lbl', 'middle');
-        text(par, x + w / 2, y + 40, it.s, 'lbl3', 'middle');
+        text(par, x + w / 2, y + 22, L(...it.t), 'lbl', 'middle');
+        text(par, x + w / 2, y + 40, L(...it.s), 'lbl3', 'middle');
         if (k < items.length - 1) arrow(svg, x + w + 3, y + 26, x + w + gap - 3, y + 26, 'arrow', 6, 3);
       });
     };
+    // Texts as [Estonian, English].
     row(28, [
-      { t: 'Parallaks', s: 'Gaia, Linnutee tsefeiidid', href: 'parallaks.html' },
-      { t: 'Tsefeiidid', s: 'perioodi-heleduse seos', href: 'tsefeiidid.html' },
-      { t: 'Ia supernoovad', s: 'kalibreeritud heledus', href: 'supernoovad.html' },
-      { t: 'H₀ täna', s: 'kaugused ja kiirused', href: '#kaugemale' },
-    ], 'ladder', 'Kauguste redel: otse ja kohalikult, mudelit pole vaja');
+      { t: ['Parallaks', 'Parallax'], s: ['Gaia, Linnutee tsefeiidid', 'Gaia, Milky Way Cepheids'], href: 'parallaks.html' },
+      { t: ['Tsefeiidid', 'Cepheids'], s: ['perioodi-heleduse seos', 'period–luminosity relation'], href: 'tsefeiidid.html' },
+      { t: ['Ia supernoovad', 'Ia supernovae'], s: ['kalibreeritud heledus', 'calibrated luminosity'], href: 'supernoovad.html' },
+      { t: ['H₀ täna', 'H₀ today'], s: ['kaugused ja kiirused', 'distances and velocities'], href: '#kaugemale' },
+    ], 'ladder', ['Kauguste redel: otse ja kohalikult, mudelit pole vaja', 'Distance ladder: direct and local, no model needed']);
     row(124, [
-      { t: 'Helilained', s: 'plasmas, 380 000 aastat' },
-      { t: 'Taustkiirgus', s: 'laikude nurkmõõt' },
-      { t: 'Standardmudel', s: 'paisumine tänaseni' },
-      { t: 'H₀', s: 'kui mudel on õige' },
-    ], 'early', 'Varane Universum: vajab mudelit (vt Kaugemale ja Hubble\'i aeg)');
+      { t: ['Helilained', 'Sound waves'], s: ['plasmas, 380 000 aastat', 'in plasma, 380,000 years'] },
+      { t: ['Taustkiirgus', 'CMB'], s: ['laikude nurkmõõt', 'angular size of the spots'] },
+      { t: ['Standardmudel', 'Standard model'], s: ['paisumine tänaseni', 'expansion to the present'] },
+      { t: ['H₀', 'H₀'], s: ['kui mudel on õige', 'if the model is right'] },
+    ], 'early', ['Varane Universum: vajab mudelit (vt Kaugemale ja Hubble\'i aeg)', 'Early Universe: needs a model (see Farther and Hubble time)']);
   }
   function readoutsMeas() {
     const d = H_SH0ES - H_PLANCK, s = Math.hypot(E_SH0ES, E_PLANCK);
-    let r = `SH0ES ja Plancki vahe: <b>${fmt(d, 2)} km/s/Mpc</b>, ${fmt(100 * d / H_PLANCK, 1)} %, ${fmt(d / s, 1)}σ.`;
+    let r = `${L('SH0ES ja Plancki vahe', 'Difference between SH0ES and Planck')}: <b>${fmt(d, 2)} km/s/Mpc</b>, ${fmt(100 * d / H_PLANCK, 1)} %, ${fmt(d / s, 1)}σ.`;
     for (const m of myRows()) {
       const sp = Math.hypot(m.e, E_PLANCK), ss = Math.hypot(m.e, E_SH0ES);
-      r += `<br>${m.name}: Planckist ${fmtS(m.v - H_PLANCK, 1)}` + (m.e ? ` (${fmt(Math.abs(m.v - H_PLANCK) / sp, 1)}σ)` : '') + `, SH0ES-ist ${fmtS(m.v - H_SH0ES, 1)}` + (m.e ? ` (${fmt(Math.abs(m.v - H_SH0ES) / ss, 1)}σ)` : '') + '.';
+      r += `<br>${L(m.name, m.en)}: ${L('Planckist', 'from Planck')} ${fmtS(m.v - H_PLANCK, 1)}` + (m.e ? ` (${fmt(Math.abs(m.v - H_PLANCK) / sp, 1)}σ)` : '') +
+        `, ${L('SH0ES-ist', 'from SH0ES')} ${fmtS(m.v - H_SH0ES, 1)}` + (m.e ? ` (${fmt(Math.abs(m.v - H_SH0ES) / ss, 1)}σ)` : '') + '.';
     }
     $('r5').innerHTML = r;
   }
@@ -1300,13 +1452,14 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     svg.textContent = '';
     const g = el('g', {}, svg), w = 138, gap = 13, y = 30;
     const boxes = [
-      { t: 'Gaia parallaksid', s: `δp = ${fmtS(st.dp, 3)} mas` },
-      { t: 'Linnutee tsefeiidid', s: `Δμ = ${fmtS(s.mp, 3)}` },
-      { t: 'Galaktikate tsefeiidid', s: `Δμ = ${fmtS(st.dc, 3)}` },
-      { t: 'Ia supernoovad', s: `Δμ = ${fmtS(st.ds, 3)}` },
-      { t: 'H₀', s: `kokku ${fmtS(s.tot, 3)} mag` },
+      { t: L('Gaia parallaksid', 'Gaia parallaxes'), s: `δp = ${fmtS(st.dp, 3)} mas` },
+      { t: L('Linnutee tsefeiidid', 'Milky Way Cepheids'), s: `Δμ = ${fmtS(s.mp, 3)}` },
+      { t: L('Galaktikate tsefeiidid', 'Cepheids in galaxies'), s: `Δμ = ${fmtS(st.dc, 3)}` },
+      { t: L('Ia supernoovad', 'Ia supernovae'), s: `Δμ = ${fmtS(st.ds, 3)}` },
+      { t: 'H₀', s: `${L('kokku', 'total')} ${fmtS(s.tot, 3)} mag` },
     ];
-    text(g, 8, 16, 'Iga viga muudab kõigi kaugemate kauguste moodulit, ja kaugused kokku annavad H₀', 'lbl2');
+    text(g, 8, 16, L('Iga viga muudab kõigi kaugemate kauguste moodulit, ja kaugused kokku annavad H₀',
+      'Each error changes the distance moduli of all the farther distances, and the distances together give H₀'), 'lbl2');
     boxes.forEach((b, k) => {
       const x = 8 + k * (w + gap), on = k === 4 ? Math.abs(s.tot) > 0.0005 : Math.abs([st.dp, s.mp, st.dc, st.ds][k]) > 0.0005;
       el('rect', { x, y, width: w, height: 56, rx: 7, class: 'box ladder', 'stroke-width': on ? 2 : 1 }, g);
@@ -1333,9 +1486,12 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
     $('dcOut').textContent = fmtS(st.dc, 3);
     $('dsOut').textContent = fmtS(st.ds, 3);
     const left = NEED - s.tot;
-    $('r5e').innerHTML = `Kui SH0ES-i mõõtmises oleks need vead, oleks õige <b>H₀ = ${fmt(s.H, 2)} km/s/Mpc</b> (vead kokku ${fmtS(s.tot, 3)} tähesuurust, H₀ tegur ${fmt(10 ** (-0.2 * s.tot), 3)}).<br>` +
+    $('r5e').innerHTML = L(`Kui SH0ES-i mõõtmises oleks need vead, oleks õige <b>H₀ = ${fmt(s.H, 2)} km/s/Mpc</b> (vead kokku ${fmtS(s.tot, 3)} tähesuurust, H₀ tegur ${fmt(10 ** (-0.2 * s.tot), 3)}).<br>` +
       `Pinge kaotamiseks on vaja kokku 5 lg(${H_SH0ES} / ${H_PLANCK}) = <b>${fmt(NEED, 3)}</b> tähesuurust; ${Math.abs(left) < 0.01 ? '<span class="ok">nüüd on see käes.</span>' : `puudu on ${fmt(left, 3)}.`}<br>` +
-      `Ainult Gaia parallaksidega oleks vaja δp = ${fmt(DP_NEED, 3)} mas, mitu korda rohkem kui Gaia nullpunkti hinnatud ebatäpsus (umbes 0.01 mas). SH0ES-i hinnangul on kõigi süstemaatiliste vigade summa mõni sajandik tähesuurust.`;
+      `Ainult Gaia parallaksidega oleks vaja δp = ${fmt(DP_NEED, 3)} mas, mitu korda rohkem kui Gaia nullpunkti hinnatud ebatäpsus (umbes 0.01 mas). SH0ES-i hinnangul on kõigi süstemaatiliste vigade summa mõni sajandik tähesuurust.`,
+      `If the SH0ES measurement had these errors, the correct value would be <b>H₀ = ${fmt(s.H, 2)} km/s/Mpc</b> (errors ${fmtS(s.tot, 3)} magnitudes in total, H₀ factor ${fmt(10 ** (-0.2 * s.tot), 3)}).<br>` +
+      `Removing the tension needs a total of 5 log(${H_SH0ES} / ${H_PLANCK}) = <b>${fmt(NEED, 3)}</b> magnitudes; ${Math.abs(left) < 0.01 ? '<span class="ok">this is now reached.</span>' : `${fmt(left, 3)} is still missing.`}<br>` +
+      `With Gaia parallaxes alone it would need δp = ${fmt(DP_NEED, 3)} mas, several times the estimated uncertainty of the Gaia zero point (about 0.01 mas). SH0ES estimates the sum of all systematic errors at a few hundredths of a magnitude.`);
   }
   function render5() {
     $('view5meas').hidden = st.view5 !== 'meas';
@@ -1364,7 +1520,8 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   /* ---------- Controls ---------- */
   for (const p of ZPRE) {
     const b = document.createElement('button');
-    b.type = 'button'; b.className = 'small'; b.dataset.name = p.name; b.textContent = p.name;
+    b.type = 'button'; b.className = 'small'; b.dataset.name = p.name;
+    b.innerHTML = p.en ? `<span data-l="et">${p.name}</span><span data-l="en">${p.en}</span>` : p.name;
     b.addEventListener('click', () => { st.z = p.z; st.zName = p.name; render1(); });
     $('zpre').appendChild(b);
   }
@@ -1438,14 +1595,15 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   }
   function startLoop() { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } }
   const PLAYS = { 1: 'playing1', 2: 'playing2', 4: 'playing4' };
-  function stopN(n) { st[PLAYS[n]] = false; $('play' + n).textContent = '▶ Käivita'; }
+  const playLabel = n => { $('play' + n).textContent = st[PLAYS[n]] ? L('❚❚ Peata', '❚❚ Pause') : L('▶ Käivita', '▶ Play'); };
+  function stopN(n) { st[PLAYS[n]] = false; playLabel(n); }
   const stop1 = () => stopN(1), stop2 = () => stopN(2), stop4 = () => stopN(4);
-  $('play1').addEventListener('click', () => { if (st.playing1) { stop1(); return; } if (st.f1 >= 1) st.f1 = 0; st.playing1 = true; $('play1').textContent = '❚❚ Peata'; startLoop(); });
-  $('play2').addEventListener('click', () => { if (st.playing2) { stop2(); return; } if (st.f2 >= 1) st.f2 = 0; st.playing2 = true; $('play2').textContent = '❚❚ Peata'; startLoop(); });
+  $('play1').addEventListener('click', () => { if (st.playing1) { stop1(); return; } if (st.f1 >= 1) st.f1 = 0; st.playing1 = true; playLabel(1); startLoop(); });
+  $('play2').addEventListener('click', () => { if (st.playing2) { stop2(); return; } if (st.f2 >= 1) st.f2 = 0; st.playing2 = true; playLabel(2); startLoop(); });
   $('play4').addEventListener('click', () => {
     if (st.playing4) { stop4(); return; }
     if (st.t4 >= T4.t1) st.t4 = Math.max(T4.t0, -ageOf(st.h4, st.om4));
-    st.playing4 = true; $('play4').textContent = '❚❚ Peata'; startLoop();
+    st.playing4 = true; playLabel(4); startLoop();
   });
 
   /* ---------- Tabs ---------- */
@@ -1492,8 +1650,37 @@ a .box:hover { fill: color-mix(in srgb, var(--sel) 10%, var(--chip)); }
   };
   window.addEventListener('hashchange', fromHash);
 
+  /* ---------- Language ---------- */
+  // The language buttons switch the page in place. Texts in the markup are switched by the CSS; the title and the
+  // attributes with a data-en-* translation are set here, keeping the Estonian in data-et-*, and the drawings and
+  // readouts are drawn again. The choice goes into the address and is remembered.
+  const ATTRS = ['aria-label', 'title', 'content'];
+  function applyLang() {
+    const lang = document.documentElement.lang;
+    document.title = L('Hubble\'i seadus', 'The Hubble law');
+    for (const e of document.querySelectorAll(ATTRS.map(a => `[data-en-${a}]`).join())) {
+      for (const a of ATTRS) {
+        if (!e.hasAttribute('data-en-' + a)) continue;
+        if (!e.hasAttribute('data-et-' + a)) e.setAttribute('data-et-' + a, e.getAttribute(a));
+        e.setAttribute(a, e.getAttribute(`data-${lang}-${a}`));
+      }
+    }
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    for (const n in PLAYS) playLabel(n);
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+    document.documentElement.lang = b.dataset.lang;
+    try { localStorage.setItem('lang', b.dataset.lang); } catch (e) {}
+    const u = new URL(location.href);
+    u.searchParams.set('lang', b.dataset.lang);
+    history.replaceState(null, '', u);
+    applyLang();
+    render();
+  }));
+
   makeUni();
   makeRnd3();
+  applyLang();
   fromHash();
 })();
 </script>

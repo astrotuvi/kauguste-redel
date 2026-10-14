@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ia tüüpi supernoovad</title>
-<meta name="description" content="Interaktiivsed joonised Ia tüüpi supernoovadest: miks valge kääbus plahvatab, mis paneb supernoova helendama, kuidas maksimumheledust standardiseeritakse ja miks kaugete supernoovade hajuvus on väike.">
+<meta name="description" content="Interaktiivsed joonised Ia tüüpi supernoovadest: miks valge kääbus plahvatab, mis paneb supernoova helendama, kuidas maksimumheledust standardiseeritakse ja miks kaugete supernoovade hajuvus on väike."
+  data-en-content="Interactive drawings of type Ia supernovae: why a white dwarf explodes, what makes a supernova shine, how the peak brightness is standardised, and why distant supernovae scatter less than nearby galaxies.">
+<script>
+// The language is set before the page is drawn: ?lang=et or ?lang=en in the address (remembered), else the last
+// choice, else Estonian.
+(() => {
+  let l = new URLSearchParams(location.search).get('lang');
+  if (l === 'et' || l === 'en') { try { localStorage.setItem('lang', l); } catch (e) {} }
+  else { try { l = localStorage.getItem('lang'); } catch (e) {} }
+  document.documentElement.lang = l === 'en' ? 'en' : 'et';
+})();
+</script>
 <style>
 :root {
   color-scheme: light;
@@ -74,6 +85,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* The page has both languages side by side; data-l marks the text of one, and the other is hidden. */
+:root[lang="et"] [data-l="en"], :root[lang="en"] [data-l="et"] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--bg);
@@ -81,7 +94,11 @@ body {
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
-.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 14px; }
+.back { font-size: 0.88rem; margin: 0; color: var(--text-3); }
+.langs { display: flex; gap: 4px; }
+.langs button { font-size: 0.8rem; padding: 2px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.top .langs button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); border-color: transparent; }
 .back a { color: var(--text-2); text-decoration: none; }
 .back a:hover { color: var(--sel); }
 .back .sep { margin: 0 6px; }
@@ -208,7 +225,7 @@ table.res tr.hl td { font-weight: 650; }
 .dim { opacity: 0.3; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
 .legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
 .legend i.box { width: 14px; height: 10px; border: none; border-radius: 2px; }
@@ -229,136 +246,154 @@ table.res tr.hl td { font-weight: 650; }
 </head>
 <body>
 <main>
-  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span>Ia tüüpi supernoovad<span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
-  <h1>Ia tüüpi supernoovad</h1>
-  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
-  <p class="intro">Ia tüüpi <a href="https://et.wikipedia.org/wiki/Supernoova" target="_blank" rel="noopener">supernoova</a> on kaksiktähe süsteemis oleva <a href="https://et.wikipedia.org/wiki/Valge_k%C3%A4%C3%A4bus" target="_blank" rel="noopener">valge kääbuse</a> plahvatus. Valge kääbus on läbipõlenud täht, mille mass on Päikese massi lähedane, kuid suurus umbes sama kui Maal.
+  <div class="top">
+    <p class="back" data-l="et"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span>Ia tüüpi supernoovad<span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
+    <p class="back" data-l="en"><a href="index.html">← The cosmic distance ladder</a><span class="sep">·</span><a href="parallaks.html">Parallax</a><span class="sep">·</span><a href="hajusparved.html">Open clusters</a><span class="sep">·</span><a href="standardkuunlad.html">Standard candles</a><span class="sep">·</span><a href="tsefeiidid.html">Cepheids</a><span class="sep">·</span>Type Ia supernovae<span class="sep">·</span><a href="hubble.html">Hubble's law</a></p>
+    <div class="langs" role="group" aria-label="Keel" data-en-aria-label="Language">
+      <button type="button" data-lang="et" lang="et">Eesti</button>
+      <button type="button" data-lang="en" lang="en">English</button>
+    </div>
+  </div>
+  <h1><span data-l="et">Ia tüüpi supernoovad</span><span data-l="en">Type Ia supernovae</span></h1>
+  <p class="byline">Taavi Tuvikene<br><span data-l="et">TÜ Tartu observatoorium</span><span data-l="en">Tartu Observatory, University of Tartu</span></p>
+  <p class="intro" data-l="et">Ia tüüpi <a href="https://et.wikipedia.org/wiki/Supernoova" target="_blank" rel="noopener">supernoova</a> on kaksiktähe süsteemis oleva <a href="https://et.wikipedia.org/wiki/Valge_k%C3%A4%C3%A4bus" target="_blank" rel="noopener">valge kääbuse</a> plahvatus. Valge kääbus on läbipõlenud täht, mille mass on Päikese massi lähedane, kuid suurus umbes sama kui Maal.
     Mõne nädala jooksul paistab supernoova sama heledalt kui terve galaktika, mõni miljard Päikest, nii et teda on näha miljardite valgusaastate kauguselt.
     Kõik need plahvatused on peaaegu ühesugused, seepärast on Ia tüüpi supernoovad <a href="standardkuunlad.html#tsefeiidid-ja-supernoovad">standardküünlad</a>, ja väikese parandusega parimad, mis suurte kauguste jaoks on.
     Linnutee-suguses galaktikas plahvatab neid umbes üks mõnesaja aasta jooksul; viimane Linnuteel nähtud oli Kepleri supernoova 1604. aastal.
     Harjutuse <a href="index.html#osa-4">4. osas</a> kalibreerid nende heleduse ja mõõdad nendega Universumi paisumist.</p>
+  <p class="intro" data-l="en">A type Ia <a href="https://en.wikipedia.org/wiki/Supernova" target="_blank" rel="noopener">supernova</a> is the explosion of a <a href="https://en.wikipedia.org/wiki/White_dwarf" target="_blank" rel="noopener">white dwarf</a> in a binary star system. A white dwarf is a burnt-out star with about the mass of the Sun but about the size of the Earth.
+    For a few weeks the supernova shines as brightly as a whole galaxy, a few billion Suns, so it can be seen from billions of light years away.
+    All these explosions are nearly alike, so type Ia supernovae are <a href="standardkuunlad.html#tsefeiidid-ja-supernoovad">standard candles</a>, and with a small correction the best there are for large distances.
+    In a galaxy like the Milky Way, about one explodes every few hundred years; the last one seen in the Milky Way was Kepler's supernova in 1604.
+    In <a href="index.html#osa-4">part 4</a> of the exercise you calibrate their luminosity and measure the expansion of the Universe with them.</p>
 
   <div class="layout">
     <section class="card">
-      <div class="tabs" role="tablist" aria-label="Teema">
-        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Plahvatus</button>
-        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Heleduskõver</button>
-        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Standardiseerimine</button>
-        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Väike hajuvus</button>
+      <div class="tabs" role="tablist" aria-label="Teema" data-en-aria-label="Topic">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true"><span data-l="et">Plahvatus</span><span data-l="en">Explosion</span></button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1"><span data-l="et">Heleduskõver</span><span data-l="en">Light curve</span></button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Standardiseerimine</span><span data-l="en">Standardisation</span></button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1"><span data-l="et">Väike hajuvus</span><span data-l="en">Small scatter</span></button>
       </div>
 
       <div id="pane1" role="tabpanel" aria-labelledby="tab1">
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view1="sys">Kaksiktäht</button>
-          <button type="button" data-view1="spec">Spekter</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" data-view1="sys"><span data-l="et">Kaksiktäht</span><span data-l="en">Binary star</span></button>
+          <button type="button" data-view1="spec"><span data-l="et">Spekter</span><span data-l="en">Spectrum</span></button>
         </div>
         <div id="view1sys">
-          <p class="hint">Vasakul on kaksiktäht, paremal valge kääbuse raadius tema massi järgi. Käivita aeg või vali paremal etapp. Joonis pole mõõtkavas.</p>
+          <p class="hint" data-l="et">Vasakul on kaksiktäht, paremal valge kääbuse raadius tema massi järgi. Käivita aeg või vali paremal etapp. Joonis pole mõõtkavas.</p>
+          <p class="hint" data-l="en">On the left is the binary star, on the right the radius of the white dwarf against its mass. Play the time or choose a stage on the right. The drawing is not to scale.</p>
           <div class="duo">
             <div>
-              <p class="sub">Süsteem</p>
-              <svg id="sys" class="scene" viewBox="0 0 370 370" role="img" aria-label="Valge kääbus, mis saab kaaslaselt massi"></svg>
+              <p class="sub"><span data-l="et">Süsteem</span><span data-l="en">System</span></p>
+              <svg id="sys" class="scene" viewBox="0 0 370 370" role="img" aria-label="Valge kääbus, mis saab kaaslaselt massi" data-en-aria-label="A white dwarf gaining mass from its companion"></svg>
             </div>
             <div>
-              <p class="sub">Mass ja raadius</p>
-              <svg id="mr" class="scene" viewBox="0 0 370 370" role="img" aria-label="Valge kääbuse raadius massi järgi kuni Chandrasekhari massini"></svg>
+              <p class="sub"><span data-l="et">Mass ja raadius</span><span data-l="en">Mass and radius</span></p>
+              <svg id="mr" class="scene" viewBox="0 0 370 370" role="img" aria-label="Valge kääbuse raadius massi järgi kuni Chandrasekhari massini" data-en-aria-label="Radius of a white dwarf against its mass up to the Chandrasekhar mass"></svg>
             </div>
           </div>
         </div>
         <div id="view1spec" hidden>
-          <p class="hint">Nelja tüüpi supernoovade spektrid maksimumi lähedal (skemaatilised). Klõpsa spektril või vali paremal tüüp.</p>
-          <svg id="spec" class="scene" viewBox="0 0 760 470" role="img" aria-label="Ia, Ib, Ic ja II tüüpi supernoovade spektrid"></svg>
+          <p class="hint" data-l="et">Nelja tüüpi supernoovade spektrid maksimumi lähedal (skemaatilised). Klõpsa spektril või vali paremal tüüp.</p>
+          <p class="hint" data-l="en">Spectra of four types of supernovae near their peak (schematic). Click a spectrum or choose a type on the right.</p>
+          <svg id="spec" class="scene" viewBox="0 0 760 470" role="img" aria-label="Ia, Ib, Ic ja II tüüpi supernoovade spektrid" data-en-aria-label="Spectra of type Ia, Ib, Ic and II supernovae"></svg>
         </div>
       </div>
 
       <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
-        <p class="hint">Vasakul on paisuv supernoova pilv, paremal radioaktiivne lagunemisahel, all heledus ja heleduskõver päevades pärast plahvatust.
+        <p class="hint" data-l="et">Vasakul on paisuv supernoova pilv, paremal radioaktiivne lagunemisahel, all heledus ja heleduskõver päevades pärast plahvatust.
           Käivita aeg ja muuda paremal nikli massi.</p>
+        <p class="hint" data-l="en">On the left is the expanding supernova cloud, on the right the radioactive decay chain, and below the luminosity and the light curve in days after the explosion.
+          Play the time and change the nickel mass on the right.</p>
         <div class="duo">
           <div>
-            <p class="sub">Paisuv pilv</p>
-            <svg id="cloud" class="scene" viewBox="0 0 370 370" role="img" aria-label="Paisuva supernoova läbilõige nikli, koobalti ja raua ning gammakiirtega"></svg>
+            <p class="sub"><span data-l="et">Paisuv pilv</span><span data-l="en">Expanding cloud</span></p>
+            <svg id="cloud" class="scene" viewBox="0 0 370 370" role="img" aria-label="Paisuva supernoova läbilõige nikli, koobalti ja raua ning gammakiirtega" data-en-aria-label="Cross-section of an expanding supernova with nickel, cobalt and iron, and gamma rays"></svg>
           </div>
           <div>
-            <p class="sub">Lagunemisahel</p>
-            <svg id="chain" class="scene" viewBox="0 0 370 370" role="img" aria-label="Nikli, koobalti ja raua hulk valitud päeval"></svg>
+            <p class="sub"><span data-l="et">Lagunemisahel</span><span data-l="en">Decay chain</span></p>
+            <svg id="chain" class="scene" viewBox="0 0 370 370" role="img" aria-label="Nikli, koobalti ja raua hulk valitud päeval" data-en-aria-label="Amounts of nickel, cobalt and iron on the chosen day"></svg>
           </div>
         </div>
-        <p class="sub">Heledus</p>
-        <svg id="lum" class="scene" viewBox="0 0 760 250" role="img" aria-label="Supernoova heledus ja radioaktiivse lagunemise võimsus aja järgi"></svg>
+        <p class="sub"><span data-l="et">Heledus</span><span data-l="en">Luminosity</span></p>
+        <svg id="lum" class="scene" viewBox="0 0 760 250" role="img" aria-label="Supernoova heledus ja radioaktiivse lagunemise võimsus aja järgi" data-en-aria-label="Luminosity of the supernova and power of the radioactive decay against time"></svg>
         <div class="legend">
-          <span><i style="border-color: var(--sn)"></i>supernoova heledus</span>
-          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>lagunemise võimsus</span>
+          <span><i style="border-color: var(--sn)"></i><span data-l="et">supernoova heledus</span><span data-l="en">supernova luminosity</span></span>
+          <span><i style="border-color: var(--text-3); border-top-style: dashed"></i><span data-l="et">lagunemise võimsus</span><span data-l="en">decay power</span></span>
         </div>
-        <p class="sub">Heleduskõver</p>
-        <svg id="lc" class="scene" viewBox="0 0 760 230" role="img" aria-label="Supernoova B- ja V-tähesuurus aja järgi"></svg>
+        <p class="sub"><span data-l="et">Heleduskõver</span><span data-l="en">Light curve</span></p>
+        <svg id="lc" class="scene" viewBox="0 0 760 230" role="img" aria-label="Supernoova B- ja V-tähesuurus aja järgi" data-en-aria-label="B and V magnitudes of the supernova against time"></svg>
         <div class="legend">
-          <span><i style="border-color: var(--sn)"></i>B (sinine)</span>
-          <span><i style="border-color: var(--sel)"></i>V (roheline)</span>
+          <span><i style="border-color: var(--sn)"></i><span data-l="et">B (sinine)</span><span data-l="en">B (blue)</span></span>
+          <span><i style="border-color: var(--sel)"></i><span data-l="et">V (roheline)</span><span data-l="en">V (green)</span></span>
         </div>
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view3="curves">Heleduskõverad</button>
-          <button type="button" data-view3="phil">Phillipsi seos</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" data-view3="curves"><span data-l="et">Heleduskõverad</span><span data-l="en">Light curves</span></button>
+          <button type="button" data-view3="phil"><span data-l="et">Phillipsi seos</span><span data-l="en">Phillips relation</span></button>
         </div>
         <div id="view3curves">
-          <p class="hint">Lähedaste supernoovade heleduskõverad tuntud kaugustelt. Lülita paremal korrektsioonid sisse ja vaata, kuidas kõverad üheks kokku tulevad. Andmed on simuleeritud.</p>
-          <svg id="curves3" class="scene" viewBox="0 0 760 400" role="img" aria-label="Supernoovade heleduskõverad enne ja pärast korrektsioone"></svg>
+          <p class="hint" data-l="et">Lähedaste supernoovade heleduskõverad tuntud kaugustelt. Lülita paremal korrektsioonid sisse ja vaata, kuidas kõverad üheks kokku tulevad. Andmed on simuleeritud.</p>
+          <p class="hint" data-l="en">Light curves of nearby supernovae at known distances. Turn on the corrections on the right and see how the curves come together into one. The data are simulated.</p>
+          <svg id="curves3" class="scene" viewBox="0 0 760 400" role="img" aria-label="Supernoovade heleduskõverad enne ja pärast korrektsioone" data-en-aria-label="Supernova light curves before and after the corrections"></svg>
           <div class="legend">
-            <span><i style="border-color: var(--text-3)"></i>valimi supernoovad</span>
+            <span><i style="border-color: var(--text-3)"></i><span data-l="et">valimi supernoovad</span><span data-l="en">supernovae of the sample</span></span>
             <span><i style="border-color: var(--sn)"></i><span id="lg3a">valitud supernoova</span></span>
           </div>
         </div>
         <div id="view3phil" hidden>
-          <p class="hint">40 lähedast supernoovat tuntud kaugustelt: maksimumheledus nõrgenemise kiiruse ja värvuse järgi, paremal maksimumheleduste histogramm. Andmed on simuleeritud.</p>
-          <svg id="phil" class="scene" viewBox="0 0 760 400" role="img" aria-label="Maksimumheledus nõrgenemise ja värvuse järgi ning histogramm"></svg>
+          <p class="hint" data-l="et">40 lähedast supernoovat tuntud kaugustelt: maksimumheledus nõrgenemise kiiruse ja värvuse järgi, paremal maksimumheleduste histogramm. Andmed on simuleeritud.</p>
+          <p class="hint" data-l="en">40 nearby supernovae at known distances: peak luminosity against the rate of fading and the colour, and on the right a histogram of the peak luminosities. The data are simulated.</p>
+          <svg id="phil" class="scene" viewBox="0 0 760 400" role="img" aria-label="Maksimumheledus nõrgenemise ja värvuse järgi ning histogramm" data-en-aria-label="Peak luminosity against fading and colour, and a histogram"></svg>
           <div class="legend">
-            <span><i class="dot" style="background: var(--text-3)"></i>valimi supernoovad</span>
+            <span><i class="dot" style="background: var(--text-3)"></i><span data-l="et">valimi supernoovad</span><span data-l="en">supernovae of the sample</span></span>
             <span><i class="dot" style="background: var(--sn)"></i><span id="lg3b">valitud supernoova</span></span>
-            <span><i style="border-color: var(--sel)"></i>seos</span>
+            <span><i style="border-color: var(--sel)"></i><span data-l="et">seos</span><span data-l="en">relation</span></span>
           </div>
         </div>
       </div>
 
       <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view4="model">Mudel</button>
-          <button type="button" data-view4="real">Päris andmed</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" data-view4="model"><span data-l="et">Mudel</span><span data-l="en">Model</span></button>
+          <button type="button" data-view4="real"><span data-l="et">Päris andmed</span><span data-l="en">Real data</span></button>
         </div>
         <p class="hint" id="hint4"></p>
-        <p class="sub">Kiirus ja kaugus</p>
-        <svg id="hub" class="scene" viewBox="0 0 760 300" role="img" aria-label="Galaktikate kiirus kauguse järgi"></svg>
-        <p class="sub">Suhteline hälve</p>
-        <svg id="rel" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kiiruse suhteline hälve Hubble'i seadusest kauguse järgi"></svg>
+        <p class="sub"><span data-l="et">Kiirus ja kaugus</span><span data-l="en">Velocity and distance</span></p>
+        <svg id="hub" class="scene" viewBox="0 0 760 300" role="img" aria-label="Galaktikate kiirus kauguse järgi" data-en-aria-label="Velocities of the galaxies against distance"></svg>
+        <p class="sub"><span data-l="et">Suhteline hälve</span><span data-l="en">Relative deviation</span></p>
+        <svg id="rel" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kiiruse suhteline hälve Hubble'i seadusest kauguse järgi" data-en-aria-label="Relative deviation of the velocity from the Hubble law against distance"></svg>
         <div class="legend" id="legend4"></div>
       </div>
     </section>
 
-    <section class="card controls" aria-label="Seaded">
+    <section class="card controls" aria-label="Seaded" data-en-aria-label="Settings">
       <div class="group" data-tabs="tab2 tab3">
-        <div class="slider"><label for="ni">Nikli mass</label><input type="range" id="ni" min="0.4" max="0.8" step="0.01" value="0.6"><output for="ni" id="niOut"></output></div>
-        <div class="btnrow" id="presets" aria-label="Tuntud supernoovad"></div>
+        <div class="slider"><label for="ni"><span data-l="et">Nikli mass</span><span data-l="en">Nickel mass</span></label><input type="range" id="ni" min="0.4" max="0.8" step="0.01" value="0.6"><output for="ni" id="niOut"></output></div>
+        <div class="btnrow" id="presets" aria-label="Tuntud supernoovad" data-en-aria-label="Known supernovae"></div>
         <p class="readout" id="snRead"></p>
       </div>
 
       <div class="group" data-tabs="tab1" data-views="sys">
-        <div class="slider"><label for="t1">Aeg</label><input type="range" id="t1" min="0" max="1000" step="1" value="0"><output for="t1" id="t1Out"></output></div>
+        <div class="slider"><label for="t1"><span data-l="et">Aeg</span><span data-l="en">Time</span></label><input type="range" id="t1" min="0" max="1000" step="1" value="0"><output for="t1" id="t1Out"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play1">▶ Käivita</button></div>
-        <label class="toggle"><input type="checkbox" id="dd"> Kaks valget kääbust</label>
+        <label class="toggle"><input type="checkbox" id="dd"><span data-l="et"> Kaks valget kääbust</span><span data-l="en"> Two white dwarfs</span></label>
       </div>
       <div class="group" data-tabs="tab1" data-views="sys">
-        <h3>Etapid</h3>
+        <h3><span data-l="et">Etapid</span><span data-l="en">Stages</span></h3>
         <div class="btnrow" id="stages"></div>
         <p class="formula" id="stageText"></p>
         <p class="readout" id="wdRead"></p>
       </div>
       <div class="group" data-tabs="tab1" data-views="spec">
-        <h3 id="typeLbl">Tüüp</h3>
+        <h3 id="typeLbl"><span data-l="et">Tüüp</span><span data-l="en">Type</span></h3>
         <div class="seg" role="radiogroup" aria-labelledby="typeLbl">
           <button type="button" role="radio" data-type="Ia">Ia</button>
           <button type="button" role="radio" data-type="Ib">Ib</button>
@@ -369,18 +404,18 @@ table.res tr.hl td { font-weight: 650; }
       </div>
 
       <div class="group" data-tabs="tab2">
-        <div class="slider"><label for="day">Päevi pärast plahvatust</label><input type="range" id="day" min="0" max="120" step="0.5" value="18"><output for="day" id="dayOut"></output></div>
+        <div class="slider"><label for="day"><span data-l="et">Päevi pärast plahvatust</span><span data-l="en">Days after the explosion</span></label><input type="range" id="day" min="0" max="120" step="0.5" value="18"><output for="day" id="dayOut"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play2">▶ Käivita</button></div>
         <p class="readout" id="lcRead"></p>
       </div>
 
       <div class="group" data-tabs="tab3">
         <div class="toggles col">
-          <label class="toggle"><input type="checkbox" id="cStr"> Nõrgenemise korrektsioon</label>
-          <label class="toggle"><input type="checkbox" id="cCol"> Värvi korrektsioon</label>
+          <label class="toggle"><input type="checkbox" id="cStr"><span data-l="et"> Nõrgenemise korrektsioon</span><span data-l="en"> Fading correction</span></label>
+          <label class="toggle"><input type="checkbox" id="cCol"><span data-l="et"> Värvi korrektsioon</span><span data-l="en"> Colour correction</span></label>
         </div>
-        <div class="slider"><label for="dust">Tolm galaktikates: keskmine E(B − V)</label><input type="range" id="dust" min="0" max="0.3" step="0.01" value="0.1"><output for="dust" id="dustOut"></output></div>
-        <div class="btnrow"><button type="button" id="newSample">Uus valim</button></div>
+        <div class="slider"><label for="dust"><span data-l="et">Tolm galaktikates: keskmine E(B − V)</span><span data-l="en">Dust in the galaxies: mean E(B − V)</span></label><input type="range" id="dust" min="0" max="0.3" step="0.01" value="0.1"><output for="dust" id="dustOut"></output></div>
+        <div class="btnrow"><button type="button" id="newSample"><span data-l="et">Uus valim</span><span data-l="en">New sample</span></button></div>
       </div>
       <div class="group" data-tabs="tab3">
         <div id="sigRead"></div>
@@ -389,29 +424,29 @@ table.res tr.hl td { font-weight: 650; }
       </div>
 
       <div class="group" data-tabs="tab4">
-        <div class="slider"><label for="sv">Galaktikate pekuliaarne kiirus σ<sub>v</sub></label><input type="range" id="sv" min="0" max="600" step="10" value="250"><output for="sv" id="svOut"></output></div>
-        <div class="slider"><label for="sm">Ühe kauguse viga σ<sub>μ</sub></label><input type="range" id="sm" min="0" max="0.5" step="0.01" value="0.13"><output for="sm" id="smOut"></output></div>
+        <div class="slider"><label for="sv"><span data-l="et">Galaktikate pekuliaarne kiirus</span><span data-l="en">Peculiar velocity of the galaxies</span> σ<sub>v</sub></label><input type="range" id="sv" min="0" max="600" step="10" value="250"><output for="sv" id="svOut"></output></div>
+        <div class="slider"><label for="sm"><span data-l="et">Ühe kauguse viga</span><span data-l="en">Error of one distance</span> σ<sub>μ</sub></label><input type="range" id="sm" min="0" max="0.5" step="0.01" value="0.13"><output for="sm" id="smOut"></output></div>
       </div>
       <div class="group" data-tabs="tab4" data-views="model">
         <div class="btnrow">
-          <button type="button" class="small" data-preset4="p3">3. osa: tsefeiidid</button>
-          <button type="button" class="small" data-preset4="p4">4. osa: supernoovad</button>
+          <button type="button" class="small" data-preset4="p3"><span data-l="et">3. osa: tsefeiidid</span><span data-l="en">Part 3: Cepheids</span></button>
+          <button type="button" class="small" data-preset4="p4"><span data-l="et">4. osa: supernoovad</span><span data-l="en">Part 4: supernovae</span></button>
         </div>
-        <div class="slider"><label for="d1">Kaugusvahemik: alates</label><input type="range" id="d1" min="0" max="1000" step="1"><output for="d1" id="d1Out"></output></div>
-        <div class="slider"><label for="d2">kuni</label><input type="range" id="d2" min="0" max="1000" step="1"><output for="d2" id="d2Out"></output></div>
-        <div class="slider"><label for="nGal">Galaktikate arv</label><input type="range" id="nGal" min="5" max="200" step="1"><output for="nGal" id="nGalOut"></output></div>
-        <div class="btnrow"><button type="button" id="newGal">Uued galaktikad</button></div>
+        <div class="slider"><label for="d1"><span data-l="et">Kaugusvahemik: alates</span><span data-l="en">Distance range: from</span></label><input type="range" id="d1" min="0" max="1000" step="1"><output for="d1" id="d1Out"></output></div>
+        <div class="slider"><label for="d2"><span data-l="et">kuni</span><span data-l="en">to</span></label><input type="range" id="d2" min="0" max="1000" step="1"><output for="d2" id="d2Out"></output></div>
+        <div class="slider"><label for="nGal"><span data-l="et">Galaktikate arv</span><span data-l="en">Number of galaxies</span></label><input type="range" id="nGal" min="5" max="200" step="1"><output for="nGal" id="nGalOut"></output></div>
+        <div class="btnrow"><button type="button" id="newGal"><span data-l="et">Uued galaktikad</span><span data-l="en">New galaxies</span></button></div>
         <p class="readout" id="modelRead"></p>
       </div>
       <div class="group" data-tabs="tab4" data-views="real">
-        <h3 id="mbLbl">Supernoovade heledus M<sub>B</sub></h3>
+        <h3 id="mbLbl"><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova luminosity</span> M<sub>B</sub></h3>
         <div class="seg" role="radiogroup" aria-labelledby="mbLbl">
-          <button type="button" role="radio" data-mb="cal">Kalibraatorid</button>
+          <button type="button" role="radio" data-mb="cal"><span data-l="et">Kalibraatorid</span><span data-l="en">Calibrators</span></button>
           <button type="button" role="radio" data-mb="sh0es">SH0ES</button>
         </div>
         <div class="toggles col">
-          <label class="toggle"><input type="checkbox" id="showGal" checked> 3. osa galaktikad</label>
-          <label class="toggle"><input type="checkbox" id="showSn" checked> 4. osa supernoovad</label>
+          <label class="toggle"><input type="checkbox" id="showGal" checked><span data-l="et"> 3. osa galaktikad</span><span data-l="en"> Part 3 galaxies</span></label>
+          <label class="toggle"><input type="checkbox" id="showSn" checked><span data-l="et"> 4. osa supernoovad</span><span data-l="en"> Part 4 supernovae</span></label>
         </div>
         <p class="readout" id="realRead"></p>
       </div>
@@ -419,8 +454,8 @@ table.res tr.hl td { font-weight: 650; }
   </div>
 
   <section class="card explain">
-    <h2>Mida joonis näitab</h2>
-    <ul data-tab="tab1">
+    <h2><span data-l="et">Mida joonis näitab</span><span data-l="en">What the drawings show</span></h2>
+    <ul data-tab="tab1" data-l="et">
       <li>Valge kääbus on tähe tuum, mis jääb järele, kui Päikese-taolisel tähel kütus otsa saab. Tema mass on Päikese massi lähedane, tavaliselt umbes 0.6 M☉, kuid ta on vaid Maa suurune. Ta enam ei põle. Gravitatsiooni vastu hoiab teda elektronide rõhk: kaks elektroni ei saa olla samas olekus
         (<a href="https://et.wikipedia.org/wiki/Pauli_keeluprintsiip" target="_blank" rel="noopener">Pauli keeluprintsiip</a>), nii et nad ei lase end rohkem kokku suruda. Sellist ainet nimetatakse kõdunud aineks; teelusikatäis seda kaalub tonne.</li>
       <li>Mida raskem on valge kääbus, seda väiksem ta on: suurem gravitatsioon surub elektronid tihedamalt kokku. Elektronide rõhk suudab kanda kõige rohkem 1.44 Päikese massi,
@@ -436,7 +471,23 @@ table.res tr.hl td { font-weight: 650; }
       <li>Ia tüübi spektris pole vesinikku, sest valges kääbuses seda pole, kuid on sügav räni joon. Räni tekib plahvatuse välimistes kihtides. Täht nimes tähistab ainult spektrit: Ia tüübi ja teiste tüüpide füüsika on täiesti erinev.
         Kauguse mõõtmine algab spektrist: ainult Ia tüüpi supernoova sobib standardküünlaks.</li>
     </ul>
-    <ul data-tab="tab2" hidden>
+    <ul data-tab="tab1" data-l="en">
+      <li>A white dwarf is the core of a star that remains when a Sun-like star runs out of fuel. Its mass is close to that of the Sun, typically about 0.6 M☉, but it is only the size of the Earth. It no longer burns. What holds it up against gravity is the pressure of its electrons: two electrons cannot be in the same state
+        (the <a href="https://en.wikipedia.org/wiki/Pauli_exclusion_principle" target="_blank" rel="noopener">Pauli exclusion principle</a>), so they do not let themselves be squeezed any further. Such matter is called degenerate matter; a teaspoon of it weighs tonnes.</li>
+      <li>The heavier a white dwarf, the smaller it is: stronger gravity squeezes the electrons closer together. Electron pressure can support at most 1.44 solar masses,
+        the <a href="https://en.wikipedia.org/wiki/Chandrasekhar_limit" target="_blank" rel="noopener">Chandrasekhar mass</a>. Near it, the radius shrinks quickly to zero.</li>
+      <li>A white dwarf gaining mass from a companion does not reach that limit. At about 1.38 M☉ the density at the centre is so high that carbon starts to burn. Degenerate matter does not expand as it heats up, so nothing slows down the burning,
+        and it runs away into an explosion. In about a second, half of the star turns into iron-group elements, mostly radioactive nickel ⁵⁶Ni, and the star is blown apart. Nothing is left behind.</li>
+      <li>All white dwarfs explode at nearly the same mass, so they have nearly the same amount of fuel and the explosion makes nearly the same amount of nickel. This is why type Ia supernovae are almost standard candles.</li>
+      <li>Another way is the merger of two white dwarfs (<b>Two white dwarfs</b>): they lose energy to <a href="https://en.wikipedia.org/wiki/Gravitational_wave" target="_blank" rel="noopener">gravitational waves</a>
+        and orbit ever closer until they merge. Which way is more common is not yet known. Some white dwarfs may also explode below the Chandrasekhar mass. This is one reason why the peak luminosity is not
+        exactly the same every time (see <a href="#standardiseerimine" data-go="tab3">Standardisation</a>).</li>
+      <li>Supernovae are classified by their spectra (the <b>Spectrum</b> view). A type II spectrum has hydrogen: it is a massive star whose core collapsed. Type Ib and Ic spectra have no hydrogen, but these too are core collapses,
+        of stars that had lost their outer layers. Their luminosities vary widely.</li>
+      <li>A type Ia spectrum has no hydrogen, because there is none in a white dwarf, but it has a deep silicon line. Silicon is made in the outer layers of the explosion. The letter in the name refers only to the spectrum: the physics of type Ia and of the other types is completely different.
+        Measuring a distance starts with the spectrum: only a type Ia supernova will do as a standard candle.</li>
+    </ul>
+    <ul data-tab="tab2" hidden data-l="et">
       <li>Supernoova ei helenda plahvatuse kuumusest: paisuv pilv jahtub kiiresti. Valgus tuleb radioaktiivsest lagunemisest. ⁵⁶Ni laguneb poolestusajaga 6.1 päeva koobaltiks ⁵⁶Co ja see 77 päevaga stabiilseks rauaks ⁵⁶Fe.
         Lagunemisel tekkivad gammakiired soojendavad pilve.</li>
       <li>Alguses on pilv nii tihe, et valgus jääb sinna kinni ja heledus on väiksem kui lagunemise võimsus. Kui pilv on hõrenenud, umbes kolm nädalat pärast plahvatust, pääseb valgus välja: see on maksimum.
@@ -447,7 +498,18 @@ table.res tr.hl td { font-weight: 650; }
       <li>B vastab sinisele ja V rohelisele valgusele. Pärast maksimumi muutub supernoova kiiresti punasemaks, nii et B langeb kiiremini kui V. Δm₁₅ on B-tähesuuruse muutus 15 päeva jooksul pärast maksimumi.</li>
       <li>Umbes pool Universumi rauast, ka raud meie veres, on tekkinud sellistes plahvatustes.</li>
     </ul>
-    <ul data-tab="tab3" hidden>
+    <ul data-tab="tab2" hidden data-l="en">
+      <li>A supernova does not shine from the heat of the explosion: the expanding cloud cools quickly. The light comes from radioactive decay. ⁵⁶Ni decays with a half-life of 6.1 days into cobalt ⁵⁶Co, and that in 77 days into stable iron ⁵⁶Fe.
+        The gamma rays from the decay heat the cloud.</li>
+      <li>At first the cloud is so dense that the light is trapped in it, and the luminosity is less than the power of the decay. Once the cloud has thinned, about three weeks after the explosion, the light escapes: this is the peak.
+        At the peak the luminosity nearly equals the power of the decay (Arnett's rule), so the peak luminosity gives the mass of nickel, about 2·10⁴³ erg/s for each solar mass of nickel.</li>
+      <li>After the peak, the luminosity follows the decay of cobalt, which is why the tail of the curve is nearly straight in magnitudes. The tail falls faster than the cobalt decays, because more and more gamma rays escape from the thinning cloud.</li>
+      <li>The more nickel, the brighter the supernova. Iron-group elements are very opaque to light, so light escapes more slowly from a cloud with more nickel: the curve is wider and fades more slowly.
+        The amount of nickel is not exactly the same every time, so neither is the peak luminosity, but the light curve shows how much nickel there was. From this comes the <a href="#standardiseerimine" data-go="tab3">Phillips relation</a>.</li>
+      <li>B corresponds to blue and V to green light. After the peak the supernova quickly turns redder, so B falls faster than V. Δm₁₅ is the change in the B magnitude in the 15 days after the peak.</li>
+      <li>About half of the iron in the Universe, including the iron in our blood, was made in such explosions.</li>
+    </ul>
+    <ul data-tab="tab3" hidden data-l="et">
       <li>Ia tüüpi supernoovade maksimumheledus erineb umbes 40 %, kauguse mõõtmiseks liiga palju. Heleduskõver näitab, millised on heledamad: need, mis nõrgenevad aeglasemalt (vt <a href="#heleduskover" data-go="tab2">Heleduskõver</a>).
         Seda märkas Mark Phillips 1993. aastal.</li>
       <li><b>Nõrgenemise korrektsioon</b> lahutab maksimumi tähesuurusest 0.8 (Δm₁₅ − 1.1). Heleduskõverate vaates venitatakse samal ajal ajatelge: kiire kõver venitatakse laiemaks, aeglane surutakse kokku.
@@ -462,7 +524,22 @@ table.res tr.hl td { font-weight: 650; }
         0.125 tähesuurust keskmise −19.33 ümber.</li>
       <li>Supernoovat, mis teistega ei sarnane, nagu SN 1991bg, ei kasutata. Pantheon+ jätab välja supernoovad, mille x<sub>1</sub> või c on liiga suur. Kauguse mõõtmine algab objektide valimisest, mille kohta seos kehtib.</li>
     </ul>
-    <ul data-tab="tab4" hidden>
+    <ul data-tab="tab3" hidden data-l="en">
+      <li>The peak luminosities of type Ia supernovae differ by about 40 %, too much for measuring distances. The light curve shows which ones are brighter: those that fade more slowly (see <a href="#heleduskover" data-go="tab2">Light curve</a>).
+        Mark Phillips noticed this in 1993.</li>
+      <li>The <b>Fading correction</b> subtracts 0.8 (Δm₁₅ − 1.1) from the peak magnitude. In the light curves view, the time axis is stretched at the same time: a fast curve is stretched wider, a slow one squeezed narrower.
+        This is how the <a href="https://en.wikipedia.org/wiki/Supernova_Cosmology_Project" target="_blank" rel="noopener">Supernova Cosmology Project</a> did it (Perlmutter et al. 1997).</li>
+      <li>Dust in the host galaxy makes a supernova fainter and redder. Its colour c at the peak (B − V) gives a correction, like W<sub>H</sub> for Cepheids (see the <a href="tsefeiidid.html#tolm">Cepheids page</a>).
+        The <b>Colour correction</b> subtracts β c, where β ≈ 3.1. This is less than R<sub>B</sub> = 4.1 for the dust of the Milky Way: part of the colour is the supernova's own, and the dust of other galaxies seems to be different.</li>
+      <li>After both corrections, one supernova gives a distance to about 6 % (0.13 magnitudes). No other single object visible that far away is as precise.</li>
+      <li>Real measurements use the <a href="https://en.wikipedia.org/wiki/Phillips_relationship" target="_blank" rel="noopener">formula of Tripp (1998)</a>
+        m<sub>B,corr</sub> = m<sub>B</sub> + α x<sub>1</sub> − β c. The stretch parameter x<sub>1</sub> is fitted to the whole light curve (SALT2): larger for slower ones, x<sub>1</sub> = 0 is about Δm₁₅ = 1.1, and α x<sub>1</sub> is nearly the same as 0.8 (1.1 − Δm₁₅).
+        Pantheon+ also adds corrections for selection effects and for the mass of the host galaxy (about 0.05 magnitudes).</li>
+      <li>These standardised magnitudes m_b_corr are exactly the m<sub>B</sub> of <a href="index.html#supernovae">part 4</a> of the exercise. With the published Cepheid relation, the M<sub>B</sub> of the supernovae in the galaxies of part 3 scatter
+        by 0.125 magnitudes around a mean of −19.33.</li>
+      <li>A supernova that is unlike the others, such as SN 1991bg, is not used. Pantheon+ leaves out supernovae whose x<sub>1</sub> or c is too large. Measuring distances starts with choosing objects for which the relation holds.</li>
+    </ul>
+    <ul data-tab="tab4" hidden data-l="et">
       <li>Galaktika kiirus on Universumi paisumine pluss tema enda liikumine, mõnisada km/s, sest ta langeb oma naabrite poole. Harjutuses kasutatud punanihked z<sub>HD</sub> on selle jaoks juba parandatud,
         kuid parandus eemaldab ainult osa: umbes 250 km/s jääb.</li>
       <li>Lähedal on mõnisada km/s suur osa kiirusest: 10 Mpc juures ±36 %. 100 Mpc juures on see ainult ±3.6 %. Paisumist näevad puhtalt ainult kauged galaktikad.</li>
@@ -474,20 +551,44 @@ table.res tr.hl td { font-weight: 650; }
       <li>4. osa lõpeb punanihkel z = 0.06. Kaugemal on Universum valguse teekonna ajal märgatavalt paisunud ja tegur (1 + 0.775 z) on ainult parenduse esimene liige.
         Sellest ja Hubble'i pingest räägib <a href="hubble.html#kaugemale">Hubble'i seaduse leht</a>.</li>
     </ul>
-    <p class="src" data-tab="tab1">Valge kääbuse mass ja raadius: Nauenberg (1972). Siiriuse B: mass 1.02 M☉, raadius 0.0084 R☉ (Bond jt 2017). Spektrid on skemaatilised.
+    <ul data-tab="tab4" hidden data-l="en">
+      <li>The velocity of a galaxy is the expansion of the Universe plus its own motion, a few hundred km/s, as it falls towards its neighbours. The redshifts z<sub>HD</sub> used in the exercise have already been corrected for this,
+        but the correction removes only part of it: about 250 km/s remains.</li>
+      <li>Nearby, a few hundred km/s is a large part of the velocity: ±36 % at 10 Mpc. At 100 Mpc it is only ±3.6 %. Only distant galaxies show the expansion cleanly.</li>
+      <li>The relative error of the distance, however, is the same at every distance: the distance of one supernova is good to about ±6 %. The two error bands cross at about 60 Mpc.
+        This is why the distant supernovae of part 4 start at a redshift of z = 0.023, about 100 Mpc.</li>
+      <li>Cepheids can be seen only out to about 40–60 Mpc, where the velocities still scatter a lot. Supernovae can be seen much farther, where they do not scatter. This is why the ladder needs a third rung,
+        and why part 4 gives a more precise H<sub>0</sub> than part 3.</li>
+      <li>The error of part 4 is set by the calibration: an error of 0.05 magnitudes in M<sub>B</sub> changes H<sub>0</sub> by 2.3 %. The mean of the 166 distant supernovae is good to about 0.01 magnitudes, so their number matters much less.</li>
+      <li>Part 4 ends at a redshift of z = 0.06. Farther out, the Universe has expanded noticeably while the light travelled, and the factor (1 + 0.775 z) is only the first term of the correction.
+        This, and the Hubble tension, are explained on the <a href="hubble.html#kaugemale">Hubble law page</a>.</li>
+    </ul>
+    <p class="src" data-tab="tab1" data-l="et">Valge kääbuse mass ja raadius: Nauenberg (1972). Siiriuse B: mass 1.02 M☉, raadius 0.0084 R☉ (Bond jt 2017). Spektrid on skemaatilised.
       Kahe valge kääbuse (0.9 ja 0.7 M☉) vahekaugus kahaneb gravitatsioonilainete tõttu nii, et ühinemiseni jäänud aeg on võrdeline vahekauguse neljanda astmega.</p>
-    <p class="src" data-tab="tab2" hidden>Heledus on arvutatud Arnetti (1982) mudeliga, lagunemise võimsus Nadyozhini (1994) järgi ja gammakiirte neeldumine nagu Jeffery (1999).
+    <p class="src" data-tab="tab1" data-l="en">White dwarf mass and radius: Nauenberg (1972). Sirius B: mass 1.02 M☉, radius 0.0084 R☉ (Bond et al. 2017). The spectra are schematic.
+      The separation of two white dwarfs (0.9 and 0.7 M☉) shrinks through gravitational waves so that the time left until the merger is proportional to the fourth power of the separation.</p>
+    <p class="src" data-tab="tab2" hidden data-l="et">Heledus on arvutatud Arnetti (1982) mudeliga, lagunemise võimsus Nadyozhini (1994) järgi ja gammakiirte neeldumine nagu Jeffery (1999).
       B- ja V-kõverad on venitatud mallist; maksimum M<sub>B</sub> = −19.3 − 2.5 lg (M<sub>Ni</sub> / 0.6 M☉) ja Δm₁₅ Phillipsi seosest M<sub>B</sub> = −19.3 + 0.8 (Δm₁₅ − 1.1), nagu standardküünalde lehel.</p>
-    <p class="src" data-tab="tab3" hidden>Valim on simuleeritud: nikli mass 0.4–0.8 M☉, juhuslik hajuvus 0.10 tähesuurust, supernoova enda värvus σ = 0.05 ja tolm eksponentjaotusega, R<sub>B</sub> = 3.1.
+    <p class="src" data-tab="tab2" hidden data-l="en">The luminosity is computed with the model of Arnett (1982), the power of the decay after Nadyozhin (1994), and the absorption of gamma rays as in Jeffery (1999).
+      The B and V curves are stretched from a template; the peak M<sub>B</sub> = −19.3 − 2.5 lg (M<sub>Ni</sub> / 0.6 M☉), and Δm₁₅ from the Phillips relation M<sub>B</sub> = −19.3 + 0.8 (Δm₁₅ − 1.1), as on the standard candles page.</p>
+    <p class="src" data-tab="tab3" hidden data-l="et">Valim on simuleeritud: nikli mass 0.4–0.8 M☉, juhuslik hajuvus 0.10 tähesuurust, supernoova enda värvus σ = 0.05 ja tolm eksponentjaotusega, R<sub>B</sub> = 3.1.
       SN 1991bg: Δm₁₅ = 1.93, M<sub>B</sub> ≈ −17.1. SN 2014J: E(B − V) ≈ 1.2 (Amanullah jt 2014).</p>
-    <p class="src" data-tab="tab4" hidden>Päris andmed: harjutuse 3. osa 29 galaktikat (Riess jt 2022, ApJL 934, L7), μ nende tsefeiididest avaldatud seosega (Cruz Reyes &amp; Anderson 2023) ja v = c z<sub>HD</sub>;
+    <p class="src" data-tab="tab3" hidden data-l="en">The sample is simulated: nickel mass 0.4–0.8 M☉, a random scatter of 0.10 magnitudes, an intrinsic supernova colour with σ = 0.05, and dust with an exponential distribution, R<sub>B</sub> = 3.1.
+      SN 1991bg: Δm₁₅ = 1.93, M<sub>B</sub> ≈ −17.1. SN 2014J: E(B − V) ≈ 1.2 (Amanullah et al. 2014).</p>
+    <p class="src" data-tab="tab4" hidden data-l="et">Päris andmed: harjutuse 3. osa 29 galaktikat (Riess jt 2022, ApJL 934, L7), μ nende tsefeiididest avaldatud seosega (Cruz Reyes &amp; Anderson 2023) ja v = c z<sub>HD</sub>;
       4. osa 166 kauget supernoovat, m_b_corr ja z<sub>HD</sub> Pantheon+ (Scolnic jt 2022; Brout jt 2022), v = c z (1 + 0.775 z). SH0ES M<sub>B</sub> = −19.253 (Riess jt 2022).</p>
+    <p class="src" data-tab="tab4" hidden data-l="en">Real data: the 29 galaxies of part 3 of the exercise (Riess et al. 2022, ApJL 934, L7), μ from their Cepheids with the published relation (Cruz Reyes &amp; Anderson 2023) and v = c z<sub>HD</sub>;
+      the 166 distant supernovae of part 4, m_b_corr and z<sub>HD</sub> from Pantheon+ (Scolnic et al. 2022; Brout et al. 2022), v = c z (1 + 0.775 z). SH0ES M<sub>B</sub> = −19.253 (Riess et al. 2022).</p>
   </section>
 </main>
 
 <script>
 (() => {
   const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+  // A text drawn by the script, in the language of the page.
+  const L = (et, en) => (document.documentElement.lang === 'en' ? en : et);
+  // Both languages as spans, for markup built by the script; the CSS shows one.
+  const sp = (et, en) => `<span data-l="et">${et}</span><span data-l="en">${en}</span>`;
 
   function el(tag, attrs, parent) {
     const e = document.createElementNS(NS, tag);
@@ -515,7 +616,7 @@ table.res tr.hl td { font-weight: 650; }
   function sig(v, n = 3) {
     if (!isFinite(v) || v === 0) return '0';
     let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
-    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, L(' ', ',')));
     return minus(s);
   }
   // 1.2·10⁴³
@@ -598,16 +699,24 @@ table.res tr.hl td { font-weight: 650; }
   }
   const STAGES = {
     sd: [
-      { name: '1. Kogub massi', f: 0.25, text: 'Valge kääbus saab kaaslaselt gaasi. Tema enda soojus teda üleval ei hoia, seda teeb elektronide rõhk: kaks elektroni ei saa olla samas olekus. Sellist ainet nimetatakse kõdunud aineks.' },
-      { name: '2. Tõmbub kokku', f: 0.7, text: 'Rohkem massi tähendab suuremat gravitatsiooni, mis surub elektronid tihedamalt kokku. Valge kääbus muutub kasvades väiksemaks ja tihedamaks.' },
-      { name: '3. Süttib', f: 0.948, text: 'Umbes 1.38 M☉ juures, veidi alla Chandrasekhari massi 1.44 M☉, on tihedus keskel umbes 2·10⁹ g/cm³ ja süsinik hakkab põlema. Kõdunud aine ei paisu kuumenedes, nii et miski ei pidurda põlemist.' },
-      { name: '4. Plahvatab', f: 0.985, text: 'Umbes sekundiga läbib põlemine tähe ja muudab poole sellest raua rühma elementideks, peamiselt radioaktiivseks nikliks ⁵⁶Ni. Energia paiskab tähe laiali kiirusega umbes 10 000 km/s. Järele ei jää midagi.' },
+      { name: '1. Kogub massi', nameEn: '1. Gains mass', f: 0.25, text: 'Valge kääbus saab kaaslaselt gaasi. Tema enda soojus teda üleval ei hoia, seda teeb elektronide rõhk: kaks elektroni ei saa olla samas olekus. Sellist ainet nimetatakse kõdunud aineks.',
+        textEn: 'The white dwarf receives gas from its companion. It is not held up by its own heat but by the pressure of its electrons: two electrons cannot be in the same state. Such matter is called degenerate matter.' },
+      { name: '2. Tõmbub kokku', nameEn: '2. Shrinks', f: 0.7, text: 'Rohkem massi tähendab suuremat gravitatsiooni, mis surub elektronid tihedamalt kokku. Valge kääbus muutub kasvades väiksemaks ja tihedamaks.',
+        textEn: 'More mass means stronger gravity, which squeezes the electrons closer together. As the white dwarf grows, it becomes smaller and denser.' },
+      { name: '3. Süttib', nameEn: '3. Ignites', f: 0.948, text: 'Umbes 1.38 M☉ juures, veidi alla Chandrasekhari massi 1.44 M☉, on tihedus keskel umbes 2·10⁹ g/cm³ ja süsinik hakkab põlema. Kõdunud aine ei paisu kuumenedes, nii et miski ei pidurda põlemist.',
+        textEn: 'At about 1.38 M☉, a little below the Chandrasekhar mass of 1.44 M☉, the density at the centre is about 2·10⁹ g/cm³ and carbon starts to burn. Degenerate matter does not expand as it heats up, so nothing slows down the burning.' },
+      { name: '4. Plahvatab', nameEn: '4. Explodes', f: 0.985, text: 'Umbes sekundiga läbib põlemine tähe ja muudab poole sellest raua rühma elementideks, peamiselt radioaktiivseks nikliks ⁵⁶Ni. Energia paiskab tähe laiali kiirusega umbes 10 000 km/s. Järele ei jää midagi.',
+        textEn: 'In about a second the burning sweeps through the star and turns half of it into iron-group elements, mostly radioactive nickel ⁵⁶Ni. The energy blows the star apart at about 10,000 km/s. Nothing is left behind.' },
     ],
     dd: [
-      { name: '1. Kaks kääbust', f: 0.3, text: 'Kaks valget kääbust tiirlevad teineteise ümber, 0.9 ja 0.7 Päikese massi, kokku rohkem kui Chandrasekhari mass. Kumbki üksi plahvatada ei saa.' },
-      { name: '2. Spiraal', f: 0.88, text: 'Tiirlemine kiirgab gravitatsioonilaineid, mis viivad energiat ära. Kääbused tulevad üha lähemale ja tiirlevad üha kiiremini, lõpuks mõnekümne sekundiga.' },
-      { name: '3. Ühinevad', f: 0.949, text: 'Väiksem ja kergem kääbus rebitakse tükkideks ja tema aine langeb raskemale. Kuskil süttib süsinik ja algab plahvatus.' },
-      { name: '4. Plahvatab', f: 0.985, text: 'Ühinenud aine paiskub laiali nagu ühest valgest kääbusest. Kas see juhtub tihti ja kas plahvatus on sama hele, on veel lahtine küsimus.' },
+      { name: '1. Kaks kääbust', nameEn: '1. Two dwarfs', f: 0.3, text: 'Kaks valget kääbust tiirlevad teineteise ümber, 0.9 ja 0.7 Päikese massi, kokku rohkem kui Chandrasekhari mass. Kumbki üksi plahvatada ei saa.',
+        textEn: 'Two white dwarfs of 0.9 and 0.7 solar masses orbit each other, together more than the Chandrasekhar mass. Neither can explode on its own.' },
+      { name: '2. Spiraal', nameEn: '2. Spiral', f: 0.88, text: 'Tiirlemine kiirgab gravitatsioonilaineid, mis viivad energiat ära. Kääbused tulevad üha lähemale ja tiirlevad üha kiiremini, lõpuks mõnekümne sekundiga.',
+        textEn: 'The orbit radiates gravitational waves, which carry energy away. The dwarfs come ever closer and orbit ever faster, in the end within a few tens of seconds.' },
+      { name: '3. Ühinevad', nameEn: '3. Merge', f: 0.949, text: 'Väiksem ja kergem kääbus rebitakse tükkideks ja tema aine langeb raskemale. Kuskil süttib süsinik ja algab plahvatus.',
+        textEn: 'The smaller, lighter dwarf is torn apart and its matter falls onto the heavier one. Somewhere carbon ignites and the explosion begins.' },
+      { name: '4. Plahvatab', nameEn: '4. Explodes', f: 0.985, text: 'Ühinenud aine paiskub laiali nagu ühest valgest kääbusest. Kas see juhtub tihti ja kas plahvatus on sama hele, on veel lahtine küsimus.',
+        textEn: 'The merged matter is blown apart as from a single white dwarf. Whether this happens often, and whether the explosion is as bright, is still an open question.' },
     ],
   };
   function stageOf() {
@@ -668,10 +777,11 @@ table.res tr.hl td { font-weight: 650; }
   const vAt = (sn, t, MB = sn.MB) => bAt(sn, t, MB) - bvOf((t - sn.tB) / sn.s);
 
   const PRESETS = [
-    { name: 'SN 2011fe', Ni: 0.55, E: 0, note: 'M101, lähim normaalne Ia tüüpi supernoova aastakümnete jooksul ja 3. osa esimene galaktika' },
-    { name: 'SN 1991T', Ni: 0.68, E: 0.14, note: 'hele ja aeglane' },
-    { name: 'SN 2014J', Ni: 0.6, E: 1.2, note: 'M82, paksu tolmu taga' },
-    { name: 'SN 1991bg', Ni: 0.1, E: 0, over: { MB: -17.1, dm15: 1.93 }, note: 'nõrk ja kiire erijuhtum, mida kosmoloogias ei kasutata' },
+    { name: 'SN 2011fe', Ni: 0.55, E: 0, note: 'M101, lähim normaalne Ia tüüpi supernoova aastakümnete jooksul ja 3. osa esimene galaktika',
+      noteEn: 'M101, the nearest normal type Ia supernova in decades and the first galaxy of part 3' },
+    { name: 'SN 1991T', Ni: 0.68, E: 0.14, note: 'hele ja aeglane', noteEn: 'bright and slow' },
+    { name: 'SN 2014J', Ni: 0.6, E: 1.2, note: 'M82, paksu tolmu taga', noteEn: 'M82, behind thick dust' },
+    { name: 'SN 1991bg', Ni: 0.1, E: 0, over: { MB: -17.1, dm15: 1.93 }, note: 'nõrk ja kiire erijuhtum, mida kosmoloogias ei kasutata', noteEn: 'a faint and fast special case, not used in cosmology' },
   ];
 
   const st = {
@@ -704,7 +814,7 @@ table.res tr.hl td { font-weight: 650; }
       const wx = 292, M = s.M, R = wdR(M) / REARTH;
       // The companion fills its Roche lobe and loses gas through the inner Lagrange point.
       el('ellipse', { cx: 112, cy, rx: 86, ry: 80, fill: gGiant }, svg);
-      text(svg, 112, cy + 104, 'kaaslane: punane hiid', 'nl2', 'middle');
+      text(svg, 112, cy + 104, L('kaaslane: punane hiid', 'companion: red giant'), 'nl2', 'middle');
       if (s.e === 0) {
         el('ellipse', { cx: wx, cy, rx: 34, ry: 8, fill: 'rgba(255, 196, 150, 0.35)', stroke: 'rgba(255, 196, 150, 0.6)' }, svg);
         const P0 = [196, cy], P1 = [250, cy - 60], P2 = [wx - 10, cy - 7], bez = u => [(1 - u) ** 2 * P0[0] + 2 * u * (1 - u) * P1[0] + u * u * P2[0], (1 - u) ** 2 * P0[1] + 2 * u * (1 - u) * P1[1] + u * u * P2[1]];
@@ -712,8 +822,8 @@ table.res tr.hl td { font-weight: 650; }
         for (let k = 0; k < 9; k++) { const p = bez((k / 9 + st.anim * 0.6) % 1); el('circle', { cx: p[0], cy: p[1], r: 1.8, fill: '#ffd2a8' }, svg); }
         el('circle', { cx: wx, cy, r: 12, fill: gWd }, svg);
         el('circle', { cx: wx, cy, r: 2 + 3 * R, fill: stage === 2 ? '#ffe6b0' : WD_COL }, svg);
-        text(svg, wx, cy + 30, 'valge kääbus', 'nl2', 'middle');
-        text(svg, wx, cy + 46, 'akretsiooniketas', 'nl2', 'middle');
+        text(svg, wx, cy + 30, L('valge kääbus', 'white dwarf'), 'nl2', 'middle');
+        text(svg, wx, cy + 46, L('akretsiooniketas', 'accretion disc'), 'nl2', 'middle');
         // Inset: the white dwarf magnified, with the Earth.
         const ix = 296, iy = 72, kp = 34;
         el('rect', { x: ix - 66, y: iy - 56, width: 132, height: 122, rx: 6, class: 'inset' }, svg);
@@ -733,7 +843,7 @@ table.res tr.hl td { font-weight: 650; }
           el('circle', { cx: p[0], cy: p[1], r: 12, fill: gWd }, svg);
           el('circle', { cx: p[0], cy: p[1], r: 2 + 3 * wdR(m) / REARTH, fill: WD_COL }, svg);
         }
-        text(svg, 185, cy + 110, 'gravitatsioonilained viivad energiat ära', 'nl2', 'middle');
+        text(svg, 185, cy + 110, L('gravitatsioonilained viivad energiat ära', 'gravitational waves carry energy away'), 'nl2', 'middle');
         const ix = 296, iy = 72, kp = 20;
         el('rect', { x: ix - 66, y: iy - 56, width: 132, height: 122, rx: 6, class: 'inset' }, svg);
         [[ix - 30, DD.m1], [ix + 30, DD.m2]].forEach(([x, m]) => {
@@ -744,12 +854,13 @@ table.res tr.hl td { font-weight: 650; }
         insetCaption(svg, ix, iy);
       } else boom(svg, C[0], cy, s.e, gBoom);
     }
-    text(svg, 12, 20, STAGES[st.dd ? 'dd' : 'sd'][stage].name.replace(/^\d\. /, ''), 'nl');
-    text(svg, 12, 36, st.dd ? `vahekaugus ${sig(s.a, 2)} R☉` : `mass ${fmt(s.M, 2)} M☉`, 'nl2');
+    const sg = STAGES[st.dd ? 'dd' : 'sd'][stage];
+    text(svg, 12, 20, L(sg.name, sg.nameEn).replace(/^\d\. /, ''), 'nl');
+    text(svg, 12, 36, st.dd ? `${L('vahekaugus', 'separation')} ${sig(s.a, 2)} R☉` : `mass ${fmt(s.M, 2)} M☉`, 'nl2');
   }
   function insetCaption(svg, ix, iy) {
-    text(svg, ix, iy + 46, 'suurendatud,', 'nl2', 'middle');
-    text(svg, ix, iy + 58, 'Maa katkendjoonega', 'nl2', 'middle');
+    text(svg, ix, iy + 46, L('suurendatud,', 'magnified,'), 'nl2', 'middle');
+    text(svg, ix, iy + 58, L('Maa katkendjoonega', 'the Earth dashed'), 'nl2', 'middle');
   }
   function boom(svg, x, y, e, fill) {
     const r = 10 + 230 * Math.sqrt(e);
@@ -759,51 +870,55 @@ table.res tr.hl td { font-weight: 650; }
       const a = rr() * 2 * Math.PI, d = r * (0.5 + 0.5 * rr());
       el('circle', { cx: x + d * Math.cos(a), cy: y + d * Math.sin(a), r: 1.6, fill: rr() < 0.5 ? '#ffe39a' : '#ff9a5a' }, svg);
     }
-    text(svg, 185, 352, 'plahvatus: aine lendab laiali kiirusega ~10 000 km/s', 'nl2', 'middle');
+    text(svg, 185, 352, L('plahvatus: aine lendab laiali kiirusega ~10 000 km/s', 'explosion: the matter flies apart at ~10,000 km/s'), 'nl2', 'middle');
   }
 
   function renderMR() {
     const svg = $('mr'), s = sys1();
     svg.textContent = '';
     const B = { x0: 52, x1: 356, y0: 12, y1: 318 }, X = mkScale(0.2, 1.5, B.x0, B.x1), Y = mkScale(0, 2.8, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0.2, 1.5, 0.2), ticks(0, 2.8, 0.5).map(([v, l]) => [v, l]), 'mass (M☉)', 'raadius (Maa raadiustes)', 36);
+    frame(g, B, X, Y, ticks(0.2, 1.5, 0.2), ticks(0, 2.8, 0.5).map(([v, l]) => [v, l]), 'mass (M☉)', L('raadius (Maa raadiustes)', 'radius (Earth radii)'), 36);
     const c = [];
     for (let m = 0.2; m < MCH; m += 0.005) c.push([X(m), Y(wdR(m) / REARTH)]);
     c.push([X(MCH), Y(0)]);
     el('polyline', { points: pts(c), class: 'curve mr' }, g);
     el('line', { x1: X(MCH), y1: B.y0, x2: X(MCH), y2: B.y1, class: 'guide' }, g);
-    text(g, X(MCH) - 4, B.y0 + 14, 'Chandrasekhari mass', 'lbl3', 'end');
+    text(g, X(MCH) - 4, B.y0 + 14, L('Chandrasekhari mass', 'Chandrasekhar mass'), 'lbl3', 'end');
     el('line', { x1: X(M_IGN), y1: Y(1.1), x2: X(M_IGN), y2: B.y1, class: 'guide' }, g);
-    text(g, X(M_IGN) - 4, Y(1.1) - 4, 'süttimine', 'lbl3', 'end');
+    text(g, X(M_IGN) - 4, Y(1.1) - 4, L('süttimine', 'ignition'), 'lbl3', 'end');
     el('line', { x1: B.x0, y1: Y(1), x2: B.x1, y2: Y(1), class: 'guide' }, g);
-    text(g, B.x0 + 6, Y(1) - 5, 'Maa raadius', 'lbl3');
+    text(g, B.x0 + 6, Y(1) - 5, L('Maa raadius', 'Earth radius'), 'lbl3');
     // Sirius B: 1.02 M☉, 0.0084 R☉ (Bond et al. 2017).
     el('circle', { cx: X(1.02), cy: Y(0.0084 * RSUN_KM / REARTH), r: 4.5, class: 'ring' }, g);
-    text(g, X(1.02) - 8, Y(0.0084 * RSUN_KM / REARTH) + 16, 'Siiriuse B', 'lbl3', 'end');
-    if (s.e > 0) { text(g, (B.x0 + B.x1) / 2, Y(2.4), 'valget kääbust enam pole', 'lbl', 'middle'); return; }
+    text(g, X(1.02) - 8, Y(0.0084 * RSUN_KM / REARTH) + 16, L('Siiriuse B', 'Sirius B'), 'lbl3', 'end');
+    if (s.e > 0) { text(g, (B.x0 + B.x1) / 2, Y(2.4), L('valget kääbust enam pole', 'the white dwarf is gone'), 'lbl', 'middle'); return; }
     const pt = m => { el('circle', { cx: X(m), cy: Y(wdR(m) / REARTH), r: 6, class: 'wdpt' }, g); };
     if (!st.dd) pt(s.M);
     else {
       pt(DD.m1); pt(DD.m2);
-      text(g, X(0.8), Y(2.2), 'kokku 1.6 M☉ — üle piiri', 'lbl2', 'middle');
+      text(g, X(0.8), Y(2.2), L('kokku 1.6 M☉ — üle piiri', 'together 1.6 M☉ — over the limit'), 'lbl2', 'middle');
     }
   }
 
   function readouts1() {
     const s = sys1(), stage = stageOf(), list = STAGES[st.dd ? 'dd' : 'sd'];
     $('t1').value = Math.round(st.t1 * 1000);
-    $('t1Out').textContent = s.e > 0 ? 'plahvatus' : `${sig(s.t, 2)} mln a`;
-    $('stageText').innerHTML = `<b>${list[stage].name}.</b> ${list[stage].text}`;
-    document.querySelectorAll('#stages button').forEach((b, i) => { b.textContent = list[i].name; b.setAttribute('aria-pressed', i === stage); });
-    if (s.e > 0) { $('wdRead').innerHTML = 'Tähest jääb järele ainult paisuv pilv, umbes 0.6 M☉ niklit. Vaata vahekaarti <b>Heleduskõver</b>.'; return; }
+    $('t1Out').textContent = s.e > 0 ? L('plahvatus', 'explosion') : `${sig(s.t, 2)} ${L('mln a', 'Myr')}`;
+    $('stageText').innerHTML = `<b>${L(list[stage].name, list[stage].nameEn)}.</b> ${L(list[stage].text, list[stage].textEn)}`;
+    document.querySelectorAll('#stages button').forEach((b, i) => { b.innerHTML = sp(list[i].name, list[i].nameEn); b.setAttribute('aria-pressed', i === stage); });
+    if (s.e > 0) { $('wdRead').innerHTML = L('Tähest jääb järele ainult paisuv pilv, umbes 0.6 M☉ niklit. Vaata vahekaarti <b>Heleduskõver</b>.', 'Only an expanding cloud is left of the star, with about 0.6 M☉ of nickel. See the <b>Light curve</b> tab.'); return; }
     if (!st.dd) {
       const R = wdR(s.M), rho = wdRho(s.M);
-      $('wdRead').innerHTML = `Aeg ${fmt(s.t, 2)} miljonit aastat, mass kasvab 10⁻⁷ M☉ aastas. Valge kääbuse mass <b>${fmt(s.M, 3)} M☉</b>, raadius <b>${sig(R, 3)} km</b> (${fmt(R / REARTH, 2)} Maa raadiust), ` +
-        `tihedus keskel ${sci(rho)} g/cm³: teelusikatäis (5 cm³) kaalub ${sig(rho * 5 / 1e6, 2)} tonni.`;
+      $('wdRead').innerHTML = L(`Aeg ${fmt(s.t, 2)} miljonit aastat, mass kasvab 10⁻⁷ M☉ aastas. Valge kääbuse mass <b>${fmt(s.M, 3)} M☉</b>, raadius <b>${sig(R, 3)} km</b> (${fmt(R / REARTH, 2)} Maa raadiust), ` +
+        `tihedus keskel ${sci(rho)} g/cm³: teelusikatäis (5 cm³) kaalub ${sig(rho * 5 / 1e6, 2)} tonni.`,
+        `Time ${fmt(s.t, 2)} million years; the mass grows by 10⁻⁷ M☉ a year. White dwarf mass <b>${fmt(s.M, 3)} M☉</b>, radius <b>${sig(R, 3)} km</b> (${fmt(R / REARTH, 2)} Earth radii), ` +
+        `central density ${sci(rho)} g/cm³: a teaspoon (5 cm³) weighs ${sig(rho * 5 / 1e6, 2)} tonnes.`);
     } else {
-      const P = ddP(s.a), left = DD.T - s.t;
-      $('wdRead').innerHTML = `Aeg ${sig(s.t, 3)} miljonit aastat. Vahekaugus <b>${sig(s.a, 2)} R☉</b> (${sig(s.a * RSUN_KM, 2)} km), tiirlemisperiood <b>${P > 3600 ? sig(P / 3600, 2) + ' h' : P > 120 ? sig(P / 60, 2) + ' min' : sig(P, 2) + ' s'}</b>; ` +
-        `ühinemiseni ${left > 0.01 ? sig(left, 2) + ' miljonit aastat' : 'vähem kui 10 000 aastat'}. Massid 0.9 + 0.7 = 1.6 M☉ > 1.44 M☉.`;
+      const P = ddP(s.a), left = DD.T - s.t, per = P > 3600 ? sig(P / 3600, 2) + ' h' : P > 120 ? sig(P / 60, 2) + ' min' : sig(P, 2) + ' s';
+      $('wdRead').innerHTML = L(`Aeg ${sig(s.t, 3)} miljonit aastat. Vahekaugus <b>${sig(s.a, 2)} R☉</b> (${sig(s.a * RSUN_KM, 2)} km), tiirlemisperiood <b>${per}</b>; ` +
+        `ühinemiseni ${left > 0.01 ? sig(left, 2) + ' miljonit aastat' : 'vähem kui 10 000 aastat'}. Massid 0.9 + 0.7 = 1.6 M☉ > 1.44 M☉.`,
+        `Time ${sig(s.t, 3)} million years. Separation <b>${sig(s.a, 2)} R☉</b> (${sig(s.a * RSUN_KM, 2)} km), orbital period <b>${per}</b>; ` +
+        `${left > 0.01 ? sig(left, 2) + ' million years' : 'less than 10,000 years'} until the merger. Masses 0.9 + 0.7 = 1.6 M☉ > 1.44 M☉.`);
     }
   }
   function render1sys() { renderSys(); renderMR(); readouts1(); }
@@ -811,10 +926,10 @@ table.res tr.hl td { font-weight: 650; }
   // Schematic spectra near the peak: a blackbody with P Cygni lines [rest wavelength, velocity in km/s, absorption depth,
   // width in Å, emission].
   const SPECTRA = {
-    Ia: { T: 11000, desc: 'valge kääbuse termotuumaplahvatus', lines: [[6355, 9700, 0.7, 65, 0.22], [5972, 10000, 0.15, 45, 0.05], [5454, 10000, 0.25, 40, 0], [5640, 10000, 0.22, 40, 0], [4481, 11000, 0.45, 90, 0.1], [5169, 10000, 0.3, 110, 0.1]] },
-    Ib: { T: 9000, desc: 'massiivse tähe tuuma kollaps, vesinikuta', lines: [[5876, 9000, 0.5, 60, 0.25], [6678, 9000, 0.3, 50, 0.1], [7065, 9000, 0.3, 50, 0.1], [5016, 9000, 0.22, 45, 0], [5169, 9000, 0.3, 110, 0.1]] },
-    Ic: { T: 8000, desc: 'massiivse tähe tuuma kollaps, vesiniku ja heeliumita', lines: [[5169, 15000, 0.35, 200, 0.15], [5890, 15000, 0.3, 160, 0.15], [6355, 15000, 0.1, 150, 0], [4481, 15000, 0.3, 180, 0]] },
-    II: { T: 13000, desc: 'massiivse tähe tuuma kollaps, vesinikuga', lines: [[6563, 9000, 0.35, 70, 0.9], [4861, 9000, 0.35, 55, 0.3], [5169, 9000, 0.15, 70, 0], [5876, 9000, 0.1, 50, 0.05]] },
+    Ia: { T: 11000, desc: 'valge kääbuse termotuumaplahvatus', descEn: 'thermonuclear explosion of a white dwarf', lines: [[6355, 9700, 0.7, 65, 0.22], [5972, 10000, 0.15, 45, 0.05], [5454, 10000, 0.25, 40, 0], [5640, 10000, 0.22, 40, 0], [4481, 11000, 0.45, 90, 0.1], [5169, 10000, 0.3, 110, 0.1]] },
+    Ib: { T: 9000, desc: 'massiivse tähe tuuma kollaps, vesinikuta', descEn: 'core collapse of a massive star, without hydrogen', lines: [[5876, 9000, 0.5, 60, 0.25], [6678, 9000, 0.3, 50, 0.1], [7065, 9000, 0.3, 50, 0.1], [5016, 9000, 0.22, 45, 0], [5169, 9000, 0.3, 110, 0.1]] },
+    Ic: { T: 8000, desc: 'massiivse tähe tuuma kollaps, vesiniku ja heeliumita', descEn: 'core collapse of a massive star, without hydrogen and helium', lines: [[5169, 15000, 0.35, 200, 0.15], [5890, 15000, 0.3, 160, 0.15], [6355, 15000, 0.1, 150, 0], [4481, 15000, 0.3, 180, 0]] },
+    II: { T: 13000, desc: 'massiivse tähe tuuma kollaps, vesinikuga', descEn: 'core collapse of a massive star, with hydrogen', lines: [[6563, 9000, 0.35, 70, 0.9], [4861, 9000, 0.35, 55, 0.3], [5169, 9000, 0.15, 70, 0], [5876, 9000, 0.1, 50, 0.05]] },
   };
   const planck = (lam, T) => 1 / (lam ** 5 * (Math.exp(1.4388e8 / (lam * T)) - 1));
   function specFlux(type, lam) {
@@ -843,7 +958,7 @@ table.res tr.hl td { font-weight: 650; }
       el('line', { x1: x0, y1, x2: x1, y2: y1, class: 'axisline' }, grp);
       el('polyline', { points: pts(ls.map(([l, f]) => [X(l), Y(f)])), class: ty === st.type ? 'curve' : 'curve fitc' }, grp);
       text(grp, 8, y0 + 34, ty, 'lbl');
-      text(grp, x1, y1 + 12, SPECTRA[ty].desc, 'lbl3', 'end');
+      text(grp, x1, y1 + 12, L(SPECTRA[ty].desc, SPECTRA[ty].descEn), 'lbl3', 'end');
       el('rect', { x: 0, y: y0 - 6, width: 760, height: 98, class: 'hit', 'data-type': ty }, svg);
     });
     // The blueshift of the silicon line.
@@ -854,18 +969,23 @@ table.res tr.hl td { font-weight: 650; }
       text(g, X(6355) + 6, y + 4, '6355 Å', 'slbl');
     }
     const ax = el('g', {}, svg);
-    for (let l = 4000; l <= 7000; l += 500) { el('line', { x1: X(l), y1: 430, x2: X(l), y2: 435, class: 'axisline' }, ax); text(ax, X(l), 448, String(l).replace(/(\d)(\d{3})$/, '$1 $2'), 'tlbl', 'middle'); }
-    text(ax, (x0 + x1) / 2, 466, 'lainepikkus (Å)', 'lbl2', 'middle');
+    for (let l = 4000; l <= 7000; l += 500) { el('line', { x1: X(l), y1: 430, x2: X(l), y2: 435, class: 'axisline' }, ax); text(ax, X(l), 448, String(l).replace(/(\d)(\d{3})$/, L('$1 $2', '$1$2')), 'tlbl', 'middle'); }
+    text(ax, (x0 + x1) / 2, 466, L('lainepikkus (Å)', 'wavelength (Å)'), 'lbl2', 'middle');
   }
   function readoutsSpec() {
     document.querySelectorAll('[data-type]').forEach(b => { if (b.tagName === 'BUTTON') b.setAttribute('aria-checked', b.dataset.type === st.type); });
     const v = C_KMS * (6355 - 6150) / 6355;
-    $('specRead').innerHTML = {
+    $('specRead').innerHTML = L({
       Ia: `<b>Ia</b>: vesinikku pole, sügav räni joon. Räni joon on nihkunud 6355 Å-lt 6150 Å-ni: aine lendab meie poole kiirusega <b>${sig(v, 2)} km/s</b>.`,
       Ib: '<b>Ib</b>: vesinikku pole, kuid on heeliumi jooned. Massiivne täht, mis oli oma vesinikukihi kaotanud.',
       Ic: '<b>Ic</b>: pole vesinikku ega heeliumi, jooned on väga laiad. Massiivne täht, mis oli kaotanud ka heeliumikihi.',
       II: '<b>II</b>: tugev vesiniku joon Hα. Massiivne täht, mille tuum kokku langes; heledused on väga erinevad.',
-    }[st.type];
+    }, {
+      Ia: `<b>Ia</b>: no hydrogen, a deep silicon line. The silicon line is shifted from 6355 Å to 6150 Å: the matter flies towards us at <b>${sig(v, 2)} km/s</b>.`,
+      Ib: '<b>Ib</b>: no hydrogen, but helium lines. A massive star that had lost its hydrogen layer.',
+      Ic: '<b>Ic</b>: neither hydrogen nor helium, very broad lines. A massive star that had also lost its helium layer.',
+      II: '<b>II</b>: a strong hydrogen line Hα. A massive star whose core collapsed; the luminosities vary widely.',
+    })[st.type];
   }
   function render1() {
     $('view1sys').hidden = st.view1 !== 'sys'; $('view1spec').hidden = st.view1 !== 'spec';
@@ -902,9 +1022,10 @@ table.res tr.hl td { font-weight: 650; }
       const a = 2 * Math.PI * (k + 0.3 * rr()) / n, r0 = R * rNi * 0.5 * rr(), r1 = k < ne ? R + 22 : R * (0.45 + 0.4 * rr());
       if (r1 - r0 > 10) arrow(svg, cx + r0 * Math.cos(a), cy + r0 * Math.sin(a), cx + r1 * Math.cos(a), cy + r1 * Math.sin(a), 'gam', 6, 3);
     }
-    const phase = t < sn.tpeak - 3 ? 'valgus jääb tihedasse pilve kinni' : t < sn.tpeak + 3 ? 'maksimum: valgus pääseb välja' : 'heledus järgib koobalti lagunemist';
-    text(svg, 12, 20, `päev ${fmt(t, 0)}: ${phase}`, 'nl');
-    text(svg, 12, 36, `raadius ${sig(t * 86400 * 1e4 / AU_KM, 2)} au (10 000 km/s)`, 'nl2');
+    const phase = t < sn.tpeak - 3 ? L('valgus jääb tihedasse pilve kinni', 'the light is trapped in the dense cloud') : t < sn.tpeak + 3 ? L('maksimum: valgus pääseb välja', 'peak: the light escapes')
+      : L('heledus järgib koobalti lagunemist', 'the luminosity follows the decay of cobalt');
+    text(svg, 12, 20, `${L('päev', 'day')} ${fmt(t, 0)}: ${phase}`, 'nl');
+    text(svg, 12, 36, `${L('raadius', 'radius')} ${sig(t * 86400 * 1e4 / AU_KM, 2)} au (${L('10 000', '10,000')} km/s)`, 'nl2');
     const lg = [[NI_COL, '⁵⁶Ni'], [CO_COL, '⁵⁶Co'], [FE_COL, '⁵⁶Fe'], [IME_COL, 'Si, S, Ca'], [CO2_COL, 'C, O']];
     lg.forEach(([c, l], i) => { el('circle', { cx: 18 + i * 70, cy: 356, r: 4, fill: c }, svg); text(svg, 26 + i * 70, 360, l, 'nl2'); });
   }
@@ -918,30 +1039,30 @@ table.res tr.hl td { font-weight: 650; }
       text(g, xs[i] + 6, 40, l, 'lbl', 'middle');
     });
     arrow(g, 107, 35, 143, 35); arrow(g, 227, 35, 263, 35);
-    text(g, 125, 72, '6.1 p', 'lbl3', 'middle'); text(g, 245, 72, '77 p', 'lbl3', 'middle');
-    text(g, 125, 86, 'poolestusaeg', 'lbl3', 'middle'); text(g, 245, 86, 'poolestusaeg', 'lbl3', 'middle');
+    text(g, 125, 72, L('6.1 p', '6.1 d'), 'lbl3', 'middle'); text(g, 245, 72, L('77 p', '77 d'), 'lbl3', 'middle');
+    text(g, 125, 86, L('poolestusaeg', 'half-life'), 'lbl3', 'middle'); text(g, 245, 86, L('poolestusaeg', 'half-life'), 'lbl3', 'middle');
     const B = { y0: 110, y1: 300 }, H = B.y1 - B.y0;
     el('line', { x1: 20, y1: B.y1, x2: 350, y2: B.y1, class: 'axisline' }, g);
     [[ni, NI_COL], [co, CO_COL], [fe, FE_COL]].forEach(([v, c], i) => {
       el('rect', { x: xs[i] - 30, y: B.y1 - H * v, width: 60, height: H * v, fill: c, opacity: 0.85 }, g);
       text(g, xs[i], B.y1 - H * v - 6, `${fmt(sn.Ni * v, 2)} M☉`, 'lbl2', 'middle');
     });
-    text(g, 185, 324, `päev ${fmt(t, 0)}; algul ${fmt(sn.Ni, 2)} M☉ niklit`, 'lbl2', 'middle');
-    text(g, 185, 344, `gammakiirtest pääseb välja ${fmt(100 * (1 - deposit(t)), 0)} %`, 'lbl3', 'middle');
+    text(g, 185, 324, L(`päev ${fmt(t, 0)}; algul ${fmt(sn.Ni, 2)} M☉ niklit`, `day ${fmt(t, 0)}; at first ${fmt(sn.Ni, 2)} M☉ of nickel`), 'lbl2', 'middle');
+    text(g, 185, 344, L(`gammakiirtest pääseb välja ${fmt(100 * (1 - deposit(t)), 0)} %`, `${fmt(100 * (1 - deposit(t)), 0)} % of the gamma rays escape`), 'lbl3', 'middle');
   }
   const TMAX = 120;
   function renderLum() {
     const svg = $('lum'), t = st.day;
     svg.textContent = '';
     const B = { x0: 70, x1: 748, y0: 10, y1: 200 }, X = mkScale(0, TMAX, B.x0, B.x1), Y = mkScale(1e41, 1e44, B.y1, B.y0, true), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, TMAX, 10), [[1e41, '10⁴¹'], [1e42, '10⁴²'], [1e43, '10⁴³'], [1e44, '10⁴⁴']], 'päevi pärast plahvatust', 'heledus (erg/s)', 52);
+    frame(g, B, X, Y, ticks(0, TMAX, 10), [[1e41, '10⁴¹'], [1e42, '10⁴²'], [1e43, '10⁴³'], [1e44, '10⁴⁴']], L('päevi pärast plahvatust', 'days after the explosion'), L('heledus (erg/s)', 'luminosity (erg/s)'), 52);
     const inner = el('g', { 'clip-path': clipRect(svg, 'lumclip', B) }, g), dec = [], lum = [];
     for (let k = 1; k <= TMAX * 2; k++) { const tt = k / 2; dec.push([X(tt), Y(sn.Ni * decayPow(tt))]); if (lumAt(sn, tt) > 1e41) lum.push([X(tt), Y(lumAt(sn, tt))]); }
     el('polyline', { points: pts(dec), class: 'curve ref' }, inner);
     el('polyline', { points: pts(lum), class: 'curve' }, inner);
     const xp = X(sn.tpeak), yp = Y(sn.Lpeak);
     el('circle', { cx: xp, cy: yp, r: 4, class: 'spt hollow' }, g);
-    text(g, xp + 8, yp - 8, 'maksimum: heledus ≈ lagunemise võimsus', 'lbl3');
+    text(g, xp + 8, yp - 8, L('maksimum: heledus ≈ lagunemise võimsus', 'peak: luminosity ≈ decay power'), 'lbl3');
     el('line', { x1: X(t), y1: B.y0, x2: X(t), y2: B.y1, class: 'guide' }, g);
     if (t > 0.5) el('circle', { cx: X(t), cy: Y(Math.max(1e41, lumAt(sn, t))), r: 5, class: 'spt' }, g);
   }
@@ -949,7 +1070,7 @@ table.res tr.hl td { font-weight: 650; }
     const svg = $('lc'), t = st.day;
     svg.textContent = '';
     const B = { x0: 70, x1: 748, y0: 10, y1: 180 }, X = mkScale(0, TMAX, B.x0, B.x1), Y = mkScale(-20, -15, B.y0, B.y1), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, TMAX, 10), ticks(-20, -15, 1), 'päevi pärast plahvatust', 'absoluutne tähesuurus', 52);
+    frame(g, B, X, Y, ticks(0, TMAX, 10), ticks(-20, -15, 1), L('päevi pärast plahvatust', 'days after the explosion'), L('absoluutne tähesuurus', 'absolute magnitude'), 52);
     const inner = el('g', { 'clip-path': clipRect(svg, 'lcclip', B) }, g), b = [], v = [];
     for (let k = 1; k <= TMAX * 2; k++) { const tt = k / 2; b.push([X(tt), Y(bAt(sn, tt))]); v.push([X(tt), Y(vAt(sn, tt))]); }
     el('polyline', { points: pts(v), class: 'curve vband' }, inner);
@@ -964,10 +1085,14 @@ table.res tr.hl td { font-weight: 650; }
   }
   function readouts2() {
     const t = st.day;
-    $('day').value = t; $('dayOut').textContent = `${fmt(t, 0)} p`;
-    $('lcRead').innerHTML = `Maksimum päeval ${fmt(sn.tpeak, 0)}: <b>L = ${sci(sn.Lpeak)} erg/s</b> = ${sci(sn.Lpeak / LSUN)} L☉, ${fmt(sn.Lpeak / sn.Ni / 1e43, 1)}·10⁴³ erg/s iga M☉ nikli kohta. ` +
-      `Päeval ${fmt(t, 0)}: heledus ${t > 0.5 ? sci(lumAt(sn, t)) : '0'} erg/s, lagunemise võimsus ${sci(sn.Ni * decayPow(Math.max(t, 0.01)))} erg/s; ` +
-      `alles ${fmt(sn.Ni * niLeft(t), 2)} M☉ niklit, ${fmt(sn.Ni * coLeft(t), 2)} M☉ koobaltit.`;
+    $('day').value = t; $('dayOut').textContent = `${fmt(t, 0)} ${L('p', 'd')}`;
+    const lumT = t > 0.5 ? sci(lumAt(sn, t)) : '0', decT = sci(sn.Ni * decayPow(Math.max(t, 0.01)));
+    $('lcRead').innerHTML = L(`Maksimum päeval ${fmt(sn.tpeak, 0)}: <b>L = ${sci(sn.Lpeak)} erg/s</b> = ${sci(sn.Lpeak / LSUN)} L☉, ${fmt(sn.Lpeak / sn.Ni / 1e43, 1)}·10⁴³ erg/s iga M☉ nikli kohta. ` +
+      `Päeval ${fmt(t, 0)}: heledus ${lumT} erg/s, lagunemise võimsus ${decT} erg/s; ` +
+      `alles ${fmt(sn.Ni * niLeft(t), 2)} M☉ niklit, ${fmt(sn.Ni * coLeft(t), 2)} M☉ koobaltit.`,
+      `Peak on day ${fmt(sn.tpeak, 0)}: <b>L = ${sci(sn.Lpeak)} erg/s</b> = ${sci(sn.Lpeak / LSUN)} L☉, ${fmt(sn.Lpeak / sn.Ni / 1e43, 1)}·10⁴³ erg/s for each M☉ of nickel. ` +
+      `On day ${fmt(t, 0)}: luminosity ${lumT} erg/s, decay power ${decT} erg/s; ` +
+      `${fmt(sn.Ni * niLeft(t), 2)} M☉ of nickel and ${fmt(sn.Ni * coLeft(t), 2)} M☉ of cobalt left.`);
   }
   function render2() { renderCloud(); renderChain(); renderLum(); renderLC(); readouts2(); }
 
@@ -989,7 +1114,7 @@ table.res tr.hl td { font-weight: 650; }
     const svg = $('curves3');
     svg.textContent = '';
     const B = { x0: 70, x1: 748, y0: 12, y1: 350 }, X = mkScale(-15, 50, B.x0, B.x1), Y = mkScale(-20.3, -16.3, B.y0, B.y1), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(-15, 50, 5), ticks(-20.3, -16.3, 0.5), st.a1 > 0.5 ? 'päevi maksimumist, venitatud' : 'päevi maksimumist', 'M_B (absoluutne tähesuurus)', 52);
+    frame(g, B, X, Y, ticks(-15, 50, 5), ticks(-20.3, -16.3, 0.5), st.a1 > 0.5 ? L('päevi maksimumist, venitatud', 'days from the peak, stretched') : L('päevi maksimumist', 'days from the peak'), L('M_B (absoluutne tähesuurus)', 'M_B (absolute magnitude)'), 52);
     const inner = el('g', { 'clip-path': clipRect(svg, 'c3clip', B) }, g);
     const curve = (o, cls) => {
       const st1 = 1 + st.a1 * (o.s - 1), M = corrOf(o, st.a1, st.a2), p = [];
@@ -1000,7 +1125,7 @@ table.res tr.hl td { font-weight: 650; }
     const o = selSN();
     curve(o, 'curve');
     const M = corrOf(o, st.a1, st.a2);
-    if (!offscale(g, X(0), Y(M), B, `${st.name || 'valitud'}: ${fmt(M, 1)}`)) text(g, X(0) + 6, Y(M) - 8, st.name || 'valitud supernoova', 'slbl');
+    if (!offscale(g, X(0), Y(M), B, `${st.name || L('valitud', 'chosen')}: ${fmt(M, 1)}`)) text(g, X(0) + 6, Y(M) - 8, st.name || L('valitud supernoova', 'chosen supernova'), 'slbl');
   }
   function renderPhil() {
     const svg = $('phil');
@@ -1008,9 +1133,9 @@ table.res tr.hl td { font-weight: 650; }
     const yLo = -20.3, yHi = -17.6, B1 = { x0: 70, x1: 330, y0: 12, y1: 350 }, B2 = { x0: 370, x1: 600, y0: 12, y1: 350 }, B3 = { x0: 620, x1: 748, y0: 12, y1: 350 };
     const Y = mkScale(yLo, yHi, B1.y0, B1.y1), X1 = mkScale(0.6, 2.0, B1.x0, B1.x1), X2 = mkScale(-0.2, 0.6, B2.x0, B2.x1), g = el('g', {}, svg);
     const yt = ticks(yLo, yHi, 0.5);
-    frame(g, B1, X1, Y, ticks(0.6, 2.0, 0.2), yt, 'Δm₁₅ (tähesuurust)', st.a1 || st.a2 ? 'M_B, parandatud' : 'M_B (maksimumis)', 46);
-    frame(g, B2, X2, Y, ticks(-0.2, 0.6, 0.2), yt.map(([v]) => [v, null]), 'värvus c = B − V', null);
-    frame(g, B3, mkScale(0, 1, B3.x0, B3.x1), Y, [], yt.map(([v]) => [v, null]), 'arv', null);
+    frame(g, B1, X1, Y, ticks(0.6, 2.0, 0.2), yt, L('Δm₁₅ (tähesuurust)', 'Δm₁₅ (magnitudes)'), st.a1 || st.a2 ? L('M_B, parandatud', 'M_B, corrected') : L('M_B (maksimumis)', 'M_B (at the peak)'), 46);
+    frame(g, B2, X2, Y, ticks(-0.2, 0.6, 0.2), yt.map(([v]) => [v, null]), L('värvus c = B − V', 'colour c = B − V'), null);
+    frame(g, B3, mkScale(0, 1, B3.x0, B3.x1), Y, [], yt.map(([v]) => [v, null]), L('arv', 'number'), null);
     const in1 = el('g', { 'clip-path': clipRect(svg, 'p1clip', B1) }, g), in2 = el('g', { 'clip-path': clipRect(svg, 'p2clip', B2) }, g);
     // The relations as they look after the corrections already applied.
     const b1 = mean(SAMPLE.map(o => corrOf(o, st.a1, st.a2) - (1 - st.a1) * PH.a * (o.dm15 - PH.ref)));
@@ -1026,7 +1151,7 @@ table.res tr.hl td { font-weight: 650; }
     });
     // SN 1991bg, outside the relation.
     offscale(g, X1(1.93), Y(-17.1), B1, 'SN 1991bg: −17.1');
-    const o = selSN(), M = corrOf(o, st.a1, st.a2), nm = st.name || 'valitud';
+    const o = selSN(), M = corrOf(o, st.a1, st.a2), nm = st.name || L('valitud', 'chosen');
     if (!offscale(g, X1(o.dm15), Y(M), B1, `${nm}: ${fmt(M, 1)}`)) el('circle', { cx: X1(o.dm15), cy: Y(M), r: 5.5, class: st.over ? 'spt hollow' : 'spt' }, g);
     if (!offscale(g, X2(o.c), Y(M), B2, `${nm}: c = ${fmt(o.c, 2)}`)) el('circle', { cx: X2(o.c), cy: Y(M), r: 5.5, class: 'spt' }, g);
     // Histogram of the sample.
@@ -1040,15 +1165,15 @@ table.res tr.hl td { font-weight: 650; }
     document.querySelectorAll('[data-view3]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view3 === st.view3));
     $('dustOut').textContent = fmt(st.dust, 2);
     const sd = (a1, a2) => std(SAMPLE.map(o => corrOf(o, a1, a2)));
-    const rows = [['ilma korrektsioonita', 0, 0], ['nõrgenemise järgi', 1, 0], ['värvi järgi', 0, 1], ['mõlema järgi', 1, 1]];
+    const rows = [[L('ilma korrektsioonita', 'no correction'), 0, 0], [L('nõrgenemise järgi', 'by fading'), 1, 0], [L('värvi järgi', 'by colour'), 0, 1], [L('mõlema järgi', 'by both'), 1, 1]];
     const cur = [+st.cStr, +st.cCol];
-    $('sigRead').innerHTML = '<table class="res"><tr><th>korrektsioon</th><th>hajuvus σ</th><th>kauguse viga</th></tr>' +
+    $('sigRead').innerHTML = `<table class="res"><tr><th>${L('korrektsioon', 'correction')}</th><th>${L('hajuvus', 'scatter')} σ</th><th>${L('kauguse viga', 'distance error')}</th></tr>` +
       rows.map(([l, a1, a2]) => { const s = sd(a1, a2); return `<tr${a1 === cur[0] && a2 === cur[1] ? ' class="hl"' : ''}><td>${l}</td><td>${fmt(s, 2)}</td><td>±${fmt(100 * (10 ** (s / 5) - 1), 0)} %</td></tr>`; }).join('') + '</table>';
     const o = selSN();
-    $('corrRead').innerHTML = (st.over ? `<b>${st.name}</b> on erijuhtum: tema maksimumheledus ei sobi seosega ja teda ei kasutata. ` : '') +
-      `${st.name || 'Valitud supernoova'}: Δm₁₅ = ${fmt(o.dm15, 2)}, x<sub>1</sub> = ${fmtS(sn.x1, 1)}, c = ${fmt(o.c, 2)}. M<sub>B</sub> = ${fmt(o.MB, 2)}, ` +
-      `pärast nõrgenemise korrektsiooni ${fmt(corrOf(o, 1, 0), 2)}, pärast mõlemat <b>${fmt(corrOf(o, 1, 1), 2)}</b>.`;
-    $('lg3a').textContent = $('lg3b').textContent = st.name || 'valitud supernoova (nikli mass paremal)';
+    $('corrRead').innerHTML = (st.over ? L(`<b>${st.name}</b> on erijuhtum: tema maksimumheledus ei sobi seosega ja teda ei kasutata. `, `<b>${st.name}</b> is a special case: its peak luminosity does not fit the relation, and it is not used. `) : '') +
+      `${st.name || L('Valitud supernoova', 'Chosen supernova')}: Δm₁₅ = ${fmt(o.dm15, 2)}, x<sub>1</sub> = ${fmtS(sn.x1, 1)}, c = ${fmt(o.c, 2)}. M<sub>B</sub> = ${fmt(o.MB, 2)}, ` +
+      L(`pärast nõrgenemise korrektsiooni ${fmt(corrOf(o, 1, 0), 2)}, pärast mõlemat <b>${fmt(corrOf(o, 1, 1), 2)}</b>.`, `after the fading correction ${fmt(corrOf(o, 1, 0), 2)}, after both <b>${fmt(corrOf(o, 1, 1), 2)}</b>.`);
+    $('lg3a').textContent = $('lg3b').textContent = st.name || L('valitud supernoova (nikli mass paremal)', 'chosen supernova (nickel mass on the right)');
   }
   function render3() {
     $('view3curves').hidden = st.view3 !== 'curves'; $('view3phil').hidden = st.view3 !== 'phil';
@@ -1114,7 +1239,7 @@ table.res tr.hl td { font-weight: 650; }
     const svg = $('hub');
     svg.textContent = '';
     const B = { x0: 70, x1: 748, y0: 10, y1: 250 }, X = mkScale(0, DMAX, B.x0, B.x1), Y = mkScale(0, VMAX, B.y1, B.y0), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(0, DMAX, 25), ticks(0, VMAX, 2000).map(([v]) => [v, sig(v, 2)]), 'kaugus (Mpc)', 'kiirus (km/s)', 56);
+    frame(g, B, X, Y, ticks(0, DMAX, 25), ticks(0, VMAX, 2000).map(([v]) => [v, sig(v, 2)]), L('kaugus (Mpc)', 'distance (Mpc)'), L('kiirus (km/s)', 'velocity (km/s)'), 56);
     const inner = el('g', { 'clip-path': clipRect(svg, 'hubclip', B) }, g);
     el('polygon', { points: pts([[X(0), Y(st.sv)], [X(DMAX), Y(H0_TRUE * DMAX + st.sv)], [X(DMAX), Y(H0_TRUE * DMAX - st.sv)], [X(0), Y(-st.sv)]]), class: 'vfill' }, inner);
     el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(H0_TRUE * DMAX), class: 'truel' }, inner);
@@ -1122,11 +1247,11 @@ table.res tr.hl td { font-weight: 650; }
       const p = modelPts(), f = fitH(p);
       el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline' }, inner);
       for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 3, class: 'mpt' }, inner);
-      text(g, B.x0 + 10, B.y0 + 18, `H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc (tõeline ${H0_TRUE})`, 'lbl');
+      text(g, B.x0 + 10, B.y0 + 18, `H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc (${L('tõeline', 'true')} ${H0_TRUE})`, 'lbl');
     } else {
       let y = B.y0 + 18;
-      if (st.showSn) { const p = snPts(), f = fitH(p); el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline sn' }, inner); for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 2.6, class: 'npt' }, inner); text(g, B.x0 + 10, y, `supernoovad: H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)}`, 'slbl'); y += 18; }
-      if (st.showGal) { const p = galPts(), f = fitH(p); el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline cep' }, inner); for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 3.2, class: 'gpt' }, inner); text(g, B.x0 + 10, y, `3. osa galaktikad: H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)}`, 'lbl2'); }
+      if (st.showSn) { const p = snPts(), f = fitH(p); el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline sn' }, inner); for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 2.6, class: 'npt' }, inner); text(g, B.x0 + 10, y, `${L('supernoovad', 'supernovae')}: H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)}`, 'slbl'); y += 18; }
+      if (st.showGal) { const p = galPts(), f = fitH(p); el('line', { x1: X(0), y1: Y(0), x2: X(DMAX), y2: Y(f.H * DMAX), class: 'fitline cep' }, inner); for (const q of p) el('circle', { cx: X(q.d), cy: Y(q.v), r: 3.2, class: 'gpt' }, inner); text(g, B.x0 + 10, y, `${L('3. osa galaktikad', 'part 3 galaxies')}: H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)}`, 'lbl2'); }
     }
   }
   function renderRel() {
@@ -1134,7 +1259,7 @@ table.res tr.hl td { font-weight: 650; }
     svg.textContent = '';
     const B = { x0: 70, x1: 748, y0: 10, y1: 250 }, X = mkScale(5, DMAX, B.x0, B.x1, true), Y = mkScale(-60, 60, B.y1, B.y0), g = el('g', {}, svg);
     const xt = [5, 10, 20, 50, 100, 200, 300].map(v => [v, String(v)]);
-    frame(g, B, X, Y, xt, ticks(-60, 60, 20).map(([v]) => [v, fmtS(v, 0) + ' %']), 'kaugus (Mpc, logaritmiline)', 'kiiruse hälve', 56);
+    frame(g, B, X, Y, xt, ticks(-60, 60, 20).map(([v]) => [v, fmtS(v, 0) + ' %']), L('kaugus (Mpc, logaritmiline)', 'distance (Mpc, logarithmic)'), L('kiiruse hälve', 'velocity deviation'), 56);
     const inner = el('g', { 'clip-path': clipRect(svg, 'relclip', B) }, g);
     const db = 100 * distBand();
     el('rect', { x: B.x0, y: Y(db), width: B.x1 - B.x0, height: Y(-db) - Y(db), class: 'dfill' }, inner);
@@ -1144,18 +1269,18 @@ table.res tr.hl td { font-weight: 650; }
     el('line', { x1: B.x0, y1: Y(0), x2: B.x1, y2: Y(0), class: 'truel' }, inner);
     // Where the two bands cross, and where part 4 starts (z = 0.023).
     const dx = st.sv / (H0_TRUE * distBand());
-    if (st.sm > 0 && dx > 5 && dx < DMAX) { el('line', { x1: X(dx), y1: B.y0, x2: X(dx), y2: B.y1, class: 'guide' }, g); text(g, X(dx) - 4, B.y0 + 14, `ribad lõikuvad: ${fmt(dx, 0)} Mpc`, 'lbl3', 'end'); }
+    if (st.sm > 0 && dx > 5 && dx < DMAX) { el('line', { x1: X(dx), y1: B.y0, x2: X(dx), y2: B.y1, class: 'guide' }, g); text(g, X(dx) - 4, B.y0 + 14, `${L('ribad lõikuvad', 'the bands cross')}: ${fmt(dx, 0)} Mpc`, 'lbl3', 'end'); }
     const d4 = C_KMS * 0.023 / H0_TRUE;
     el('line', { x1: X(d4), y1: B.y0, x2: X(d4), y2: B.y1, class: 'guide' }, g);
-    text(g, X(d4) + 4, B.y0 + 14, '4. osa algab (z = 0.023)', 'lbl3');
+    text(g, X(d4) + 4, B.y0 + 14, L('4. osa algab (z = 0.023)', 'part 4 starts (z = 0.023)'), 'lbl3');
     if (st.view4 === 'model') {
       for (const q of modelPts()) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (H0_TRUE * q.d) - 1)), r: 3, class: 'mpt' }, inner);
     } else {
       if (st.showSn) { const p = snPts(), f = fitH(p); for (const q of p) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (f.H * q.d) - 1)), r: 2.6, class: 'npt' }, inner); }
       if (st.showGal) { const p = galPts(), f = fitH(p); for (const q of p) el('circle', { cx: X(q.d), cy: Y(100 * (q.v / (f.H * q.d) - 1)), r: 3.2, class: 'gpt' }, inner); }
     }
-    text(g, B.x1 - 8, B.y1 - 24, `pekuliaarne kiirus ±${st.sv} km/s`, 'lbl2', 'end');
-    text(g, B.x1 - 8, B.y1 - 8, `kauguse viga ±${fmt(db, 0)} %`, 'slbl', 'end');
+    text(g, B.x1 - 8, B.y1 - 24, `${L('pekuliaarne kiirus', 'peculiar velocity')} ±${st.sv} km/s`, 'lbl2', 'end');
+    text(g, B.x1 - 8, B.y1 - 8, `${L('kauguse viga', 'distance error')} ±${fmt(db, 0)} %`, 'slbl', 'end');
   }
   const LOGD = v => +(5 * (DMAX / 5) ** (v / 1000)).toPrecision(2);
   const DLOG = d => Math.round(1000 * Math.log(d / 5) / Math.log(DMAX / 5));
@@ -1167,21 +1292,28 @@ table.res tr.hl td { font-weight: 650; }
     $('d1Out').textContent = `${st.d1} Mpc`; $('d2Out').textContent = `${st.d2} Mpc`; $('nGalOut').textContent = st.nGal;
     const model = st.view4 === 'model';
     $('hint4').textContent = model
-      ? 'Simuleeritud galaktikad: kiirus on paisumine (H₀ = 70 km/s/Mpc) pluss galaktika oma liikumine, kaugusel on mõõtmisviga. Vali paremal kaugusvahemik või vajuta harjutuse osa nuppu.'
-      : 'Harjutuse andmed: 3. osa 29 galaktikat tsefeiidide kaugustega (punased) ja 4. osa 166 kauget supernoovat (oranžid). Muuda paremal pekuliaarset kiirust ja kauguse viga, et ribad sobiksid punktidega.';
-    $('legend4').innerHTML = (model ? '<span><i class="dot" style="background: var(--sel)"></i>simuleeritud galaktikad</span><span><i style="border-color: var(--sel)"></i>sobitus</span>'
-      : '<span><i class="dot" style="background: var(--cep)"></i>3. osa galaktikad</span><span><i class="dot" style="background: var(--sn)"></i>4. osa supernoovad</span>') +
-      '<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>H₀ = 70</span><span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>pekuliaarne kiirus</span>' +
-      '<span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i>kauguse viga</span>';
+      ? L('Simuleeritud galaktikad: kiirus on paisumine (H₀ = 70 km/s/Mpc) pluss galaktika oma liikumine, kaugusel on mõõtmisviga. Vali paremal kaugusvahemik või vajuta harjutuse osa nuppu.',
+        "Simulated galaxies: the velocity is the expansion (H₀ = 70 km/s/Mpc) plus the galaxy's own motion, and the distance has a measurement error. Choose a distance range on the right or press the button of a part of the exercise.")
+      : L('Harjutuse andmed: 3. osa 29 galaktikat tsefeiidide kaugustega (punased) ja 4. osa 166 kauget supernoovat (oranžid). Muuda paremal pekuliaarset kiirust ja kauguse viga, et ribad sobiksid punktidega.',
+        'The data of the exercise: the 29 galaxies of part 3 with Cepheid distances (red) and the 166 distant supernovae of part 4 (orange). Change the peculiar velocity and the distance error on the right so that the bands match the points.');
+    $('legend4').innerHTML = (model ? `<span><i class="dot" style="background: var(--sel)"></i>${L('simuleeritud galaktikad', 'simulated galaxies')}</span><span><i style="border-color: var(--sel)"></i>${L('sobitus', 'fit')}</span>`
+      : `<span><i class="dot" style="background: var(--cep)"></i>${L('3. osa galaktikad', 'part 3 galaxies')}</span><span><i class="dot" style="background: var(--sn)"></i>${L('4. osa supernoovad', 'part 4 supernovae')}</span>`) +
+      `<span><i style="border-color: var(--text-1); border-top-style: dashed"></i>H₀ = 70</span><span><i class="box" style="background: color-mix(in srgb, var(--sel) 25%, transparent)"></i>${L('pekuliaarne kiirus', 'peculiar velocity')}</span>` +
+      `<span><i class="box" style="background: color-mix(in srgb, var(--sn) 30%, transparent)"></i>${L('kauguse viga', 'distance error')}</span>`;
     if (model) {
       const p = modelPts(), f = fitH(p), vb = mean(p.map(q => relBand(q.d) ** 2)), dbb = distBand() ** 2, sh = vb / (vb + dbb || 1);
-      $('modelRead').innerHTML = `<b>H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc</b>. Kiirused hajuvad joone ümber ${fmt(100 * f.rel, 0)} %; sellest umbes ${fmt(100 * sh, 0)} % tuleb pekuliaarsest kiirusest ` +
-        `ja ${fmt(100 * (1 - sh), 0)} % kauguse veast.`;
+      $('modelRead').innerHTML = `<b>H₀ = ${fmt(f.H, 1)} ± ${fmt(f.e, 1)} km/s/Mpc</b>. ` + L(`Kiirused hajuvad joone ümber ${fmt(100 * f.rel, 0)} %; sellest umbes ${fmt(100 * sh, 0)} % tuleb pekuliaarsest kiirusest ` +
+        `ja ${fmt(100 * (1 - sh), 0)} % kauguse veast.`, `The velocities scatter around the line by ${fmt(100 * f.rel, 0)} %; about ${fmt(100 * sh, 0)} % of this comes from the peculiar velocity ` +
+        `and ${fmt(100 * (1 - sh), 0)} % from the distance error.`);
     } else {
       const g3 = fitH(galPts()), s4 = fitH(snPts()), M = st.mb === 'cal' ? MB_CAL : MB_SH0ES;
-      $('realRead').innerHTML = `3. osa galaktikad (7–59 Mpc): H₀ = ${fmt(g3.H, 1)} ± ${fmt(g3.e, 1)}, kiirused hajuvad ${fmt(100 * g3.rel, 0)} % (${fmt(g3.mag, 2)} tähesuurust), umbes ${fmt(g3.rms, 0)} km/s.<br>` +
+      const mbe = fmt(std(HOSTS.map(h => h[2] - h[4])) / Math.sqrt(HOSTS.length), 2);
+      $('realRead').innerHTML = L(`3. osa galaktikad (7–59 Mpc): H₀ = ${fmt(g3.H, 1)} ± ${fmt(g3.e, 1)}, kiirused hajuvad ${fmt(100 * g3.rel, 0)} % (${fmt(g3.mag, 2)} tähesuurust), umbes ${fmt(g3.rms, 0)} km/s.<br>` +
         `Supernoovad (80–270 Mpc) M<sub>B</sub> = ${fmt(M, 3)}-ga: <b>H₀ = ${fmt(s4.H, 1)} ± ${fmt(s4.e, 1)}</b>, hajuvus ${fmt(100 * s4.rel, 0)} % (${fmt(s4.mag, 3)} tähesuurust).<br>` +
-        `Kalibraatorite keskmine M<sub>B</sub> = ${fmt(MB_CAL, 2)} ± ${fmt(std(HOSTS.map(h => h[2] - h[4])) / Math.sqrt(HOSTS.length), 2)}. Oma tulemuse saad <a href="index.html#snHubble">harjutuse 4. osas</a>.`;
+        `Kalibraatorite keskmine M<sub>B</sub> = ${fmt(MB_CAL, 2)} ± ${mbe}. Oma tulemuse saad <a href="index.html#snHubble">harjutuse 4. osas</a>.`,
+        `Part 3 galaxies (7–59 Mpc): H₀ = ${fmt(g3.H, 1)} ± ${fmt(g3.e, 1)}, the velocities scatter by ${fmt(100 * g3.rel, 0)} % (${fmt(g3.mag, 2)} magnitudes), about ${fmt(g3.rms, 0)} km/s.<br>` +
+        `Supernovae (80–270 Mpc) with M<sub>B</sub> = ${fmt(M, 3)}: <b>H₀ = ${fmt(s4.H, 1)} ± ${fmt(s4.e, 1)}</b>, scatter ${fmt(100 * s4.rel, 0)} % (${fmt(s4.mag, 3)} magnitudes).<br>` +
+        `Mean M<sub>B</sub> of the calibrators = ${fmt(MB_CAL, 2)} ± ${mbe}. You get your own result in <a href="index.html#snHubble">part 4 of the exercise</a>.`);
     }
   }
   function render4() { renderHub(); renderRel(); readouts4(); updateGroups(); }
@@ -1192,8 +1324,9 @@ table.res tr.hl td { font-weight: 650; }
     $('ni').value = st.Ni;
     document.querySelectorAll('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.name === st.name));
     const p = PRESETS.find(q => q.name === st.name);
-    $('snRead').innerHTML = (p ? `<b>${p.name}</b>: ${p.note}. ` : '') + `Maksimumis <b>M<sub>B</sub> = ${fmt(sn.MB, 2)}</b>, Δm₁₅ = ${fmt(sn.dm15, 2)}, venitus s = ${fmt(sn.s, 2)}` +
-      (st.E ? `, tolm E(B − V) = ${fmt(st.E, 2)}, mis nõrgendab teda ${fmt(RB_HOST * st.E, 1)} tähesuurust.` : '.');
+    $('snRead').innerHTML = (p ? `<b>${p.name}</b>: ${L(p.note, p.noteEn)}. ` : '') + L(`Maksimumis <b>M<sub>B</sub> = ${fmt(sn.MB, 2)}</b>, Δm₁₅ = ${fmt(sn.dm15, 2)}, venitus s = ${fmt(sn.s, 2)}`,
+      `At the peak <b>M<sub>B</sub> = ${fmt(sn.MB, 2)}</b>, Δm₁₅ = ${fmt(sn.dm15, 2)}, stretch s = ${fmt(sn.s, 2)}`) +
+      (st.E ? L(`, tolm E(B − V) = ${fmt(st.E, 2)}, mis nõrgendab teda ${fmt(RB_HOST * st.E, 1)} tähesuurust.`, `, dust E(B − V) = ${fmt(st.E, 2)}, which dims it by ${fmt(RB_HOST * st.E, 1)} magnitudes.`) : '.');
   }
   function render() {
     readoutsShared();
@@ -1281,17 +1414,18 @@ table.res tr.hl td { font-weight: 650; }
     raf = requestAnimationFrame(tick);
   }
   function startLoop() { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } }
-  function stop1() { st.playing1 = false; $('play1').textContent = '▶ Käivita'; }
-  function stop2() { st.playing2 = false; $('play2').textContent = '▶ Käivita'; }
+  const playLabels = () => { for (const n of [1, 2]) $('play' + n).textContent = st['playing' + n] ? L('❚❚ Peata', '❚❚ Pause') : L('▶ Käivita', '▶ Play'); };
+  function stop1() { st.playing1 = false; playLabels(); }
+  function stop2() { st.playing2 = false; playLabels(); }
   $('play1').addEventListener('click', () => {
     if (st.playing1) { stop1(); return; }
     if (st.t1 >= 1) st.t1 = 0;
-    st.playing1 = true; $('play1').textContent = '❚❚ Peata'; startLoop();
+    st.playing1 = true; playLabels(); startLoop();
   });
   $('play2').addEventListener('click', () => {
     if (st.playing2) { stop2(); return; }
     if (st.day >= TMAX) st.day = 0;
-    st.playing2 = true; $('play2').textContent = '❚❚ Peata'; startLoop();
+    st.playing2 = true; playLabels(); startLoop();
   });
 
   /* ---------- Tabs ---------- */
@@ -1330,8 +1464,37 @@ table.res tr.hl td { font-weight: 650; }
   };
   window.addEventListener('hashchange', fromHash);
 
+  /* ---------- Language ---------- */
+  // The language buttons switch the page in place. Texts in the markup are switched by the CSS; the title and the
+  // attributes with a data-en-* translation are set here, keeping the Estonian in data-et-*, and the drawings and
+  // readouts are drawn again. The choice goes into the address and is remembered.
+  const ATTRS = ['aria-label', 'title', 'content', 'placeholder'];
+  function applyLang() {
+    const lang = document.documentElement.lang;
+    document.title = L('Ia tüüpi supernoovad', 'Type Ia supernovae');
+    for (const e of document.querySelectorAll(ATTRS.map(a => `[data-en-${a}]`).join())) {
+      for (const a of ATTRS) {
+        if (!e.hasAttribute('data-en-' + a)) continue;
+        if (!e.hasAttribute('data-et-' + a)) e.setAttribute('data-et-' + a, e.getAttribute(a));
+        e.setAttribute(a, e.getAttribute(`data-${lang}-${a}`));
+      }
+    }
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    playLabels();
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+    document.documentElement.lang = b.dataset.lang;
+    try { localStorage.setItem('lang', b.dataset.lang); } catch (e) {}
+    const u = new URL(location.href);
+    u.searchParams.set('lang', b.dataset.lang);
+    history.replaceState(null, '', u);
+    applyLang();
+    render();
+  }));
+
   makeSample();
   makeRnd();
+  applyLang();
   fromHash();
 })();
 </script>

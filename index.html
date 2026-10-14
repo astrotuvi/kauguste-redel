@@ -4,7 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kosmiliste kauguste redel</title>
-<meta name="description" content="Kosmiliste kauguste redel: mõõda hajusparvede kaugused Gaia DR3 parallaksidest, kalibreeri nende abil tsefeiidide perioodi-heleduse seos ja leia galaktikate kaugustest Hubble'i konstant.">
+<meta name="description" data-en-content="The cosmic distance ladder: measure the distances of open clusters from Gaia DR3 parallaxes, calibrate the period–luminosity relation of Cepheids with them, find the distances of galaxies and the Hubble constant, and measure the expansion of the Universe with type Ia supernovae." content="Kosmiliste kauguste redel: mõõda hajusparvede kaugused Gaia DR3 parallaksidest, kalibreeri nende abil tsefeiidide perioodi-heleduse seos ja leia galaktikate kaugustest Hubble'i konstant.">
+<script>
+// The language is set before the page is drawn: ?lang=et or ?lang=en in the address (remembered), else the last
+// choice, else Estonian.
+(() => {
+  let l = new URLSearchParams(location.search).get('lang');
+  if (l === 'et' || l === 'en') { try { localStorage.setItem('lang', l); } catch (e) {} }
+  else { try { l = localStorage.getItem('lang'); } catch (e) {} }
+  document.documentElement.lang = l === 'en' ? 'en' : 'et';
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.1.0/plotly.min.js"></script>
 <style>
 :root {
@@ -81,13 +91,20 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* The page has both languages side by side; data-l marks the text of one, and the other is hidden. */
+:root[lang="et"] [data-l="en"], :root[lang="en"] [data-l="et"] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--bg);
   color: var(--text-1);
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; position: relative; }
+/* The language switch in the top right corner of the page, above the home view and the parts alike. */
+.page-langs { position: absolute; top: 24px; right: 16px; display: flex; gap: 4px; z-index: 5; }
+body.in-part .page-langs { top: 10px; }
+.page-langs button { font-size: 0.8rem; padding: 2px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.page-langs button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); }
 h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 10px; font-weight: 650; letter-spacing: -0.01em; }
 .byline { color: var(--text-2); font-size: 0.9rem; margin: -4px 0 16px; }
 .intro a, .lede a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
@@ -417,127 +434,155 @@ footer a { color: inherit; }
 </head>
 <body>
 <main>
+  <div class="page-langs" role="group" aria-label="Keel" data-en-aria-label="Language">
+    <button type="button" data-lang="et" lang="et">Eesti</button>
+    <button type="button" data-lang="en" lang="en">English</button>
+  </div>
   <div class="home" id="home">
-  <h1>Kosmiliste kauguste redel</h1>
-  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
+  <h1><span data-l="et">Kosmiliste kauguste redel</span><span data-l="en">The cosmic distance ladder</span></h1>
+  <p class="byline">Taavi Tuvikene<br><span data-l="et">TÜ Tartu observatoorium</span><span data-l="en">Tartu Observatory, University of Tartu</span></p>
   <div class="intro-row">
   <div>
-    <p class="intro">Kaugusi kosmoses ei saa mõõta ühe meetodiga. Lähedaste tähtede kauguse annab otse <a href="https://et.wikipedia.org/wiki/Parallaks" target="_blank" rel="noopener">parallaks</a> — tähe näiv nihe taevas,
+    <p class="intro" data-l="et">Kaugusi kosmoses ei saa mõõta ühe meetodiga. Lähedaste tähtede kauguse annab otse <a href="https://et.wikipedia.org/wiki/Parallaks" target="_blank" rel="noopener">parallaks</a> — tähe näiv nihe taevas,
     mis tekib Maa liikumisest ümber Päikese. Kaugemal on parallaks liiga väike ja appi tulevad <i><a href="standardkuunlad.html">standardküünlad</a></i>: objektid, mille
     tegelikku heledust me teame, nii et nende näiv heledus annab kauguse. Iga uus meetod kalibreeritakse eelmise abil, nii et meetodid
     moodustavad <a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">redeli</a>, mille iga pulk ulatub kaugemale. Sellel lehel ronid redelil neli pulka: <a href="hajusparved.html">hajusparvede</a> kaugustest <a href="https://et.wikipedia.org/wiki/Gaia_(kosmoseteleskoop)" target="_blank" rel="noopener">Gaia</a> parallaksidega
     (1. osa) <a href="tsefeiidid.html">tsefeiidide</a> <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seoseni</a> (2. osa), sealt tsefeiididega <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> kaugusteni ja <a href="hubble.html">Hubble'i seaduseni</a> (3. osa)
     ning lõpuks Ia tüüpi <a href="supernoovad.html">supernoovadeni</a>, mis näitavad <a href="https://et.wikipedia.org/wiki/Universumi_paisumine" target="_blank" rel="noopener">Universumi paisumist</a> sadade <a href="https://et.wikipedia.org/wiki/Parsek" target="_blank" rel="noopener">megaparsekite</a> kaugusel (4. osa).</p>
+    <p class="intro" data-l="en">Distances in space cannot be measured with a single method. The distances of nearby stars are given directly by <a href="https://en.wikipedia.org/wiki/Stellar_parallax" target="_blank" rel="noopener">parallax</a>, the apparent shift of a star on the sky
+    caused by the motion of the Earth around the Sun. Farther away the parallax is too small, and <i><a href="standardkuunlad.html">standard candles</a></i> come to help: objects whose
+    true luminosity we know, so that their apparent brightness gives their distance. Each new method is calibrated with the previous one, so the methods
+    form a <a href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder" target="_blank" rel="noopener">ladder</a> whose every rung reaches farther. On this page you climb four rungs of the ladder: from the distances of <a href="hajusparved.html">open clusters</a> with <a href="https://en.wikipedia.org/wiki/Gaia_(spacecraft)" target="_blank" rel="noopener">Gaia</a> parallaxes
+    (part 1) to the <a href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener">period–luminosity relation</a> of <a href="tsefeiidid.html">Cepheids</a> (part 2), from there to the distances of <a href="https://en.wikipedia.org/wiki/Galaxy" target="_blank" rel="noopener">galaxies</a> with Cepheids and to the <a href="hubble.html">Hubble law</a> (part 3),
+    and finally to type Ia <a href="supernoovad.html">supernovae</a>, which show the <a href="https://en.wikipedia.org/wiki/Expansion_of_the_universe" target="_blank" rel="noopener">expansion of the Universe</a> hundreds of <a href="https://en.wikipedia.org/wiki/Parsec" target="_blank" rel="noopener">megaparsecs</a> away (part 4).</p>
   </div>
     <figure class="ladder-art" aria-labelledby="artTitle">
       <svg viewBox="0 0 393 274" role="group" aria-labelledby="artTitle artDesc">
-      <title id="artTitle">Kauguste redeli kolm pulka</title>
-      <desc id="artDesc">Redel, mille alumine pulk on parallaks, keskmine tsefeiidid ja ülemine Ia tüüpi supernoovad; iga pulk ulatub kaugemale. Iga pulk kalibreeritakse eelmise abil. Tsefeiidid ja supernoovad on mõlemad standardküünlad.</desc>
+      <title id="artTitle" data-en-text="Three rungs of the distance ladder">Kauguste redeli kolm pulka</title>
+      <desc id="artDesc" data-en-text="A ladder whose lowest rung is parallax, the middle one Cepheids and the top one type Ia supernovae; each rung reaches farther. Each rung is calibrated with the one before. Cepheids and supernovae are both standard candles.">Redel, mille alumine pulk on parallaks, keskmine tsefeiidid ja ülemine Ia tüüpi supernoovad; iga pulk ulatub kaugemale. Iga pulk kalibreeritakse eelmise abil. Tsefeiidid ja supernoovad on mõlemad standardküünlad.</desc>
       <defs><linearGradient id="candleGrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" style="stop-color: var(--cep)"/><stop offset="1" style="stop-color: var(--accent)"/></linearGradient></defs>
       <polygon class="cal-arrow" points="210,167 221,178 214,178 214,191 206,191 206,178 199,178"/><polygon class="cal-arrow" points="210,92 221,103 214,103 214,116 206,116 206,103 199,103"/>
-      <a class="rung-link candle-link" href="standardkuunlad.html" aria-label="Standardküünlad: interaktiivsed joonised standardküünaldest">
+      <a class="rung-link candle-link" href="standardkuunlad.html" aria-label="Standardküünlad: interaktiivsed joonised standardküünaldest" data-en-aria-label="Standard candles: interactive drawings of standard candles">
         <rect class="hit" x="356" y="40" width="37" height="119"/>
         <path class="bracket" d="M362 44 H368 V155 H362"/>
-        <text class="bracket-label" x="380" y="99.5" transform="rotate(90 380 99.5)">Standardküünlad</text>
+        <text class="bracket-label" x="380" y="99.5" transform="rotate(90 380 99.5)"><tspan data-l="et">Standardküünlad</tspan><tspan data-l="en">Standard candles</tspan></text>
       </a>
       <line class="rail" x1="52.0" y1="262" x2="74.0" y2="12"/>
       <line class="rail" x1="152.0" y1="262" x2="130.0" y2="12"/>
-      <a class="rung-link" href="parallaks.html" aria-label="Parallaks: interaktiivne joonis parallaksi meetodist">
+      <a class="rung-link" href="parallaks.html" aria-label="Parallaks: interaktiivne joonis parallaksi meetodist" data-en-aria-label="Parallax: an interactive drawing of the parallax method">
         <rect class="hit" x="0" y="184" width="345" height="52"/>
         <line class="rung r1" x1="56.4" y1="212" x2="147.6" y2="212"/>
-        <text class="name" x="172" y="210">Parallaks</text><text class="sub" x="172" y="229">1. osa · kuni ~5 kpc</text>
+        <text class="name" x="172" y="210"><tspan data-l="et">Parallaks</tspan><tspan data-l="en">Parallax</tspan></text><text class="sub" x="172" y="229"><tspan data-l="et">1. osa · kuni ~5 kpc</tspan><tspan data-l="en">part 1 · up to ~5 kpc</tspan></text>
         <g class="icon r1"><ellipse class="orbit" cx="22" cy="224" rx="14" ry="5"/><circle class="fill" cx="22" cy="224" r="3.5"/>
           <path class="sight" d="M8 224 L22 194 L36 224"/><circle class="fill" cx="22" cy="194" r="3"/><circle class="earth" cx="8" cy="224" r="2.5"/><circle class="earth" cx="36" cy="224" r="2.5"/></g>
       </a>
-      <a class="rung-link" href="tsefeiidid.html" aria-label="Tsefeiidid: interaktiivsed joonised tsefeiididest">
+      <a class="rung-link" href="tsefeiidid.html" aria-label="Tsefeiidid: interaktiivsed joonised tsefeiididest" data-en-aria-label="Cepheids: interactive drawings of Cepheids">
         <rect class="hit" x="0" y="111" width="340" height="52"/>
         <line class="rung r2" x1="63.0" y1="137" x2="141.0" y2="137"/>
-        <text class="name" x="172" y="135">Tsefeiidid</text><text class="sub" x="172" y="154">2.–3. osa · kuni ~40 Mpc</text>
+        <text class="name" x="172" y="135"><tspan data-l="et">Tsefeiidid</tspan><tspan data-l="en">Cepheids</tspan></text><text class="sub" x="172" y="154"><tspan data-l="et">2.–3. osa · kuni ~40 Mpc</tspan><tspan data-l="en">parts 2–3 · up to ~40 Mpc</tspan></text>
         <g class="icon r2"><circle class="ring" cx="22" cy="137" r="13"/><circle class="ring" cx="22" cy="137" r="9"/><circle class="fill" cx="22" cy="137" r="5"/></g>
       </a>
-      <a class="rung-link" href="supernoovad.html" aria-label="Ia tüüpi supernoovad: interaktiivsed joonised Ia tüüpi supernoovadest">
+      <a class="rung-link" href="supernoovad.html" aria-label="Ia tüüpi supernoovad: interaktiivsed joonised Ia tüüpi supernoovadest" data-en-aria-label="Type Ia supernovae: interactive drawings of type Ia supernovae">
         <rect class="hit" x="0" y="36" width="356" height="52"/>
         <line class="rung r3" x1="69.6" y1="62" x2="134.4" y2="62"/>
-        <text class="name" x="172" y="60">Ia tüüpi supernoovad</text><text class="sub" x="172" y="79">4. osa · üle 1 Gpc</text>
+        <text class="name" x="172" y="60"><tspan data-l="et">Ia tüüpi supernoovad</tspan><tspan data-l="en">Type Ia supernovae</tspan></text><text class="sub" x="172" y="79"><tspan data-l="et">4. osa · üle 1 Gpc</tspan><tspan data-l="en">part 4 · beyond 1 Gpc</tspan></text>
         <g class="icon r3"><polygon class="fill" points="22.0,49.0 23.9,57.4 31.2,52.8 26.6,60.1 35.0,62.0 26.6,63.9 31.2,71.2 23.9,66.6 22.0,75.0 20.1,66.6 12.8,71.2 17.4,63.9 9.0,62.0 17.4,60.1 12.8,52.8 20.1,57.4"/></g>
       </a>
       </svg>
     </figure>
   </div>
   <nav class="toc" aria-labelledby="tocTitle">
-    <h2 id="tocTitle">Sisukord</h2>
-    <h3>Uuri lähemalt</h3>
+    <h2 id="tocTitle"><span data-l="et">Sisukord</span><span data-l="en">Contents</span></h2>
+    <h3><span data-l="et">Uuri lähemalt</span><span data-l="en">Explore</span></h3>
     <ul class="methods">
       <li class="m1">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><ellipse class="orbit" cx="0" cy="8" rx="14" ry="5"/><circle class="fill" cx="0" cy="8" r="3.5"/><path class="sight" d="M-14 8 L0 -14 L14 8"/><circle class="fill" cx="0" cy="-14" r="3"/><circle class="earth" cx="-14" cy="8" r="2.5"/><circle class="earth" cx="14" cy="8" r="2.5"/></svg><a class="toc-part" href="parallaks.html">Parallaks</a></div>
-        <p>Interaktiivne joonis: Maa liikumine ümber Päikese paneb lähedase tähe kaugete kvasarite taustal ellipsit joonistama.</p>
-        <span class="rel">Seotud: <a href="#osa-1">1. osa</a></span>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><ellipse class="orbit" cx="0" cy="8" rx="14" ry="5"/><circle class="fill" cx="0" cy="8" r="3.5"/><path class="sight" d="M-14 8 L0 -14 L14 8"/><circle class="fill" cx="0" cy="-14" r="3"/><circle class="earth" cx="-14" cy="8" r="2.5"/><circle class="earth" cx="14" cy="8" r="2.5"/></svg><a class="toc-part" href="parallaks.html"><span data-l="et">Parallaks</span><span data-l="en">Parallax</span></a></div>
+        <p data-l="et">Interaktiivne joonis: Maa liikumine ümber Päikese paneb lähedase tähe kaugete kvasarite taustal ellipsit joonistama.</p>
+        <p data-l="en">An interactive drawing: the motion of the Earth around the Sun makes a nearby star trace an ellipse against distant quasars.</p>
+        <span class="rel"><span data-l="et">Seotud:</span><span data-l="en">Related:</span> <a href="#osa-1"><span data-l="et">1. osa</span><span data-l="en">part 1</span></a></span>
       </li>
       <li class="m1">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-6" cy="-2" r="2.6"/><circle class="fill" cx="1" cy="-7" r="2.2"/><circle class="fill" cx="2" cy="1" r="3"/><circle class="fill" cx="-4" cy="6" r="2"/><circle class="fill" cx="7" cy="-3" r="1.8"/><path class="arrow" d="M-15 14 L-7 10 M3 14 L11 10 M-2 -14 L6 -18"/></svg><a class="toc-part" href="hajusparved.html">Hajusparved</a></div>
-        <p>Parve liikmed omaliikumiste järgi, värvus-heledusdiagramm ja miks keskmistatakse parallakse, mitte kaugusi.</p>
-        <span class="rel">Seotud: <a href="#osa-1">1. osa</a></span>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-6" cy="-2" r="2.6"/><circle class="fill" cx="1" cy="-7" r="2.2"/><circle class="fill" cx="2" cy="1" r="3"/><circle class="fill" cx="-4" cy="6" r="2"/><circle class="fill" cx="7" cy="-3" r="1.8"/><path class="arrow" d="M-15 14 L-7 10 M3 14 L11 10 M-2 -14 L6 -18"/></svg><a class="toc-part" href="hajusparved.html"><span data-l="et">Hajusparved</span><span data-l="en">Open clusters</span></a></div>
+        <p data-l="et">Parve liikmed omaliikumiste järgi, värvus-heledusdiagramm ja miks keskmistatakse parallakse, mitte kaugusi.</p>
+        <p data-l="en">Cluster members by their proper motions, the colour–magnitude diagram, and why parallaxes are averaged rather than distances.</p>
+        <span class="rel"><span data-l="et">Seotud:</span><span data-l="en">Related:</span> <a href="#osa-1"><span data-l="et">1. osa</span><span data-l="en">part 1</span></a></span>
       </li>
       <li class="mc">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-9" cy="0" r="6"/><circle class="fill" cx="5" cy="0" r="3.8" opacity="0.6"/><circle class="fill" cx="14" cy="0" r="2.2" opacity="0.35"/></svg><a class="toc-part" href="standardkuunlad.html">Standardküünlad</a></div>
-        <p>Kui valgusallika tegelik heledus on teada, annab näiv heledus kauguse. Tähesuurused, kaugusmoodul ja kalibreerimine.</p>
-        <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a>, <a href="#osa-4">4. osa</a></span>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" cx="-9" cy="0" r="6"/><circle class="fill" cx="5" cy="0" r="3.8" opacity="0.6"/><circle class="fill" cx="14" cy="0" r="2.2" opacity="0.35"/></svg><a class="toc-part" href="standardkuunlad.html"><span data-l="et">Standardküünlad</span><span data-l="en">Standard candles</span></a></div>
+        <p data-l="et">Kui valgusallika tegelik heledus on teada, annab näiv heledus kauguse. Tähesuurused, kaugusmoodul ja kalibreerimine.</p>
+        <p data-l="en">If the true luminosity of a light source is known, its apparent brightness gives its distance. Magnitudes, the distance modulus and calibration.</p>
+        <span class="rel"><span data-l="et">Seotud:</span><span data-l="en">Related:</span> <a href="#osa-2"><span data-l="et">2. osa</span><span data-l="en">part 2</span></a>, <a href="#osa-3"><span data-l="et">3. osa</span><span data-l="en">part 3</span></a>, <a href="#osa-4"><span data-l="et">4. osa</span><span data-l="en">part 4</span></a></span>
       </li>
       <li class="m2">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="ring" r="13"/><circle class="ring" r="9"/><circle class="fill" r="5"/></svg><a class="toc-part" href="tsefeiidid.html">Tsefeiidid</a></div>
-        <p>Miks tsefeiidid pulseerivad, kuidas mõõta perioodi, Leavitt'i perioodi-heleduse seos, tähtedevaheline tolm ja Wesenheiti tähesuurus.</p>
-        <span class="rel">Seotud: <a href="#osa-2">2. osa</a>, <a href="#osa-3">3. osa</a></span>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="ring" r="13"/><circle class="ring" r="9"/><circle class="fill" r="5"/></svg><a class="toc-part" href="tsefeiidid.html"><span data-l="et">Tsefeiidid</span><span data-l="en">Cepheids</span></a></div>
+        <p data-l="et">Miks tsefeiidid pulseerivad, kuidas mõõta perioodi, Leavitt'i perioodi-heleduse seos, tähtedevaheline tolm ja Wesenheiti tähesuurus.</p>
+        <p data-l="en">Why Cepheids pulsate, how to measure the period, Leavitt's period–luminosity relation, interstellar dust and the Wesenheit magnitude.</p>
+        <span class="rel"><span data-l="et">Seotud:</span><span data-l="en">Related:</span> <a href="#osa-2"><span data-l="et">2. osa</span><span data-l="en">part 2</span></a>, <a href="#osa-3"><span data-l="et">3. osa</span><span data-l="en">part 3</span></a></span>
       </li>
       <li class="m3">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><polygon class="fill" points="0.0,-13.0 1.9,-4.6 9.2,-9.2 4.6,-1.9 13.0,-0.0 4.6,1.9 9.2,9.2 1.9,4.6 0.0,13.0 -1.9,4.6 -9.2,9.2 -4.6,1.9 -13.0,0.0 -4.6,-1.9 -9.2,-9.2 -1.9,-4.6"/></svg><a class="toc-part" href="supernoovad.html">Ia tüüpi supernoovad</a></div>
-        <p>Miks valge kääbus plahvatab, mis paneb supernoova helendama, kuidas maksimumheledust standardiseeritakse ja miks kaugete supernoovade hajuvus on väike.</p>
-        <span class="rel">Seotud: <a href="#osa-4">4. osa</a></span>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><polygon class="fill" points="0.0,-13.0 1.9,-4.6 9.2,-9.2 4.6,-1.9 13.0,-0.0 4.6,1.9 9.2,9.2 1.9,4.6 0.0,13.0 -1.9,4.6 -9.2,9.2 -4.6,1.9 -13.0,0.0 -4.6,-1.9 -9.2,-9.2 -1.9,-4.6"/></svg><a class="toc-part" href="supernoovad.html"><span data-l="et">Ia tüüpi supernoovad</span><span data-l="en">Type Ia supernovae</span></a></div>
+        <p data-l="et">Miks valge kääbus plahvatab, mis paneb supernoova helendama, kuidas maksimumheledust standardiseeritakse ja miks kaugete supernoovade hajuvus on väike.</p>
+        <p data-l="en">Why a white dwarf explodes, what makes a supernova shine, how the peak brightness is standardised, and why distant supernovae scatter little.</p>
+        <span class="rel"><span data-l="et">Seotud:</span><span data-l="en">Related:</span> <a href="#osa-4"><span data-l="et">4. osa</span><span data-l="en">part 4</span></a></span>
       </li>
       <li class="mh">
-        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" r="3"/><path class="arrow" d="M0 -6 V-14 M-3 -11 L0 -14 L3 -11 M0 6 V14 M-3 11 L0 14 L3 11 M-6 0 H-14 M-11 -3 L-14 0 L-11 3 M6 0 H14 M11 -3 L14 0 L11 3"/></svg><a class="toc-part" href="hubble.html">Hubble'i seadus</a></div>
-        <p>Punanihe, eemaldumiskiirus ja Hubble'i konstant; miks lähedased galaktikad hajuvad ja mis on Hubble'i pinge.</p>
-        <span class="rel">Seotud: <a href="#osa-3">3. osa</a>, <a href="#osa-4">4. osa</a></span>
+        <div class="m-head"><svg viewBox="-17 -17 34 34" aria-hidden="true"><circle class="fill" r="3"/><path class="arrow" d="M0 -6 V-14 M-3 -11 L0 -14 L3 -11 M0 6 V14 M-3 11 L0 14 L3 11 M-6 0 H-14 M-11 -3 L-14 0 L-11 3 M6 0 H14 M11 -3 L14 0 L11 3"/></svg><a class="toc-part" href="hubble.html"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble's law</span></a></div>
+        <p data-l="et">Punanihe, eemaldumiskiirus ja Hubble'i konstant; miks lähedased galaktikad hajuvad ja mis on Hubble'i pinge.</p>
+        <p data-l="en">Redshift, recession velocity and the Hubble constant; why nearby galaxies scatter, and what the Hubble tension is.</p>
+        <span class="rel"><span data-l="et">Seotud:</span><span data-l="en">Related:</span> <a href="#osa-3"><span data-l="et">3. osa</span><span data-l="en">part 3</span></a>, <a href="#osa-4"><span data-l="et">4. osa</span><span data-l="en">part 4</span></a></span>
       </li>
     </ul>
-    <h3>Harjutus andmetega</h3>
+    <h3><span data-l="et">Harjutus andmetega</span><span data-l="en">Exercise with data</span></h3>
     <ol>
-      <li><a class="toc-part" href="#osa-1">1. osa: Hajusparvede kaugused Gaia parallaksidest</a>
-        <p>Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest.</p>
-        <div class="toc-tabs"><a href="#intro">Sissejuhatus</a><a href="#query">Päring</a><a href="#table">Tabel</a><a href="#plots">Joonised</a><a href="#dist">Kaugus</a></div></li>
-      <li><a class="toc-part" href="#osa-2">2. osa: Tsefeiidide perioodi-heleduse seos</a>
-        <p>Parvede kaugustest leia tsefeiidide heledus ja perioodi-heleduse seos.</p>
-        <div class="toc-tabs"><a href="#cepIntro">Sissejuhatus</a><a href="#cepCluster">Parvede tsefeiidid</a><a href="#cepField">Väljatsefeiidid</a><a href="#cepPL">Periood-heledus</a></div></li>
-      <li><a class="toc-part" href="#osa-3">3. osa: Hubble'i seadus</a>
-        <p>Tsefeiididest leia galaktikate kaugused ja Hubble'i konstant.</p>
-        <div class="toc-tabs"><a href="#hubIntro">Sissejuhatus</a><a href="#galaxies">Galaktikad</a><a href="#hubble">Hubble'i seadus</a></div></li>
-      <li><a class="toc-part" href="#osa-4">4. osa: Ia tüüpi supernoovad</a>
-        <p>Supernoovadega mõõda Universumi paisumist sadade megaparsekite kaugusel.</p>
-        <div class="toc-tabs"><a href="#snIntro">Sissejuhatus</a><a href="#supernovae">Supernoovad</a><a href="#snHubble">Hubble'i seadus</a></div></li>
+      <li><a class="toc-part" href="#osa-1"><span data-l="et">1. osa: Hajusparvede kaugused Gaia parallaksidest</span><span data-l="en">Part 1: Distances of open clusters from Gaia parallaxes</span></a>
+        <p data-l="et">Mõõda hajusparve kaugus selle tähtede Gaia parallaksidest.</p>
+        <p data-l="en">Measure the distance of an open cluster from the Gaia parallaxes of its stars.</p>
+        <div class="toc-tabs"><a href="#intro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#query"><span data-l="et">Päring</span><span data-l="en">Query</span></a><a href="#table"><span data-l="et">Tabel</span><span data-l="en">Table</span></a><a href="#plots"><span data-l="et">Joonised</span><span data-l="en">Plots</span></a><a href="#dist"><span data-l="et">Kaugus</span><span data-l="en">Distance</span></a></div></li>
+      <li><a class="toc-part" href="#osa-2"><span data-l="et">2. osa: Tsefeiidide perioodi-heleduse seos</span><span data-l="en">Part 2: Period–luminosity relation of Cepheids</span></a>
+        <p data-l="et">Parvede kaugustest leia tsefeiidide heledus ja perioodi-heleduse seos.</p>
+        <p data-l="en">From the cluster distances, find the luminosity of Cepheids and the period–luminosity relation.</p>
+        <div class="toc-tabs"><a href="#cepIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#cepCluster"><span data-l="et">Parvede tsefeiidid</span><span data-l="en">Cepheids in clusters</span></a><a href="#cepField"><span data-l="et">Väljatsefeiidid</span><span data-l="en">Field Cepheids</span></a><a href="#cepPL"><span data-l="et">Periood-heledus</span><span data-l="en">Period–luminosity</span></a></div></li>
+      <li><a class="toc-part" href="#osa-3"><span data-l="et">3. osa: Hubble'i seadus</span><span data-l="en">Part 3: The Hubble law</span></a>
+        <p data-l="et">Tsefeiididest leia galaktikate kaugused ja Hubble'i konstant.</p>
+        <p data-l="en">From Cepheids, find the distances of galaxies and the Hubble constant.</p>
+        <div class="toc-tabs"><a href="#hubIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#galaxies"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></a><a href="#hubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
+      <li><a class="toc-part" href="#osa-4"><span data-l="et">4. osa: Ia tüüpi supernoovad</span><span data-l="en">Part 4: Type Ia supernovae</span></a>
+        <p data-l="et">Supernoovadega mõõda Universumi paisumist sadade megaparsekite kaugusel.</p>
+        <p data-l="en">Measure the expansion of the Universe hundreds of megaparsecs away with supernovae.</p>
+        <div class="toc-tabs"><a href="#snIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#supernovae"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></a><a href="#snHubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
     </ol>
   </nav>
   </div>
 
-  <div class="part" id="part1" data-short="Parvede kaugused" hidden>
+  <div class="part" id="part1" data-short="Parvede kaugused" data-short-en="Cluster distances" hidden>
   <div class="part-head" id="p1Head">
-    <h2 class="rung">1. osa: Hajusparvede kaugused Gaia parallaksidest</h2>
-    <div class="tabs" role="tablist" id="p1Tabs" aria-label="1. osa">
-      <button type="button" role="tab" id="tabIntro" data-tab="intro" aria-controls="paneIntro" aria-selected="true">Sissejuhatus</button>
-      <button type="button" role="tab" id="tabQuery" data-tab="query" aria-controls="paneQuery" aria-selected="false" tabindex="-1">Päring</button>
-      <button type="button" role="tab" id="tabTable" data-tab="table" aria-controls="paneTable" aria-selected="false" tabindex="-1">Tabel</button>
-      <button type="button" role="tab" id="tabPlots" data-tab="plots" aria-controls="panePlots" aria-selected="false" tabindex="-1">Joonised</button>
-      <button type="button" role="tab" id="tabDist" data-tab="dist" aria-controls="paneDist" aria-selected="false" tabindex="-1">Kaugus</button>
+    <h2 class="rung"><span data-l="et">1. osa: Hajusparvede kaugused Gaia parallaksidest</span><span data-l="en">Part 1: Distances of open clusters from Gaia parallaxes</span></h2>
+    <div class="tabs" role="tablist" id="p1Tabs" aria-label="1. osa" data-en-aria-label="Part 1">
+      <button type="button" role="tab" id="tabIntro" data-tab="intro" aria-controls="paneIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
+      <button type="button" role="tab" id="tabQuery" data-tab="query" aria-controls="paneQuery" aria-selected="false" tabindex="-1"><span data-l="et">Päring</span><span data-l="en">Query</span></button>
+      <button type="button" role="tab" id="tabTable" data-tab="table" aria-controls="paneTable" aria-selected="false" tabindex="-1"><span data-l="et">Tabel</span><span data-l="en">Table</span></button>
+      <button type="button" role="tab" id="tabPlots" data-tab="plots" aria-controls="panePlots" aria-selected="false" tabindex="-1"><span data-l="et">Joonised</span><span data-l="en">Plots</span></button>
+      <button type="button" role="tab" id="tabDist" data-tab="dist" aria-controls="paneDist" aria-selected="false" tabindex="-1"><span data-l="et">Kaugus</span><span data-l="en">Distance</span></button>
     </div>
   </div>
 
   <div role="tabpanel" class="pane" id="paneIntro" aria-labelledby="tabIntro">
-  <p class="lede">Päri <a href="https://et.wikipedia.org/wiki/Gaia_(kosmoseteleskoop)" target="_blank" rel="noopener">Gaia</a> DR3 tähed <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">parve</a> ümbrusest, vali välja koos <a class="en" href="https://en.wikipedia.org/wiki/Proper_motion" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">üle taeva liikuvad</a> tähed ja keskmista nende <a href="https://et.wikipedia.org/wiki/Parallaks" target="_blank" rel="noopener">parallaksid</a>, et leida parve kaugus.</p>
+  <p class="lede" data-l="et">Päri <a href="https://et.wikipedia.org/wiki/Gaia_(kosmoseteleskoop)" target="_blank" rel="noopener">Gaia</a> DR3 tähed <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">parve</a> ümbrusest, vali välja koos <a class="en" href="https://en.wikipedia.org/wiki/Proper_motion" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">üle taeva liikuvad</a> tähed ja keskmista nende <a href="https://et.wikipedia.org/wiki/Parallaks" target="_blank" rel="noopener">parallaksid</a>, et leida parve kaugus.</p>
+  <p class="lede" data-l="en">Query the <a href="https://en.wikipedia.org/wiki/Gaia_(spacecraft)" target="_blank" rel="noopener">Gaia</a> DR3 stars around a <a href="https://en.wikipedia.org/wiki/Open_cluster" target="_blank" rel="noopener">cluster</a>, pick out the stars that <a href="https://en.wikipedia.org/wiki/Proper_motion" target="_blank" rel="noopener">move together across the sky</a>, and average their <a href="https://en.wikipedia.org/wiki/Stellar_parallax" target="_blank" rel="noopener">parallaxes</a> to find the distance of the cluster.</p>
 
-  <ol class="steps">
+  <ol class="steps" data-l="et">
     <li><span>Tee päring parve keskpunkti ümbert. <a class="go" href="#query" data-go="query">Päring →</a></span></li>
     <li><span>Päringuga saadud andmeid saad vaadata tabelist. <a class="go" href="#table" data-go="table">Tabel →</a></span></li>
     <li><span>Märgi lassoga omaliikumiste joonisel koos liikuvate tähtede tihe kogum. <a class="go" href="#plots" data-go="plots">Joonised →</a></span></li>
     <li><span>Kontrolli värvus-heledusdiagrammi: parve liikmed moodustavad selge peajada. <a class="go" href="#plots" data-go="plots">Joonised →</a></span></li>
     <li><span>Loe keskmine parallaks ja kaugus. <a class="go" href="#dist" data-go="dist">Kaugus →</a></span></li>
+  </ol>
+  <ol class="steps" data-l="en">
+    <li><span>Make a query around the centre of the cluster. <a class="go" href="#query" data-go="query">Query →</a></span></li>
+    <li><span>You can see the data from the query in the table. <a class="go" href="#table" data-go="table">Table →</a></span></li>
+    <li><span>With the lasso, mark the dense clump of stars moving together in the proper motion plot. <a class="go" href="#plots" data-go="plots">Plots →</a></span></li>
+    <li><span>Check the colour–magnitude diagram: the cluster members form a clear main sequence. <a class="go" href="#plots" data-go="plots">Plots →</a></span></li>
+    <li><span>Read off the mean parallax and the distance. <a class="go" href="#dist" data-go="dist">Distance →</a></span></li>
   </ol>
   </div>
 
@@ -546,34 +591,34 @@ footer a { color: inherit; }
   <div class="query-main">
   <section class="card">
     <div class="field source">
-      <label for="source">Andmeallikas</label>
+      <label for="source"><span data-l="et">Andmeallikas</span><span data-l="en">Data source</span></label>
       <select id="source">
-        <option value="auto">Automaatne</option>
+        <option value="auto" data-en-text="Automatic">Automaatne</option>
       </select>
     </div>
     <form class="controls" id="form" novalidate>
       <div class="field target">
-        <label for="target">Parve nimi või koordinaadid</label>
+        <label for="target"><span data-l="et">Parve nimi või koordinaadid</span><span data-l="en">Cluster name or coordinates</span></label>
         <input id="target" name="target" value="Pleiades" autocomplete="off" spellcheck="false"
-               placeholder="nt NGC 2516, Pleiades, 08:51:23 +11:48:50">
+               placeholder="nt NGC 2516, Pleiades, 08:51:23 +11:48:50" data-en-placeholder="e.g. NGC 2516, Pleiades, 08:51:23 +11:48:50">
       </div>
-      <div class="examples" id="examples">Proovi:</div>
+      <div class="examples" id="examples"><span data-l="et">Proovi:</span><span data-l="en">Try:</span></div>
       <div class="field coords">
-        <label for="coords">α δ (kraadides)</label>
-        <input id="coords" name="coords" autocomplete="off" spellcheck="false" placeholder="nt 132.85 11.81">
+        <label for="coords"><span data-l="et">α δ (kraadides)</span><span data-l="en">α δ (degrees)</span></label>
+        <input id="coords" name="coords" autocomplete="off" spellcheck="false" placeholder="nt 132.85 11.81" data-en-placeholder="e.g. 132.85 11.81">
       </div>
       <div class="field num">
-        <label for="radius">Raadius (°)</label>
+        <label for="radius"><span data-l="et">Raadius (°)</span><span data-l="en">Radius (°)</span></label>
         <input id="radius" type="number" lang="en" value="2" min="0.1" max="3" step="0.1">
       </div>
       <div class="field num">
-        <label for="gmax">G piir (mag)</label>
+        <label for="gmax"><span data-l="et">G piir (mag)</span><span data-l="en">G limit (mag)</span></label>
         <input id="gmax" type="number" lang="en" value="17" min="6" max="21" step="0.5">
       </div>
       <div class="actions">
-        <button type="submit" class="primary" id="go">Päri Gaiast</button>
-        <button type="button" id="showSky">Näita taevapilti</button>
-        <button type="button" id="stop" hidden>Katkesta</button>
+        <button type="submit" class="primary" id="go"><span data-l="et">Päri Gaiast</span><span data-l="en">Query Gaia</span></button>
+        <button type="button" id="showSky"><span data-l="et">Näita taevapilti</span><span data-l="en">Show the sky image</span></button>
+        <button type="button" id="stop" hidden><span data-l="et">Katkesta</span><span data-l="en">Stop</span></button>
       </div>
     </form>
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -581,38 +626,41 @@ footer a { color: inherit; }
   <div class="tiles two query-info" id="queryInfo" hidden></div>
   </div>
   <section class="card sky-card">
-    <h2>Päringu ala taevas</h2>
+    <h2><span data-l="et">Päringu ala taevas</span><span data-l="en">Query field on the sky</span></h2>
     <div class="sky-pic empty" id="skyPic"></div>
-    <p class="hint">DSS2 värviline ülesvõte, kriipsjoonega päringu ala; põhi üleval, ida vasakul.</p>
+    <p class="hint" data-l="et">DSS2 värviline ülesvõte, kriipsjoonega päringu ala; põhi üleval, ida vasakul.</p>
+    <p class="hint" data-l="en">DSS2 colour image, with the query field dashed; north up, east left.</p>
   </section>
   </div>
   </div>
 
   <div role="tabpanel" class="pane" id="paneTable" aria-labelledby="tabTable" hidden>
-  <section class="card" id="dataEmpty"><p class="empty">Andmeid pole laaditud — päri tähed vahelehel „Päring“.</p></section>
+  <section class="card" id="dataEmpty"><p class="empty" data-l="et">Andmeid pole laaditud — päri tähed vahelehel „Päring“.</p>
+<p class="empty" data-l="en">No data loaded — query the stars in the “Query” tab.</p></section>
   <section class="card data" id="dataCard" hidden>
     <div class="card-head">
       <div>
-        <h2>Päritud tähed<span class="cluster-name"></span></h2>
-        <p class="hint">Valitud tähed on esile tõstetud. Klõps real märgib tähe joonistel, klõps veeru pealkirjal sorteerib (uus klõps pöörab järjekorra).</p>
+        <h2><span data-l="et">Päritud tähed</span><span data-l="en">Queried stars</span><span class="cluster-name"></span></h2>
+        <p class="hint" data-l="et">Valitud tähed on esile tõstetud. Klõps real märgib tähe joonistel, klõps veeru pealkirjal sorteerib (uus klõps pöörab järjekorra).</p>
+        <p class="hint" data-l="en">The selected stars are highlighted. A click on a row marks the star in the plots, a click on a column heading sorts by it (another click reverses the order).</p>
       </div>
       <span class="count" id="dataCount"></span>
     </div>
     <div class="table-wrap">
       <table class="data-table">
         <thead><tr>
-          <th data-col="src" title="Tähe tunnus Gaia DR3 kataloogis">Gaia DR3 source_id</th><th data-col="ra" title="Otsetõus">α (°)</th><th data-col="dec" title="Kääne">δ (°)</th><th data-col="sep" title="Kaugus päringu keskmest">r (′)</th><th data-col="plx" title="Parallaks">p (mas)</th><th data-col="eplx" title="Parallaksi viga">σ<sub>p</sub> (mas)</th>
-          <th data-col="pmra" title="Omaliikumine otsetõusu sihis (μ_α* = μ_α cos δ)">μ<sub>α*</sub> (mas/a)</th><th data-col="pmdec" title="Omaliikumine käände sihis">μ<sub>δ</sub> (mas/a)</th><th data-col="g" title="Heledus Gaia G-ribas (näiv tähesuurus)">G (mag)</th><th data-col="bprp" title="Värvusindeks: sinise (BP) ja punase (RP) riba tähesuuruste vahe">BP−RP (mag)</th>
+          <th data-col="src" title="Tähe tunnus Gaia DR3 kataloogis" data-en-title="Identifier of the star in the Gaia DR3 catalogue">Gaia DR3 source_id</th><th data-col="ra" title="Otsetõus" data-en-title="Right ascension">α (°)</th><th data-col="dec" title="Kääne" data-en-title="Declination">δ (°)</th><th data-col="sep" title="Kaugus päringu keskmest" data-en-title="Distance from the query centre">r (′)</th><th data-col="plx" title="Parallaks" data-en-title="Parallax">p (mas)</th><th data-col="eplx" title="Parallaksi viga" data-en-title="Parallax error">σ<sub>p</sub> (mas)</th>
+          <th data-col="pmra" title="Omaliikumine otsetõusu sihis (μ_α* = μ_α cos δ)" data-en-title="Proper motion in right ascension (μ_α* = μ_α cos δ)"><span data-l="et">μ<sub>α*</sub> (mas/a)</span><span data-l="en">μ<sub>α*</sub> (mas/yr)</span></th><th data-col="pmdec" title="Omaliikumine käände sihis" data-en-title="Proper motion in declination"><span data-l="et">μ<sub>δ</sub> (mas/a)</span><span data-l="en">μ<sub>δ</sub> (mas/yr)</span></th><th data-col="g" title="Heledus Gaia G-ribas (näiv tähesuurus)" data-en-title="Brightness in the Gaia G band (apparent magnitude)">G (mag)</th><th data-col="bprp" title="Värvusindeks: sinise (BP) ja punase (RP) riba tähesuuruste vahe" data-en-title="Colour index: difference between the magnitudes in the blue (BP) and red (RP) bands">BP−RP (mag)</th>
         </tr></thead>
         <tbody id="dataBody"></tbody>
       </table>
     </div>
     <div class="pager">
       <span id="pageInfo"></span>
-      <button type="button" id="firstPage" aria-label="Esimene lehekülg">« Esimene</button>
-      <button type="button" id="prevPage" aria-label="Eelmine lehekülg">‹ Eelmine</button>
-      <button type="button" id="nextPage" aria-label="Järgmine lehekülg">Järgmine ›</button>
-      <button type="button" id="lastPage" aria-label="Viimane lehekülg">Viimane »</button>
+      <button type="button" id="firstPage" aria-label="Esimene lehekülg" data-en-aria-label="First page"><span data-l="et">« Esimene</span><span data-l="en">« First</span></button>
+      <button type="button" id="prevPage" aria-label="Eelmine lehekülg" data-en-aria-label="Previous page"><span data-l="et">‹ Eelmine</span><span data-l="en">‹ Previous</span></button>
+      <button type="button" id="nextPage" aria-label="Järgmine lehekülg" data-en-aria-label="Next page"><span data-l="et">Järgmine ›</span><span data-l="en">Next ›</span></button>
+      <button type="button" id="lastPage" aria-label="Viimane lehekülg" data-en-aria-label="Last page"><span data-l="et">Viimane »</span><span data-l="en">Last »</span></button>
     </div>
   </section>
   </div>
@@ -621,53 +669,60 @@ footer a { color: inherit; }
   <div class="grid quad" id="plots">
     <section class="card">
       <div class="card-head">
-        <h2>Asukohad taevas<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
+        <h2><span data-l="et">Asukohad taevas</span><span data-l="en">Positions on the sky</span><button type="button" class="help-key" aria-expanded="false"><span data-l="et">selgitus</span><span data-l="en">explanation</span></button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="skyImage" autocomplete="off"> Taevapilt</label>
-          <label class="toggle"><input type="checkbox" id="allSky" autocomplete="off" checked> Kõik tähed</label>
-          <button type="button" class="expand">⤢ Suurenda</button>
+          <label class="toggle"><input type="checkbox" id="skyImage" autocomplete="off"><span data-l="et"> Taevapilt</span><span data-l="en"> Sky image</span></label>
+          <label class="toggle"><input type="checkbox" id="allSky" autocomplete="off" checked><span data-l="et"> Kõik tähed</span><span data-l="en"> All stars</span></label>
+          <button type="button" class="expand"><span data-l="et">⤢ Suurenda</span><span data-l="en">⤢ Enlarge</span></button>
         </div>
-        <p class="hint help">Omaliikumiste joonisel valitud tähed on esile tõstetud, tähekesega on märgitud tsefeiid; tähe andmete nägemiseks vii kursor selle kohale, klõps märgib tähe sihikuga ja näitab selle rida tabelis. Keri suumimiseks, topeltklõps taastab vaate. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti, „Taevapilt“ lisab taustaks DSS2 värvilise ülesvõtte samast taevaosast.</p>
+        <p class="hint help" data-l="et">Omaliikumiste joonisel valitud tähed on esile tõstetud, tähekesega on märgitud tsefeiid; tähe andmete nägemiseks vii kursor selle kohale, klõps märgib tähe sihikuga ja näitab selle rida tabelis. Keri suumimiseks, topeltklõps taastab vaate. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti, „Taevapilt“ lisab taustaks DSS2 värvilise ülesvõtte samast taevaosast.</p>
+        <p class="hint help" data-l="en">The stars selected in the proper motion plot are highlighted, and a Cepheid is marked with a star; hover over a star to see its data, and a click marks the star with a crosshair and shows its row in the table. Scroll to zoom, double-click to reset the view. The “All stars” box shows all queried stars or only the selected ones; “Sky image” adds a DSS2 colour image of the same part of the sky as the background.</p>
       </div>
       <div class="plot" id="sky"></div>
     </section>
     <section class="card">
       <div class="card-head">
-        <h2>Omaliikumised<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
+        <h2><span data-l="et">Omaliikumised</span><span data-l="en">Proper motions</span><button type="button" class="help-key" aria-expanded="false"><span data-l="et">selgitus</span><span data-l="en">explanation</span></button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="allPm" autocomplete="off" checked> Kõik tähed</label>
-          <button type="button" id="clear">Tühista valik</button>
-          <button type="button" class="expand">⤢ Suurenda</button>
+          <label class="toggle"><input type="checkbox" id="allPm" autocomplete="off" checked><span data-l="et"> Kõik tähed</span><span data-l="en"> All stars</span></label>
+          <button type="button" id="clear"><span data-l="et">Tühista valik</span><span data-l="en">Clear selection</span></button>
+          <button type="button" class="expand"><span data-l="et">⤢ Suurenda</span><span data-l="en">⤢ Enlarge</span></button>
         </div>
-        <p class="hint help">Parve liikmed liiguvad ühtmoodi — leia tihe kogum (lohista ja keri) ning märgi see lassoga, mille saad joonise tööriistaribalt. Iga uus lasso lisab tähed valikule. Klõps märgib tähe kõigil joonistel ja tabelis. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti; lassoga saab tähti valida ainult siis, kui kõik tähed on nähtaval. <a class="more" href="hajusparved.html#liikmed">Loe lähemalt →</a></p>
+        <p class="hint help" data-l="et">Parve liikmed liiguvad ühtmoodi — leia tihe kogum (lohista ja keri) ning märgi see lassoga, mille saad joonise tööriistaribalt. Iga uus lasso lisab tähed valikule. Klõps märgib tähe kõigil joonistel ja tabelis. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti; lassoga saab tähti valida ainult siis, kui kõik tähed on nähtaval. <a class="more" href="hajusparved.html#liikmed">Loe lähemalt →</a></p>
+        <p class="hint help" data-l="en">The cluster members move alike — find the dense clump (drag and scroll) and mark it with the lasso, which you find in the toolbar of the plot. Each new lasso adds stars to the selection. A click marks the star in all plots and in the table. The “All stars” box shows all queried stars or only the selected ones; stars can be selected with the lasso only when all stars are shown. <a class="more" href="hajusparved.html#liikmed">Read more →</a></p>
       </div>
       <div class="plot" id="pm"></div>
     </section>
     <section class="card">
       <div class="card-head">
-        <h2>Värvus-heledusdiagramm<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
+        <h2><span data-l="et">Värvus-heledusdiagramm</span><span data-l="en">Colour–magnitude diagram</span><button type="button" class="help-key" aria-expanded="false"><span data-l="et">selgitus</span><span data-l="en">explanation</span></button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="allCmd" autocomplete="off" checked> Kõik tähed</label>
-          <label class="toggle"><input type="checkbox" id="cmdAbs" autocomplete="off"> Absoluutne M<sub>G</sub></label>
-          <button type="button" id="dropOutliers" disabled>Eemalda erindid</button>
-          <button type="button" id="restore" disabled>Taasta valik</button>
-          <button type="button" class="expand">⤢ Suurenda</button>
+          <label class="toggle"><input type="checkbox" id="allCmd" autocomplete="off" checked><span data-l="et"> Kõik tähed</span><span data-l="en"> All stars</span></label>
+          <label class="toggle"><input type="checkbox" id="cmdAbs" autocomplete="off"> <span data-l="et">Absoluutne M<sub>G</sub></span><span data-l="en">Absolute M<sub>G</sub></span></label>
+          <button type="button" id="dropOutliers" disabled><span data-l="et">Eemalda erindid</span><span data-l="en">Remove outliers</span></button>
+          <button type="button" id="restore" disabled><span data-l="et">Taasta valik</span><span data-l="en">Restore selection</span></button>
+          <button type="button" class="expand"><span data-l="et">⤢ Suurenda</span><span data-l="en">⤢ Enlarge</span></button>
         </div>
-        <p class="hint help">Valitud tähed värviliselt, kõik ülejäänud hallilt. Rist: parallaksi kõrvalekalle (vt parallakside histogrammi). Klõps märgib tähe. Shift + klõps valitud tähel eemaldab selle parallaksi arvutusest; eemaldatud täht (rõngas) tuleb Shift + klõpsuga tagasi. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti. <a class="more" href="hajusparved.html#varvus-heledus">Loe lähemalt →</a></p>
+        <p class="hint help" data-l="et">Valitud tähed värviliselt, kõik ülejäänud hallilt. Rist: parallaksi kõrvalekalle (vt parallakside histogrammi). Klõps märgib tähe. Shift + klõps valitud tähel eemaldab selle parallaksi arvutusest; eemaldatud täht (rõngas) tuleb Shift + klõpsuga tagasi. Märkeruut „Kõik tähed“ näitab kõiki päritud tähti või ainult valitud tähti. <a class="more" href="hajusparved.html#varvus-heledus">Loe lähemalt →</a></p>
+        <p class="hint help" data-l="en">The selected stars in colour, all the others in grey. Cross: a parallax outlier (see the parallax histogram). A click marks the star. Shift + click on a selected star removes it from the parallax calculation; a removed star (ring) comes back with Shift + click. The “All stars” box shows all queried stars or only the selected ones. <a class="more" href="hajusparved.html#varvus-heledus">Read more →</a></p>
       </div>
       <div class="plot" id="cmd"></div>
     </section>
     <section class="card">
       <div class="card-head">
-        <h2>Valitud tähtede parallaksid<button type="button" class="help-key" aria-expanded="false">selgitus</button></h2>
+        <h2><span data-l="et">Valitud tähtede parallaksid</span><span data-l="en">Parallaxes of the selected stars</span><button type="button" class="help-key" aria-expanded="false"><span data-l="et">selgitus</span><span data-l="en">explanation</span></button></h2>
         <div class="tools">
-          <label class="toggle"><input type="checkbox" id="histAll" autocomplete="off"> Kõik tähed</label>
-          <button type="button" class="expand">⤢ Suurenda</button>
+          <label class="toggle"><input type="checkbox" id="histAll" autocomplete="off"><span data-l="et"> Kõik tähed</span><span data-l="en"> All stars</span></label>
+          <button type="button" class="expand"><span data-l="et">⤢ Suurenda</span><span data-l="en">⤢ Enlarge</span></button>
         </div>
-        <p class="hint help" id="histHint">Katkendjoon: kaalutud keskmine parallaks. Punktiir: kõrvalekallete piirid (alumine kvartiil − 3 × kvartiilhaare
+        <p class="hint help" id="histHint"><span data-l="et">Katkendjoon: kaalutud keskmine parallaks. Punktiir: kõrvalekallete piirid (alumine kvartiil − 3 × kvartiilhaare
             ja ülemine kvartiil + 3 × kvartiilhaare). Piiridest väljapoole jäävad tähed on HR-diagrammil ristiga.
             Lühikesed jooned x-telje kohal: kõrvalekallete (punktiirjoontest väljapoole jäävate tähtede) parallaksid, nii on näha ka üksikud kõrvalekalded.
-            Märkeruut „Kõik tähed“ lisab halli tausta: kõik päritud tähed; väga suured väärtused jäetakse välja (telje all on kirjas, mitu tähte) ja tulpade laius leitakse ülejäänud tähtede jaotusest. <a class="more" href="hajusparved.html#keskmine">Loe lähemalt →</a></p>
+            Märkeruut „Kõik tähed“ lisab halli tausta: kõik päritud tähed; väga suured väärtused jäetakse välja (telje all on kirjas, mitu tähte) ja tulpade laius leitakse ülejäänud tähtede jaotusest. <a class="more" href="hajusparved.html#keskmine">Loe lähemalt →</a></span>
+            <span data-l="en">Dashed line: the weighted mean parallax. Dotted lines: the limits for outliers (lower quartile − 3 × interquartile range
+            and upper quartile + 3 × interquartile range). Stars beyond the limits are crossed in the HR diagram.
+            Short lines above the x-axis: the parallaxes of the outliers (the stars beyond the dotted lines), so that single outliers can be seen too.
+            The “All stars” box adds a grey background of all queried stars; very large values are left out (the axis title says how many stars), and the width of the bars is found from the distribution of the remaining stars. <a class="more" href="hajusparved.html#keskmine">Read more →</a></span></p>
       </div>
       <div class="plot" id="hist"></div>
     </section>
@@ -676,62 +731,75 @@ footer a { color: inherit; }
 
   <div role="tabpanel" class="pane compact" id="paneDist" aria-labelledby="tabDist" hidden>
   <section class="card">
-    <h2>Keskmine parallaks<span class="cluster-name"></span></h2>
-    <div id="plxStats"><p class="empty">Andmeid pole laaditud.</p></div>
+    <h2><span data-l="et">Keskmine parallaks</span><span data-l="en">Mean parallax</span><span class="cluster-name"></span></h2>
+    <div id="plxStats"><p class="empty" data-l="et">Andmeid pole laaditud.</p>
+<p class="empty" data-l="en">No data loaded.</p></div>
   </section>
 
   <section class="card results">
     <div class="results-head">
-      <h2>Parve kaugus<span class="cluster-name"></span></h2>
+      <h2><span data-l="et">Parve kaugus</span><span data-l="en">Cluster distance</span><span class="cluster-name"></span></h2>
       <div class="opts">
-        <button type="button" id="download" disabled>Laadi valik alla (CSV)</button>
+        <button type="button" id="download" disabled><span data-l="et">Laadi valik alla (CSV)</span><span data-l="en">Download the selection (CSV)</span></button>
       </div>
     </div>
-    <div id="results"><p class="empty">Ühtegi tähte pole veel valitud.</p></div>
+    <div id="results"><p class="empty" data-l="et">Ühtegi tähte pole veel valitud.</p>
+<p class="empty" data-l="en">No stars selected yet.</p></div>
   </section>
   </div>
 
   </div>
 
-  <div class="part" id="part2" data-short="Tsefeiidid" hidden>
+  <div class="part" id="part2" data-short="Tsefeiidid" data-short-en="Cepheids" hidden>
     <div class="part-head" id="p2Head">
-      <h2 class="rung">2. osa: Tsefeiidide perioodi-heleduse seos</h2>
-      <div class="tabs" role="tablist" id="p2Tabs" aria-label="2. osa">
-        <button type="button" role="tab" id="tabCepIntro" data-tab="cepIntro" aria-controls="paneCepIntro" aria-selected="true">Sissejuhatus</button>
-        <button type="button" role="tab" id="tabCepCluster" data-tab="cepCluster" aria-controls="paneCepCluster" aria-selected="false" tabindex="-1">Parvede tsefeiidid</button>
-        <button type="button" role="tab" id="tabCepField" data-tab="cepField" aria-controls="paneCepField" aria-selected="false" tabindex="-1">Väljatsefeiidid</button>
-        <button type="button" role="tab" id="tabCepPL" data-tab="cepPL" aria-controls="paneCepPL" aria-selected="false" tabindex="-1">Periood-heledus</button>
+      <h2 class="rung"><span data-l="et">2. osa: Tsefeiidide perioodi-heleduse seos</span><span data-l="en">Part 2: Period–luminosity relation of Cepheids</span></h2>
+      <div class="tabs" role="tablist" id="p2Tabs" aria-label="2. osa" data-en-aria-label="Part 2">
+        <button type="button" role="tab" id="tabCepIntro" data-tab="cepIntro" aria-controls="paneCepIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
+        <button type="button" role="tab" id="tabCepCluster" data-tab="cepCluster" aria-controls="paneCepCluster" aria-selected="false" tabindex="-1"><span data-l="et">Parvede tsefeiidid</span><span data-l="en">Cepheids in clusters</span></button>
+        <button type="button" role="tab" id="tabCepField" data-tab="cepField" aria-controls="paneCepField" aria-selected="false" tabindex="-1"><span data-l="et">Väljatsefeiidid</span><span data-l="en">Field Cepheids</span></button>
+        <button type="button" role="tab" id="tabCepPL" data-tab="cepPL" aria-controls="paneCepPL" aria-selected="false" tabindex="-1"><span data-l="et">Periood-heledus</span><span data-l="en">Period–luminosity</span></button>
       </div>
     </div>
 
     <div role="tabpanel" class="pane" id="paneCepIntro" aria-labelledby="tabCepIntro">
-    <p class="lede">Need <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">hajusparved</a> sisaldavad <a class="en" href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">klassikalisi tsefeiide</a>. Mõõda iga parve kaugus 1. osas (nupp „Mõõda“ täidab päringu vormi) ja salvesta see.
+    <p class="lede" data-l="et">Need <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">hajusparved</a> sisaldavad <a class="en" href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">klassikalisi tsefeiide</a>. Mõõda iga parve kaugus 1. osas (nupp „Mõõda“ täidab päringu vormi) ja salvesta see.
       Parve kaugusest saab tsefeiidi <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse heleduse</a> ning mitme parve põhjal tekib <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seos</a>.</p>
+    <p class="lede" data-l="en">These <a href="https://en.wikipedia.org/wiki/Open_cluster" target="_blank" rel="noopener">open clusters</a> contain <a href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener">classical Cepheids</a>. Measure the distance of each cluster in part 1 (the “Measure” button fills in the query form) and save it.
+      The cluster distance gives the <a href="https://en.wikipedia.org/wiki/Absolute_magnitude" target="_blank" rel="noopener">absolute brightness</a> of the Cepheid, and from several clusters a <a href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener">period–luminosity relation</a> emerges.</p>
 
-    <ol class="steps">
+    <ol class="steps" data-l="et">
       <li><span>Vali parv ja vajuta „Mõõda“: see täidab 1. osa päringu vormi. <a class="go" href="#cepCluster" data-go="cepCluster">Parvede tsefeiidid →</a></span></li>
       <li><span>Mõõda 1. osas parve kaugus ja salvesta see vahelehel „Kaugus“. Iga salvestatud parv lisab oma tsefeiidid seosesse. <a class="go" href="#dist" data-go="dist">1. osa: Kaugus →</a></span></li>
       <li><span>Parvedes on pikaperioodilisi tsefeiide vähe. Soovi korral lisa seosesse väljatsefeiide, mille kauguse annab nende enda Gaia parallaks. <a class="go" href="#cepField" data-go="cepField">Väljatsefeiidid →</a></span></li>
       <li><span>Vaata perioodi-heleduse seost ja sinu sobitatud sirget. <a class="go" href="#cepPL" data-go="cepPL">Periood-heledus →</a></span></li>
     </ol>
-    <p class="hint">Periood: Gaia DR3. W<sub>H</sub> = F160W − 0,386 (F555W − F814W) on Hubble'i kosmoseteleskoobi mõõtmistest leitud Wesenheiti tähesuurus,
+    <ol class="steps" data-l="en">
+      <li><span>Choose a cluster and press “Measure”: this fills in the query form of part 1. <a class="go" href="#cepCluster" data-go="cepCluster">Cepheids in clusters →</a></span></li>
+      <li><span>Measure the distance of the cluster in part 1 and save it in the “Distance” tab. Each saved cluster adds its Cepheids to the relation. <a class="go" href="#dist" data-go="dist">Part 1: Distance →</a></span></li>
+      <li><span>There are few long-period Cepheids in clusters. If you like, add field Cepheids to the relation, whose distances come from their own Gaia parallaxes. <a class="go" href="#cepField" data-go="cepField">Field Cepheids →</a></span></li>
+      <li><span>Look at the period–luminosity relation and the line you fitted. <a class="go" href="#cepPL" data-go="cepPL">Period–luminosity →</a></span></li>
+    </ol>
+    <p class="hint" data-l="et">Periood: Gaia DR3. W<sub>H</sub> = F160W − 0,386 (F555W − F814W) on Hubble'i kosmoseteleskoobi mõõtmistest leitud Wesenheiti tähesuurus,
       mis ei sõltu tähtedevahelisest tolmust. M<sub>H</sub><sup>W</sup> on sama suurus absoluutsena. <a class="more" href="tsefeiidid.html#tolm">Loe lähemalt →</a></p>
+    <p class="hint" data-l="en">Period: Gaia DR3. W<sub>H</sub> = F160W − 0.386 (F555W − F814W) is the Wesenheit magnitude from measurements with the Hubble Space Telescope,
+      which does not depend on interstellar dust. M<sub>H</sub><sup>W</sup> is the same quantity in absolute terms. <a class="more" href="tsefeiidid.html#tolm">Read more →</a></p>
     </div>
 
     <div role="tabpanel" class="pane" id="paneCepCluster" aria-labelledby="tabCepCluster" hidden>
     <section class="card">
       <div class="card-head">
         <div>
-          <h2>Parvede tsefeiidid</h2>
-          <p class="hint">„Mõõda“ täidab 1. osa päringu vormi selle parve jaoks. Kui parve kaugus on salvestatud, annab see tsefeiidi absoluutse tähesuuruse M<sub>H</sub><sup>W</sup> = W<sub>H</sub> + 5 log p − 10.</p>
+          <h2><span data-l="et">Parvede tsefeiidid</span><span data-l="en">Cepheids in clusters</span></h2>
+          <p class="hint" data-l="et">„Mõõda“ täidab 1. osa päringu vormi selle parve jaoks. Kui parve kaugus on salvestatud, annab see tsefeiidi absoluutse tähesuuruse M<sub>H</sub><sup>W</sup> = W<sub>H</sub> + 5 log p − 10.</p>
+          <p class="hint" data-l="en">“Measure” fills in the query form of part 1 for this cluster. Once the cluster distance is saved, it gives the absolute magnitude of the Cepheid M<sub>H</sub><sup>W</sup> = W<sub>H</sub> + 5 log p − 10.</p>
         </div>
         <span class="count" id="cepCount"></span>
       </div>
       <div class="table-wrap">
         <table class="data-table">
             <thead><tr>
-              <th title="Hajusparv, mille liige tsefeiid on">Parv</th><th title="Tsefeiidi nimi">Tsefeiid</th><th title="Heleduse muutumise periood ööpäevades (Gaia DR3)">P (ööp)</th><th title="Perioodi kümnendlogaritm">log P</th><th title="Wesenheiti näiv tähesuurus Hubble'i kosmoseteleskoobi mõõtmistest; ei sõltu tähtedevahelisest tolmust">W<sub>H</sub> (mag)</th>
-              <th title="Salvestatud parve keskmine parallaks">p (mas)</th><th title="Kaugus d = 1000 / p parsekites">Kaugus (pc)</th><th title="Absoluutne Wesenheiti tähesuurus: M = W_H + 5 log p − 10">M<sub>H</sub><sup>W</sup> (mag)</th><th title="Parve mõõtmine või salvestatud kauguse kustutamine"></th>
+              <th title="Hajusparv, mille liige tsefeiid on" data-en-title="The open cluster the Cepheid belongs to"><span data-l="et">Parv</span><span data-l="en">Cluster</span></th><th title="Tsefeiidi nimi" data-en-title="Name of the Cepheid"><span data-l="et">Tsefeiid</span><span data-l="en">Cepheid</span></th><th title="Heleduse muutumise periood ööpäevades (Gaia DR3)" data-en-title="Period of the brightness variation in days (Gaia DR3)"><span data-l="et">P (ööp)</span><span data-l="en">P (d)</span></th><th title="Perioodi kümnendlogaritm" data-en-title="Decimal logarithm of the period">log P</th><th title="Wesenheiti näiv tähesuurus Hubble'i kosmoseteleskoobi mõõtmistest; ei sõltu tähtedevahelisest tolmust" data-en-title="Apparent Wesenheit magnitude from Hubble Space Telescope measurements; does not depend on interstellar dust">W<sub>H</sub> (mag)</th>
+              <th title="Salvestatud parve keskmine parallaks" data-en-title="Mean parallax of the saved cluster">p (mas)</th><th title="Kaugus d = 1000 / p parsekites" data-en-title="Distance d = 1000 / p in parsecs"><span data-l="et">Kaugus (pc)</span><span data-l="en">Distance (pc)</span></th><th title="Absoluutne Wesenheiti tähesuurus: M = W_H + 5 log p − 10" data-en-title="Absolute Wesenheit magnitude: M = W_H + 5 log p − 10">M<sub>H</sub><sup>W</sup> (mag)</th><th title="Parve mõõtmine või salvestatud kauguse kustutamine" data-en-title="Measuring the cluster or deleting the saved distance"></th>
             </tr></thead>
             <tbody id="cepBody"></tbody>
         </table>
@@ -743,16 +811,17 @@ footer a { color: inherit; }
     <section class="card">
       <div class="card-head">
         <div>
-          <h2>Väljatsefeiidid</h2>
-          <p class="hint">Need tsefeiidid ei ole parvedes; nende kauguse annab nende enda Gaia parallaks. Neid saab seosesse lisada ükshaaval, joonisel on nad rombid.</p>
+          <h2><span data-l="et">Väljatsefeiidid</span><span data-l="en">Field Cepheids</span></h2>
+          <p class="hint" data-l="et">Need tsefeiidid ei ole parvedes; nende kauguse annab nende enda Gaia parallaks. Neid saab seosesse lisada ükshaaval, joonisel on nad rombid.</p>
+          <p class="hint" data-l="en">These Cepheids are not in clusters; their distances come from their own Gaia parallaxes. They can be added to the relation one at a time, and in the plot they are diamonds.</p>
         </div>
         <span class="count" id="fieldCount"></span>
       </div>
       <div class="table-wrap">
         <table class="data-table">
             <thead><tr>
-              <th title="Tsefeiidi nimi">Tsefeiid</th><th title="Heleduse muutumise periood ööpäevades (Gaia DR3)">P (ööp)</th><th title="Perioodi kümnendlogaritm">log P</th><th title="Wesenheiti näiv tähesuurus Hubble'i kosmoseteleskoobi mõõtmistest; ei sõltu tähtedevahelisest tolmust">W<sub>H</sub> (mag)</th>
-              <th title="Tsefeiidi enda Gaia parallaks">p (mas)</th><th title="Kaugus d = 1000 / p parsekites">Kaugus (pc)</th><th title="Absoluutne Wesenheiti tähesuurus: M = W_H + 5 log p − 10">M<sub>H</sub><sup>W</sup> (mag)</th><th title="Tsefeiidi lisamine seosesse"></th>
+              <th title="Tsefeiidi nimi" data-en-title="Name of the Cepheid"><span data-l="et">Tsefeiid</span><span data-l="en">Cepheid</span></th><th title="Heleduse muutumise periood ööpäevades (Gaia DR3)" data-en-title="Period of the brightness variation in days (Gaia DR3)"><span data-l="et">P (ööp)</span><span data-l="en">P (d)</span></th><th title="Perioodi kümnendlogaritm" data-en-title="Decimal logarithm of the period">log P</th><th title="Wesenheiti näiv tähesuurus Hubble'i kosmoseteleskoobi mõõtmistest; ei sõltu tähtedevahelisest tolmust" data-en-title="Apparent Wesenheit magnitude from Hubble Space Telescope measurements; does not depend on interstellar dust">W<sub>H</sub> (mag)</th>
+              <th title="Tsefeiidi enda Gaia parallaks" data-en-title="Gaia parallax of the Cepheid itself">p (mas)</th><th title="Kaugus d = 1000 / p parsekites" data-en-title="Distance d = 1000 / p in parsecs"><span data-l="et">Kaugus (pc)</span><span data-l="en">Distance (pc)</span></th><th title="Absoluutne Wesenheiti tähesuurus: M = W_H + 5 log p − 10" data-en-title="Absolute Wesenheit magnitude: M = W_H + 5 log p − 10">M<sub>H</sub><sup>W</sup> (mag)</th><th title="Tsefeiidi lisamine seosesse" data-en-title="Adding the Cepheid to the relation"></th>
             </tr></thead>
             <tbody id="fieldBody"></tbody>
         </table>
@@ -764,8 +833,9 @@ footer a { color: inherit; }
     <section class="card fill">
       <div class="card-head">
         <div>
-          <h2>Perioodi-heleduse seos</h2>
-          <p class="hint">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud; rombid on seosesse lisatud väljatsefeiidid. Katkendjoon: sinu kaalutud vähimruutude sirge; punktiir: avaldatud seos. Shift + klõps väljatsefeiidil eemaldab selle seosest. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+          <h2><span data-l="et">Perioodi-heleduse seos</span><span data-l="en">Period–luminosity relation</span></h2>
+          <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud; rombid on seosesse lisatud väljatsefeiidid. Katkendjoon: sinu kaalutud vähimruutude sirge; punktiir: avaldatud seos. Shift + klõps väljatsefeiidil eemaldab selle seosest. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+          <p class="hint" data-l="en">Each point is a Cepheid whose cluster distance is saved; diamonds are field Cepheids added to the relation. Dashed line: your weighted least-squares line; dotted line: the published relation. Shift + click on a field Cepheid removes it from the relation. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
         </div>
       </div>
       <div class="plot" id="pl"></div>
@@ -774,63 +844,75 @@ footer a { color: inherit; }
     </div>
   </div>
 
-  <div class="part" id="part3" data-short="Hubble'i seadus" hidden>
+  <div class="part" id="part3" data-short="Hubble'i seadus" data-short-en="Hubble law" hidden>
     <div class="part-head" id="p3Head">
-      <h2 class="rung">3. osa: Hubble'i seadus</h2>
-      <div class="tabs" role="tablist" id="p3Tabs" aria-label="3. osa">
-        <button type="button" role="tab" id="tabHubIntro" data-tab="hubIntro" aria-controls="paneHubIntro" aria-selected="true">Sissejuhatus</button>
-        <button type="button" role="tab" id="tabGal" data-tab="galaxies" aria-controls="paneGal" aria-selected="false" tabindex="-1">Galaktikad</button>
-        <button type="button" role="tab" id="tabHub" data-tab="hubble" aria-controls="paneHub" aria-selected="false" tabindex="-1">Hubble'i seadus</button>
+      <h2 class="rung"><span data-l="et">3. osa: Hubble'i seadus</span><span data-l="en">Part 3: The Hubble law</span></h2>
+      <div class="tabs" role="tablist" id="p3Tabs" aria-label="3. osa" data-en-aria-label="Part 3">
+        <button type="button" role="tab" id="tabHubIntro" data-tab="hubIntro" aria-controls="paneHubIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
+        <button type="button" role="tab" id="tabGal" data-tab="galaxies" aria-controls="paneGal" aria-selected="false" tabindex="-1"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></button>
+        <button type="button" role="tab" id="tabHub" data-tab="hubble" aria-controls="paneHub" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></button>
       </div>
     </div>
 
     <div role="tabpanel" class="pane" id="paneHubIntro" aria-labelledby="tabHubIntro">
-    <p class="lede">Nende <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> tsefeiide on mõõtnud <a href="https://et.wikipedia.org/wiki/Hubble'i_kosmoseteleskoop" target="_blank" rel="noopener">Hubble'i kosmoseteleskoop</a>. <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidi</a> periood annab <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seosest</a> tema <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse
+    <p class="lede" data-l="et">Nende <a href="https://et.wikipedia.org/wiki/Galaktika" target="_blank" rel="noopener">galaktikate</a> tsefeiide on mõõtnud <a href="https://et.wikipedia.org/wiki/Hubble'i_kosmoseteleskoop" target="_blank" rel="noopener">Hubble'i kosmoseteleskoop</a>. <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidi</a> periood annab <a class="en" href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">perioodi-heleduse seosest</a> tema <a href="https://et.wikipedia.org/wiki/Absoluutne_t%C3%A4hesuurus" target="_blank" rel="noopener">absoluutse
       tähesuuruse</a> ning võrdlus <a href="https://et.wikipedia.org/wiki/T%C3%A4hesuurus" target="_blank" rel="noopener">näiva tähesuurusega</a> galaktika kauguse. Koos galaktika eemaldumiskiirusega (<a href="https://et.wikipedia.org/wiki/Punanihe" target="_blank" rel="noopener">punanihkest</a>) annab see <a href="https://et.wikipedia.org/wiki/Hubble'i_konstant" target="_blank" rel="noopener">Hubble'i konstandi</a>.</p>
+    <p class="lede" data-l="en">The Cepheids of these <a href="https://en.wikipedia.org/wiki/Galaxy" target="_blank" rel="noopener">galaxies</a> have been measured by the <a href="https://en.wikipedia.org/wiki/Hubble_Space_Telescope" target="_blank" rel="noopener">Hubble Space Telescope</a>. The period of a <a href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener">Cepheid</a> gives its <a href="https://en.wikipedia.org/wiki/Absolute_magnitude" target="_blank" rel="noopener">absolute
+      magnitude</a> from the <a href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener">period–luminosity relation</a>, and comparing it with the <a href="https://en.wikipedia.org/wiki/Apparent_magnitude" target="_blank" rel="noopener">apparent magnitude</a> gives the distance of the galaxy. Together with the recession velocity of the galaxy (from its <a href="https://en.wikipedia.org/wiki/Redshift" target="_blank" rel="noopener">redshift</a>) this gives the <a href="https://en.wikipedia.org/wiki/Hubble%27s_law" target="_blank" rel="noopener">Hubble constant</a>.</p>
 
-    <ol class="steps">
+    <ol class="steps" data-l="et">
       <li><span>Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
       <li><span>Vaata galaktikate kaugusi tabelis. Klõps galaktika real näitab selle tsefeiide. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
       <li><span>Vali, millised galaktikad lähevad Hubble'i seaduse sobitusse. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
       <li><span>Loe kiiruse ja kauguse seosest Hubble'i konstant H<sub>0</sub>. <a class="go" href="#hubble" data-go="hubble">Hubble'i seadus →</a></span></li>
     </ol>
-    <p class="hint">Nendes 29 galaktikas on Hubble'i kosmoseteleskoop mõõtnud kokku üle 2000 tsefeiidi.</p>
+    <ol class="steps" data-l="en">
+      <li><span>Choose a period–luminosity relation and press “Use the relation” to find the distances of the galaxies. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
+      <li><span>Look at the distances of the galaxies in the table. A click on the row of a galaxy shows its Cepheids. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
+      <li><span>Choose which galaxies go into the fit of the Hubble law. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
+      <li><span>Read off the Hubble constant H<sub>0</sub> from the relation between velocity and distance. <a class="go" href="#hubble" data-go="hubble">Hubble law →</a></span></li>
+    </ol>
+    <p class="hint" data-l="et">Nendes 29 galaktikas on Hubble'i kosmoseteleskoop mõõtnud kokku üle 2000 tsefeiidi.</p>
+    <p class="hint" data-l="en">In these 29 galaxies the Hubble Space Telescope has measured more than 2000 Cepheids in all.</p>
     </div>
 
     <div role="tabpanel" class="pane" id="paneGal" aria-labelledby="tabGal" hidden>
     <section class="card">
       <div class="card-head">
         <div>
-          <h2>Tsefeiididega galaktikad</h2>
-          <p class="hint">Rakenda galaktikate tsefeiididele oma perioodi-heleduse seos, et leida galaktikate kaugused.</p>
+          <h2><span data-l="et">Tsefeiididega galaktikad</span><span data-l="en">Galaxies with Cepheids</span></h2>
+          <p class="hint" data-l="et">Rakenda galaktikate tsefeiididele oma perioodi-heleduse seos, et leida galaktikate kaugused.</p>
+          <p class="hint" data-l="en">Apply your period–luminosity relation to the Cepheids of the galaxies to find their distances.</p>
         </div>
       </div>
-      <p class="hint calib-prompt" id="calibPrompt">Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused.</p>
+      <p class="hint calib-prompt" id="calibPrompt"><span data-l="et">Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused.</span><span data-l="en">Choose a period–luminosity relation and press “Use the relation” to find the distances of the galaxies.</span></p>
       <div class="calib-row" id="calibRow">
-        <select id="calib" class="calib-menu" aria-label="Perioodi-heleduse seos">
-          <option value="own">Minu seos (2. osa)</option>
-          <option value="pub">Avaldatud seos</option>
+        <select id="calib" class="calib-menu" aria-label="Perioodi-heleduse seos" data-en-aria-label="Period–luminosity relation">
+          <option value="own" data-en-text="My relation (part 2)">Minu seos (2. osa)</option>
+          <option value="pub" data-en-text="Published relation">Avaldatud seos</option>
         </select>
-        <button type="button" class="primary calib-apply" id="calibApply">Kasuta seost</button>
+        <button type="button" class="primary calib-apply" id="calibApply"><span data-l="et">Kasuta seost</span><span data-l="en">Use the relation</span></button>
       </div>
       <p class="fit" id="calibInfo"></p>
-      <p class="hint table-note" id="galNote">Kauguse moodul μ on galaktika tsefeiidide W<sub>H</sub> − M<sub>H</sub><sup>W</sup>(P) kaalutud keskmine. Kiirus v = cz,
-        kus z on galaktikas plahvatanud supernoova punanihe, mis on parandatud galaktika pekuliaarse kiiruse jaoks. Klõpsa galaktika real, et näha selle tsefeiide; uus klõps peidab need. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+      <p class="hint table-note" id="galNote"><span data-l="et">Kauguse moodul μ on galaktika tsefeiidide W<sub>H</sub> − M<sub>H</sub><sup>W</sup>(P) kaalutud keskmine. Kiirus v = cz,
+        kus z on galaktikas plahvatanud supernoova punanihe, mis on parandatud galaktika pekuliaarse kiiruse jaoks. Klõpsa galaktika real, et näha selle tsefeiide; uus klõps peidab need. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></span>
+        <span data-l="en">The distance modulus μ is the weighted mean of W<sub>H</sub> − M<sub>H</sub><sup>W</sup>(P) of the Cepheids of the galaxy. The velocity v = cz,
+        where z is the redshift of the supernova that exploded in the galaxy, corrected for the peculiar velocity of the galaxy. Click the row of a galaxy to see its Cepheids; another click hides them. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></span></p>
       <div id="galWrap">
         <div class="table-wrap">
           <table class="data-table">
           <thead><tr>
-            <th title="Galaktika nimi">Galaktika</th><th title="Galaktikas plahvatanud Ia tüüpi supernoova">Supernoova</th><th title="Galaktikas mõõdetud tsefeiidide arv">Tsefeiide</th><th title="Kauguse moodul μ = m − M: tsefeiidide W_H − M_H^W(P) kaalutud keskmine">μ (mag)</th><th title="Kaugus d = 10^(μ/5 − 5) megaparsekites">Kaugus (Mpc)</th><th title="Eemaldumiskiirus v = cz supernoova punanihkest">Kiirus (km/s)</th><th title="Selle galaktika kiiruse ja kauguse suhe — üksiku galaktika hinnang Hubble'i konstandile">v / d (km/s/Mpc)</th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses">Sobitusse</th>
+            <th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas plahvatanud Ia tüüpi supernoova" data-en-title="Type Ia supernova that exploded in the galaxy"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th><th title="Galaktikas mõõdetud tsefeiidide arv" data-en-title="Number of Cepheids measured in the galaxy"><span data-l="et">Tsefeiide</span><span data-l="en">Cepheids</span></th><th title="Kauguse moodul μ = m − M: tsefeiidide W_H − M_H^W(P) kaalutud keskmine" data-en-title="Distance modulus μ = m − M: weighted mean of W_H − M_H^W(P) of the Cepheids">μ (mag)</th><th title="Kaugus d = 10^(μ/5 − 5) megaparsekites" data-en-title="Distance d = 10^(μ/5 − 5) in megaparsecs"><span data-l="et">Kaugus (Mpc)</span><span data-l="en">Distance (Mpc)</span></th><th title="Eemaldumiskiirus v = cz supernoova punanihkest" data-en-title="Recession velocity v = cz from the redshift of the supernova"><span data-l="et">Kiirus (km/s)</span><span data-l="en">Velocity (km/s)</span></th><th title="Selle galaktika kiiruse ja kauguse suhe — üksiku galaktika hinnang Hubble'i konstandile" data-en-title="Ratio of the velocity and distance of this galaxy — the estimate of the Hubble constant from a single galaxy">v / d (km/s/Mpc)</th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses" data-en-title="Whether the galaxy is used in the fit of the Hubble law"><span data-l="et">Sobitusse</span><span data-l="en">In the fit</span></th>
           </tr></thead>
             <tbody id="galBody"></tbody>
           </table>
         </div>
         <div class="pager" id="galPager">
           <span id="galPageInfo"></span>
-          <button type="button" data-page="first" aria-label="Esimene lehekülg">« Esimene</button>
-          <button type="button" data-page="prev" aria-label="Eelmine lehekülg">‹ Eelmine</button>
-          <button type="button" data-page="next" aria-label="Järgmine lehekülg">Järgmine ›</button>
-          <button type="button" data-page="last" aria-label="Viimane lehekülg">Viimane »</button>
+          <button type="button" data-page="first" aria-label="Esimene lehekülg" data-en-aria-label="First page"><span data-l="et">« Esimene</span><span data-l="en">« First</span></button>
+          <button type="button" data-page="prev" aria-label="Eelmine lehekülg" data-en-aria-label="Previous page"><span data-l="et">‹ Eelmine</span><span data-l="en">‹ Previous</span></button>
+          <button type="button" data-page="next" aria-label="Järgmine lehekülg" data-en-aria-label="Next page"><span data-l="et">Järgmine ›</span><span data-l="en">Next ›</span></button>
+          <button type="button" data-page="last" aria-label="Viimane lehekülg" data-en-aria-label="Last page"><span data-l="et">Viimane »</span><span data-l="en">Last »</span></button>
         </div>
       </div>
     </section>
@@ -840,21 +922,22 @@ footer a { color: inherit; }
     <section class="card fill" id="hubCard">
       <div class="card-head">
         <div>
-          <h2>Kiiruse ja kauguse seos</h2>
-          <p class="hint">Joon: v = H<sub>0</sub> · d, sobitatud vähimruutude meetodil läbi nullpunkti. Shift + klõps galaktikal jätab selle sobitusest välja; väljajäetud galaktika (hall) tuleb Shift + klõpsuga tagasi.</p>
+          <h2><span data-l="et">Kiiruse ja kauguse seos</span><span data-l="en">Velocity and distance</span></h2>
+          <p class="hint" data-l="et">Joon: v = H<sub>0</sub> · d, sobitatud vähimruutude meetodil läbi nullpunkti. Shift + klõps galaktikal jätab selle sobitusest välja; väljajäetud galaktika (hall) tuleb Shift + klõpsuga tagasi.</p>
+          <p class="hint" data-l="en">Line: v = H<sub>0</sub> · d, fitted by least squares through the origin. Shift + click on a galaxy leaves it out of the fit; a left-out galaxy (grey) comes back with Shift + click.</p>
         </div>
       </div>
       <div class="plot-side">
         <div class="plot" id="hub"></div>
         <div class="side">
           <div class="side-choice">
-            <label for="calibHub">Perioodi-heleduse seos</label>
+            <label for="calibHub"><span data-l="et">Perioodi-heleduse seos</span><span data-l="en">Period–luminosity relation</span></label>
             <div class="calib-row">
               <select id="calibHub" class="calib-menu">
-                <option value="own">Minu seos (2. osa)</option>
-                <option value="pub">Avaldatud seos</option>
+                <option value="own" data-en-text="My relation (part 2)">Minu seos (2. osa)</option>
+                <option value="pub" data-en-text="Published relation">Avaldatud seos</option>
               </select>
-              <button type="button" class="primary calib-apply">Kasuta seost</button>
+              <button type="button" class="primary calib-apply"><span data-l="et">Kasuta seost</span><span data-l="en">Use the relation</span></button>
             </div>
             <p class="hint" id="calibHubInfo"></p>
           </div>
@@ -862,30 +945,38 @@ footer a { color: inherit; }
         </div>
       </div>
     </section>
-    <section class="card" id="hubEmpty"><p class="empty">Hubble'i seadus ilmub, kui vahelehel „Galaktikad“ on perioodi-heleduse seos rakendatud.</p></section>
+    <section class="card" id="hubEmpty"><p class="empty"><span data-l="et">Hubble'i seadus ilmub, kui vahelehel „Galaktikad“ on perioodi-heleduse seos rakendatud.</span><span data-l="en">The Hubble law appears once a period–luminosity relation has been applied in the “Galaxies” tab.</span></p></section>
     </div>
   </div>
 
-  <div class="part" id="part4" data-short="Supernoovad" hidden>
+  <div class="part" id="part4" data-short="Supernoovad" data-short-en="Supernovae" hidden>
     <div class="part-head" id="p4Head">
-      <h2 class="rung">4. osa: Ia tüüpi supernoovad</h2>
-      <div class="tabs" role="tablist" id="p4Tabs" aria-label="4. osa">
-        <button type="button" role="tab" id="tabSnIntro" data-tab="snIntro" aria-controls="paneSnIntro" aria-selected="true">Sissejuhatus</button>
-        <button type="button" role="tab" id="tabSn" data-tab="supernovae" aria-controls="paneSn" aria-selected="false" tabindex="-1">Supernoovad</button>
-        <button type="button" role="tab" id="tabSnHub" data-tab="snHubble" aria-controls="paneSnHub" aria-selected="false" tabindex="-1">Hubble'i seadus</button>
+      <h2 class="rung"><span data-l="et">4. osa: Ia tüüpi supernoovad</span><span data-l="en">Part 4: Type Ia supernovae</span></h2>
+      <div class="tabs" role="tablist" id="p4Tabs" aria-label="4. osa" data-en-aria-label="Part 4">
+        <button type="button" role="tab" id="tabSnIntro" data-tab="snIntro" aria-controls="paneSnIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
+        <button type="button" role="tab" id="tabSn" data-tab="supernovae" aria-controls="paneSn" aria-selected="false" tabindex="-1"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></button>
+        <button type="button" role="tab" id="tabSnHub" data-tab="snHubble" aria-controls="paneSnHub" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></button>
       </div>
     </div>
 
     <div role="tabpanel" class="pane" id="paneSnIntro" aria-labelledby="tabSnIntro">
-    <p class="lede">Ia tüüpi <a href="supernoovad.html">supernoova</a> on plahvatav <a href="https://et.wikipedia.org/wiki/Valge_k%C3%A4%C3%A4bus" target="_blank" rel="noopener">valge kääbus</a>. Kõik need plahvatused on maksimumis peaaegu ühesuguse heledusega, nii et supernoova sobib
+    <p class="lede" data-l="et">Ia tüüpi <a href="supernoovad.html">supernoova</a> on plahvatav <a href="https://et.wikipedia.org/wiki/Valge_k%C3%A4%C3%A4bus" target="_blank" rel="noopener">valge kääbus</a>. Kõik need plahvatused on maksimumis peaaegu ühesuguse heledusega, nii et supernoova sobib
       kauguse mõõtmiseks ja on nähtav ka väga kaugelt. Kõigepealt leia 3. osa galaktikate abil, kui hele on supernoova tegelikult, ja seejärel mõõda
       kaugete supernoovade abil <a href="https://et.wikipedia.org/wiki/Hubble'i_konstant" target="_blank" rel="noopener">Hubble'i konstant</a>. Nii kaugel ei sega galaktikate <a class="en" href="https://en.wikipedia.org/wiki/Peculiar_velocity" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">pekuliaarsed kiirused</a> enam palju.</p>
+    <p class="lede" data-l="en">A type Ia <a href="supernoovad.html">supernova</a> is an exploding <a href="https://en.wikipedia.org/wiki/White_dwarf" target="_blank" rel="noopener">white dwarf</a>. All these explosions are nearly equally bright at their peak, so a supernova is suited
+      to measuring distances and can be seen from very far away. First find out with the galaxies of part 3 how bright a supernova really is, and then measure
+      the <a href="https://en.wikipedia.org/wiki/Hubble%27s_law" target="_blank" rel="noopener">Hubble constant</a> with distant supernovae. That far away, the <a href="https://en.wikipedia.org/wiki/Peculiar_velocity" target="_blank" rel="noopener">peculiar velocities</a> of the galaxies no longer get much in the way.</p>
     <p class="fit" id="snInfo"></p>
 
-    <ol class="steps">
+    <ol class="steps" data-l="et">
       <li><span>Vali supernoovade heledus ja vajuta „Kasuta heledust“: galaktikate kaugused tulevad 3. osast. <a class="go" href="#supernovae" data-go="supernovae">Supernoovad →</a></span></li>
       <li><span>Vaata tabelist, kui heledad on supernoovad 3. osa galaktikates. <a class="go" href="#supernovae" data-go="supernovae">Supernoovad →</a></span></li>
       <li><span>Loe kaugete supernoovade kiiruse ja kauguse seosest Hubble'i konstant ja võrdle seda 3. osa ja Plancki satelliidi väärtusega. <a class="go" href="#snHubble" data-go="snHubble">Hubble'i seadus →</a></span></li>
+    </ol>
+    <ol class="steps" data-l="en">
+      <li><span>Choose the supernova luminosity and press “Use the luminosity”: the distances of the galaxies come from part 3. <a class="go" href="#supernovae" data-go="supernovae">Supernovae →</a></span></li>
+      <li><span>See in the table how bright the supernovae in the galaxies of part 3 are. <a class="go" href="#supernovae" data-go="supernovae">Supernovae →</a></span></li>
+      <li><span>Read off the Hubble constant from the velocity and distance of the distant supernovae, and compare it with the value of part 3 and that of the Planck satellite. <a class="go" href="#snHubble" data-go="snHubble">Hubble law →</a></span></li>
     </ol>
     </div>
 
@@ -893,59 +984,65 @@ footer a { color: inherit; }
     <section class="card" id="snCalCard">
       <div class="card-head">
         <div>
-          <h2>Supernoovade heledus</h2>
-          <p class="hint">Igas 3. osa galaktikas on plahvatanud vähemalt üks Ia tüüpi supernoova; kui neid on mitu, kasutatakse nende keskmist. Kui galaktika kaugus on teada, saab supernoova näivast heledusest tema tegeliku heleduse.</p>
+          <h2><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova luminosity</span></h2>
+          <p class="hint" data-l="et">Igas 3. osa galaktikas on plahvatanud vähemalt üks Ia tüüpi supernoova; kui neid on mitu, kasutatakse nende keskmist. Kui galaktika kaugus on teada, saab supernoova näivast heledusest tema tegeliku heleduse.</p>
+          <p class="hint" data-l="en">In each galaxy of part 3 at least one type Ia supernova has exploded; when there are several, their mean is used. Once the distance of the galaxy is known, the apparent brightness of the supernova gives its true luminosity.</p>
         </div>
       </div>
-      <p class="hint calib-prompt" id="snPrompt">Vali supernoovade heledus ja vajuta „Kasuta heledust“, et võtta galaktikate kaugused 3. osast ja leida Hubble'i konstant kaugete supernoovade abil.</p>
+      <p class="hint calib-prompt" id="snPrompt"><span data-l="et">Vali supernoovade heledus ja vajuta „Kasuta heledust“, et võtta galaktikate kaugused 3. osast ja leida Hubble'i konstant kaugete supernoovade abil.</span><span data-l="en">Choose the supernova luminosity and press “Use the luminosity” to take the distances of the galaxies from part 3 and find the Hubble constant with distant supernovae.</span></p>
       <div class="calib-row" id="snRow">
-        <select id="snCal" class="sn-menu" aria-label="Supernoovade heledus">
-          <option value="own">Minu M_B (3. osa galaktikatest)</option>
-          <option value="pub">SH0ES: M_B = −19,253</option>
+        <select id="snCal" class="sn-menu" aria-label="Supernoovade heledus" data-en-aria-label="Supernova luminosity">
+          <option value="own" data-en-text="My M_B (from the galaxies of part 3)">Minu M_B (3. osa galaktikatest)</option>
+          <option value="pub" data-en-text="SH0ES: M_B = −19.253">SH0ES: M_B = −19,253</option>
         </select>
-        <button type="button" class="primary sn-apply" id="snApply">Kasuta heledust</button>
+        <button type="button" class="primary sn-apply" id="snApply"><span data-l="et">Kasuta heledust</span><span data-l="en">Use the luminosity</span></button>
       </div>
       <div id="mb"></div>
-      <p class="hint table-note">m<sub>B</sub> on supernoova näiv tähesuurus maksimumis, standardiseeritud nõrgenemise kiiruse ja värvi järgi, μ galaktika kauguse moodul 3. osast ja M<sub>B</sub> = m<sub>B</sub> − μ supernoova absoluutne tähesuurus.
+      <p class="hint table-note" data-l="et">m<sub>B</sub> on supernoova näiv tähesuurus maksimumis, standardiseeritud nõrgenemise kiiruse ja värvi järgi, μ galaktika kauguse moodul 3. osast ja M<sub>B</sub> = m<sub>B</sub> − μ supernoova absoluutne tähesuurus.
         Kasutatakse samu galaktikaid, mis on valitud 3. osa sobitusse. <a class="more" href="supernoovad.html#standardiseerimine">Loe lähemalt →</a></p>
+      <p class="hint table-note" data-l="en">m<sub>B</sub> is the apparent magnitude of the supernova at its peak, standardised by its rate of fading and its colour, μ the distance modulus of the galaxy from part 3, and M<sub>B</sub> = m<sub>B</sub> − μ the absolute magnitude of the supernova.
+        The same galaxies are used as were chosen for the fit in part 3. <a class="more" href="supernoovad.html#standardiseerimine">Read more →</a></p>
       <div class="table-wrap">
         <table class="data-table">
-          <thead><tr><th title="Galaktika nimi">Galaktika</th><th title="Galaktikas plahvatanud Ia tüüpi supernoova">Supernoova</th><th title="Supernoova näiv tähesuurus B-ribas heleduse maksimumis">m<sub>B</sub> (mag)</th><th title="Galaktika kauguse moodul 3. osast">μ (mag)</th><th title="Supernoova absoluutne tähesuurus M_B = m_B − μ">M<sub>B</sub> (mag)</th></tr></thead>
+          <thead><tr><th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas plahvatanud Ia tüüpi supernoova" data-en-title="Type Ia supernova that exploded in the galaxy"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th><th title="Supernoova näiv tähesuurus B-ribas heleduse maksimumis" data-en-title="Apparent magnitude of the supernova in the B band at peak brightness">m<sub>B</sub> (mag)</th><th title="Galaktika kauguse moodul 3. osast" data-en-title="Distance modulus of the galaxy from part 3">μ (mag)</th><th title="Supernoova absoluutne tähesuurus M_B = m_B − μ" data-en-title="Absolute magnitude of the supernova M_B = m_B − μ">M<sub>B</sub> (mag)</th></tr></thead>
           <tbody id="snBody"></tbody>
         </table>
       </div>
       <div class="pager" id="snPager">
         <span id="snPageInfo"></span>
-        <button type="button" data-page="first" aria-label="Esimene lehekülg">« Esimene</button>
-        <button type="button" data-page="prev" aria-label="Eelmine lehekülg">‹ Eelmine</button>
-        <button type="button" data-page="next" aria-label="Järgmine lehekülg">Järgmine ›</button>
-        <button type="button" data-page="last" aria-label="Viimane lehekülg">Viimane »</button>
+        <button type="button" data-page="first" aria-label="Esimene lehekülg" data-en-aria-label="First page"><span data-l="et">« Esimene</span><span data-l="en">« First</span></button>
+        <button type="button" data-page="prev" aria-label="Eelmine lehekülg" data-en-aria-label="Previous page"><span data-l="et">‹ Eelmine</span><span data-l="en">‹ Previous</span></button>
+        <button type="button" data-page="next" aria-label="Järgmine lehekülg" data-en-aria-label="Next page"><span data-l="et">Järgmine ›</span><span data-l="en">Next ›</span></button>
+        <button type="button" data-page="last" aria-label="Viimane lehekülg" data-en-aria-label="Last page"><span data-l="et">Viimane »</span><span data-l="en">Last »</span></button>
       </div>
     </section>
-    <section class="card" id="snCalEmpty"><p class="empty">Supernoovade heledus ilmub, kui 3. osas on galaktikate kaugused leitud.</p></section>
+    <section class="card" id="snCalEmpty"><p class="empty"><span data-l="et">Supernoovade heledus ilmub, kui 3. osas on galaktikate kaugused leitud.</span><span data-l="en">The supernova luminosity appears once the distances of the galaxies have been found in part 3.</span></p></section>
     </div>
 
     <div role="tabpanel" class="pane fit compact" id="paneSnHub" aria-labelledby="tabSnHub" hidden>
     <section class="card fill" id="snHubCard">
       <div class="card-head">
         <div>
-          <h2>Kaugete supernoovade kiirus ja kaugus</h2>
-          <p class="hint">Iga punkt on üks supernoova kuni umbes 250 Mpc kaugusel. Kaugus tuleb näivast tähesuurusest ja ülal leitud M<sub>B</sub>-st. Kiirus on v = cz väikese parandusega
+          <h2><span data-l="et">Kaugete supernoovade kiirus ja kaugus</span><span data-l="en">Velocity and distance of distant supernovae</span></h2>
+          <p class="hint" data-l="et">Iga punkt on üks supernoova kuni umbes 250 Mpc kaugusel. Kaugus tuleb näivast tähesuurusest ja ülal leitud M<sub>B</sub>-st. Kiirus on v = cz väikese parandusega
             (1 + 0,775 z): valgus on nii kaugelt tulnud kaua ja <a href="hubble.html#kaugemale">Universum on selle aja jooksul paisunud</a>.
             Joon: v = H<sub>0</sub> · d. <a class="more" href="supernoovad.html#hajuvus">Loe lähemalt →</a></p>
+          <p class="hint" data-l="en">Each point is a supernova up to about 250 Mpc away. The distance comes from the apparent magnitude and the M<sub>B</sub> found above. The velocity is v = cz with a small correction
+            (1 + 0.775 z): light from that far away has been travelling for a long time, and <a href="hubble.html#kaugemale">the Universe has expanded meanwhile</a>.
+            Line: v = H<sub>0</sub> · d. <a class="more" href="supernoovad.html#hajuvus">Read more →</a></p>
         </div>
       </div>
       <div class="plot-side">
         <div class="plot" id="snHub"></div>
         <div class="side">
           <div class="side-choice">
-            <label for="snCalHub">Supernoovade heledus</label>
+            <label for="snCalHub"><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova luminosity</span></label>
             <div class="calib-row">
               <select id="snCalHub" class="sn-menu">
-                <option value="own">Minu M_B (3. osa galaktikatest)</option>
-                <option value="pub">SH0ES: M_B = −19,253</option>
+                <option value="own" data-en-text="My M_B (from the galaxies of part 3)">Minu M_B (3. osa galaktikatest)</option>
+                <option value="pub" data-en-text="SH0ES: M_B = −19.253">SH0ES: M_B = −19,253</option>
               </select>
-              <button type="button" class="primary sn-apply">Kasuta heledust</button>
+              <button type="button" class="primary sn-apply"><span data-l="et">Kasuta heledust</span><span data-l="en">Use the luminosity</span></button>
             </div>
             <p class="hint" id="snCalHubInfo"></p>
           </div>
@@ -953,17 +1050,17 @@ footer a { color: inherit; }
         </div>
       </div>
     </section>
-    <section class="card" id="snHubEmpty"><p class="empty">Kaugete supernoovade Hubble'i seadus ilmub, kui vahelehel „Supernoovad“ on heledus rakendatud.</p></section>
+    <section class="card" id="snHubEmpty"><p class="empty"><span data-l="et">Kaugete supernoovade Hubble'i seadus ilmub, kui vahelehel „Supernoovad“ on heledus rakendatud.</span><span data-l="en">The Hubble law of the distant supernovae appears once a luminosity has been applied in the “Supernovae” tab.</span></p></section>
     </div>
   </div>
 
   <div class="home" id="homeEnd">
   <div class="reset">
-    <button type="button" id="resetAll">Kustuta kõik salvestatud andmed</button>
-    <span>Eemaldab sellest brauserist salvestatud parvede kaugused ja seosesse lisatud väljatsefeiidid.</span>
+    <button type="button" id="resetAll"><span data-l="et">Kustuta kõik salvestatud andmed</span><span data-l="en">Delete all saved data</span></button>
+    <span data-l="et">Eemaldab sellest brauserist salvestatud parvede kaugused ja seosesse lisatud väljatsefeiidid.</span><span data-l="en">Removes the cluster distances saved in this browser and the field Cepheids added to the relation.</span>
   </div>
 
-  <footer>
+  <footer data-l="et">
     Andmed: ESA <i>Gaia</i> DR3 (Gaia Collaboration 2023), päritud
     <a href="https://dc.g-vo.org/tableinfo/gaia.dr3lite" target="_blank" rel="noopener">GAVO Data Centeri</a> (väikesed väljad) ja
     VizieR'i <a href="https://vizier.cds.unistra.fr/viz-bin/VizieR?-source=I/355/gaiadr3" target="_blank" rel="noopener">I/355/gaiadr3</a> (suured väljad) TAP-teenustest
@@ -982,11 +1079,36 @@ footer a { color: inherit; }
     Supernoovade punanihked z<sub>HD</sub> ja standardiseeritud maksimumheledused: Pantheon+ (Scolnic jt 2022; Brout jt 2022).
     Võrdluseks H<sub>0</sub> = 67,4 km/s/Mpc: Planck Collaboration (2020).
   </footer>
+  <footer data-l="en">
+    Data: ESA <i>Gaia</i> DR3 (Gaia Collaboration 2023), queried from the TAP services of the
+    <a href="https://dc.g-vo.org/tableinfo/gaia.dr3lite" target="_blank" rel="noopener">GAVO Data Center</a> (small fields) and
+    VizieR <a href="https://vizier.cds.unistra.fr/viz-bin/VizieR?-source=I/355/gaiadr3" target="_blank" rel="noopener">I/355/gaiadr3</a> (large fields)
+    (fallbacks:
+    <a href="https://gaia.ari.uni-heidelberg.de/" target="_blank" rel="noopener">ARI Heidelberg Gaia data centre</a>,
+    <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">ESA Gaia archive</a>
+    and <a href="https://gaia.aip.de/" target="_blank" rel="noopener">AIP Potsdam</a>).
+    Names are resolved with SIMBAD and Sesame (CDS, Strasbourg), and the sky images are the DSS2 colour survey (CDS hips2fits). The parallax zero point of −0.017 mas is from Lindegren et al. (2021);
+    a systematic error of ~0.010 mas is added, because parallax errors correlated over angle do not shrink with averaging
+    (Lindegren et al. 2021; Maíz Apellániz et al. 2021). The HR diagram in absolute magnitudes does not account for extinction.
+    The Cepheids and their clusters are from Cruz Reyes &amp; Anderson (2023; membership probability ≥ 0.5, fundamental-mode Cepheids only);
+    TW Nor and CD Cyg are added from a match of the Gaia DR3 Cepheids with the clusters of Hunt &amp; Reffert (2023). W<sub>H</sub> of the field Cepheids and of CD Cyg: Riess et al. (2021);
+    the periods of the Cepheids from the Gaia DR3 table vari_cepheid (Ripepi et al. 2023).
+    W<sub>H</sub> of the cluster Cepheids and the published relation: Cruz Reyes &amp; Anderson (2023). Saved distances are kept only in this browser.
+    Cepheids of the galaxies (period, F160W, V − I and their errors): Riess et al. (2022, SH0ES); W<sub>H</sub> = F160W − 0.386 (V − I).
+    Redshifts z<sub>HD</sub> and standardised peak magnitudes of the supernovae: Pantheon+ (Scolnic et al. 2022; Brout et al. 2022).
+    For comparison H<sub>0</sub> = 67.4 km/s/Mpc: Planck Collaboration (2020).
+  </footer>
   </div>
 </main>
 
 <script>
 "use strict";
+
+// A text drawn by the script, in the language of the page, and both languages as spans for markup the
+// script builds (the CSS shows one). LOCALE formats the numbers: a decimal comma in Estonian, a point in English.
+const L = (et, en) => (document.documentElement.lang === "en" ? en : et);
+const sp = (et, en) => `<span data-l="et">${et}</span><span data-l="en">${en}</span>`;
+const LOCALE = () => L("et-EE", "en-GB");
 
 // Gaia DR3 services queried from the browser. "Automaatne" tries them in this order, except that
 // large fields (async jobs) start with VizieR (see queryGaia). GAVO is queried directly.
@@ -1020,7 +1142,7 @@ const GAIA_SOURCES = [
     cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe" },
   },
   {
-    name: "ESA Gaia arhiiv",
+    name: "ESA Gaia arhiiv", nameEn: "ESA Gaia archive",
     url: TAP_PROXY + "/esa/sync",          // no async: see above
     table: "gaiadr3.gaia_source",
     cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe" },
@@ -1213,7 +1335,7 @@ const S = {
 
 function checkCoords(ra, dec) {
   if (!(ra >= 0 && ra < 360 && dec >= -90 && dec <= 90)) {
-    throw new Error("Koordinaadid on lubatud vahemikust väljas: α peab olema 0–360°, δ −90…+90°.");
+    throw new Error(L("Koordinaadid on lubatud vahemikust väljas: α peab olema 0–360°, δ −90…+90°.", "The coordinates are out of range: α must be 0–360°, δ −90…+90°."));
   }
   return { ra, dec };
 }
@@ -1256,8 +1378,8 @@ async function fetchText(url, ms, opts = {}) {
     return { ok: r.ok, status: r.status, url: r.url, text: await r.text() };
   } catch (e) {
     if (stopped()) throw new Error("cancelled");
-    if (e.name === "AbortError") throw new Error("päring aegus");
-    throw new Error("võrguviga või blokeeritud päring");
+    if (e.name === "AbortError") throw new Error(L("päring aegus", "the request timed out"));
+    throw new Error(L("võrguviga või blokeeritud päring", "network error or blocked request"));
   } finally {
     clearTimeout(timer);
   }
@@ -1301,7 +1423,7 @@ async function simbadId(name) {
   const td = [...r.text.matchAll(/<TD>([^<]*)<\/TD>/g)].map((m) => m[1].trim());
   if (td.length < 3 || !isFinite(parseFloat(td[1]))) {
     if (/name="Error"/.test(r.text)) return null;    // a definitive "not found"
-    throw new Error("ootamatu SIMBADi vastus");
+    throw new Error(L("ootamatu SIMBADi vastus", "unexpected answer from SIMBAD"));
   }
   return { oname: td[0], ra: parseFloat(td[1]), dec: parseFloat(td[2]), otype: td[3] };
 }
@@ -1313,10 +1435,10 @@ function resolveName(name) {
     let failed = 0;
     for (const f of resolvers) {
       f().then(
-        (res) => res ? resolve(res) : reject(new Error(`Nime „${name}“ ei leitud. Kontrolli kirjapilti või sisesta koordinaadid.`)),
+        (res) => res ? resolve(res) : reject(new Error(L(`Nime „${name}“ ei leitud. Kontrolli kirjapilti või sisesta koordinaadid.`, `The name “${name}” was not found. Check the spelling or enter coordinates.`))),
         () => {
           if (++failed === resolvers.length) {
-            reject(new Error("Nimelahendajad (SIMBAD, Sesame) ei ole praegu kättesaadavad. Sisesta selle asemel koordinaadid, nt 132.85 11.81."));
+            reject(new Error(L("Nimelahendajad (SIMBAD, Sesame) ei ole praegu kättesaadavad. Sisesta selle asemel koordinaadid, nt 132.85 11.81.", "The name resolvers (SIMBAD, Sesame) are not available at the moment. Enter coordinates instead, e.g. 132.85 11.81.")));
           }
         });
     }
@@ -1368,13 +1490,13 @@ async function querySync(s, params) {
 async function queryAsync(s, params, onWait) {
   const created = await fetchText(s.async, 30000, { method: "POST", body: new URLSearchParams(params) });
   const job = created.url;                            // fetch follows the 303 to the job URL
-  if (!created.ok || job.replace(/\/$/, "") === s.async) throw new Error("taustapäringu loomine ebaõnnestus");
+  if (!created.ok || job.replace(/\/$/, "") === s.async) throw new Error(L("taustapäringu loomine ebaõnnestus", "creating the background job failed"));
   try {
     await fetchText(job + "/phase", 30000, { method: "POST", body: new URLSearchParams({ PHASE: "RUN" }) });
     const t0 = performance.now();
     for (;;) {
       const elapsed = (performance.now() - t0) / 1000;
-      if (elapsed > ASYNC_LIMIT) throw new Error(`päring ei lõppenud ${ASYNC_LIMIT / 60} minuti jooksul`);
+      if (elapsed > ASYNC_LIMIT) throw new Error(L(`päring ei lõppenud ${ASYNC_LIMIT / 60} minuti jooksul`, `the query did not finish within ${ASYNC_LIMIT / 60} minutes`));
       if (onWait && onWait(elapsed) === false) throw new Error("cancelled");
       const phase = (await fetchText(job + "/phase", 20000)).text.trim();
       if (phase === "COMPLETED") break;
@@ -1413,7 +1535,7 @@ async function queryGaia(c, radius, gmax, onWait) {
       failures.push(`${s.name}: ${e.message}`);
     }
   }
-  throw new Error("Gaia päring ebaõnnestus — " + failures.join("; "));
+  throw new Error(L("Gaia päring ebaõnnestus — ", "The Gaia query failed — ") + failures.join("; "));
 }
 
 // Columns arrive in FIELDS order (CSV of plain numbers; the header row is skipped).
@@ -1425,7 +1547,7 @@ function parseCSV(text) {
   const num = (s) => (s === "" || s === undefined ? null : +s);
   for (let i = 0; i < n; i++) {
     const f = lines[i + 1].split(",");
-    if (f.length !== FIELDS.length) throw new Error("Ootamatu vastuse vorming.");
+    if (f.length !== FIELDS.length) throw new Error(L("Ootamatu vastuse vorming.", "Unexpected format of the answer."));
     d.src[i] = f[0].replace(/"/g, "");
     for (let j = 1; j < FIELDS.length; j++) d[FIELDS[j]][i] = num(f[j]);
   }
@@ -1478,9 +1600,11 @@ function computeStats(idx) {
 
 /* ---------- Formatting ---------- */
 
+// English formats negative numbers with a hyphen, Estonian with a minus sign; both get the minus sign.
+const minus = (s) => s.replace(/-/g, "−");
 const NF = {};
-const fmtN = (v, dp) => (NF[dp] ??= new Intl.NumberFormat("et-EE", { minimumFractionDigits: dp, maximumFractionDigits: dp })).format(v);
-const fmt = (v) => v.toLocaleString("et-EE", { maximumFractionDigits: 3 });
+const fmtN = (v, dp) => minus((NF[LOCALE() + dp] ??= new Intl.NumberFormat(LOCALE(), { minimumFractionDigits: dp, maximumFractionDigits: dp })).format(v));
+const fmt = (v) => minus(v.toLocaleString(LOCALE(), { maximumFractionDigits: 3 }));
 
 // value ± error, error rounded to 2 significant figures, value to the same decimal place
 function valErr(v, e) {
@@ -1493,7 +1617,7 @@ function valErr(v, e) {
 function rounded(v, e) {
   const place = Math.floor(Math.log10(e)) - 1;
   if (place <= 0) return fmtN(v, -place);
-  return (BigInt(Math.round(v / 10 ** place)) * 10n ** BigInt(place)).toLocaleString("et-EE");
+  return minus((BigInt(Math.round(v / 10 ** place)) * 10n ** BigInt(place)).toLocaleString(LOCALE()));
 }
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1530,7 +1654,7 @@ function baseLayout(extra = {}) {
     font: { family: getComputedStyle(document.body).fontFamily, size: 12, color: css("--text-2") },
     margin: { l: 58, r: 12, t: 8, b: 46 },
     hovermode: "closest",
-    separators: ", ",
+    separators: L(", ", ".,"),
     showlegend: false,
     hoverlabel: { bgcolor: css("--surface"), bordercolor: css("--border"), font: { color: css("--text-1") } },
     uirevision: S.rev,
@@ -1576,7 +1700,7 @@ function cepheidTrace(x, y, hover) {
   const star = { symbol: "hexagram", size: 12, color: css("--cep"), line: { width: 1, color: css("--surface") } };
   return {
     type: "scattergl", mode: "markers", x, y,
-    ...(hover ? { text: S.ceph.map((c) => `Tsefeiid ${c.cep}<br>P = ${fmtN(c.P, 3)} ööp`), hovertemplate: "%{text}<extra></extra>" } : { hoverinfo: "none" }),
+    ...(hover ? { text: S.ceph.map((c) => `${L("Tsefeiid", "Cepheid")} ${c.cep}<br>P = ${fmtN(c.P, 3)} ${L("ööp", "d")}`), hovertemplate: "%{text}<extra></extra>" } : { hoverinfo: "none" }),
     marker: star, selected: { marker: star }, unselected: { marker: star },
   };
 }
@@ -1642,7 +1766,7 @@ function fieldPicture(ra0, dec0, r) {
     NAXIS: 2, NAXIS1: n, NAXIS2: n, CTYPE1: "RA---TAN", CTYPE2: "DEC--TAN",
     CRVAL1: ra0, CRVAL2: dec0, CRPIX1: n / 2 + 0.5, CRPIX2: n / 2 + 0.5, CDELT1: -s, CDELT2: s,
   };
-  return `<img src="${esc(hips2fits(wcs))}" alt="DSS2 värviline ülesvõte päringu alast">
+  return `<img src="${esc(hips2fits(wcs))}" alt="${L("DSS2 värviline ülesvõte päringu alast", "DSS2 colour image of the query field")}">
     <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="${(50 / SKY_VIEW).toFixed(3)}" vector-effect="non-scaling-stroke"/></svg>`;
 }
 
@@ -1676,8 +1800,8 @@ function drawSky() {
   return Plotly.react("sky", traces, baseLayout({
     dragmode: "zoom",
     // with the image, δ has a fixed range and the plot widens the α range to the shape of the plot
-    xaxis: axis("Otsetõus α (°)", { autorange: "reversed", scaleanchor: "y", scaleratio: cosd, showgrid: !image }),
-    yaxis: axis("Kääne δ (°)", image ? { range: [dec0 - SKY_VIEW * r, dec0 + SKY_VIEW * r], showgrid: false } : {}),
+    xaxis: axis(L("Otsetõus α (°)", "Right ascension α (°)"), { autorange: "reversed", scaleanchor: "y", scaleratio: cosd, showgrid: !image }),
+    yaxis: axis(L("Kääne δ (°)", "Declination δ (°)"), image ? { range: [dec0 - SKY_VIEW * r, dec0 + SKY_VIEW * r], showgrid: false } : {}),
     annotations: nameTag(),
     images: image ? [skyImage(ra0, dec0, r, cosd)] : [],
     shapes: [{
@@ -1698,8 +1822,8 @@ function drawPM() {
   traces.push(crosshairTrace("pm"));
   return Plotly.react("pm", traces, baseLayout({
     dragmode: "pan",            // pan first to find the clump; the lasso is chosen from the toolbar
-    xaxis: axis("μ<sub>α*</sub> (mas/a)", { range: xr }),
-    yaxis: axis("μ<sub>δ</sub> (mas/a)", { range: yr, scaleanchor: "x", scaleratio: 1 }),
+    xaxis: axis(`μ<sub>α*</sub> (${L("mas/a", "mas/yr")})`, { range: xr }),
+    yaxis: axis(`μ<sub>δ</sub> (${L("mas/a", "mas/yr")})`, { range: yr, scaleanchor: "x", scaleratio: 1 }),
   }), CONFIG);
 }
 
@@ -1731,7 +1855,7 @@ function drawCMD() {
     {
       type: "scattergl", mode: "markers",
       x: sel.map((i) => d.bprp[i]), y: sel.map((i) => yAll[i]),
-      text: sel.map((i) => S.hover[i] + (out.has(i) ? "<br>parallaksi kõrvalekalle" : "")), hovertemplate: "%{text}<extra></extra>",
+      text: sel.map((i) => S.hover[i] + (out.has(i) ? L("<br>parallaksi kõrvalekalle", "<br>parallax outlier") : "")), hovertemplate: "%{text}<extra></extra>",
       // parallax outliers (1.5 IQR) as crosses in the same colour
       marker: {
         size: sel.map((i) => (out.has(i) ? 8 : 5)), symbol: sel.map((i) => (out.has(i) ? "x" : "circle")),
@@ -1760,7 +1884,7 @@ function drawHist() {
   drawPlxStats();
   if (!st) {
     S.histBase = null;
-    emptyPlot("hist", S.idx && S.idx.length === 0 ? "Praegune valik ei sisalda ühtegi tähte." : "Märgi tähed lassoga omaliikumiste joonisel.");
+    emptyPlot("hist", S.idx && S.idx.length === 0 ? L("Praegune valik ei sisalda ühtegi tähte.", "The current selection contains no stars.") : L("Märgi tähed lassoga omaliikumiste joonisel.", "Mark stars with the lasso in the proper motion plot."));
     return;
   }
   const d = S.d;
@@ -1785,7 +1909,7 @@ function drawHist() {
     const every = d.plx.map((p) => p + st.off);
     field = every.filter((p) => p >= cutLo && p <= cutHi);
     const nHi = every.filter((p) => p > cutHi).length, nLo = every.length - field.length - nHi;
-    cutNote = [nHi && `${fmt(nHi)} tähte, kus p > ${fmtN(cutHi, 2)} mas`, nLo && `${fmt(nLo)} tähte, kus p < ${fmtN(cutLo, 2)} mas`]
+    cutNote = [nHi && L(`${fmt(nHi)} tähte, kus p > ${fmtN(cutHi, 2)} mas`, `${fmt(nHi)} stars with p > ${fmtN(cutHi, 2)} mas`), nLo && L(`${fmt(nLo)} tähte, kus p < ${fmtN(cutLo, 2)} mas`, `${fmt(nLo)} stars with p < ${fmtN(cutLo, 2)} mas`)]
       .filter(Boolean).join("; ");
     let flo = lo, fhi = hi;
     for (const p of field) { if (p < flo) flo = p; if (p > fhi) fhi = p; }
@@ -1834,8 +1958,8 @@ function drawHist() {
     dragmode: "zoom",
     bargap: 0,
     barmode: "overlay",
-    xaxis: axis(cutNote ? `Parallaks (mas) · kärbitud: ${cutNote}` : "Parallaks (mas)"),
-    yaxis: axis("Tähti"),
+    xaxis: axis(cutNote ? `${L("Parallaks (mas) · kärbitud", "Parallax (mas) · cut")}: ${cutNote}` : L("Parallaks (mas)", "Parallax (mas)")),
+    yaxis: axis(L("Tähti", "Stars")),
     shapes, annotations,
   }), CONFIG).then(updateHistStar);
 }
@@ -1880,37 +2004,39 @@ function updateHistStar() {
 // the statistical error of the mean
 function drawPlxStats() {
   const st = S.stats;
-  if (!st) { $("plxStats").innerHTML = `<p class="empty">Märgi parve tähed lassoga omaliikumiste joonisel (vaheleht „Joonised“).</p>`; return; }
+  if (!st) { $("plxStats").innerHTML = `<p class="empty">${L("Märgi parve tähed lassoga omaliikumiste joonisel (vaheleht „Joonised“).", "Mark the stars of the cluster with the lasso in the proper motion plot (the “Plots” tab).")}</p>`; return; }
   const [pV, pE] = valErr(st.wmean, st.etot);
   const typ = percentile(st.use.map((i) => S.d.eplx[i]), 0.5);
   $("plxStats").innerHTML = `<div class="tiles four">
-      <div class="tile"><div class="label">Keskmine parallaks ⟨p⟩</div><div class="value">${pV} <small>± ${pE}</small></div><div class="unit">mas</div></div>
-      <div class="tile"><div class="label">Tähti arvutuses</div><div class="value">${fmt(st.n)}</div><div class="unit">tähte</div></div>
-      <div class="tile"><div class="label">Ühe tähe tüüpiline viga σ<sub>p</sub></div><div class="value">${fmtN(typ, typ < 0.1 ? 3 : 2)}</div><div class="unit">mas (mediaan)</div></div>
-      <div class="tile"><div class="label">Keskmise statistiline viga 1/√Σw<sub>i</sub></div><div class="value">${valErr(st.estat, st.estat)[1]}</div><div class="unit">mas</div></div>
+      <div class="tile"><div class="label">${L("Keskmine parallaks", "Mean parallax")} ⟨p⟩</div><div class="value">${pV} <small>± ${pE}</small></div><div class="unit">mas</div></div>
+      <div class="tile"><div class="label">${L("Tähti arvutuses", "Stars in the calculation")}</div><div class="value">${fmt(st.n)}</div><div class="unit">${L("tähte", "stars")}</div></div>
+      <div class="tile"><div class="label">${L("Ühe tähe tüüpiline viga", "Typical error of one star")} σ<sub>p</sub></div><div class="value">${fmtN(typ, typ < 0.1 ? 3 : 2)}</div><div class="unit">${L("mas (mediaan)", "mas (median)")}</div></div>
+      <div class="tile"><div class="label">${L("Keskmise statistiline viga", "Statistical error of the mean")} 1/√Σw<sub>i</sub></div><div class="value">${valErr(st.estat, st.estat)[1]}</div><div class="unit">mas</div></div>
     </div>
-    <p class="formula">Kaalutud keskmine ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, kaal w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, parallaksi nullpunkti parandusega +${fmtN(-ZP, 3)} mas.
-    Viga: statistiline 1/√Σw<sub>i</sub> = ${fmtN(st.estat, 4)} mas ja Gaia süsteemne ${fmtN(SYS, 3)} mas, liidetud ruutudena.</p>
-    <div class="calib-row"><button type="button" class="primary" id="calcDist"${S.distOn ? " disabled" : ""}>Arvuta kaugus</button>` +
-    (S.distOn ? `<span class="hint">Kaugus on allpool ja muutub koos valikuga.</span>` : "") + `</div>`;
+    <p class="formula">${L(`Kaalutud keskmine ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, kaal w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, parallaksi nullpunkti parandusega +${fmtN(-ZP, 3)} mas.
+    Viga: statistiline 1/√Σw<sub>i</sub> = ${fmtN(st.estat, 4)} mas ja Gaia süsteemne ${fmtN(SYS, 3)} mas, liidetud ruutudena.`,
+    `Weighted mean ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, weight w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, with the parallax zero-point correction of +${fmtN(-ZP, 3)} mas.
+    Error: statistical 1/√Σw<sub>i</sub> = ${fmtN(st.estat, 4)} mas and the Gaia systematic ${fmtN(SYS, 3)} mas, added in quadrature.`)}</p>
+    <div class="calib-row"><button type="button" class="primary" id="calcDist"${S.distOn ? " disabled" : ""}>${L("Arvuta kaugus", "Compute the distance")}</button>` +
+    (S.distOn ? `<span class="hint">${L("Kaugus on allpool ja muutub koos valikuga.", "The distance is below and changes with the selection.")}</span>` : "") + `</div>`;
 }
 
 function drawResults() {
   const el = $("results");
   const st = S.stats;
   $("download").disabled = !(S.idx && S.idx.length);
-  if (!S.d) { el.innerHTML = `<p class="empty">Andmeid pole laaditud.</p>`; return; }
-  const counts = `<p class="counts">Valitud tähti: <b>${fmt(S.idx ? S.idx.length : 0)}</b>` +
-    (S.removed.size ? ` (HR-diagrammil eemaldatud ${fmt(S.removed.size)})` : "") +
-    (st && st.outliers.size ? ` · Parallaksi kõrvalekaldeid: <b>${fmt(st.outliers.size)}</b>` : "") + ` · Kokku tähti: <b>${fmt(S.n)}</b></p>`;
-  if (!S.idx) { el.innerHTML = `${counts}<p class="empty">Ühtegi tähte pole veel valitud — märgi omaliikumiste joonisel parve kogum lassoga.</p>`; return; }
-  if (!st) { el.innerHTML = `${counts}<p class="empty">Valik on tühi — kõik tähed on HR-diagrammil eemaldatud.</p>`; return; }
-  if (!S.distOn) { el.innerHTML = `<p class="empty">Vajuta keskmise parallaksi all nuppu „Arvuta kaugus“.</p>`; return; }
+  if (!S.d) { el.innerHTML = `<p class="empty">${L("Andmeid pole laaditud.", "No data loaded.")}</p>`; return; }
+  const counts = `<p class="counts">${L("Valitud tähti", "Selected stars")}: <b>${fmt(S.idx ? S.idx.length : 0)}</b>` +
+    (S.removed.size ? ` (${L("HR-diagrammil eemaldatud", "removed in the HR diagram")} ${fmt(S.removed.size)})` : "") +
+    (st && st.outliers.size ? ` · ${L("Parallaksi kõrvalekaldeid", "Parallax outliers")}: <b>${fmt(st.outliers.size)}</b>` : "") + ` · ${L("Kokku tähti", "Stars in all")}: <b>${fmt(S.n)}</b></p>`;
+  if (!S.idx) { el.innerHTML = `${counts}<p class="empty">${L("Ühtegi tähte pole veel valitud — märgi omaliikumiste joonisel parve kogum lassoga.", "No stars selected yet — mark the clump of the cluster with the lasso in the proper motion plot.")}</p>`; return; }
+  if (!st) { el.innerHTML = `${counts}<p class="empty">${L("Valik on tühi — kõik tähed on HR-diagrammil eemaldatud.", "The selection is empty — all stars have been removed in the HR diagram.")}</p>`; return; }
+  if (!S.distOn) { el.innerHTML = `<p class="empty">${L("Vajuta keskmise parallaksi all nuppu „Arvuta kaugus“.", "Press the “Compute the distance” button below the mean parallax.")}</p>`; return; }
 
   const notes = [];
   let tiles;
   if (!(st.wmean > 0)) {
-    notes.push(`<div class="note error">Keskmine parallaks ei ole positiivne, seega kaugust leida ei saa. Vali puhtam parve tähtede kogum.</div>`);
+    notes.push(`<div class="note error">${L("Keskmine parallaks ei ole positiivne, seega kaugust leida ei saa. Vali puhtam parve tähtede kogum.", "The mean parallax is not positive, so no distance can be found. Choose a cleaner clump of cluster stars.")}</div>`);
     tiles = "";
   } else {
     const dpc = 1000 / st.wmean;
@@ -1920,27 +2046,29 @@ function drawResults() {
     const auV = rounded(dpc * PC_AU, epc * PC_AU);
     const kmV = rounded(dpc * PC_KM, epc * PC_KM);
     tiles = `<div class="tiles four">
-      <div class="tile"><div class="label">Kaugus</div><div class="value">${pcV} <small>± ${pcE}</small></div><div class="unit">parsekit</div></div>
-      <div class="tile"><div class="label">Kaugus</div><div class="value">${lyV} <small>± ${lyE}</small></div><div class="unit">valgusaastat</div></div>
-      <div class="tile"><div class="label">Kaugus</div><div class="value">${auV}</div><div class="unit">astronoomilist ühikut</div></div>
-      <div class="tile"><div class="label">Kaugus</div><div class="value">${kmV}</div><div class="unit">kilomeetrit</div></div>
+      <div class="tile"><div class="label">${L("Kaugus", "Distance")}</div><div class="value">${pcV} <small>± ${pcE}</small></div><div class="unit">${L("parsekit", "parsecs")}</div></div>
+      <div class="tile"><div class="label">${L("Kaugus", "Distance")}</div><div class="value">${lyV} <small>± ${lyE}</small></div><div class="unit">${L("valgusaastat", "light years")}</div></div>
+      <div class="tile"><div class="label">${L("Kaugus", "Distance")}</div><div class="value">${auV}</div><div class="unit">${L("astronoomilist ühikut", "astronomical units")}</div></div>
+      <div class="tile"><div class="label">${L("Kaugus", "Distance")}</div><div class="value">${kmV}</div><div class="unit">${L("kilomeetrit", "kilometres")}</div></div>
     </div>`;
-    if (st.etot / st.wmean > 0.1) notes.push(`<div class="note warn">Parallaksi suhteline viga on ${fmtN(100 * st.etot / st.wmean, 0)}%. Üle ~10% muutub 1/p nihkega ja asümmeetriliseks kauguse hinnanguks.</div>`);
+    if (st.etot / st.wmean > 0.1) notes.push(`<div class="note warn">${L(`Parallaksi suhteline viga on ${fmtN(100 * st.etot / st.wmean, 0)}%. Üle ~10% muutub 1/p nihkega ja asümmeetriliseks kauguse hinnanguks.`, `The relative error of the parallax is ${fmtN(100 * st.etot / st.wmean, 0)}%. Above ~10%, 1/p becomes a biased and asymmetric estimate of the distance.`)}</div>`);
   }
-  if (st.n < 10) notes.push(`<div class="note warn">Valitud on ainult ${st.n} ${st.n === 1 ? "täht" : "tähte"} — keskmine on ebakindel.</div>`);
-  if (st.redchi2 > 3 && st.n >= 10) notes.push(`<div class="note warn">Parallakside hajuvus on ${fmtN(Math.sqrt(st.redchi2), 1)}× suurem, kui antud vead ennustavad (χ²/vabadusaste = ${fmtN(st.redchi2, 1)}). Valikus on tõenäoliselt taustatähti — kitsenda omaliikumiste lassot.</div>`);
+  if (st.n < 10) notes.push(`<div class="note warn">${L(`Valitud on ainult ${st.n} ${st.n === 1 ? "täht" : "tähte"} — keskmine on ebakindel.`, `Only ${st.n} ${st.n === 1 ? "star is" : "stars are"} selected — the mean is uncertain.`)}</div>`);
+  if (st.redchi2 > 3 && st.n >= 10) notes.push(`<div class="note warn">${L(`Parallakside hajuvus on ${fmtN(Math.sqrt(st.redchi2), 1)}× suurem, kui antud vead ennustavad (χ²/vabadusaste = ${fmtN(st.redchi2, 1)}). Valikus on tõenäoliselt taustatähti — kitsenda omaliikumiste lassot.`,
+    `The scatter of the parallaxes is ${fmtN(Math.sqrt(st.redchi2), 1)}× larger than the given errors predict (χ²/degree of freedom = ${fmtN(st.redchi2, 1)}). The selection probably contains background stars — narrow the lasso in the proper motion plot.`)}</div>`);
 
   const cl = S.center && cepCluster(S.center);
   let save = "";
   if (cl && st.wmean > 0) {
     const old = S.stored[cl];
-    save = `<div class="save"><button type="button" class="primary" id="saveDist">${old ? "Uuenda" : "Salvesta"} parve ${esc(cl)} kaugus tsefeiidide jaoks</button>` +
-      (old ? `<span>Salvestatud: p = ${fmtN(old.plx, 4)} ± ${fmtN(old.e, 4)} mas (${fmt(old.n)} tähte)</span>` +
-        `<button type="button" data-go="cepCluster">Parvede tsefeiidid →</button>` : "") + `</div>`;
+    save = `<div class="save"><button type="button" class="primary" id="saveDist">${L(`${old ? "Uuenda" : "Salvesta"} parve ${esc(cl)} kaugus tsefeiidide jaoks`, `${old ? "Update" : "Save"} the distance of ${esc(cl)} for the Cepheids`)}</button>` +
+      (old ? `<span>${L("Salvestatud", "Saved")}: p = ${fmtN(old.plx, 4)} ± ${fmtN(old.e, 4)} mas (${fmt(old.n)} ${L("tähte", "stars")})</span>` +
+        `<button type="button" data-go="cepCluster">${L("Parvede tsefeiidid →", "Cepheids in clusters →")}</button>` : "") + `</div>`;
   }
   el.innerHTML = `${counts}${tiles}${notes.join("")}${save}
-    <p class="formula">d [pc] = 1000 / ⟨p⟩ [mas]. Keskmista kõigepealt parallaksid ja alles siis pööra ümber — 1/p keskmine on nihkega. <a class="more" href="hajusparved.html#keskmine">Miks? →</a>
-    1 pc = 3,2616 valgusaastat = 30 856 775 814 914 km = 206 265 aü.</p>`;
+    <p class="formula">d [pc] = 1000 / ⟨p⟩ [mas]. ${L(`Keskmista kõigepealt parallaksid ja alles siis pööra ümber — 1/p keskmine on nihkega. <a class="more" href="hajusparved.html#keskmine">Miks? →</a>
+    1 pc = 3,2616 valgusaastat = 30 856 775 814 914 km = 206 265 aü.`, `Average the parallaxes first and only then invert — the mean of 1/p is biased. <a class="more" href="hajusparved.html#keskmine">Why? →</a>
+    1 pc = 3.2616 light years = 30,856,775,814,914 km = 206,265 au.`)}</p>`;
 }
 
 /* ---------- Part 2: Cepheid period-luminosity relation ---------- */
@@ -1991,7 +2119,7 @@ function toggleField(name) {
 
 // remove everything this app has stored in the browser (all keys with the app prefix)
 function resetAll() {
-  if (!confirm("Kas kustutada kõik salvestatud parvede kaugused ja väljatsefeiidide valik?")) return;
+  if (!confirm(L("Kas kustutada kõik salvestatud parvede kaugused ja väljatsefeiidide valik?", "Delete all saved cluster distances and the choice of field Cepheids?"))) return;
   try {
     for (const k of Object.keys(localStorage)) if (k.startsWith("kauguste-redel:")) localStorage.removeItem(k);
   } catch { /* nothing stored */ }
@@ -2063,8 +2191,9 @@ function plFormula(f, sub, withErr) {
 function drawCepheids() {
   const clusters = new Set(CEPHEIDS.map((x) => x.cluster));
   const done = new Set(Object.keys(S.stored).filter((k) => clusters.has(k)));
-  $("cepCount").textContent = `${fmt(CEPHEIDS.length)} tsefeiidi ${fmt(clusters.size)} parves, kaugus salvestatud ${fmt(done.size)} parvel`;
-  $("fieldCount").textContent = `${fmt(FIELD_CEPHEIDS.length)} tsefeiidi, seoses ${fmt(S.fieldOn.size)}`;
+  $("cepCount").textContent = L(`${fmt(CEPHEIDS.length)} tsefeiidi ${fmt(clusters.size)} parves, kaugus salvestatud ${fmt(done.size)} parvel`,
+    `${fmt(CEPHEIDS.length)} Cepheids in ${fmt(clusters.size)} clusters, distance saved for ${fmt(done.size)} clusters`);
+  $("fieldCount").textContent = L(`${fmt(FIELD_CEPHEIDS.length)} tsefeiidi, seoses ${fmt(S.fieldOn.size)}`, `${fmt(FIELD_CEPHEIDS.length)} Cepheids, ${fmt(S.fieldOn.size)} in the relation`);
   const dash = `<td class="muted">—</td>`;
   const row = (x, s, p, cluster, act) => {
     const dist = s ? valErr(1000 / s.plx, (1000 * s.e) / (s.plx * s.plx)) : null;
@@ -2075,15 +2204,15 @@ function drawCepheids() {
   const byPeriod = (list) => [...list].sort((a, b) => a.P - b.P);
   const rows = byPeriod(CEPHEIDS).map((x) => {
     const s = S.stored[x.cluster];
-    const act = `<button type="button" data-measure="${esc(x.cluster)}">Mõõda</button>` +
-      (s ? `<button type="button" data-forget="${esc(x.cluster)}">Kustuta</button>` : "");
+    const act = `<button type="button" data-measure="${esc(x.cluster)}">${L("Mõõda", "Measure")}</button>` +
+      (s ? `<button type="button" data-forget="${esc(x.cluster)}">${L("Kustuta", "Delete")}</button>` : "");
     return row(x, s, cepheidPoint(x, s, false), `<td>${esc(x.cluster)}</td>`, act);
   });
   $("cepBody").innerHTML = rows.join("");
   $("fieldBody").innerHTML = byPeriod(FIELD_CEPHEIDS).map((x) => {
     const on = S.fieldOn.has(x.cep);
     const s = fieldPlx(x);
-    const act = `<button type="button" data-field="${esc(x.cep)}"${on ? "" : ' class="primary"'}>${on ? "Eemalda seosest" : "Lisa seosesse"}</button>`;
+    const act = `<button type="button" data-field="${esc(x.cep)}"${on ? "" : ' class="primary"'}>${on ? L("Eemalda seosest", "Remove from the relation") : L("Lisa seosesse", "Add to the relation")}</button>`;
     return row(x, s, on ? cepheidPoint(x, s, true) : null, "", act);
   }).join("");
   drawPL();
@@ -2094,9 +2223,9 @@ function drawPL() {
   const pts = cepheidPoints();
   const pub = PL_PUB;
   const sub = "H";
-  const pubText = `Avaldatud seos (${pub.ref}): ${plFormula(pub, sub, false)}.`;
+  const pubText = `${L("Avaldatud seos", "Published relation")} (${pub.ref}): ${plFormula(pub, sub, false)}.`;
   if (!pts.length) {
-    emptyPlot("pl", "Salvesta ülal vähemalt kahe parve kaugus.");
+    emptyPlot("pl", L("Salvesta ülal vähemalt kahe parve kaugus.", "Save the distances of at least two clusters above."));
     $("fit").innerHTML = pubText;
     return;
   }
@@ -2118,7 +2247,7 @@ function drawPL() {
     traces.push({
       type: "scatter", mode: "markers", x: q.map((p) => p.logP), y: q.map((p) => p.M),
       error_y: { type: "data", array: q.map((p) => p.eM), color: css("--field"), thickness: 1, width: 0 },
-      text: q.map((p) => `${p.cep} (${field ? "väljatsefeiid" : p.cluster})<br>P = ${fmtN(p.P, 3)} ööp<br>M<sub>${sub}</sub><sup>W</sup> = ${fmtN(p.M, 2)} ± ${fmtN(p.eM, 2)} mag`),
+      text: q.map((p) => `${p.cep} (${field ? L("väljatsefeiid", "field Cepheid") : p.cluster})<br>P = ${fmtN(p.P, 3)} ${L("ööp", "d")}<br>M<sub>${sub}</sub><sup>W</sup> = ${fmtN(p.M, 2)} ± ${fmtN(p.eM, 2)} mag`),
       hovertemplate: "%{text}<extra></extra>",
       customdata: field ? q.map((p) => p.cep) : undefined,
       marker: field ? { size: 9, symbol: "diamond-open", color: css("--accent"), line: { width: 1.5 } }
@@ -2127,15 +2256,16 @@ function drawPL() {
   }
   Plotly.react("pl", traces, baseLayout({
     dragmode: "zoom",
-    xaxis: axis("log P (P ööpäevades)", { range: [lo, hi] }),
+    xaxis: axis(L("log P (P ööpäevades)", "log P (P in days)"), { range: [lo, hi] }),
     yaxis: axis(`M<sub>${sub}</sub><sup>W</sup> (mag)`, { autorange: "reversed" }),
   }), CONFIG);
   onShiftClick("pl", toggleField);
   const nf = pts.filter((p) => p.field).length;
-  const n = `${fmt(pts.length)} ${pts.length === 1 ? "tsefeiid" : "tsefeiidi"}` + (nf ? `, neist ${fmt(nf)} väljatsefeiidi` : "");
-  const own = !fit ? `${n}. Sirge sobitamiseks on vaja vähemalt kahte tsefeiidi.`
-    : pts.length >= 3 ? `Sinu seos: <b>${plFormula(fit, sub, true)}</b> · ${n}.`
-    : `Sinu seos: <b>${plFormula(fit, sub, false)}</b> · ${n}; vigade hindamiseks on vaja vähemalt kolme tsefeiidi.`;
+  const n = L(`${fmt(pts.length)} ${pts.length === 1 ? "tsefeiid" : "tsefeiidi"}` + (nf ? `, neist ${fmt(nf)} väljatsefeiidi` : ""),
+    `${fmt(pts.length)} ${pts.length === 1 ? "Cepheid" : "Cepheids"}` + (nf ? `, ${fmt(nf)} of them field Cepheids` : ""));
+  const own = !fit ? `${n}. ${L("Sirge sobitamiseks on vaja vähemalt kahte tsefeiidi.", "Fitting a line needs at least two Cepheids.")}`
+    : pts.length >= 3 ? `${L("Sinu seos", "Your relation")}: <b>${plFormula(fit, sub, true)}</b> · ${n}.`
+    : `${L("Sinu seos", "Your relation")}: <b>${plFormula(fit, sub, false)}</b> · ${n}; ${L("vigade hindamiseks on vaja vähemalt kolme tsefeiidi.", "estimating the errors needs at least three Cepheids.")}`;
   $("fit").innerHTML = `${own}<br>${pubText}`;
 }
 
@@ -2191,28 +2321,29 @@ function drawHubble() {
   const [first, last] = pageRange("gal", GALAXIES.length);
   if (!used) {
     S.snUsed = null;
-    $("snInfo").textContent = "See osa avaneb, kui 3. osas on galaktikate kaugused leitud.";
+    $("snInfo").textContent = L("See osa avaneb, kui 3. osas on galaktikate kaugused leitud.", "This part opens once the distances of the galaxies have been found in part 3.");
   }
   if (ready && !used) {
     $("calibInfo").textContent = "";
     $("galBody").innerHTML = GALAXIES.slice(first, last).map((g) => `<tr><td>${esc(g.name)}</td><td>SN ${esc(g.sn)}</td><td>${fmt(g.c.length / 4)}</td>` +
       `<td class="muted">—</td><td class="muted">—</td><td>${fmtN(C_KMS * g.z, 0)}</td><td class="muted">—</td>` +
-      `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} sobitusse"></td></tr>`).join("");
+      `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} ${L("sobitusse", "in the fit")}"></td></tr>`).join("");
     return;
   }
   if (!ready) {
     S.calibUsed = null;
     S.calib = "own";
     syncMenus("calib-menu", "own");
-    $("calibInfo").innerHTML = `Hubble'i seaduse jaoks on vaja sinu enda perioodi-heleduse seost. Salvesta 2. osas vähemalt kahe parve kaugus. Väljatsefeiidid ainult täiendavad seost.`;
+    $("calibInfo").innerHTML = L(`Hubble'i seaduse jaoks on vaja sinu enda perioodi-heleduse seost. Salvesta 2. osas vähemalt kahe parve kaugus. Väljatsefeiidid ainult täiendavad seost.`,
+      `The Hubble law needs your own period–luminosity relation. Save the distances of at least two clusters in part 2. Field Cepheids only add to the relation.`);
     return;
   }
   const cal = calibration();
   const nH = cepheidPoints().length;
-  const what = S.calibUsed === "pub" ? `avaldatud seos (${PL_PUB.ref})`
-    : `sinu seos ${nH} tsefeiidist`;
-  $("calibInfo").innerHTML = `Kasutusel: <b>${plFormula(cal, "H", S.calibUsed !== "pub")}</b> — ${what}.`;
-  $("calibHubInfo").textContent = `Kasutusel: ${what}.`;
+  const what = S.calibUsed === "pub" ? `${L("avaldatud seos", "the published relation")} (${PL_PUB.ref})`
+    : L(`sinu seos ${nH} tsefeiidist`, `your relation from ${nH} Cepheids`);
+  $("calibInfo").innerHTML = `${L("Kasutusel", "In use")}: <b>${plFormula(cal, "H", S.calibUsed !== "pub")}</b> — ${what}.`;
+  $("calibHubInfo").innerHTML = `${L("Kasutusel", "In use")}: ${what}.`;
 
   const gals = GALAXIES.map((g) => galaxyFit(g, cal));
   // a clicked galaxy opens a row with its Cepheid plot right below it; clicking again closes it
@@ -2221,9 +2352,10 @@ function drawHubble() {
     const open = g.name === S.gal;
     return `<tr data-gal="${esc(g.name)}" aria-expanded="${open}"${open ? ' class="cur"' : ""}><td>${esc(g.name)}</td><td>SN ${esc(g.sn)}</td><td>${fmt(g.ceph.length)}</td>` +
       `<td>${fmtN(g.mu, 2)} ± ${fmtN(g.eMu, 2)}</td><td>${dV} ± ${dE}</td><td>${fmtN(g.v, 0)}</td><td>${fmtN(g.v / g.d, 0)}</td>` +
-      `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} sobitusse"></td></tr>` +
-      (open ? `<tr class="gal-detail"><td colspan="8"><p class="hint">Galaktika ${esc(g.name)} tsefeiidid. Iga punkt on üks tsefeiid;
-        joon on perioodi-heleduse seos, mida on nihutatud galaktika kauguse mooduli võrra.</p><div class="plot small" id="gpl"></div></td></tr>` : "");
+      `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} ${L("sobitusse", "in the fit")}"></td></tr>` +
+      (open ? `<tr class="gal-detail"><td colspan="8"><p class="hint">${L(`Galaktika ${esc(g.name)} tsefeiidid. Iga punkt on üks tsefeiid;
+        joon on perioodi-heleduse seos, mida on nihutatud galaktika kauguse mooduli võrra.`, `The Cepheids of ${esc(g.name)}. Each point is a Cepheid;
+        the line is the period–luminosity relation shifted by the distance modulus of the galaxy.`)}</p><div class="plot small" id="gpl"></div></td></tr>` : "");
   }).join("");
 
   const cur = gals.find((g) => g.name === S.gal);
@@ -2250,8 +2382,8 @@ function drawHubble() {
   }
   Plotly.react("hub", traces, baseLayout({
     dragmode: "zoom",
-    xaxis: axis("Kaugus d (Mpc)", { range: [0, dMax] }),
-    yaxis: axis("Kiirus v (km/s)", { rangemode: "tozero" }),
+    xaxis: axis(L("Kaugus d (Mpc)", "Distance d (Mpc)"), { range: [0, dMax] }),
+    yaxis: axis(L("Kiirus v (km/s)", "Velocity v (km/s)"), { rangemode: "tozero" }),
   }), CONFIG);
   onShiftClick("hub", (name) => {
     if (S.galOff.has(name)) S.galOff.delete(name); else S.galOff.add(name);
@@ -2260,17 +2392,20 @@ function drawHubble() {
 
   S.h0Local = fit ? fit.H : null;
   drawSupernovae(gals);
-  if (!fit) { $("h0").innerHTML = `<p class="empty">Vali sobitusse vähemalt üks galaktika.</p>`; return; }
+  if (!fit) { $("h0").innerHTML = `<p class="empty">${L("Vali sobitusse vähemalt üks galaktika.", "Choose at least one galaxy for the fit.")}</p>`; return; }
   const [hV, hE] = valErr(fit.H, fit.e);
   const tH = 977.8 / fit.H;                              // 1/H0 in Gyr
   const [tV, tE] = valErr(tH, tH * fit.e / fit.H);
   $("h0").innerHTML = `<div class="tiles two">
-      <div class="tile"><div class="label">Hubble'i konstant H<sub>0</sub></div><div class="value">${hV} <small>± ${hE}</small></div><div class="unit">km/s/Mpc</div></div>
-      <div class="tile"><div class="label">Hubble'i aeg 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">miljardit aastat</div></div>
+      <div class="tile"><div class="label">${L("Hubble'i konstant", "Hubble constant")} H<sub>0</sub></div><div class="value">${hV} <small>± ${hE}</small></div><div class="unit">km/s/Mpc</div></div>
+      <div class="tile"><div class="label">${L("Hubble'i aeg", "Hubble time")} 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">${L("miljardit aastat", "billion years")}</div></div>
     </div>
-    <p class="formula">${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
+    <p class="formula">` + L(`${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
     (fit.eCal ? `, perioodi-heleduse seose nullpunkt ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, liidetud ruutudena.
-    Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus. <a class="more" href="hubble.html#vanus">Loe lähemalt →</a></p>`;
+    Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus. <a class="more" href="hubble.html#vanus">Loe lähemalt →</a>`,
+    `${fmt(fit.n)} galaxies. Error: scatter about the line ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
+    (fit.eCal ? `, zero point of the period–luminosity relation ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `, added in quadrature.
+    The peculiar velocities of nearby galaxies (a few hundred km/s) cause scatter. The Hubble time is roughly the age of the Universe. <a class="more" href="hubble.html#vanus">Read more →</a>`) + `</p>`;
 }
 
 // rows first..last of a paged table (S.pages[key]) with n rows; updates its pager
@@ -2279,7 +2414,7 @@ function pageRange(key, n) {
   const pages = Math.ceil(n / p.size);
   p.page = Math.min(Math.max(p.page, 0), pages - 1);
   const first = p.page * p.size, last = Math.min(first + p.size, n);
-  $(`${key}PageInfo`).textContent = `Read ${fmt(first + 1)}–${fmt(last)} / ${fmt(n)} · lehekülg ${fmt(p.page + 1)} / ${fmt(pages)}`;
+  $(`${key}PageInfo`).textContent = `${L("Read", "Rows")} ${fmt(first + 1)}–${fmt(last)} / ${fmt(n)} · ${L("lehekülg", "page")} ${fmt(p.page + 1)} / ${fmt(pages)}`;
   for (const b of $(`${key}Pager`).querySelectorAll("button")) {
     b.disabled = ["first", "prev"].includes(b.dataset.page) ? p.page === 0 : p.page >= pages - 1;
   }
@@ -2318,17 +2453,17 @@ function drawSupernovae(gals) {
     const sd = Math.sqrt(Ms.reduce((a, v) => a + (v - M) ** 2, 0) / (n - 1));
     own = { M, e: sd / Math.sqrt(n) };
     const [mV, mE] = valErr(M, own.e);
-    ownLine = `Supernoovade keskmine absoluutne tähesuurus maksimumis 3. osa galaktikatest: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
-      (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag).`;
-  } else ownLine = "Oma M<sub>B</sub> leidmiseks vali 3. osas sobitusse vähemalt kaks galaktikat.";
+    ownLine = L(`Supernoovade keskmine absoluutne tähesuurus maksimumis 3. osa galaktikatest: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
+      (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag).`, `Mean absolute peak magnitude of the supernovae from the galaxies of part 3: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
+      (${fmt(n)} galaxies, scatter ${fmtN(sd, 2)} mag).`);
+  } else ownLine = L("Oma M<sub>B</sub> leidmiseks vali 3. osas sobitusse vähemalt kaks galaktikat.", "To find your own M<sub>B</sub>, choose at least two galaxies for the fit in part 3.");
   const cal = S.snUsed === "pub" ? MB_SH0ES : own;
   const [uV, uE] = cal ? valErr(cal.M, cal.e) : [];
-  $("mb").innerHTML = `<p class="fit">${ownLine}` + (cal ? `<br>Kasutusel: <b>M<sub>B</sub> = ${uV} ± ${uE} mag</b> — ` +
-    (S.snUsed === "pub" ? "SH0ES (Riess jt 2022)." : "sinu väärtus 3. osa galaktikatest.") : "") + `</p>`;
-  $("snCalHubInfo").innerHTML = cal ? `Kasutusel: M<sub>B</sub> = ${uV} ± ${uE} mag, ` +
-    (S.snUsed === "pub" ? "SH0ES (Riess jt 2022)." : "sinu väärtus 3. osa galaktikatest.") : ownLine;
+  const whose = S.snUsed === "pub" ? L("SH0ES (Riess jt 2022).", "SH0ES (Riess et al. 2022).") : L("sinu väärtus 3. osa galaktikatest.", "your value from the galaxies of part 3.");
+  $("mb").innerHTML = `<p class="fit">${ownLine}` + (cal ? `<br>${L("Kasutusel", "In use")}: <b>M<sub>B</sub> = ${uV} ± ${uE} mag</b> — ${whose}` : "") + `</p>`;
+  $("snCalHubInfo").innerHTML = cal ? `${L("Kasutusel", "In use")}: M<sub>B</sub> = ${uV} ± ${uE} mag, ${whose}` : ownLine;
   if (!cal) {
-    emptyPlot("snHub", "Supernoovade heledus on veel leidmata.");
+    emptyPlot("snHub", L("Supernoovade heledus on veel leidmata.", "The supernova luminosity has not been found yet."));
     $("snH0").innerHTML = "";
     return;
   }
@@ -2356,20 +2491,22 @@ function drawSupernovae(gals) {
     },
   ], baseLayout({
     dragmode: "zoom",
-    xaxis: axis("Kaugus d (Mpc)", { range: [0, dMax] }),
-    yaxis: axis("Kiirus v (km/s)", { rangemode: "tozero" }),
+    xaxis: axis(L("Kaugus d (Mpc)", "Distance d (Mpc)"), { range: [0, dMax] }),
+    yaxis: axis(L("Kiirus v (km/s)", "Velocity v (km/s)"), { rangemode: "tozero" }),
   }), CONFIG);
 
   const [hV, hE] = valErr(H, eH);
   const tH = 977.8 / H;
   const [tV, tE] = valErr(tH, (tH * eH) / H);
-  const local = S.h0Local ? `lähedased galaktikad (3. osa) ${fmtN(S.h0Local, 1)} km/s/Mpc, ` : "";
+  const local = S.h0Local ? L(`lähedased galaktikad (3. osa) ${fmtN(S.h0Local, 1)} km/s/Mpc, `, `nearby galaxies (part 3) ${fmtN(S.h0Local, 1)} km/s/Mpc, `) : "";
   $("snH0").innerHTML = `<div class="tiles two">
-      <div class="tile"><div class="label">Hubble'i konstant H<sub>0</sub></div><div class="value">${hV} <small>± ${hE}</small></div><div class="unit">km/s/Mpc</div></div>
-      <div class="tile"><div class="label">Hubble'i aeg 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">miljardit aastat</div></div>
+      <div class="tile"><div class="label">${L("Hubble'i konstant", "Hubble constant")} H<sub>0</sub></div><div class="value">${hV} <small>± ${hE}</small></div><div class="unit">km/s/Mpc</div></div>
+      <div class="tile"><div class="label">${L("Hubble'i aeg", "Hubble time")} 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">${L("miljardit aastat", "billion years")}</div></div>
     </div>
-    <p class="formula">${fmt(pts.length)} supernoovat. Võrdluseks: ${local}Plancki satelliit (kosmiline taustkiirgus) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
-    Kauguste redeli ja kosmilise taustkiirguse põhjal leitud H<sub>0</sub> erinevus on tuntud kui Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a></p>`;
+    <p class="formula">` + L(`${fmt(pts.length)} supernoovat. Võrdluseks: ${local}Plancki satelliit (kosmiline taustkiirgus) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
+    Kauguste redeli ja kosmilise taustkiirguse põhjal leitud H<sub>0</sub> erinevus on tuntud kui Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a>`,
+    `${fmt(pts.length)} supernovae. For comparison: ${local}the Planck satellite (cosmic microwave background) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
+    The difference between the H<sub>0</sub> from the distance ladder and from the microwave background is known as the Hubble tension. <a class="more" href="hubble.html#pinge">Read more →</a>`) + `</p>`;
 }
 
 function drawGalaxyPL(g, cal) {
@@ -2388,7 +2525,7 @@ function drawGalaxyPL(g, cal) {
   ], baseLayout({
     uirevision: g.name,
     dragmode: "zoom",
-    xaxis: axis("log P (P ööpäevades)", { range: [lo, hi] }),
+    xaxis: axis(L("log P (P ööpäevades)", "log P (P in days)"), { range: [lo, hi] }),
     yaxis: axis("W<sub>H</sub> (mag)", { autorange: "reversed" }),
     annotations: [{
       xref: "paper", yref: "paper", x: 0.02, y: 0.98, xanchor: "left", yanchor: "top", showarrow: false, align: "left",
@@ -2422,8 +2559,8 @@ function drawTable() {
       `<td>${num(d.g[i], 3)}</td><td>${num(d.bprp[i], 3)}</td></tr>`);
   }
   $("dataBody").innerHTML = rows.join("");
-  $("dataCount").textContent = `${fmt(S.n)} rida` + (S.idx ? `, neist valitud ${fmt(S.idx.length)}` : "");
-  $("pageInfo").textContent = `Read ${fmt(first + 1)}–${fmt(last)} / ${fmt(S.n)} · lehekülg ${fmt(S.page + 1)} / ${fmt(pages)}`;
+  $("dataCount").textContent = L(`${fmt(S.n)} rida` + (S.idx ? `, neist valitud ${fmt(S.idx.length)}` : ""), `${fmt(S.n)} rows` + (S.idx ? `, ${fmt(S.idx.length)} of them selected` : ""));
+  $("pageInfo").textContent = `${L("Read", "Rows")} ${fmt(first + 1)}–${fmt(last)} / ${fmt(S.n)} · ${L("lehekülg", "page")} ${fmt(S.page + 1)} / ${fmt(pages)}`;
   $("firstPage").disabled = $("prevPage").disabled = S.page === 0;
   $("lastPage").disabled = $("nextPage").disabled = S.page >= pages - 1;
   for (const th of document.querySelectorAll("#dataCard th[data-col]")) {
@@ -2628,10 +2765,10 @@ function setStatus(msg, kind = "") {
 async function queryCentre(target, coordText, current) {
   if (coordText && (!target || S.coordsFor === target)) {
     const p = parseCoords(coordText);
-    if (!p) throw new Error("Koordinaadid peavad olema kujul α δ kraadides, nt 132.85 11.81.");
+    if (!p) throw new Error(L("Koordinaadid peavad olema kujul α δ kraadides, nt 132.85 11.81.", "The coordinates must be α δ in degrees, e.g. 132.85 11.81."));
     return { ...p, label: S.coordsLabel || `α = ${fmtN(p.ra, 4)}°, δ = ${p.dec >= 0 ? "+" : ""}${fmtN(p.dec, 4)}°` };
   }
-  setStatus(`Otsin „${target}“…`);
+  setStatus(L(`Otsin „${target}“…`, `Looking up “${target}”…`));
   const c = await resolveTarget(target);
   if (!current()) return null;
   $("coords").value = `${c.ra.toFixed(5)} ${c.dec.toFixed(5)}`;
@@ -2653,8 +2790,8 @@ async function showSky() {
   const target = $("target").value.trim();
   const coordText = $("coords").value.trim();
   const radius = +$("radius").value;
-  if (!target && !coordText) { setStatus("Sisesta parve nimi või koordinaadid.", "error"); return; }
-  if (!(radius > 0 && radius <= 3)) { setStatus("Raadius peab olema vahemikus 0 kuni 3 kraadi.", "error"); return; }
+  if (!target && !coordText) { setStatus(L("Sisesta parve nimi või koordinaadid.", "Enter a cluster name or coordinates."), "error"); return; }
+  if (!(radius > 0 && radius <= 3)) { setStatus(L("Raadius peab olema vahemikus 0 kuni 3 kraadi.", "The radius must be between 0 and 3 degrees."), "error"); return; }
   const token = ++S.skyToken;
   const resolving = !(coordText && (!target || S.coordsFor === target));
   try {
@@ -2672,9 +2809,9 @@ async function run() {
   const coordText = $("coords").value.trim();
   const radius = +$("radius").value;
   const gmax = +$("gmax").value;
-  if (!target && !coordText) { setStatus("Sisesta parve nimi või koordinaadid.", "error"); return; }
-  if (!(radius > 0 && radius <= 3)) { setStatus("Raadius peab olema vahemikus 0 kuni 3 kraadi.", "error"); return; }
-  if (!(gmax > 0 && gmax <= 21)) { setStatus("G piir peab olema vahemikus 0 kuni 21 mag.", "error"); return; }
+  if (!target && !coordText) { setStatus(L("Sisesta parve nimi või koordinaadid.", "Enter a cluster name or coordinates."), "error"); return; }
+  if (!(radius > 0 && radius <= 3)) { setStatus(L("Raadius peab olema vahemikus 0 kuni 3 kraadi.", "The radius must be between 0 and 3 degrees."), "error"); return; }
+  if (!(gmax > 0 && gmax <= 21)) { setStatus(L("G piir peab olema vahemikus 0 kuni 21 mag.", "The G limit must be between 0 and 21 mag."), "error"); return; }
 
   const token = ++S.token;
   S.qctrl = new AbortController();
@@ -2683,43 +2820,33 @@ async function run() {
   try {
     const c = await queryCentre(target, coordText, () => token === S.token);
     if (!c) return;
-    setStatus("Pärin Gaia DR3 andmeid…");
+    setStatus(L("Pärin Gaia DR3 andmeid…", "Querying Gaia DR3 data…"));
     const t0 = performance.now();
     const { d, source } = await queryGaia(c, radius, gmax, (sec) => {
       if (token !== S.token) return false;
-      setStatus(`Gaia päring töötab serveris taustal (${Math.round(sec)} s; tavaliselt alla minuti)…`);
+      setStatus(L(`Gaia päring töötab serveris taustal (${Math.round(sec)} s; tavaliselt alla minuti)…`, `The Gaia query runs in the background on the server (${Math.round(sec)} s; usually under a minute)…`));
     });
     if (token !== S.token) return;
     const n = d.src.length;
-    const done = `Päring lõpetatud (${source}), ${fmtN((performance.now() - t0) / 1000, 1)} s.`;
-    if (!n) { setStatus(`${done} Sobivaid tähti ei leitud — suurenda raadiust või G piiri. Ridu: 0.`, "warn"); return; }
+    const done = L(`Päring lõpetatud (${source}), ${fmtN((performance.now() - t0) / 1000, 1)} s.`, `Query finished (${source}), ${fmtN((performance.now() - t0) / 1000, 1)} s.`);
+    if (!n) { setStatus(`${done} ${L("Sobivaid tähti ei leitud — suurenda raadiust või G piiri. Ridu: 0.", "No suitable stars were found — increase the radius or the G limit. Rows: 0.")}`, "warn"); return; }
 
     d.sep = d.ra.map((ra, i) => 60 * sepDeg(c.ra, c.dec, ra, d.dec[i]));   // arcmin from the query centre
     S.d = d; S.n = n; S.center = c; S.radius = radius; S.rev++;
     S.picked = new Set(); S.removed = new Set(); S.idx = null; S.stats = null; S.distOn = false; S.page = 0; S.hl = null;
     sortRows();                 // keep the chosen column order for the new data
-    S.hover = d.src.map((_, i) =>
-      `Gaia DR3 ${d.src[i]}<br>G = ${fmtN(d.g[i], 2)}` +
-      (d.bprp[i] !== null ? `, BP−RP = ${fmtN(d.bprp[i], 2)}` : "") +
-      `<br>p = ${fmtN(d.plx[i], 3)} ± ${fmtN(d.eplx[i], 3)} mas` +
-      `<br>μ = (${fmtN(d.pmra[i], 2)}; ${fmtN(d.pmdec[i], 2)}) mas/a`);
+    makeHover();
     S.sky = { ra0: c.ra, dec0: c.dec, raPlot: d.ra.map((ra) => unwrapRA(ra, c.ra)) };
     S.ceph = CEPHEIDS.filter((x) => sepDeg(c.ra, c.dec, x.at[0], x.at[1]) <= radius);
 
     // the cluster name, unless coordinates were typed in
-    const name = target && !parseCoords(target) ? target : null;
-    const sign = c.dec >= 0 ? "+" : "";
-    $("queryInfo").innerHTML = (name ? `<div class="tile"><div class="label">Parv</div><div class="value">${esc(name)}</div>
-        <div class="unit">α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°</div></div>` : "") +
-      `<div class="tile"><div class="label">Saadud ridu</div><div class="value">${fmt(n)}</div>
-        <div class="unit">Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)</div></div>`;
+    S.qinfo = { name: target && !parseCoords(target) ? target : null, c, n, gmax, radius };
+    drawQueryInfo();
     setSkyPic(c, radius, target);
     $("queryInfo").hidden = false;
     S.queryTarget = target;
-    S.title = name || `α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°`;
-    for (const el of document.querySelectorAll(".cluster-name")) el.textContent = S.title;
     const trunc = n >= MAXREC;
-    setStatus(`${done}` + (trunc ? ` Tulemus on kärbitud — vähenda raadiust või G piiri.` : "") + ` Ridu: ${fmt(n)}.`, trunc ? "warn" : "");
+    setStatus(`${done}` + (trunc ? L(" Tulemus on kärbitud — vähenda raadiust või G piiri.", " The result is cut off — decrease the radius or the G limit.") : "") + ` ${L("Ridu", "Rows")}: ${fmt(n)}.`, trunc ? "warn" : "");
     markStale();                // the name box may have changed while the query ran
 
     drawSky();
@@ -2733,6 +2860,27 @@ async function run() {
   }
 }
 
+// the hover labels of the stars, in the language of the page
+function makeHover() {
+  const d = S.d;
+  S.hover = d.src.map((_, i) =>
+    `Gaia DR3 ${d.src[i]}<br>G = ${fmtN(d.g[i], 2)}` +
+    (d.bprp[i] !== null ? `, BP−RP = ${fmtN(d.bprp[i], 2)}` : "") +
+    `<br>p = ${fmtN(d.plx[i], 3)} ± ${fmtN(d.eplx[i], 3)} mas` +
+    `<br>μ = (${fmtN(d.pmra[i], 2)}; ${fmtN(d.pmdec[i], 2)}) ${L("mas/a", "mas/yr")}`);
+}
+
+// the cards with the cluster and the number of rows of the last query, and the title of its data
+function drawQueryInfo() {
+  const { name, c, n, gmax, radius } = S.qinfo, sign = c.dec >= 0 ? "+" : "";
+  $("queryInfo").innerHTML = (name ? `<div class="tile"><div class="label">${L("Parv", "Cluster")}</div><div class="value">${esc(name)}</div>
+      <div class="unit">α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°</div></div>` : "") +
+    `<div class="tile"><div class="label">${L("Saadud ridu", "Rows received")}</div><div class="value">${fmt(n)}</div>
+      <div class="unit">${L(`Gaia DR3 tähte (G &lt; ${fmt(gmax)} mag, raadius ${fmt(radius)}°)`, `Gaia DR3 stars (G &lt; ${fmt(gmax)} mag, radius ${fmt(radius)}°)`)}</div></div>`;
+  S.title = name || `α = ${fmtN(c.ra, 4)}°, δ = ${sign}${fmtN(c.dec, 4)}°`;
+  for (const el of document.querySelectorAll(".cluster-name")) el.textContent = S.title;
+}
+
 // stop the running query; the previous data and plots stay as they were
 function stopQuery() {
   if (!S.qctrl) return;
@@ -2740,7 +2888,7 @@ function stopQuery() {
   S.token++;                  // results that still arrive are ignored
   $("go").disabled = false;
   $("stop").hidden = true;
-  setStatus("Päring katkestati.", "warn");
+  setStatus(L("Päring katkestati.", "The query was stopped."), "warn");
 }
 
 function clearSelection() {
@@ -2759,7 +2907,7 @@ function downloadSelection() {
   const blob = new Blob([rows.join("\n") + "\n"], { type: "text/csv" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `${($("target").value.trim() || $("coords").value.trim()).replace(/[^\w.+-]+/g, "_") || "valik"}_gaia_valik.csv`;
+  a.download = `${($("target").value.trim() || $("coords").value.trim()).replace(/[^\w.+-]+/g, "_") || L("valik", "selection")}_gaia_${L("valik", "selection")}.csv`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
@@ -2767,7 +2915,7 @@ function downloadSelection() {
 function redrawAll() {
   drawCepheids();
   if (!S.d) {
-    for (const id of ["sky", "pm", "cmd", "hist"]) emptyPlot(id, "Alustamiseks päri mõne parve andmed.");
+    for (const id of ["sky", "pm", "cmd", "hist"]) emptyPlot(id, L("Alustamiseks päri mõne parve andmed.", "To start, query the data of a cluster."));
     return;
   }
   drawSky();
@@ -2879,7 +3027,7 @@ function navButton(label, primary, onClick) {
   const b = document.createElement("button");
   b.type = "button";
   if (primary) b.className = "primary";
-  b.textContent = label;
+  b.innerHTML = label;
   b.addEventListener("click", onClick);
   return b;
 }
@@ -2891,12 +3039,13 @@ for (const [k, part] of PARTS.entries()) {
     const nav = document.createElement("div");
     nav.className = "pane-nav";
     nav.append(
-      navButton(prev ? `← ${prev.textContent}` : prevPart ? `← ${k}. osa` : "← Sisukord", false, () => {
+      // the labels have both languages, from the tab names
+      navButton(prev ? `← ${prev.innerHTML}` : prevPart ? `← ${sp(`${k}. osa`, `Part ${k}`)}` : `← ${sp("Sisukord", "Contents")}`, false, () => {
         if (prev) pickTab(prev.dataset.tab);
         else if (prevPart) go(tabsOf(prevPart).at(-1).dataset.tab);
         else go("");
       }),
-      navButton(next ? `Edasi: ${next.textContent} →` : nextPart ? `Edasi: ${k + 2}. osa →` : "Tagasi sisukorda", true, () => {
+      navButton(next ? `${sp("Edasi:", "Next:")} ${next.innerHTML} →` : nextPart ? `${sp(`Edasi: ${k + 2}. osa`, `Next: part ${k + 2}`)} →` : sp("Tagasi sisukorda", "Back to the contents"), true, () => {
         if (next) pickTab(next.dataset.tab);
         else if (nextPart) go(tabsOf(nextPart)[0].dataset.tab);
         else go("");
@@ -2909,8 +3058,9 @@ for (const [k, part] of PARTS.entries()) {
   const nav = document.createElement("nav");
   nav.className = "part-nav";
   nav.setAttribute("aria-label", "Osad");
-  nav.innerHTML = `<a class="to-toc" href="#">← Sisukord</a>` +
-    PARTS.map((p, i) => `<a href="#osa-${i + 1}" data-part="${i}">${i + 1}. ${esc(p.dataset.short)}</a>`).join("");
+  nav.setAttribute("data-en-aria-label", "Parts");
+  nav.innerHTML = `<a class="to-toc" href="#">← ${sp("Sisukord", "Contents")}</a>` +
+    PARTS.map((p, i) => `<a href="#osa-${i + 1}" data-part="${i}">${i + 1}. ${sp(esc(p.dataset.short), esc(p.dataset.shortEn))}</a>`).join("");
   part.querySelector(".part-head").prepend(nav);
 }
 // the tabs fill the window below their part links, title and tab bar
@@ -2958,7 +3108,7 @@ let fullCard = null;
 function setFull(card) {
   if (fullCard) {
     fullCard.classList.remove("full");
-    fullCard.querySelector(".expand").textContent = "⤢ Suurenda";
+    fullCard.querySelector(".expand").innerHTML = sp("⤢ Suurenda", "⤢ Enlarge");
     resizePlot(fullCard.querySelector(".plot"));
   }
   fullCard = card;
@@ -2966,7 +3116,7 @@ function setFull(card) {
   if (!card) return;
   showHelp(null);
   card.classList.add("full");
-  card.querySelector(".expand").textContent = "✕ Sulge";
+  card.querySelector(".expand").innerHTML = sp("✕ Sulge", "✕ Close");
   resizePlot(card.querySelector(".plot"));
 }
 // the plot card whose explanation is open, or null; a click elsewhere closes it
@@ -3006,7 +3156,14 @@ $("stop").addEventListener("click", stopQuery);
 
 // data source menu: "auto" plus every Gaia service; the choice is remembered in this browser
 const SOURCE_KEY = "kauguste-redel:andmeallikas";
-for (const src of GAIA_SOURCES) $("source").add(new Option(src.name, src.name));
+// the options are named in the language of the page; their values stay the same
+function fillSources() {
+  const sel = $("source"), value = sel.value;
+  for (const o of [...sel.options]) if (o.value !== "auto") o.remove();
+  for (const src of GAIA_SOURCES) sel.add(new Option(L(src.name, src.nameEn || src.name), src.name));
+  sel.value = value;
+}
+fillSources();
 try {
   const saved = localStorage.getItem(SOURCE_KEY);
   if (saved && [...$("source").options].some((o) => o.value === saved)) $("source").value = saved;
@@ -3060,6 +3217,40 @@ for (const ex of EXAMPLES) {
 }
 
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", redrawAll);
+
+/* ---------- Language ---------- */
+// The language buttons switch the page in place. Texts in the markup are switched by the CSS; the title,
+// the attributes with a data-en-* translation and the texts with data-en-text are set here, keeping the
+// Estonian in data-et-*, and everything the script has drawn is drawn again. The choice goes into the
+// address and is remembered.
+const ATTRS = ["aria-label", "title", "content", "placeholder", "text"];
+function applyLang() {
+  const lang = document.documentElement.lang;
+  document.title = L("Kosmiliste kauguste redel", "The cosmic distance ladder");
+  for (const e of document.querySelectorAll(ATTRS.map((a) => `[data-en-${a}]`).join())) {
+    for (const a of ATTRS) {
+      if (!e.hasAttribute("data-en-" + a)) continue;
+      const cur = a === "text" ? e.textContent : e.getAttribute(a);
+      if (!e.hasAttribute("data-et-" + a)) e.setAttribute("data-et-" + a, cur);
+      const v = e.getAttribute(`data-${lang}-${a}`);
+      if (a === "text") e.textContent = v; else e.setAttribute(a, v);
+    }
+  }
+  for (const b of document.querySelectorAll("[data-lang]")) b.setAttribute("aria-pressed", b.dataset.lang === lang);
+  fillSources();
+}
+for (const b of document.querySelectorAll("[data-lang]")) b.addEventListener("click", () => {
+  document.documentElement.lang = b.dataset.lang;
+  try { localStorage.setItem("lang", b.dataset.lang); } catch { /* this visit only */ }
+  const u = new URL(location.href);
+  u.searchParams.set("lang", b.dataset.lang);
+  history.replaceState(null, "", u);
+  applyLang();
+  if (S.d) { makeHover(); drawQueryInfo(); }
+  redrawAll();
+  drawResults();
+});
+applyLang();
 
 S.stored = loadStored();
 try { S.fieldOn = new Set(JSON.parse(localStorage.getItem(FIELD_KEY)) || []); } catch { /* none added */ }

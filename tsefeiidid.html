@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tsefeiidid</title>
-<meta name="description" content="Interaktiivsed joonised tsefeiididest: miks nad pulseerivad, kuidas mõõta perioodi, Leavitt'i perioodi-heleduse seos ning tolm ja Wesenheiti tähesuurus.">
+<meta name="description" content="Interaktiivsed joonised tsefeiididest: miks nad pulseerivad, kuidas mõõta perioodi, Leavitt'i perioodi-heleduse seos ning tolm ja Wesenheiti tähesuurus."
+  data-en-content="Interactive drawings of Cepheids: why they pulsate, how to measure the period, Leavitt's period–luminosity relation, and dust and the Wesenheit magnitude.">
+<script>
+// The language is set before the page is drawn: ?lang=et or ?lang=en in the address (remembered), else the last
+// choice, else Estonian.
+(() => {
+  let l = new URLSearchParams(location.search).get('lang');
+  if (l === 'et' || l === 'en') { try { localStorage.setItem('lang', l); } catch (e) {} }
+  else { try { l = localStorage.getItem('lang'); } catch (e) {} }
+  document.documentElement.lang = l === 'en' ? 'en' : 'et';
+})();
+</script>
 <style>
 :root {
   color-scheme: light;
@@ -71,6 +82,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* The page has both languages side by side; data-l marks the text of one, and the other is hidden. */
+:root[lang="et"] [data-l="en"], :root[lang="en"] [data-l="et"] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--bg);
@@ -78,7 +91,11 @@ body {
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
-.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 14px; }
+.back { font-size: 0.88rem; margin: 0; color: var(--text-3); }
+.langs { display: flex; gap: 4px; }
+.langs button { font-size: 0.8rem; padding: 2px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.top .langs button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); border-color: transparent; }
 .back a { color: var(--text-2); text-decoration: none; }
 .back a:hover { color: var(--sel); }
 .back .sep { margin: 0 6px; }
@@ -215,7 +232,7 @@ table.res tr.hl td { font-weight: 650; }
 .band-lbl { fill: var(--text-1); font-size: 13px; font-weight: 600; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
 .legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
 .legend .lt { font-style: normal; }
@@ -236,54 +253,69 @@ table.res tr.hl td { font-weight: 650; }
 </head>
 <body>
 <main>
-  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span>Tsefeiidid<span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
-  <h1>Tsefeiidid</h1>
-  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
-  <p class="intro"><a class="en" href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidid</a> on noored massiivsed hiidtähed, mis paisuvad ja tõmbuvad kokku mõnest päevast mõne kuuni kestva perioodiga, ja koos sellega muutub nende heledus.
+  <div class="top">
+    <p class="back" data-l="et"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span>Tsefeiidid<span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
+    <p class="back" data-l="en"><a href="index.html">← The cosmic distance ladder</a><span class="sep">·</span><a href="parallaks.html">Parallax</a><span class="sep">·</span><a href="hajusparved.html">Open clusters</a><span class="sep">·</span><a href="standardkuunlad.html">Standard candles</a><span class="sep">·</span>Cepheids<span class="sep">·</span><a href="supernoovad.html">Type Ia supernovae</a><span class="sep">·</span><a href="hubble.html">Hubble's law</a></p>
+    <div class="langs" role="group" aria-label="Keel" data-en-aria-label="Language">
+      <button type="button" data-lang="et" lang="et">Eesti</button>
+      <button type="button" data-lang="en" lang="en">English</button>
+    </div>
+  </div>
+  <h1><span data-l="et">Tsefeiidid</span><span data-l="en">Cepheids</span></h1>
+  <p class="byline">Taavi Tuvikene<br><span data-l="et">TÜ Tartu observatoorium</span><span data-l="en">Tartu Observatory, University of Tartu</span></p>
+  <p class="intro" data-l="et"><a class="en" href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Tsefeiidid</a> on noored massiivsed hiidtähed, mis paisuvad ja tõmbuvad kokku mõnest päevast mõne kuuni kestva perioodiga, ja koos sellega muutub nende heledus.
     Mida pikem on periood, seda heledam on täht. Periood annab seega tähe tegeliku heleduse ja tsefeiidid on <a href="standardkuunlad.html#tsefeiidid-ja-supernoovad">standardküünlad</a>, mida on näha ka teistes galaktikates.
     Nimi tuleb tähest δ Cephei, mille heleduse muutumise avastas John Goodricke 1784. aastal. Harjutuse <a href="index.html#osa-2">2. osas</a> kalibreerid tsefeiidide perioodi-heleduse seose
     ja <a href="index.html#osa-3">3. osas</a> mõõdad sellega galaktikate kaugusi.</p>
+  <p class="intro" data-l="en"><a href="https://en.wikipedia.org/wiki/Classical_Cepheid_variable" target="_blank" rel="noopener">Cepheids</a> are young, massive giant stars that expand and contract with a period of a few days to a few months, and their brightness changes with it.
+    The longer the period, the more luminous the star. The period therefore gives the true luminosity of the star, and Cepheids are <a href="standardkuunlad.html#tsefeiidid-ja-supernoovad">standard candles</a> that can be seen in other galaxies too.
+    The name comes from the star δ Cephei, whose variability was discovered by John Goodricke in 1784. In <a href="index.html#osa-2">part 2</a> of the exercise you calibrate the period–luminosity relation of Cepheids,
+    and in <a href="index.html#osa-3">part 3</a> you measure the distances of galaxies with it.</p>
 
   <div class="layout">
     <section class="card">
-      <div class="tabs" role="tablist" aria-label="Teema">
-        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Pulsatsioon</button>
-        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Perioodi mõõtmine</button>
-        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Leavitt'i seadus</button>
-        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Tolm ja Wesenheit</button>
+      <div class="tabs" role="tablist" aria-label="Teema" data-en-aria-label="Topic">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true"><span data-l="et">Pulsatsioon</span><span data-l="en">Pulsation</span></button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1"><span data-l="et">Perioodi mõõtmine</span><span data-l="en">Measuring the period</span></button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Leavitt'i seadus</span><span data-l="en">Leavitt's law</span></button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1"><span data-l="et">Tolm ja Wesenheit</span><span data-l="en">Dust and Wesenheit</span></button>
       </div>
 
       <div id="pane1" role="tabpanel" aria-labelledby="tab1">
-        <p class="hint">Vasakul on tsefeiidi läbilõige, paremal tema koht Hertzsprungi-Russelli diagrammil, all heledus, raadius, temperatuur ja kiirus faasi järgi.
+        <p class="hint" data-l="et">Vasakul on tsefeiidi läbilõige, paremal tema koht Hertzsprungi-Russelli diagrammil, all heledus, raadius, temperatuur ja kiirus faasi järgi.
           Käivita pulsatsioon või vali paremal klapi samm.</p>
+        <p class="hint" data-l="en">On the left is a cross-section of a Cepheid, on the right its place in the Hertzsprung–Russell diagram, and below its luminosity, radius, temperature and velocity against phase.
+          Play the pulsation or choose a step of the valve on the right.</p>
         <div class="duo">
           <div>
-            <p class="sub">Täht</p>
-            <svg id="star" class="scene" viewBox="0 0 370 370" role="img" aria-label="Pulseeriva tsefeiidi läbilõige heeliumi kihiga"></svg>
+            <p class="sub"><span data-l="et">Täht</span><span data-l="en">Star</span></p>
+            <svg id="star" class="scene" viewBox="0 0 370 370" role="img" aria-label="Pulseeriva tsefeiidi läbilõige heeliumi kihiga" data-en-aria-label="Cross-section of a pulsating Cepheid with its helium layer"></svg>
           </div>
           <div>
-            <p class="sub">HR-diagramm</p>
-            <svg id="hr" class="scene" viewBox="0 0 370 370" role="img" aria-label="Hertzsprungi-Russelli diagramm peajada ja ebastabiilsuse ribaga"></svg>
+            <p class="sub"><span data-l="et">HR-diagramm</span><span data-l="en">HR diagram</span></p>
+            <svg id="hr" class="scene" viewBox="0 0 370 370" role="img" aria-label="Hertzsprungi-Russelli diagramm peajada ja ebastabiilsuse ribaga" data-en-aria-label="Hertzsprung–Russell diagram with the main sequence and the instability strip"></svg>
           </div>
         </div>
-        <p class="sub">Kõverad</p>
-        <svg id="curves" class="scene" viewBox="0 0 760 330" role="img" aria-label="Heledus, raadius, temperatuur ja radiaalkiirus faasi järgi"></svg>
+        <p class="sub"><span data-l="et">Kõverad</span><span data-l="en">Curves</span></p>
+        <svg id="curves" class="scene" viewBox="0 0 760 330" role="img" aria-label="Heledus, raadius, temperatuur ja radiaalkiirus faasi järgi" data-en-aria-label="Luminosity, radius, temperature and radial velocity against phase"></svg>
       </div>
 
       <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
-        <p class="hint">Ülal on vaatlused aja järgi, keskel samad vaatlused prooviperioodiga kokku volditud, all periodogramm: kui hästi sobib iga prooviperiood.
+        <p class="hint" data-l="et">Ülal on vaatlused aja järgi, keskel samad vaatlused prooviperioodiga kokku volditud, all periodogramm: kui hästi sobib iga prooviperiood.
           Muuda paremal prooviperioodi või lohista periodogrammil, kuni punktid moodustavad puhta kõvera.</p>
-        <p class="sub">Vaatlused</p>
-        <svg id="obs" class="scene" viewBox="0 0 760 210" role="img" aria-label="Tsefeiidi vaatlused aja järgi"></svg>
-        <p class="sub">Kokkuvolditud</p>
-        <svg id="fold" class="scene" viewBox="0 0 760 210" role="img" aria-label="Vaatlused prooviperioodiga kokku volditud"></svg>
-        <p class="sub">Periodogramm</p>
-        <svg id="pgram" class="scene" viewBox="0 0 760 210" role="img" aria-label="Periodogramm; lohista, et valida prooviperiood"></svg>
+        <p class="hint" data-l="en">At the top are the observations against time, in the middle the same observations folded with the trial period, and at the bottom the periodogram: how well each trial period fits.
+          Change the trial period on the right or drag in the periodogram until the points form a clean curve.</p>
+        <p class="sub"><span data-l="et">Vaatlused</span><span data-l="en">Observations</span></p>
+        <svg id="obs" class="scene" viewBox="0 0 760 210" role="img" aria-label="Tsefeiidi vaatlused aja järgi" data-en-aria-label="Observations of a Cepheid against time"></svg>
+        <p class="sub"><span data-l="et">Kokkuvolditud</span><span data-l="en">Folded</span></p>
+        <svg id="fold" class="scene" viewBox="0 0 760 210" role="img" aria-label="Vaatlused prooviperioodiga kokku volditud" data-en-aria-label="Observations folded with the trial period"></svg>
+        <p class="sub"><span data-l="et">Periodogramm</span><span data-l="en">Periodogram</span></p>
+        <svg id="pgram" class="scene" viewBox="0 0 760 210" role="img" aria-label="Periodogramm; lohista, et valida prooviperiood" data-en-aria-label="Periodogram; drag to choose the trial period"></svg>
         <div class="legend">
-          <span><i class="dot" style="background: hsl(210 70% 50%)"></i>varasemad vaatlused</span>
-          <span><i class="dot" style="background: hsl(30 70% 50%)"></i>hilisemad vaatlused</span>
-          <span><i style="border-color: var(--text-1)"></i>sobitatud kõver</span>
-          <span><i style="border-color: var(--accent)"></i>prooviperiood</span>
+          <span><i class="dot" style="background: hsl(210 70% 50%)"></i><span data-l="et">varasemad vaatlused</span><span data-l="en">earlier observations</span></span>
+          <span><i class="dot" style="background: hsl(30 70% 50%)"></i><span data-l="et">hilisemad vaatlused</span><span data-l="en">later observations</span></span>
+          <span><i style="border-color: var(--text-1)"></i><span data-l="et">sobitatud kõver</span><span data-l="en">fitted curve</span></span>
+          <span><i style="border-color: var(--accent)"></i><span data-l="et">prooviperiood</span><span data-l="en">trial period</span></span>
         </div>
       </div>
 
@@ -291,145 +323,147 @@ table.res tr.hl td { font-weight: 650; }
         <p class="hint" id="leavHint"></p>
         <div class="duo" id="step1scene">
           <div>
-            <p class="sub">Väike Magalhãesi pilv</p>
-            <svg id="smc" class="scene" viewBox="0 0 370 370" role="img" aria-label="Väikese Magalhãesi pilve muutlikud tähed; klõpsa tähel"></svg>
+            <p class="sub"><span data-l="et">Väike Magalhãesi pilv</span><span data-l="en">Small Magellanic Cloud</span></p>
+            <svg id="smc" class="scene" viewBox="0 0 370 370" role="img" aria-label="Väikese Magalhãesi pilve muutlikud tähed; klõpsa tähel" data-en-aria-label="Variable stars of the Small Magellanic Cloud; click a star"></svg>
           </div>
           <div>
-            <p class="sub">Periood ja tähesuurus</p>
-            <svg id="leav" class="scene" viewBox="0 0 370 370" role="img" aria-label="Leavitt'i tähtede tähesuurus perioodi logaritmi järgi"></svg>
+            <p class="sub"><span data-l="et">Periood ja tähesuurus</span><span data-l="en">Period and magnitude</span></p>
+            <svg id="leav" class="scene" viewBox="0 0 370 370" role="img" aria-label="Leavitt'i tähtede tähesuurus perioodi logaritmi järgi" data-en-aria-label="Magnitudes of Leavitt's stars against the logarithm of the period"></svg>
           </div>
         </div>
         <div class="legend" id="leavLegend">
-          <span><i class="dot" style="background: var(--accent)"></i>maksimum</span>
-          <span><i class="ring" style="border-color: var(--accent)"></i>miinimum</span>
-          <span><i style="border-color: var(--accent); border-top-style: dashed"></i>sirged</span>
+          <span><i class="dot" style="background: var(--accent)"></i><span data-l="et">maksimum</span><span data-l="en">maximum</span></span>
+          <span><i class="ring" style="border-color: var(--accent)"></i><span data-l="et">miinimum</span><span data-l="en">minimum</span></span>
+          <span><i style="border-color: var(--accent); border-top-style: dashed"></i><span data-l="et">sirged</span><span data-l="en">lines</span></span>
         </div>
         <div id="calibScene" hidden>
-          <svg id="calib" class="scene" viewBox="0 0 760 450" role="img" aria-label="Perioodi-heleduse seos: Linnutee tsefeiidid ja teise galaktika tsefeiidid"></svg>
+          <svg id="calib" class="scene" viewBox="0 0 760 450" role="img" aria-label="Perioodi-heleduse seos: Linnutee tsefeiidid ja teise galaktika tsefeiidid" data-en-aria-label="Period–luminosity relation: Milky Way Cepheids and the Cepheids of another galaxy"></svg>
           <div class="legend">
-            <span><i class="dot" style="background: var(--sel)"></i>Linnutee tsefeiidid Gaia parallaksidega</span>
-            <span><i style="border-color: var(--sel)"></i>nende seos</span>
+            <span><i class="dot" style="background: var(--sel)"></i><span data-l="et">Linnutee tsefeiidid Gaia parallaksidega</span><span data-l="en">Milky Way Cepheids with Gaia parallaxes</span></span>
+            <span><i style="border-color: var(--sel)"></i><span data-l="et">nende seos</span><span data-l="en">their relation</span></span>
             <span><i class="dot" style="background: var(--accent)"></i><span id="lgGal">SMC tsefeiidid, nihutatud μ võrra</span></span>
           </div>
         </div>
       </div>
 
       <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view4="star">Üks täht</button>
-          <button type="button" data-view4="gal">Galaktika</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" data-view4="star"><span data-l="et">Üks täht</span><span data-l="en">One star</span></button>
+          <button type="button" data-view4="gal"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></button>
         </div>
         <div id="view4star">
-          <p class="hint">Sama tsefeiid ilma tolmuta ja tolmupilve taga. Lisa paremal tolmu: täht muutub nõrgemaks ja punasemaks, kuid W<sub>H</sub> jääb samaks.</p>
-          <svg id="dustview" class="scene" viewBox="0 0 760 250" role="img" aria-label="Täht ilma tolmuta ja tolmuga ning tähesuurused eri ribades"></svg>
-          <p class="sub">Värvus ja tähesuurus</p>
-          <svg id="dustcmd" class="scene" viewBox="0 0 760 330" role="img" aria-label="H tähesuurus värvuse V − I järgi koos punanemise noolega"></svg>
+          <p class="hint" data-l="et">Sama tsefeiid ilma tolmuta ja tolmupilve taga. Lisa paremal tolmu: täht muutub nõrgemaks ja punasemaks, kuid W<sub>H</sub> jääb samaks.</p>
+          <p class="hint" data-l="en">The same Cepheid without dust and behind a dust cloud. Add dust on the right: the star becomes fainter and redder, but W<sub>H</sub> stays the same.</p>
+          <svg id="dustview" class="scene" viewBox="0 0 760 250" role="img" aria-label="Täht ilma tolmuta ja tolmuga ning tähesuurused eri ribades" data-en-aria-label="The star without and with dust, and its magnitudes in different bands"></svg>
+          <p class="sub"><span data-l="et">Värvus ja tähesuurus</span><span data-l="en">Colour and magnitude</span></p>
+          <svg id="dustcmd" class="scene" viewBox="0 0 760 330" role="img" aria-label="H tähesuurus värvuse V − I järgi koos punanemise noolega" data-en-aria-label="H magnitude against the colour V − I with the reddening arrow"></svg>
           <div class="legend">
-            <span><i class="ring" style="border-color: var(--cep)"></i>ilma tolmuta</span>
-            <span><i class="dot" style="background: var(--cep)"></i>tolmuga</span>
-            <span><i style="border-color: var(--bad)"></i>punanemine</span>
-            <span><i style="border-color: var(--sel)"></i><em class="lt">sama W<sub>H</sub></em></span>
+            <span><i class="ring" style="border-color: var(--cep)"></i><span data-l="et">ilma tolmuta</span><span data-l="en">without dust</span></span>
+            <span><i class="dot" style="background: var(--cep)"></i><span data-l="et">tolmuga</span><span data-l="en">with dust</span></span>
+            <span><i style="border-color: var(--bad)"></i><span data-l="et">punanemine</span><span data-l="en">reddening</span></span>
+            <span><i style="border-color: var(--sel)"></i><em class="lt"><span data-l="et">sama W<sub>H</sub></span><span data-l="en">same W<sub>H</sub></span></em></span>
           </div>
         </div>
         <div id="view4gal" hidden>
-          <p class="hint">Galaktika 10 Mpc kaugusel, 50 tsefeiidi, igaüks erineva tolmukihi taga. Vali paremal riba ja vaata, kui palju tolm seost nihutab ja hajutab.</p>
-          <svg id="dustpl" class="scene" viewBox="0 0 760 420" role="img" aria-label="Tolmuga tsefeiidide perioodi-heleduse seos valitud ribas"></svg>
+          <p class="hint" data-l="et">Galaktika 10 Mpc kaugusel, 50 tsefeiidi, igaüks erineva tolmukihi taga. Vali paremal riba ja vaata, kui palju tolm seost nihutab ja hajutab.</p>
+          <p class="hint" data-l="en">A galaxy 10 Mpc away with 50 Cepheids, each behind a different layer of dust. Choose a band on the right and see how much the dust shifts and scatters the relation.</p>
+          <svg id="dustpl" class="scene" viewBox="0 0 760 420" role="img" aria-label="Tolmuga tsefeiidide perioodi-heleduse seos valitud ribas" data-en-aria-label="Period–luminosity relation of dusty Cepheids in the chosen band"></svg>
           <div class="legend">
-            <span><i class="dot" style="background: var(--text-3)"></i>ilma tolmuta</span>
-            <span><i class="dot" style="background: var(--cep)"></i>tolmuga</span>
-            <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>seos ilma tolmuta</span>
+            <span><i class="dot" style="background: var(--text-3)"></i><span data-l="et">ilma tolmuta</span><span data-l="en">without dust</span></span>
+            <span><i class="dot" style="background: var(--cep)"></i><span data-l="et">tolmuga</span><span data-l="en">with dust</span></span>
+            <span><i style="border-color: var(--text-3); border-top-style: dashed"></i><span data-l="et">seos ilma tolmuta</span><span data-l="en">relation without dust</span></span>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="card controls" aria-label="Seaded">
+    <section class="card controls" aria-label="Seaded" data-en-aria-label="Settings">
       <div class="group" data-tabs="tab1 tab2 tab4" data-views="star">
-        <div class="slider"><label for="per">Periood</label><input type="range" id="per" min="0" max="1000" step="1"><output for="per" id="perOut"></output></div>
-        <div class="btnrow" id="presets" aria-label="Tuntud tsefeiidid"></div>
+        <div class="slider"><label for="per"><span data-l="et">Periood</span><span data-l="en">Period</span></label><input type="range" id="per" min="0" max="1000" step="1"><output for="per" id="perOut"></output></div>
+        <div class="btnrow" id="presets" aria-label="Tuntud tsefeiidid" data-en-aria-label="Known Cepheids"></div>
         <p class="readout" id="cepRead"></p>
       </div>
 
       <div class="group" data-tabs="tab1">
-        <div class="slider"><label for="phase">Faas</label><input type="range" id="phase" min="0" max="1000" step="1" value="0"><output for="phase" id="phaseOut"></output></div>
+        <div class="slider"><label for="phase"><span data-l="et">Faas</span><span data-l="en">Phase</span></label><input type="range" id="phase" min="0" max="1000" step="1" value="0"><output for="phase" id="phaseOut"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play">▶ Käivita</button></div>
-        <div class="seg" role="radiogroup" aria-label="Kiirus">
-          <button type="button" role="radio" data-speed="8">Aeglane</button>
-          <button type="button" role="radio" data-speed="4">Tavaline</button>
-          <button type="button" role="radio" data-speed="2">Kiire</button>
+        <div class="seg" role="radiogroup" aria-label="Kiirus" data-en-aria-label="Speed">
+          <button type="button" role="radio" data-speed="8"><span data-l="et">Aeglane</span><span data-l="en">Slow</span></button>
+          <button type="button" role="radio" data-speed="4"><span data-l="et">Tavaline</span><span data-l="en">Normal</span></button>
+          <button type="button" role="radio" data-speed="2"><span data-l="et">Kiire</span><span data-l="en">Fast</span></button>
         </div>
       </div>
       <div class="group" data-tabs="tab1">
-        <h3>Klapp</h3>
+        <h3><span data-l="et">Klapp</span><span data-l="en">Valve</span></h3>
         <div class="btnrow" id="stages"></div>
         <p class="formula" id="stageText"></p>
         <p class="readout" id="pulsRead"></p>
       </div>
 
       <div class="group" data-tabs="tab2">
-        <h3 id="modeLbl">Vaatlused</h3>
+        <h3 id="modeLbl"><span data-l="et">Vaatlused</span><span data-l="en">Observations</span></h3>
         <div class="seg" role="radiogroup" aria-labelledby="modeLbl">
-          <button type="button" role="radio" data-mode="ground">Maapealne</button>
+          <button type="button" role="radio" data-mode="ground"><span data-l="et">Maapealne</span><span data-l="en">Ground</span></button>
           <button type="button" role="radio" data-mode="gaia">Gaia</button>
           <button type="button" role="radio" data-mode="hst">Hubble</button>
         </div>
-        <div class="slider"><label for="nobs">Vaatluste arv</label><input type="range" id="nobs" min="5" max="200" step="1"><output for="nobs" id="nobsOut"></output></div>
-        <div class="slider"><label for="span">Vaatlusperiood</label><input type="range" id="span" min="0" max="1000" step="1"><output for="span" id="spanOut"></output></div>
-        <div class="slider"><label for="noise">Mõõtmisviga</label><input type="range" id="noise" min="0.005" max="0.2" step="0.005"><output for="noise" id="noiseOut"></output></div>
-        <div class="btnrow"><button type="button" id="newObs">Uued vaatlused</button></div>
+        <div class="slider"><label for="nobs"><span data-l="et">Vaatluste arv</span><span data-l="en">Number of observations</span></label><input type="range" id="nobs" min="5" max="200" step="1"><output for="nobs" id="nobsOut"></output></div>
+        <div class="slider"><label for="span"><span data-l="et">Vaatlusperiood</span><span data-l="en">Time span</span></label><input type="range" id="span" min="0" max="1000" step="1"><output for="span" id="spanOut"></output></div>
+        <div class="slider"><label for="noise"><span data-l="et">Mõõtmisviga</span><span data-l="en">Measurement error</span></label><input type="range" id="noise" min="0.005" max="0.2" step="0.005"><output for="noise" id="noiseOut"></output></div>
+        <div class="btnrow"><button type="button" id="newObs"><span data-l="et">Uued vaatlused</span><span data-l="en">New observations</span></button></div>
       </div>
       <div class="group" data-tabs="tab2">
-        <div class="slider"><label for="ptest">Prooviperiood</label><input type="range" id="ptest" min="0" max="10000" step="1"><output for="ptest" id="ptestOut"></output></div>
+        <div class="slider"><label for="ptest"><span data-l="et">Prooviperiood</span><span data-l="en">Trial period</span></label><input type="range" id="ptest" min="0" max="10000" step="1"><output for="ptest" id="ptestOut"></output></div>
         <div class="btnrow">
-          <button type="button" class="small" id="pDown" aria-label="Lühem prooviperiood">◀</button>
-          <button type="button" class="small" id="pUp" aria-label="Pikem prooviperiood">▶</button>
-          <button type="button" class="primary" id="findP">Leia periood</button>
+          <button type="button" class="small" id="pDown" aria-label="Lühem prooviperiood" data-en-aria-label="Shorter trial period">◀</button>
+          <button type="button" class="small" id="pUp" aria-label="Pikem prooviperiood" data-en-aria-label="Longer trial period">▶</button>
+          <button type="button" class="primary" id="findP"><span data-l="et">Leia periood</span><span data-l="en">Find the period</span></button>
         </div>
         <p class="readout" id="perRead" aria-live="polite"></p>
       </div>
 
       <div class="group" data-tabs="tab3">
-        <h3 id="stepLbl">Samm</h3>
+        <h3 id="stepLbl"><span data-l="et">Samm</span><span data-l="en">Step</span></h3>
         <div class="seg" role="radiogroup" aria-labelledby="stepLbl">
-          <button type="button" role="radio" data-step="avastus">1. Avastus</button>
-          <button type="button" role="radio" data-step="kalib">2. Kalibreerimine</button>
-          <button type="button" role="radio" data-step="galaktika">3. Kauge galaktika</button>
+          <button type="button" role="radio" data-step="avastus"><span data-l="et">1. Avastus</span><span data-l="en">1. Discovery</span></button>
+          <button type="button" role="radio" data-step="kalib"><span data-l="et">2. Kalibreerimine</span><span data-l="en">2. Calibration</span></button>
+          <button type="button" role="radio" data-step="galaktika"><span data-l="et">3. Kauge galaktika</span><span data-l="en">3. Distant galaxy</span></button>
         </div>
       </div>
       <div class="group" data-tabs="tab3" data-steps="avastus">
         <div class="btnrow"><button type="button" class="primary" id="blink">▶ Käivita</button></div>
         <div class="toggles col">
-          <label class="toggle"><input type="checkbox" id="allLeav"> Kõik korraga</label>
-          <label class="toggle"><input type="checkbox" id="leavLine" checked> Sirged</label>
+          <label class="toggle"><input type="checkbox" id="allLeav"><span data-l="et"> Kõik korraga</span><span data-l="en"> All at once</span></label>
+          <label class="toggle"><input type="checkbox" id="leavLine" checked><span data-l="et"> Sirged</span><span data-l="en"> Lines</span></label>
         </div>
         <p class="readout" id="leavRead"></p>
       </div>
       <div class="group" data-tabs="tab3" data-steps="kalib">
-        <div class="slider"><label for="mu2">SMC kaugusmoodul μ</label><input type="range" id="mu2" min="15" max="22" step="0.01" value="17"><output for="mu2" id="mu2Out"></output></div>
-        <div class="btnrow"><button type="button" id="fit2">Sobita</button></div>
+        <div class="slider"><label for="mu2"><span data-l="et">SMC kaugusmoodul μ</span><span data-l="en">SMC distance modulus μ</span></label><input type="range" id="mu2" min="15" max="22" step="0.01" value="17"><output for="mu2" id="mu2Out"></output></div>
+        <div class="btnrow"><button type="button" id="fit2"><span data-l="et">Sobita</span><span data-l="en">Fit</span></button></div>
         <p class="readout" id="calRead" aria-live="polite"></p>
       </div>
       <div class="group" data-tabs="tab3" data-steps="galaktika">
-        <div class="slider"><label for="mu3">Galaktika kaugusmoodul μ</label><input type="range" id="mu3" min="27" max="35" step="0.01" value="30"><output for="mu3" id="mu3Out"></output></div>
+        <div class="slider"><label for="mu3"><span data-l="et">Galaktika kaugusmoodul μ</span><span data-l="en">Galaxy distance modulus μ</span></label><input type="range" id="mu3" min="27" max="35" step="0.01" value="30"><output for="mu3" id="mu3Out"></output></div>
         <div class="btnrow">
-          <button type="button" class="primary" id="check3">Kontrolli</button>
-          <button type="button" id="fit3">Sobita</button>
-          <button type="button" id="newGal">Uus galaktika</button>
+          <button type="button" class="primary" id="check3"><span data-l="et">Kontrolli</span><span data-l="en">Check</span></button>
+          <button type="button" id="fit3"><span data-l="et">Sobita</span><span data-l="en">Fit</span></button>
+          <button type="button" id="newGal"><span data-l="et">Uus galaktika</span><span data-l="en">New galaxy</span></button>
         </div>
         <p class="readout" id="galRead" aria-live="polite"></p>
       </div>
 
       <div class="group" data-tabs="tab4">
         <div class="slider"><label for="av" id="avLbl">Tolm: neeldumine A<sub>V</sub> (tähesuurustes)</label><input type="range" id="av" min="0" max="5" step="0.05" value="1.5"><output for="av" id="avOut"></output></div>
-        <label class="toggle"><input type="checkbox" id="alt"> Teistsugune tolm</label>
+        <label class="toggle"><input type="checkbox" id="alt"><span data-l="et"> Teistsugune tolm</span><span data-l="en"> Different dust</span></label>
       </div>
       <div class="group" data-tabs="tab4" data-views="star">
         <div id="dustRead"></div>
         <p class="formula">W<sub>H</sub> = H − 0.386 (V − I)</p>
       </div>
       <div class="group" data-tabs="tab4" data-views="gal">
-        <h3 id="bandLbl">Riba</h3>
+        <h3 id="bandLbl"><span data-l="et">Riba</span><span data-l="en">Band</span></h3>
         <div class="seg" role="radiogroup" aria-labelledby="bandLbl">
           <button type="button" role="radio" data-band="V">V</button>
           <button type="button" role="radio" data-band="I">I</button>
@@ -437,14 +471,14 @@ table.res tr.hl td { font-weight: 650; }
           <button type="button" role="radio" data-band="W">W<sub>H</sub></button>
         </div>
         <div id="galDustRead"></div>
-        <div class="btnrow"><button type="button" id="newDust">Uued tsefeiidid</button></div>
+        <div class="btnrow"><button type="button" id="newDust"><span data-l="et">Uued tsefeiidid</span><span data-l="en">New Cepheids</span></button></div>
       </div>
     </section>
   </div>
 
   <section class="card explain">
-    <h2>Mida joonis näitab</h2>
-    <ul data-tab="tab1">
+    <h2><span data-l="et">Mida joonis näitab</span><span data-l="en">What the drawings show</span></h2>
+    <ul data-tab="tab1" data-l="et">
       <li>Tsefeiid on hiidtäht, mis on <a href="https://et.wikipedia.org/wiki/Peajada" target="_blank" rel="noopener">peajadalt</a> lahkunud. Mõne miljoni aasta jooksul ületab ta HR-diagrammil kitsa
         ebastabiilsuse riba ja pulseerib, kuni on selle sees. Mida pikem on periood, seda kõrgemal ribas täht on: seda suurem ja heledam ta on.</li>
       <li>Pulsatsiooni mootor on heeliumi kiht tähe välisosas. Kokkusurumisel kiht kuumeneb ja heelium ioniseerub teist korda (He⁺ → He⁺⁺). Ioniseeritud heelium on läbipaistmatum ja peab kinni seest tulevat soojust,
@@ -458,7 +492,21 @@ table.res tr.hl td { font-weight: 650; }
         Sellest tuleb <a href="#leavitt" data-go="tab3">perioodi-heleduse seos</a>.</li>
       <li>Joonis on simulatsioon: keskmine heledus tuleb perioodi-heleduse seosest, temperatuur ebastabiilsuse riba keskelt ja raadius neist kahest. Raadius muutub ±8 %, temperatuur umbes ±10 %.</li>
     </ul>
-    <ul data-tab="tab2" hidden>
+    <ul data-tab="tab1" data-l="en">
+      <li>A Cepheid is a giant star that has left the <a href="https://en.wikipedia.org/wiki/Main_sequence" target="_blank" rel="noopener">main sequence</a>. Over a few million years it crosses the narrow
+        instability strip of the HR diagram and pulsates while it is inside it. The longer the period, the higher up in the strip the star is: the larger and more luminous it is.</li>
+      <li>The engine of the pulsation is a layer of helium in the outer part of the star. When compressed, the layer heats up and the helium is ionised a second time (He⁺ → He⁺⁺). Ionised helium is more opaque and holds back the heat coming from inside,
+        so the pressure rises and pushes the layers out. As it expands the layer cools, the helium recombines, becomes transparent and lets the heat out. Then gravity pulls the layers back and everything repeats.</li>
+      <li>It is like the lid of a pot that rises when steam builds up and falls when the steam has escaped. The mechanism is called the κ mechanism, after the opacity κ.</li>
+      <li>In stars hotter than the strip, the helium layer is too close to the surface to move anything; in cooler ones, convection damps the pulsation. This is why only the stars in the strip pulsate.</li>
+      <li>The star is brightest when it is hottest: nearly at its smallest, not at its largest. The luminosity depends more on the temperature than on the radius, because L = 4π R² σ T⁴.
+        The brightness rises fast and falls slowly.</li>
+      <li>The velocity is measured from the <a href="https://en.wikipedia.org/wiki/Doppler_effect" target="_blank" rel="noopener">Doppler shift</a> of the spectral lines. A positive radial velocity means that the surface moves away from us: the star contracts.</li>
+      <li>The period is set by the mean density of the star, roughly the time it takes a sound wave to cross the star. A larger star is less dense and pulsates more slowly, but it is also more luminous.
+        From this comes the <a href="#leavitt" data-go="tab3">period–luminosity relation</a>.</li>
+      <li>The drawing is a simulation: the mean luminosity comes from the period–luminosity relation, the temperature from the middle of the instability strip, and the radius from these two. The radius changes by ±8 %, the temperature by about ±10 %.</li>
+    </ul>
+    <ul data-tab="tab2" hidden data-l="et">
       <li>Tähte saab vaadelda ainult selgetel öödel, nii et ühtki tsüklit ei näe tervikuna. Kui vaatlused perioodiga kokku voltida (faas on aja ja perioodi jagatise murdosa),
         liituvad paljud tsüklid üheks heleduskõveraks.</li>
       <li>Ainult õige periood annab puhta kõvera. Arvuti proovib läbi tuhandeid perioode, sobitab igaühega sujuva kõvera ja leiab selle, millega punktid kõverast kõige vähem hajuvad: periodogrammi kõrgeima tipu.</li>
@@ -469,7 +517,18 @@ table.res tr.hl td { font-weight: 650; }
       <li>Harjutuse <a href="index.html#cepCluster">2. osa</a> perioodid on Gaia DR3-st: Gaia mõõtis iga tähte mõnikümmend korda ligi kolme aasta jooksul. <a href="index.html#galaxies">3. osa</a> galaktikate tsefeiidide perioodid
         on Hubble'i kosmoseteleskoobi vaatlustest, umbes tosin vaatlust mõne kuu jooksul.</li>
     </ul>
-    <ul data-tab="tab3" hidden>
+    <ul data-tab="tab2" hidden data-l="en">
+      <li>A star can be observed only on clear nights, so no cycle is seen whole. When the observations are folded with the period (the phase is the fractional part of the time divided by the period),
+        many cycles combine into one light curve.</li>
+      <li>Only the right period gives a clean curve. A computer tries thousands of periods, fits a smooth curve with each one and finds the one with which the points scatter least around the curve: the highest peak of the periodogram.</li>
+      <li>The smaller peaks are aliases. Ground-based observations are made about once a day, so a period whose frequency differs by one cycle per day fits almost as well. With few observations
+        an alias can even be higher than the right peak.</li>
+      <li>The longer the time span T of the observations, the more cycles fit into it and the more precise the period: a small error in the period grows with every cycle. The error of the period is about P² δφ / T, where δφ is the error in phase.
+        This is why the period of a Cepheid is known much more precisely than its luminosity.</li>
+      <li>The periods of <a href="index.html#cepCluster">part 2</a> of the exercise are from Gaia DR3: Gaia measured each star a few dozen times over nearly three years. The periods of the Cepheids in the galaxies of <a href="index.html#galaxies">part 3</a>
+        are from observations with the Hubble Space Telescope, about a dozen observations over a few months.</li>
+    </ul>
+    <ul data-tab="tab3" hidden data-l="et">
       <li><a class="en" href="https://en.wikipedia.org/wiki/Henrietta_Swan_Leavitt" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Henrietta Swan Leavitt</a> (1868–1921) mõõtis Harvardi observatooriumis fotoplaatidelt muutlike tähtede heledusi.
         1908. aastal avaldas ta 1777 muutliku tähe kataloogi Magalhãesi pilvedes ja märkis, et heledamatel tähtedel on pikemad perioodid. 1912. aastal näitas ta 25 tähe põhjal, et seos on täpne:
         perioodi logaritm kasvab umbes 0.48 võrra iga tähesuuruse kohta.</li>
@@ -484,7 +543,22 @@ table.res tr.hl td { font-weight: 650; }
         (vt <a href="#tolm" data-go="tab4">Tolm ja Wesenheit</a>).</li>
       <li>Miks seos üldse on: suurem tsefeiid on heledam ja hõredam, seepärast pulseerib ta aeglasemalt (vt <a href="#pulsatsioon" data-go="tab1">Pulsatsioon</a>).</li>
     </ul>
-    <ul data-tab="tab4" hidden>
+    <ul data-tab="tab3" hidden data-l="en">
+      <li><a href="https://en.wikipedia.org/wiki/Henrietta_Swan_Leavitt" target="_blank" rel="noopener">Henrietta Swan Leavitt</a> (1868–1921) measured the brightnesses of variable stars on photographic plates at Harvard College Observatory.
+        In 1908 she published a catalogue of 1777 variable stars in the Magellanic Clouds and noted that the brighter stars had longer periods. In 1912 she showed from 25 stars that the relation is precise:
+        the logarithm of the period grows by about 0.48 for each magnitude.</li>
+      <li>All the stars of the Small Magellanic Cloud are at about the same distance from us, so their apparent magnitudes differ as much as their true luminosities. Leavitt did not need to know the distances.</li>
+      <li>The relation gives only relative luminosities, though. It becomes a yardstick once the distance of some Cepheid is known in another way. The first calibration was made by Ejnar Hertzsprung in 1913.
+        <a href="hubble.html#paisumine">Edwin Hubble</a> found Cepheids in the Andromeda nebula in 1923–1924 and showed with them that it is another galaxy far outside the Milky Way.
+        In 1952 Walter Baade found that the calibration had mixed up two different types of pulsating stars, and the distances of galaxies doubled.</li>
+      <li>Today the relation is calibrated with Gaia parallaxes: from the parallaxes of single Cepheids, as in step 2, or from the distances of their clusters, as in <a href="index.html#cepPL">part 2</a> of the exercise.</li>
+      <li>In a distant galaxy, the Cepheids are again all at one distance. The shift of their apparent magnitudes from the calibrated relation is the distance modulus of the galaxy, μ = m − M. This is exactly what <a href="index.html#galaxies">part 3</a> of the exercise does
+        for 29 galaxies.</li>
+      <li>Leavitt's magnitudes are photographic, in blue light, and dust affects them. The drawings of steps 2 and 3 use the Wesenheit magnitude W<sub>H</sub>, as does the exercise
+        (see <a href="#tolm" data-go="tab4">Dust and Wesenheit</a>).</li>
+      <li>Why there is a relation at all: a larger Cepheid is more luminous and less dense, so it pulsates more slowly (see <a href="#pulsatsioon" data-go="tab1">Pulsation</a>).</li>
+    </ul>
+    <ul data-tab="tab4" hidden data-l="et">
       <li>Tähtedevaheline tolm neelab ja hajutab sinist valgust rohkem kui punast, nii et tolmu taga olev täht paistab nõrgem ja punasem.</li>
       <li>Kui palju nõrgem täht igas ribas paistab, on ette teada sellest, kui palju punasem ta paistab: värvuse ja tähesuuruse muutus on võrdelised. W<sub>H</sub> = H − 0.386 (V − I) lahutab heledusest
         just nii palju, kui värvus ennustab. Mis jääb, ei sõltu tolmu hulgast.
@@ -497,15 +571,35 @@ table.res tr.hl td { font-weight: 650; }
         W<sub>H</sub>-ga on seos kõigi jaoks sama, seepärast kasutab harjutus ainult W<sub>H</sub>-d.</li>
       <li>Harjutuse 1. osa värvus-heledusdiagramm tolmu ei arvesta (vt <a href="hajusparved.html#varvus-heledus">hajusparvede lehte</a>).</li>
     </ul>
-    <p class="src" data-tab="tab3" hidden>Andmed: 1. samm Leavitt &amp; Pickering (1912, Harvard College Observatory Circular 173), tähtede asukohad joonisel on välja mõeldud.
+    <ul data-tab="tab4" hidden data-l="en">
+      <li>Interstellar dust absorbs and scatters blue light more than red, so a star behind dust looks fainter and redder.</li>
+      <li>How much fainter the star looks in each band is known in advance from how much redder it looks: the changes in colour and magnitude are proportional. W<sub>H</sub> = H − 0.386 (V − I) subtracts from the brightness
+        exactly as much as the colour predicts. What remains does not depend on the amount of dust.
+        A similar quantity W = V − 3 (B − V) was introduced by van den Bergh (1968); the name Wesenheit (German for essence) was given to it by Madore (1976).</li>
+      <li>In the drawing, the star with dust moves along the reddening arrow and stays on the same blue line all the time. W<sub>H</sub> is where this line crosses the colour V − I = 0: the H brightness of the star without its colour.</li>
+      <li>The H band (1.6 μm, infrared) is chosen because dust dims it little and the correction is small. The colour V − I comes from visible light.</li>
+      <li>The factor 0.386 assumes a certain kind of dust. <b>Different dust</b> absorbs relatively less red and infrared light. Then W<sub>H</sub> no longer stays exactly the same, but the error is much smaller than in the V, I or H band.</li>
+      <li>W<sub>H</sub> also removes part of the scatter that comes from the width of the instability strip: a Cepheid that is hotter and more luminous than average is also bluer.</li>
+      <li>The Milky Way Cepheids of <a href="index.html#cepCluster">part 2</a> of the exercise are behind different amounts of dust, and so are the Cepheids in the dusty spiral galaxies of <a href="index.html#galaxies">part 3</a>.
+        With W<sub>H</sub> the relation is the same for all of them, which is why the exercise uses only W<sub>H</sub>.</li>
+      <li>The colour–magnitude diagram of part 1 of the exercise does not account for dust (see the <a href="hajusparved.html#varvus-heledus">open clusters page</a>).</li>
+    </ul>
+    <p class="src" data-tab="tab3" hidden data-l="et">Andmed: 1. samm Leavitt &amp; Pickering (1912, Harvard College Observatory Circular 173), tähtede asukohad joonisel on välja mõeldud.
       2. samm: harjutuse 2. osa väljatsefeiidid, W<sub>H</sub> Riess jt (2021), parallaksid Gaia DR3 nullpunkti parandusega. SMC kaugusmoodul 18.98 (62 kpc): Graczyk jt (2020).
       SMC ja kauge galaktika tsefeiidid on simuleeritud seosest M<sub>H</sub><sup>W</sup> = −5.914 − 3.29 (log P − 1) (Cruz Reyes &amp; Anderson 2023).</p>
+    <p class="src" data-tab="tab3" hidden data-l="en">Data: step 1 Leavitt &amp; Pickering (1912, Harvard College Observatory Circular 173); the positions of the stars in the drawing are made up.
+      Step 2: the field Cepheids of part 2 of the exercise, W<sub>H</sub> Riess et al. (2021), parallaxes from Gaia DR3 with the zero-point correction. SMC distance modulus 18.98 (62 kpc): Graczyk et al. (2020).
+      The Cepheids of the SMC and of the distant galaxy are simulated from the relation M<sub>H</sub><sup>W</sup> = −5.914 − 3.29 (log P − 1) (Cruz Reyes &amp; Anderson 2023).</p>
   </section>
 </main>
 
 <script>
 (() => {
   const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+  // A text drawn by the script, in the language of the page.
+  const L = (et, en) => (document.documentElement.lang === 'en' ? en : et);
+  // Both languages as spans, for markup built by the script; the CSS shows one.
+  const sp = (et, en) => `<span data-l="et">${et}</span><span data-l="en">${en}</span>`;
 
   function el(tag, attrs, parent) {
     const e = document.createElementNS(NS, tag);
@@ -533,7 +627,7 @@ table.res tr.hl td { font-weight: 650; }
   function sig(v, n = 3) {
     if (!isFinite(v) || v === 0) return '0';
     let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
-    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, L(' ', ',')));
     return minus(s);
   }
   function seeded(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
@@ -633,10 +727,14 @@ table.res tr.hl td { font-weight: 650; }
 
   const PRESETS = [['δ Cep', 5.366], ['η Aql', 7.177], ['S Nor', 9.754], ['ℓ Car', 35.55], ['SV Vul', 44.91]];
   const STAGES = [
-    { name: '1. Kokkusurutud', phi: 0.92, text: 'Täht on kokku surutud. Heeliumi kiht kuumeneb ja ioniseerub teist korda (He⁺ → He⁺⁺). Ioniseeritud heelium on läbipaistmatu ja peab seest tulevat soojust kinni.' },
-    { name: '2. Paisub', phi: 0.12, text: 'Kinni jäänud soojus tõstab rõhku ja surub kihid välja. Täht on kõige kuumem ja heledam.' },
-    { name: '3. Paisunud', phi: 0.42, text: 'Täht on kõige suurem. Kiht on jahtunud, heelium on rekombineerunud ja läbipaistev, nii et soojus pääseb välja.' },
-    { name: '4. Langeb', phi: 0.7, text: 'Lisarõhku enam pole ja gravitatsioon tõmbab kihid tagasi. Täht tõmbub kokku ja kõik kordub.' },
+    { name: '1. Kokkusurutud', nameEn: '1. Compressed', phi: 0.92, text: 'Täht on kokku surutud. Heeliumi kiht kuumeneb ja ioniseerub teist korda (He⁺ → He⁺⁺). Ioniseeritud heelium on läbipaistmatu ja peab seest tulevat soojust kinni.',
+      textEn: 'The star is compressed. The helium layer heats up and is ionised a second time (He⁺ → He⁺⁺). Ionised helium is opaque and holds back the heat from inside.' },
+    { name: '2. Paisub', nameEn: '2. Expanding', phi: 0.12, text: 'Kinni jäänud soojus tõstab rõhku ja surub kihid välja. Täht on kõige kuumem ja heledam.',
+      textEn: 'The trapped heat raises the pressure and pushes the layers out. The star is at its hottest and brightest.' },
+    { name: '3. Paisunud', nameEn: '3. Expanded', phi: 0.42, text: 'Täht on kõige suurem. Kiht on jahtunud, heelium on rekombineerunud ja läbipaistev, nii et soojus pääseb välja.',
+      textEn: 'The star is at its largest. The layer has cooled, and the helium has recombined and is transparent, so the heat escapes.' },
+    { name: '4. Langeb', nameEn: '4. Falling', phi: 0.7, text: 'Lisarõhku enam pole ja gravitatsioon tõmbab kihid tagasi. Täht tõmbub kokku ja kõik kordub.',
+      textEn: 'The extra pressure is gone, and gravity pulls the layers back. The star contracts and everything repeats.' },
   ];
   const stageOf = phi => (phi >= 0.85 || phi < 0.03 ? 0 : phi < 0.3 ? 1 : phi < 0.55 ? 2 : 3);
 
@@ -690,8 +788,8 @@ table.res tr.hl td { font-weight: 650; }
         else arrow(svg, cx + r1 * ca, cy + r1 * sa, cx + r0 * ca, cy + r0 * sa, 'gas', 8, 4.5);
       }
     }
-    text(svg, 12, 20, k > 0.5 ? 'heeliumi kiht: läbipaistmatu (He⁺⁺)' : 'heeliumi kiht: läbipaistev (He⁺)', 'nl');
-    text(svg, 12, 36, Math.abs(v) <= 0.08 ? 'pind peaaegu seisab' : v > 0 ? 'pind liigub välja' : 'pind liigub sisse', 'nl2');
+    text(svg, 12, 20, k > 0.5 ? L('heeliumi kiht: läbipaistmatu (He⁺⁺)', 'helium layer: opaque (He⁺⁺)') : L('heeliumi kiht: läbipaistev (He⁺)', 'helium layer: transparent (He⁺)'), 'nl');
+    text(svg, 12, 36, Math.abs(v) <= 0.08 ? L('pind peaaegu seisab', 'the surface is nearly still') : v > 0 ? L('pind liigub välja', 'the surface moves out') : L('pind liigub sisse', 'the surface moves in'), 'nl2');
     text(svg, 12, 356, `R = ${sig(radiusAt(c, phi), 3)} R☉`, 'nl2');
     text(svg, 358, 356, `T = ${round10(T)} K`, 'nl2', 'end');
   }
@@ -704,24 +802,24 @@ table.res tr.hl td { font-weight: 650; }
     const X = mkScale(4.45, 3.55, B.x0, B.x1), Y = mkScale(-1.5, 5.4, B.y1, B.y0);
     hrS = { X, Y };
     const g = el('g', {}, svg);
-    const xt = [20000, 10000, 7000, 5000].map(t => [Math.log10(t), sig(t, 2).replace(/^(\d+)(\d{3})$/, '$1 $2')]);
+    const xt = [20000, 10000, 7000, 5000].map(t => [Math.log10(t), sig(t, 2).replace(/^(\d+)(\d{3})$/, L('$1 $2', '$1,$2'))]);
     const yt = [-1, 0, 1, 2, 3, 4, 5].map(v => [v, ['0.1', '1', '10', '100', '1000', '10⁴', '10⁵'][v + 1]]);
-    frame(g, B, X, Y, xt, yt, 'temperatuur (K)', 'heledus (L☉)', 36);
+    frame(g, B, X, Y, xt, yt, L('temperatuur (K)', 'temperature (K)'), L('heledus (L☉)', 'luminosity (L☉)'), 36);
     const inner = el('g', { 'clip-path': clipRect(svg, 'hrclip', B) }, g);
     const ms = [[4.45, 4.4], [4.2, 2.8], [4.0, 1.5], [3.88, 0.7], [3.8, 0.2], [3.762, 0], [3.7, -0.5], [3.6, -1.3]];
     el('polyline', { points: pts(ms.map(([t, l]) => [X(t), Y(l)])), class: 'msline' }, inner);
-    text(g, X(4.14), Y(1.85), 'peajada', 'lbl3', 'middle');
+    text(g, X(4.14), Y(1.85), L('peajada', 'main sequence'), 'lbl3', 'middle');
     const blue = [], red = [];
     for (let l = 2.0; l <= 5.3001; l += 0.1) { blue.push([X(stripT(l) + 0.035), Y(l)]); red.push([X(stripT(l) - 0.035), Y(l)]); }
     el('polygon', { points: pts(blue.concat(red.reverse())), class: 'strip' }, inner);
-    text(g, X(stripT(2.0)) + 6, Y(2.0) + 16, 'ebastabiilsuse riba', 'clbl', 'middle');
+    text(g, X(stripT(2.0)) + 6, Y(2.0) + 16, L('ebastabiilsuse riba', 'instability strip'), 'clbl', 'middle');
     for (const P of [1, 3, 10, 30, 100]) {
       const q = cepheid(P), x = X(stripT(q.logL) - 0.035), y = Y(q.logL);
       el('line', { x1: x, y1: y, x2: x + 6, y2: y, class: 'axisline' }, g);
-      text(g, x + 8, y + 4, `${P} p`, 'lbl3');
+      text(g, x + 8, y + 4, `${P} ${L('p', 'd')}`, 'lbl3');
     }
     el('circle', { cx: X(Math.log10(TSUN)), cy: Y(0), r: 5, class: 'sun' }, g);
-    text(g, X(Math.log10(TSUN)) + 8, Y(0) + 15, 'Päike', 'lbl3');
+    text(g, X(Math.log10(TSUN)) + 8, Y(0) + 15, L('Päike', 'Sun'), 'lbl3');
     const loop = [];
     for (let i = 0; i <= 100; i++) { const p = i / 100; loop.push([X(Math.log10(tempAt(c, p))), Y(logLAt(c, p))]); }
     el('polyline', { points: pts(loop), class: 'curve thin' }, g);
@@ -742,7 +840,7 @@ table.res tr.hl td { font-weight: 650; }
     const x0 = 110, x1 = 748, X = mkScale(0, 2, x0, x1), g = el('g', {}, svg);
     const n = 240, ph = Array.from({ length: n + 1 }, (_, i) => 2 * i / n);
     const rows = [
-      { f: p => mvAt(c, p), lab: 'M_V', unit: 'tähesuurus', rev: true, d: 1 },
+      { f: p => mvAt(c, p), lab: 'M_V', unit: L('tähesuurus', 'magnitude'), rev: true, d: 1 },
       { f: p => radiusAt(c, p), lab: 'R', unit: 'R☉', d: 0 },
       { f: p => tempAt(c, p), lab: 'T', unit: 'K', d: 0 },
       { f: p => vradAt(c, p), lab: 'v', unit: 'km/s', d: 0 },
@@ -762,7 +860,7 @@ table.res tr.hl td { font-weight: 650; }
       el('polyline', { points: pts(ph.map((p, k) => [X(p), Y(v[k])])), class: 'curve' }, g);
       crvS.rows.push({ Y, f: r.f });
     });
-    text(g, (x0 + x1) / 2, 322, 'faas (tsüklid)', 'lbl2', 'middle');
+    text(g, (x0 + x1) / 2, 322, L('faas (tsüklid)', 'phase (cycles)'), 'lbl2', 'middle');
     crvDyn = el('g', {}, svg);
     drawCurvesDyn();
   }
@@ -779,12 +877,14 @@ table.res tr.hl td { font-weight: 650; }
   function readouts1() {
     const c = cep, s = stageOf(st.phase);
     $('phaseOut').textContent = fmt(st.phase, 2);
-    $('stageText').innerHTML = `<b>${STAGES[s].name}.</b> ${STAGES[s].text}`;
+    $('stageText').innerHTML = `<b>${L(STAGES[s].name, STAGES[s].nameEn)}.</b> ${L(STAGES[s].text, STAGES[s].textEn)}`;
     document.querySelectorAll('#stages button').forEach((b, i) => b.setAttribute('aria-pressed', i === s));
     const rs = Array.from({ length: 100 }, (_, i) => radiusAt(c, i / 100)), ts = Array.from({ length: 100 }, (_, i) => tempAt(c, i / 100));
     const vs = Array.from({ length: 100 }, (_, i) => vradAt(c, i / 100));
-    $('pulsRead').innerHTML = `Raadius ${sig(Math.min(...rs), 3)}–${sig(Math.max(...rs), 3)} R☉, temperatuur ${round10(Math.min(...ts))}–${round10(Math.max(...ts))} K, ` +
-      `radiaalkiirus ${fmt(Math.min(...vs), 0)}…${fmtS(Math.max(...vs), 0)} km/s. Keskmine heledus <b>${sig(10 ** c.logL, 2)} L☉</b>, M<sub>V</sub> = ${fmt(c.Mv, 2)}, amplituud ${fmt(c.A, 2)} tähesuurust.`;
+    $('pulsRead').innerHTML = L(`Raadius ${sig(Math.min(...rs), 3)}–${sig(Math.max(...rs), 3)} R☉, temperatuur ${round10(Math.min(...ts))}–${round10(Math.max(...ts))} K, ` +
+      `radiaalkiirus ${fmt(Math.min(...vs), 0)}…${fmtS(Math.max(...vs), 0)} km/s. Keskmine heledus <b>${sig(10 ** c.logL, 2)} L☉</b>, M<sub>V</sub> = ${fmt(c.Mv, 2)}, amplituud ${fmt(c.A, 2)} tähesuurust.`,
+      `Radius ${sig(Math.min(...rs), 3)}–${sig(Math.max(...rs), 3)} R☉, temperature ${round10(Math.min(...ts))}–${round10(Math.max(...ts))} K, ` +
+      `radial velocity ${fmt(Math.min(...vs), 0)}…${fmtS(Math.max(...vs), 0)} km/s. Mean luminosity <b>${sig(10 ** c.logL, 2)} L☉</b>, M<sub>V</sub> = ${fmt(c.Mv, 2)}, amplitude ${fmt(c.A, 2)} magnitudes.`);
   }
   function render1() { renderStar(); renderHR(); renderCurves(); readouts1(); }
   function phaseMoved() { renderStar(); drawHRDyn(); drawCurvesDyn(); readouts1(); $('phase').value = Math.round(st.phase * 1000) % 1000; }
@@ -868,7 +968,7 @@ table.res tr.hl td { font-weight: 650; }
     const lo = Math.min(...ms) - 0.1, hi = Math.max(...ms) + 0.1;
     const X = mkScale(0, st.span, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
     const ys = niceStep((hi - lo) / 3);
-    frame(g, B, X, Y, ticks(0, st.span, niceStep(st.span / 8)), ticks(lo, hi, ys), 'aeg (päevades)', 'V (tähesuurus)', 44);
+    frame(g, B, X, Y, ticks(0, st.span, niceStep(st.span / 8)), ticks(lo, hi, ys), L('aeg (päevades)', 'time (days)'), L('V (tähesuurus)', 'V (magnitude)'), 44);
     for (const o of obs) el('circle', { cx: X(o.t), cy: Y(o.m), r: 3, fill: tCol(o.t) }, g);
   }
   function renderFold() {
@@ -878,7 +978,7 @@ table.res tr.hl td { font-weight: 650; }
     const lo = Math.min(...ms) - 0.1, hi = Math.max(...ms) + 0.1;
     const X = mkScale(0, 2, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
     frame(g, B, X, Y, [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(v => [v, fmt(v, 2)]), ticks(lo, hi, niceStep((hi - lo) / 3)),
-      `faas, kui periood on ${sig(st.Ptest, 4)} päeva`, 'V (tähesuurus)', 44);
+      L(`faas, kui periood on ${sig(st.Ptest, 4)} päeva`, `phase for a period of ${sig(st.Ptest, 4)} days`), L('V (tähesuurus)', 'V (magnitude)'), 44);
     const f = 1 / st.Ptest, fit = fitAt(f, obs.length >= 12 ? 5 : 3), b = fit.beta, c = [];
     for (let i = 0; i <= 300; i++) {
       const p = 2 * i / 300, w = 2 * Math.PI * p;
@@ -899,7 +999,7 @@ table.res tr.hl td { font-weight: 650; }
     const svg = $('pgram');
     svg.textContent = '';
     const Y = mkScale(0, 1, PB.y1, PB.y0), g = el('g', {}, svg);
-    frame(g, PB, pgX, Y, [1, 2, 5, 10, 20, 50, 100].map(v => [v, String(v)]), [0, 0.5, 1].map(v => [v, fmt(v, 1)]), 'prooviperiood (päevades, logaritmiline skaala)', 'sobivus', 40);
+    frame(g, PB, pgX, Y, [1, 2, 5, 10, 20, 50, 100].map(v => [v, String(v)]), [0, 0.5, 1].map(v => [v, fmt(v, 1)]), L('prooviperiood (päevades, logaritmiline skaala)', 'trial period (days, logarithmic scale)'), L('sobivus', 'fit'), 40);
     // The highest value in each pixel column, so that narrow peaks are not lost; columns without a trial period are skipped.
     const cols = new Float64Array(PB.x1 - PB.x0 + 1).fill(-1);
     for (let i = 0; i < pg.f.length; i++) { const x = Math.round(pgX(1 / pg.f[i]) - PB.x0); if (x >= 0 && x < cols.length && pg.pw[i] > cols[x]) cols[x] = pg.pw[i]; }
@@ -909,22 +1009,25 @@ table.res tr.hl td { font-weight: 650; }
     el('polyline', { points: pts(line), class: 'pgline' }, g);
     const x = pgX(st.Ptest);
     el('line', { x1: x, y1: PB.y0, x2: x, y2: PB.y1, class: 'ptest' }, g);
-    text(g, x + (x > 600 ? -6 : 6), PB.y0 + 14, `${sig(st.Ptest, 4)} p`, 'lbl2', x > 600 ? 'end' : 'start');
+    text(g, x + (x > 600 ? -6 : 6), PB.y0 + 14, `${sig(st.Ptest, 4)} ${L('p', 'd')}`, 'lbl2', x > 600 ? 'end' : 'start');
   }
   function readouts2() {
     $('nobsOut').textContent = st.N;
-    $('spanOut').textContent = sig(st.span, 3) + ' p';
+    $('spanOut').textContent = sig(st.span, 3) + L(' p', ' d');
     $('noiseOut').textContent = fmt(st.noise, 3);
-    $('ptestOut').textContent = sig(st.Ptest, 4) + ' p';
+    $('ptestOut').textContent = sig(st.Ptest, 4) + L(' p', ' d');
     $('ptest').value = Math.round(10000 * Math.log(st.Ptest / PMIN) / Math.log(PMAX / PMIN));
     $('nobs').value = st.N; $('span').value = Math.round(1000 * Math.log10(st.span / 10) / 2); $('noise').value = st.noise;
     document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-checked', b.dataset.mode === st.mode));
-    let s = `Tegelik periood <b>${sig(cep.P, 4)} p</b>, vaatlusperioodi sisse mahub ${sig(st.span / cep.P, 2)} tsüklit. ` +
-      `Prooviperioodi sobivus ${fmt(fitAt(1 / st.Ptest).pw, 2)}.`;
+    let s = L(`Tegelik periood <b>${sig(cep.P, 4)} p</b>, vaatlusperioodi sisse mahub ${sig(st.span / cep.P, 2)} tsüklit. ` +
+      `Prooviperioodi sobivus ${fmt(fitAt(1 / st.Ptest).pw, 2)}.`,
+      `True period <b>${sig(cep.P, 4)} d</b>; the time span holds ${sig(st.span / cep.P, 2)} cycles. ` +
+      `Fit of the trial period ${fmt(fitAt(1 / st.Ptest).pw, 2)}.`);
     if (st.found) {
       const off = Math.abs(st.found.P - cep.P) > Math.max(3 * st.found.e, 0.001 * cep.P);
-      s += `<br>Leitud periood: <b>${sig(st.found.P, 5)} ± ${sig(st.found.e, 1)} p</b>. ` +
-        (off ? '<span class="off">See ei ole õige periood, vaid vari: lisa vaatlusi või pikenda vaatlusperioodi.</span>' : '<span class="ok">Õige.</span>');
+      s += `<br>${L('Leitud periood', 'Period found')}: <b>${sig(st.found.P, 5)} ± ${sig(st.found.e, 1)} ${L('p', 'd')}</b>. ` +
+        (off ? L('<span class="off">See ei ole õige periood, vaid vari: lisa vaatlusi või pikenda vaatlusperioodi.</span>',
+          '<span class="off">This is not the right period but an alias: add observations or lengthen the time span.</span>') : L('<span class="ok">Õige.</span>', '<span class="ok">Correct.</span>'));
     }
     $('perRead').innerHTML = s;
   }
@@ -970,7 +1073,7 @@ table.res tr.hl td { font-weight: 650; }
     drawSMCDyn();
     const hits = el('g', {}, svg);
     LEAVITT.forEach((s, i) => el('circle', { cx: s.x, cy: s.y, r: 9, class: 'hit', 'data-i': i }, hits));
-    text(svg, 12, 20, 'muutlikud tähed vilguvad', 'nl');
+    text(svg, 12, 20, L('muutlikud tähed vilguvad', 'the variable stars blink'), 'nl');
   }
   function drawSMCDyn() {
     if (!smcDyn) return;
@@ -981,7 +1084,7 @@ table.res tr.hl td { font-weight: 650; }
       if (st.shown.has(i) || st.allLeav) el('circle', { cx: s.x, cy: s.y, r: 6, class: 'skyshown' }, smcDyn);
       if (i === st.picked) el('circle', { cx: s.x, cy: s.y, r: 9, class: 'skypick' }, smcDyn);
     });
-    text(smcDyn, 12, 358, `päev ${Math.floor(st.tDays)}`, 'nl2');
+    text(smcDyn, 12, 358, `${L('päev', 'day')} ${Math.floor(st.tDays)}`, 'nl2');
   }
   const leavShown = () => LEAVITT.filter((s, i) => st.allLeav || st.shown.has(i));
   let leavDyn = null;
@@ -990,7 +1093,7 @@ table.res tr.hl td { font-weight: 650; }
     svg.textContent = '';
     const B = { x0: 52, x1: 360, y0: 10, y1: 320 };
     const X = mkScale(0, 2.2, B.x0, B.x1), Y = mkScale(11, 16.8, B.y0, B.y1), g = el('g', {}, svg);
-    frame(g, B, X, Y, [0, 0.5, 1, 1.5, 2].map(v => [v, fmt(v, 1)]), [11, 12, 13, 14, 15, 16].map(v => [v, String(v)]), 'log P (P päevades)', 'fotograafiline tähesuurus', 36);
+    frame(g, B, X, Y, [0, 0.5, 1, 1.5, 2].map(v => [v, fmt(v, 1)]), [11, 12, 13, 14, 15, 16].map(v => [v, String(v)]), L('log P (P päevades)', 'log P (P in days)'), L('fotograafiline tähesuurus', 'photographic magnitude'), 36);
     const sh = leavShown();
     if (st.leavLine && sh.length >= 3) {
       for (const k of ['mx', 'mn']) {
@@ -1005,7 +1108,7 @@ table.res tr.hl td { font-weight: 650; }
       el('circle', { cx: x, cy: Y(s.mx), r: 3.2, class: 'maxpt' }, g);
       el('circle', { cx: x, cy: Y(s.mn), r: 3.2, class: 'minpt' }, g);
     });
-    if (!sh.length) text(g, (B.x0 + B.x1) / 2, (B.y0 + B.y1) / 2, 'klõpsa tähel vasakul', 'lbl3', 'middle');
+    if (!sh.length) text(g, (B.x0 + B.x1) / 2, (B.y0 + B.y1) / 2, L('klõpsa tähel vasakul', 'click a star on the left'), 'lbl3', 'middle');
     leavDyn = el('g', {}, svg);
     drawLeavDyn();
   }
@@ -1017,7 +1120,7 @@ table.res tr.hl td { font-weight: 650; }
     if (!s) return;
     const I = { x0: 62, x1: 200, y0: 34, y1: 104 };
     el('rect', { x: I.x0 - 6, y: I.y0 - 22, width: I.x1 - I.x0 + 12, height: I.y1 - I.y0 + 30, rx: 6, class: 'inset' }, leavDyn);
-    text(leavDyn, I.x0, I.y0 - 8, `HV ${s.h}: P = ${sig(s.P, 3)} p`, 'lbl3');
+    text(leavDyn, I.x0, I.y0 - 8, `HV ${s.h}: P = ${sig(s.P, 3)} ${L('p', 'd')}`, 'lbl3');
     const X = mkScale(0, 2 * s.P, I.x0, I.x1), Y = mkScale(s.mx - 0.15, s.mn + 0.15, I.y0, I.y1), c = [];
     const t0 = st.tDays - ((st.tDays / s.P + s.ph) % 1) * s.P;   // start of the current cycle
     for (let i = 0; i <= 120; i++) { const t = 2 * s.P * i / 120; c.push([X(t), Y(leavMag(s, t0 + t))]); }
@@ -1027,11 +1130,11 @@ table.res tr.hl td { font-weight: 650; }
   }
   function readoutsLeav() {
     const sh = leavShown(), s = LEAVITT[st.picked];
-    let t = `Joonisel ${sh.length} tähte 25-st.`;
-    if (s) t += ` Valitud HV ${s.h}: periood <b>${sig(s.P, 4)} p</b>, tähesuurus ${fmt(s.mx, 1)}–${fmt(s.mn, 1)}.`;
+    let t = L(`Joonisel ${sh.length} tähte 25-st.`, `${sh.length} stars of 25 in the plot.`);
+    if (s) t += L(` Valitud HV ${s.h}: periood <b>${sig(s.P, 4)} p</b>, tähesuurus ${fmt(s.mx, 1)}–${fmt(s.mn, 1)}.`, ` Picked HV ${s.h}: period <b>${sig(s.P, 4)} d</b>, magnitude ${fmt(s.mx, 1)}–${fmt(s.mn, 1)}.`);
     if (sh.length >= 3) {
       const f = linfit(sh.map(s => s.lp), sh.map(s => (s.mx + s.mn) / 2));
-      t += ` Sirge järgi kasvab log P <b>${fmt(-1 / f.a, 2)}</b> võrra iga tähesuuruse kohta (Leavitt: 0.48).`;
+      t += L(` Sirge järgi kasvab log P <b>${fmt(-1 / f.a, 2)}</b> võrra iga tähesuuruse kohta (Leavitt: 0.48).`, ` By the line, log P grows by <b>${fmt(-1 / f.a, 2)}</b> for each magnitude (Leavitt: 0.48).`);
     }
     $('leavRead').innerHTML = t;
   }
@@ -1066,9 +1169,9 @@ table.res tr.hl td { font-weight: 650; }
     svg.textContent = '';
     const B = { x0: 62, x1: 690, y0: 12, y1: 400 };
     const X = mkScale(0.2, 2.0, B.x0, B.x1), Y = mkScale(-9.6, -2.2, B.y0, B.y1), g = el('g', {}, svg);
-    frame(g, B, X, Y, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8].map(v => [v, fmt(v, 1)]), ticks(-9.6, -2.2, 1), 'log P (P päevades)', 'M (absoluutne Wesenheiti tähesuurus)', 40);
+    frame(g, B, X, Y, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8].map(v => [v, fmt(v, 1)]), ticks(-9.6, -2.2, 1), L('log P (P päevades)', 'log P (P in days)'), L('M (absoluutne Wesenheiti tähesuurus)', 'M (absolute Wesenheit magnitude)'), 40);
     for (let v = -9; v <= -3; v++) text(g, B.x1 + 6, Y(v) + 4, fmt(v + mu, 1), 'tlbl');
-    text(g, 0, 0, 'W_H (näiv tähesuurus) = M + μ', 'lbl2', 'middle').setAttribute('transform', `translate(${B.x1 + 56} ${(B.y0 + B.y1) / 2}) rotate(90)`);
+    text(g, 0, 0, L('W_H (näiv tähesuurus) = M + μ', 'W_H (apparent magnitude) = M + μ'), 'lbl2', 'middle').setAttribute('transform', `translate(${B.x1 + 56} ${(B.y0 + B.y1) / 2}) rotate(90)`);
     const inner = el('g', { 'clip-path': clipRect(svg, 'calclip', B) }, g);
     el('line', { x1: X(0.2), y1: Y(mwM(0.2)), x2: X(2), y2: Y(mwM(2)), class: 'fitline' }, inner);
     for (const c of list) el('circle', { cx: X(c.lp), cy: Y(c.W - mu), r: 3.6, class: 'galpt' }, inner);
@@ -1078,31 +1181,41 @@ table.res tr.hl td { font-weight: 650; }
       el('title', {}, p).textContent = c.name;
     }
     const off = mean(list.map(c => c.W - mu - mwM(c.lp)));
-    text(g, B.x0 + 10, B.y0 + 18, two ? 'Väike Magalhãesi pilv' : `galaktika, ${list.length} tsefeiidi`, 'lbl');
-    if (Math.abs(off) > 0.08) text(g, B.x0 + 10, B.y0 + 36, `punktid on seosest keskmiselt ${fmt(Math.abs(off), 2)} tähesuurust ${off > 0 ? 'allpool' : 'ülalpool'}`, 'lbl3');
+    text(g, B.x0 + 10, B.y0 + 18, two ? L('Väike Magalhãesi pilv', 'Small Magellanic Cloud') : L(`galaktika, ${list.length} tsefeiidi`, `galaxy, ${list.length} Cepheids`), 'lbl');
+    if (Math.abs(off) > 0.08) text(g, B.x0 + 10, B.y0 + 36, L(`punktid on seosest keskmiselt ${fmt(Math.abs(off), 2)} tähesuurust ${off > 0 ? 'allpool' : 'ülalpool'}`,
+      `the points are on average ${fmt(Math.abs(off), 2)} magnitudes ${off > 0 ? 'below' : 'above'} the relation`), 'lbl3');
   }
   function readoutsCalib() {
     $('mu2Out').textContent = fmt(st.mu2, 2);
     $('mu3Out').textContent = fmt(st.mu3, 2);
-    const lin = `Linnutee seos: M = ${fmt(MWFIT.b, 2)} ${MWFIT.a < 0 ? '−' : '+'} ${fmt(Math.abs(MWFIT.a), 2)} (log P − 1).`;
+    const lin = `${L('Linnutee seos', 'Milky Way relation')}: M = ${fmt(MWFIT.b, 2)} ${MWFIT.a < 0 ? '−' : '+'} ${fmt(Math.abs(MWFIT.a), 2)} (log P − 1).`;
+    const yours = mu => L(`Sinu μ = <b>${fmt(mu, 2)}</b> annab kauguse <b>${fmtDist(muToPc(mu))}</b>.`, `Your μ = <b>${fmt(mu, 2)}</b> gives a distance of <b>${fmtDist(muToPc(mu))}</b>.`);
+    const best = f => L(`Parim μ = ${fmt(f.mu, 2)} ± ${fmt(f.e, 2)}, kaugus ${fmtDist(muToPc(f.mu))}.`, `Best μ = ${fmt(f.mu, 2)} ± ${fmt(f.e, 2)}, distance ${fmtDist(muToPc(f.mu))}.`);
     if (st.step === 'kalib') {
       const f = fitMu(SMC);
-      let s = `${lin}<br>Sinu μ = <b>${fmt(st.mu2, 2)}</b> annab kauguse <b>${fmtDist(muToPc(st.mu2))}</b>.`;
-      if (st.fitted2) s += `<br>Parim μ = ${fmt(f.mu, 2)} ± ${fmt(f.e, 2)}, kaugus ${fmtDist(muToPc(f.mu))}. Kaksiktähtede järgi on SMC kaugusmoodul 18.98, kaugus 62 kpc (Graczyk jt 2020).`;
+      let s = `${lin}<br>${yours(st.mu2)}`;
+      if (st.fitted2) s += `<br>${best(f)} ` + L('Kaksiktähtede järgi on SMC kaugusmoodul 18.98, kaugus 62 kpc (Graczyk jt 2020).', 'From eclipsing binaries, the distance modulus of the SMC is 18.98, a distance of 62 kpc (Graczyk et al. 2020).');
       $('calRead').innerHTML = s;
     } else {
       const f = fitMu(GAL.c);
-      let s = `${lin}<br>Sinu μ = <b>${fmt(st.mu3, 2)}</b> annab kauguse <b>${fmtDist(muToPc(st.mu3))}</b>.`;
-      if (st.fitted3) s += `<br>Parim μ = ${fmt(f.mu, 2)} ± ${fmt(f.e, 2)}, kaugus ${fmtDist(muToPc(f.mu))}.`;
+      let s = `${lin}<br>${yours(st.mu3)}`;
+      if (st.fitted3) s += `<br>${best(f)}`;
       if (st.checked) {
         const tol = Math.max(2 * f.e, 0.1), d = st.checked.mu - f.mu;
         s += Math.abs(d) <= tol
-          ? `<br><span class="ok">Õige!</span> Galaktika tegelik kaugusmoodul on ${fmt(GAL.mu, 2)}, kaugus ${fmtDist(muToPc(GAL.mu))}.`
-          : `<br><span class="off">Veel mitte:</span> ${d < 0 ? 'galaktika on kaugemal, suurenda μ' : 'galaktika on lähemal, vähenda μ'}.`;
+          ? L(`<br><span class="ok">Õige!</span> Galaktika tegelik kaugusmoodul on ${fmt(GAL.mu, 2)}, kaugus ${fmtDist(muToPc(GAL.mu))}.`,
+            `<br><span class="ok">Correct!</span> The true distance modulus of the galaxy is ${fmt(GAL.mu, 2)}, a distance of ${fmtDist(muToPc(GAL.mu))}.`)
+          : L(`<br><span class="off">Veel mitte:</span> ${d < 0 ? 'galaktika on kaugemal, suurenda μ' : 'galaktika on lähemal, vähenda μ'}.`,
+            `<br><span class="off">Not yet:</span> ${d < 0 ? 'the galaxy is farther away, increase μ' : 'the galaxy is closer, decrease μ'}.`);
       }
       $('galRead').innerHTML = s;
     }
   }
+  const HINTS_EN = {
+    avastus: "The variable stars of the Small Magellanic Cloud blink, each with its own period. Play the time and click the stars: each star you click is added to the plot with its period and brightness, as in Leavitt's 1912 table.",
+    kalib: 'The blue points are Milky Way Cepheids whose distances come from Gaia parallaxes; their absolute magnitudes are on the left axis. The orange ones are SMC Cepheids. Shift them with the μ slider on the right until they are on the blue line.',
+    galaktika: 'Cepheids of a distant galaxy. Shift them with the μ slider until they are on the calibrated line, and press “Check”. This is what part 3 of the exercise does.',
+  };
   const HINTS = {
     avastus: 'Väikese Magalhãesi pilve muutlikud tähed vilguvad, igaüks oma perioodiga. Käivita aeg ja klõpsa tähtedel: iga klõpsatud täht lisandub joonisele oma perioodi ja heledusega, nagu Leavitt\'i 1912. aasta tabelis.',
     kalib: 'Sinised punktid on Linnutee tsefeiidid, mille kauguse annab Gaia parallaks; nende absoluutne tähesuurus on vasakul teljel. Oranžid on SMC tsefeiidid. Nihuta neid paremal μ-liuguriga, kuni nad on sinisel sirgel.',
@@ -1111,8 +1224,8 @@ table.res tr.hl td { font-weight: 650; }
   function render3() {
     const one = st.step === 'avastus';
     $('step1scene').hidden = !one; $('leavLegend').hidden = !one; $('calibScene').hidden = one;
-    $('leavHint').textContent = HINTS[st.step];
-    $('lgGal').textContent = st.step === 'kalib' ? 'SMC tsefeiidid, nihutatud μ võrra' : 'galaktika tsefeiidid, nihutatud μ võrra';
+    $('leavHint').textContent = L(HINTS[st.step], HINTS_EN[st.step]);
+    $('lgGal').textContent = st.step === 'kalib' ? L('SMC tsefeiidid, nihutatud μ võrra', 'SMC Cepheids, shifted by μ') : L('galaktika tsefeiidid, nihutatud μ võrra', 'Cepheids of the galaxy, shifted by μ');
     document.querySelectorAll('[data-step]').forEach(b => b.setAttribute('aria-checked', b.dataset.step === st.step));
     if (one) { renderSMC(); renderLeav(); readoutsLeav(); } else { renderCalib(); readoutsCalib(); }
     updateGroups();
@@ -1132,7 +1245,7 @@ table.res tr.hl td { font-weight: 650; }
     svg.textContent = '';
     const b0 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, 0), b1 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, st.Av);
     const defs = el('defs', {}, svg);
-    [[b0, 0, 'ilma tolmuta'], [b1, 1, 'tolmuga']].forEach(([b, k, lab]) => {
+    [[b0, 0, L('ilma tolmuta', 'without dust')], [b1, 1, L('tolmuga', 'with dust')]].forEach(([b, k, lab]) => {
       const x0 = 10 + k * 220, y0 = 26, cx = x0 + 100, cy = y0 + 100;
       text(svg, cx, 16, lab, 'lbl2', 'middle');
       el('rect', { x: x0, y: y0, width: 200, height: 200, rx: 6, class: 'night' }, svg);
@@ -1154,7 +1267,7 @@ table.res tr.hl td { font-weight: 650; }
     const X = k => B.x0 + (keys.indexOf(k) + 0.5) * (B.x1 - B.x0) / 4, Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
     for (const [v, L] of ticks(lo, hi, 1)) { el('line', { x1: B.x0, y1: Y(v), x2: B.x1, y2: Y(v), class: 'gridline' }, g); text(g, B.x0 - 6, Y(v) + 4, L, 'tlbl', 'end'); }
     el('rect', { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: 'axisline' }, g);
-    text(g, (B.x0 + B.x1) / 2, 16, 'tähesuurused ribades', 'lbl2', 'middle');
+    text(g, (B.x0 + B.x1) / 2, 16, L('tähesuurused ribades', 'magnitudes in the bands'), 'lbl2', 'middle');
     for (const k of keys) {
       const x = X(k), d = b1[k] - b0[k];
       text(g, x, B.y1 + 18, k === 'W' ? 'W_H' : k, 'band-lbl', 'middle');
@@ -1172,7 +1285,7 @@ table.res tr.hl td { font-weight: 650; }
     const B = { x0: 62, x1: 740, y0: 12, y1: 288 };
     const xhi = Math.max(3, bmax.C + 0.2), lo = b0.W - 0.35, hi = Math.max(bmax.H, b0.H + 1) + 0.15;
     const X = mkScale(-0.2, xhi, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
-    frame(g, B, X, Y, ticks(-0.2, xhi, 0.5), ticks(lo, hi, 0.2), 'värvus V − I', 'H', 40);
+    frame(g, B, X, Y, ticks(-0.2, xhi, 0.5), ticks(lo, hi, 0.2), L('värvus V − I', 'colour V − I'), 'H', 40);
     const inner = el('g', { 'clip-path': clipRect(svg, 'cmdclip', B) }, g);
     // Lines of equal W_H: H = W + 0.386 (V − I).
     for (let k = -4; k <= 8; k++) {
@@ -1184,22 +1297,23 @@ table.res tr.hl td { font-weight: 650; }
     text(g, X(0) + 8, Y(b0.W) + (st.alt ? 16 : -6), `W_H = ${fmt(b0.W, 2)}`, 'lbl2');
     if (st.alt && st.Av > 0) {
       el('circle', { cx: X(0), cy: Y(b1.W), r: 4, class: 'cpt hollow' }, inner);
-      text(g, X(0) + 8, Y(b1.W) - 6, `tolmuga W_H = ${fmt(b1.W, 2)}`, 'lbl3');
+      text(g, X(0) + 8, Y(b1.W) - 6, `${L('tolmuga', 'with dust')} W_H = ${fmt(b1.W, 2)}`, 'lbl3');
     }
     // The reddening arrow over the whole slider range, and the star's path so far.
     el('line', { x1: X(b0.C), y1: Y(b0.H), x2: X(bmax.C), y2: Y(bmax.H), class: 'guide' }, inner);
     if (st.Av > 0.05) arrow(inner, X(b0.C), Y(b0.H), X(b1.C), Y(b1.H), 'redden', 9, 4.5);
     el('circle', { cx: X(b0.C), cy: Y(b0.H), r: 5.5, class: 'cpt hollow' }, inner);
     el('circle', { cx: X(b1.C), cy: Y(b1.H), r: 5.5, class: 'cpt' }, inner);
-    text(g, X(b0.C) - 9, Y(b0.H) + 4, 'ilma tolmuta', 'lbl3', 'end');
+    text(g, X(b0.C) - 9, Y(b0.H) + 4, L('ilma tolmuta', 'without dust'), 'lbl3', 'end');
     if (st.Av > 0.3) text(g, X(b1.C) + 9, Y(b1.H) + 4, `A_V = ${fmt(st.Av, 1)}`, 'lbl3');
   }
   function readoutsDust() {
     $('avOut').textContent = fmt(st.Av, 2);
-    $('avLbl').innerHTML = st.view4 === 'gal' ? 'Tolm: keskmine neeldumine A<sub>V</sub> (tähesuurustes)' : 'Tolm: neeldumine A<sub>V</sub> (tähesuurustes)';
+    $('avLbl').innerHTML = st.view4 === 'gal' ? L('Tolm: keskmine neeldumine A<sub>V</sub> (tähesuurustes)', 'Dust: mean extinction A<sub>V</sub> (magnitudes)')
+      : L('Tolm: neeldumine A<sub>V</sub> (tähesuurustes)', 'Dust: extinction A<sub>V</sub> (magnitudes)');
     const c = cep, b0 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, 0), b1 = bandsOf(c.Mv + MU2, c.Mi + MU2, c.Mh + MU2, st.Av);
     const rows = [['V', 'V'], ['I', 'I'], ['H', 'H'], ['C', 'V − I'], ['W', 'W<sub>H</sub>']];
-    $('dustRead').innerHTML = '<table class="res"><tr><th></th><th>ilma tolmuta</th><th>tolmuga</th><th>vahe</th></tr>' +
+    $('dustRead').innerHTML = `<table class="res"><tr><th></th><th>${L('ilma tolmuta', 'without dust')}</th><th>${L('tolmuga', 'with dust')}</th><th>${L('vahe', 'difference')}</th></tr>` +
       rows.map(([k, l]) => `<tr${k === 'W' ? ' class="hl"' : ''}><td>${l}</td><td>${fmt(b0[k], 3)}</td><td>${fmt(b1[k], 3)}</td><td>${fmtS(b1[k] - b0[k], 3)}</td></tr>`).join('') + '</table>';
   }
 
@@ -1233,18 +1347,18 @@ table.res tr.hl td { font-weight: 650; }
     const all = pts0.concat(pts1).map(p => p[1]);
     const lo = Math.floor((Math.min(...all) - 0.3) * 2) / 2, hi = Math.ceil((Math.max(...all) + 0.3) * 2) / 2;
     const X = mkScale(0.3, 2.0, B.x0, B.x1), Y = mkScale(lo, hi, B.y0, B.y1), g = el('g', {}, svg);
-    frame(g, B, X, Y, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8].map(v => [v, fmt(v, 1)]), ticks(lo, hi, niceStep((hi - lo) / 6)), 'log P (P päevades)',
-      k === 'W' ? 'W_H (näiv tähesuurus)' : `${k} (näiv tähesuurus)`, 40);
+    frame(g, B, X, Y, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8].map(v => [v, fmt(v, 1)]), ticks(lo, hi, niceStep((hi - lo) / 6)), L('log P (P päevades)', 'log P (P in days)'),
+      `${k === 'W' ? 'W_H' : k} ${L('(näiv tähesuurus)', '(apparent magnitude)')}`, 40);
     el('line', { x1: X(0.3), y1: Y(PLB[k](0.3) + MUG), x2: X(2), y2: Y(PLB[k](2) + MUG), class: 'curve ref' }, g);
     for (const [lp, m] of pts0) el('circle', { cx: X(lp), cy: Y(m), r: 2.6, class: 'fpt' }, g);
     for (const [lp, m] of pts1) el('circle', { cx: X(lp), cy: Y(m), r: 3.8, class: 'cpt' }, g);
     const s = dustStats()[k];
-    text(g, B.x1 - 10, B.y1 - 12, `${k === 'W' ? 'W_H' : k}: nihe ${fmtS(s.shift, 2)}, hajuvus σ = ${fmt(s.sd, 2)} tähesuurust`, 'lbl', 'end');
+    text(g, B.x1 - 10, B.y1 - 12, `${k === 'W' ? 'W_H' : k}: ` + L(`nihe ${fmtS(s.shift, 2)}, hajuvus σ = ${fmt(s.sd, 2)} tähesuurust`, `shift ${fmtS(s.shift, 2)}, scatter σ = ${fmt(s.sd, 2)} magnitudes`), 'lbl', 'end');
   }
   function readoutsDustGal() {
     document.querySelectorAll('[data-band]').forEach(b => b.setAttribute('aria-checked', b.dataset.band === st.band));
     const S = dustStats(), lab = { V: 'V', I: 'I', H: 'H', W: 'W<sub>H</sub>' };
-    $('galDustRead').innerHTML = '<table class="res"><tr><th>riba</th><th>nihe</th><th>hajuvus σ</th><th>kauguse viga</th></tr>' +
+    $('galDustRead').innerHTML = `<table class="res"><tr><th>${L('riba', 'band')}</th><th>${L('nihe', 'shift')}</th><th>${L('hajuvus', 'scatter')} σ</th><th>${L('kauguse viga', 'distance error')}</th></tr>` +
       ['V', 'I', 'H', 'W'].map(k => `<tr${k === st.band ? ' class="hl"' : ''}><td>${lab[k]}</td><td>${fmtS(S[k].shift, 2)}</td><td>${fmt(S[k].sd, 2)}</td><td>${fmtS(100 * (10 ** (S[k].shift / 5) - 1), 0)} %</td></tr>`).join('') +
       '</table>';
   }
@@ -1258,10 +1372,11 @@ table.res tr.hl td { font-weight: 650; }
 
   /* ---------- Shared ---------- */
   function readoutsShared() {
-    $('perOut').textContent = sig(st.P, 3) + ' p';
+    $('perOut').textContent = sig(st.P, 3) + L(' p', ' d');
     $('per').value = Math.round(500 * Math.log10(st.P));
     document.querySelectorAll('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.name === st.name));
-    $('cepRead').innerHTML = (st.name ? `<b>${st.name}</b>: ` : '') + `periood <b>${sig(st.P, 4)} päeva</b>, keskmine M<sub>V</sub> = ${fmt(cep.Mv, 2)}, M<sub>H</sub><sup>W</sup> = ${fmt(cep.Mw, 2)}.`;
+    $('cepRead').innerHTML = (st.name ? `<b>${st.name}</b>: ` : '') + L(`periood <b>${sig(st.P, 4)} päeva</b>, keskmine M<sub>V</sub> = ${fmt(cep.Mv, 2)}, M<sub>H</sub><sup>W</sup> = ${fmt(cep.Mw, 2)}.`,
+      `period <b>${sig(st.P, 4)} days</b>, mean M<sub>V</sub> = ${fmt(cep.Mv, 2)}, M<sub>H</sub><sup>W</sup> = ${fmt(cep.Mw, 2)}.`);
   }
   function render() {
     readoutsShared();
@@ -1293,7 +1408,7 @@ table.res tr.hl td { font-weight: 650; }
   $('per').addEventListener('input', e => setP(+(10 ** (e.target.value / 500)).toPrecision(3)));
   STAGES.forEach((s, i) => {
     const b = document.createElement('button');
-    b.type = 'button'; b.className = 'small'; b.textContent = s.name;
+    b.type = 'button'; b.className = 'small'; b.innerHTML = sp(s.name, s.nameEn);
     b.addEventListener('click', () => { stop(); st.phase = s.phi; phaseMoved(); });
     $('stages').appendChild(b);
   });
@@ -1355,15 +1470,16 @@ table.res tr.hl td { font-weight: 650; }
     raf = requestAnimationFrame(tick);
   }
   function startLoop() { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } }
-  function stop() { st.playing = false; $('play').textContent = '▶ Käivita'; }
-  function stopBlink() { st.blink = false; $('blink').textContent = '▶ Käivita'; }
+  const playLabels = () => { for (const [id, on] of [['play', st.playing], ['blink', st.blink]]) $(id).textContent = on ? L('❚❚ Peata', '❚❚ Pause') : L('▶ Käivita', '▶ Play'); };
+  function stop() { st.playing = false; playLabels(); }
+  function stopBlink() { st.blink = false; playLabels(); }
   $('play').addEventListener('click', () => {
     if (st.playing) { stop(); return; }
-    st.playing = true; $('play').textContent = '❚❚ Peata'; startLoop();
+    st.playing = true; playLabels(); startLoop();
   });
   $('blink').addEventListener('click', () => {
     if (st.blink) { stopBlink(); return; }
-    st.blink = true; $('blink').textContent = '❚❚ Peata'; startLoop();
+    st.blink = true; playLabels(); startLoop();
   });
 
   /* ---------- Tabs ---------- */
@@ -1402,11 +1518,40 @@ table.res tr.hl td { font-weight: 650; }
   };
   window.addEventListener('hashchange', fromHash);
 
+  /* ---------- Language ---------- */
+  // The language buttons switch the page in place. Texts in the markup are switched by the CSS; the title and the
+  // attributes with a data-en-* translation are set here, keeping the Estonian in data-et-*, and the drawings and
+  // readouts are drawn again. The choice goes into the address and is remembered.
+  const ATTRS = ['aria-label', 'title', 'content', 'placeholder'];
+  function applyLang() {
+    const lang = document.documentElement.lang;
+    document.title = L('Tsefeiidid', 'Cepheids');
+    for (const e of document.querySelectorAll(ATTRS.map(a => `[data-en-${a}]`).join())) {
+      for (const a of ATTRS) {
+        if (!e.hasAttribute('data-en-' + a)) continue;
+        if (!e.hasAttribute('data-et-' + a)) e.setAttribute('data-et-' + a, e.getAttribute(a));
+        e.setAttribute(a, e.getAttribute(`data-${lang}-${a}`));
+      }
+    }
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    playLabels();
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+    document.documentElement.lang = b.dataset.lang;
+    try { localStorage.setItem('lang', b.dataset.lang); } catch (e) {}
+    const u = new URL(location.href);
+    u.searchParams.set('lang', b.dataset.lang);
+    history.replaceState(null, '', u);
+    applyLang();
+    render();
+  }));
+
   Object.assign(st, MODES.ground);
   makeObs();
   st.Ptest = 7;
   makeGal();
   makeDust();
+  applyLang();
   fromHash();
 })();
 </script>

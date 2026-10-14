@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hajusparvede kaugused</title>
-<meta name="description" content="Interaktiivsed joonised hajusparvedest: parve liikmete leidmine omaliikumiste järgi, värvus-heledusdiagramm ja parallakside keskmistamine.">
+<meta name="description" content="Interaktiivsed joonised hajusparvedest: parve liikmete leidmine omaliikumiste järgi, värvus-heledusdiagramm ja parallakside keskmistamine."
+  data-en-content="Interactive drawings of open clusters: finding the cluster members by their proper motions, the colour–magnitude diagram and averaging the parallaxes.">
+<script>
+// The language is set before the page is drawn: ?lang=et or ?lang=en in the address (remembered), else the last
+// choice, else Estonian.
+(() => {
+  let l = new URLSearchParams(location.search).get('lang');
+  if (l === 'et' || l === 'en') { try { localStorage.setItem('lang', l); } catch (e) {} }
+  else { try { l = localStorage.getItem('lang'); } catch (e) {} }
+  document.documentElement.lang = l === 'en' ? 'en' : 'et';
+})();
+</script>
 <style>
 :root {
   color-scheme: light;
@@ -74,6 +85,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* The page has both languages side by side; data-l marks the text of one, and the other is hidden. */
+:root[lang="et"] [data-l="en"], :root[lang="en"] [data-l="et"] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--bg);
@@ -81,7 +94,11 @@ body {
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
-.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 14px; }
+.back { font-size: 0.88rem; margin: 0; color: var(--text-3); }
+.langs { display: flex; gap: 4px; }
+.langs button { font-size: 0.8rem; padding: 2px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.top .langs button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); border-color: transparent; }
 .back a { color: var(--text-2); text-decoration: none; }
 .back a:hover { color: var(--sel); }
 .back .sep { margin: 0 6px; }
@@ -201,7 +218,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
 .curpt { fill: var(--text-1); stroke: var(--surface); stroke-width: 2; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
 .legend i.dot { width: 8px; height: 8px; border: none; border-radius: 50%; }
 .legend i.ring { width: 8px; height: 8px; border: 1.5px solid; border-radius: 50%; }
@@ -220,142 +237,160 @@ table.res td.n { text-align: right; color: var(--text-1); }
 </head>
 <body>
 <main>
-  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span>Hajusparved<span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
-  <h1>Hajusparvede kaugused</h1>
-  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
-  <p class="intro"><a href="parallaks.html">Parallaks</a> annab otse ühe tähe kauguse, kuid juba mõnesaja parseki kaugusel on ühe tähe parallaksi viga suur.
+  <div class="top">
+    <p class="back" data-l="et"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span>Hajusparved<span class="sep">·</span><a href="standardkuunlad.html">Standardküünlad</a><span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
+    <p class="back" data-l="en"><a href="index.html">← The cosmic distance ladder</a><span class="sep">·</span><a href="parallaks.html">Parallax</a><span class="sep">·</span>Open clusters<span class="sep">·</span><a href="standardkuunlad.html">Standard candles</a><span class="sep">·</span><a href="tsefeiidid.html">Cepheids</a><span class="sep">·</span><a href="supernoovad.html">Type Ia supernovae</a><span class="sep">·</span><a href="hubble.html">Hubble's law</a></p>
+    <div class="langs" role="group" aria-label="Keel" data-en-aria-label="Language">
+      <button type="button" data-lang="et" lang="et">Eesti</button>
+      <button type="button" data-lang="en" lang="en">English</button>
+    </div>
+  </div>
+  <h1><span data-l="et">Hajusparvede kaugused</span><span data-l="en">Distances of open clusters</span></h1>
+  <p class="byline">Taavi Tuvikene<br><span data-l="et">TÜ Tartu observatoorium</span><span data-l="en">Tartu Observatory, University of Tartu</span></p>
+  <p class="intro" data-l="et"><a href="parallaks.html">Parallaks</a> annab otse ühe tähe kauguse, kuid juba mõnesaja parseki kaugusel on ühe tähe parallaksi viga suur.
     <a href="https://et.wikipedia.org/wiki/Hajusparv" target="_blank" rel="noopener">Hajusparves</a> on sadu tähti peaaegu ühel kaugusel, nii et nende parallaksid saab keskmistada.
     Kõigepealt tuleb aga parve tähed eraldada nende ees ja taga olevatest väljatähtedest. Siin on üks simuleeritud parv koos väljatähtedega: leia selle liikmed
     <a class="en" href="https://en.wikipedia.org/wiki/Proper_motion" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">omaliikumiste</a> järgi, kontrolli neid värvus-heledusdiagrammil
     ja keskmista nende parallaksid. Need on samad sammud nagu harjutuse <a href="index.html#osa-1">1. osas</a>.</p>
+  <p class="intro" data-l="en"><a href="parallaks.html">Parallax</a> gives the distance of a single star directly, but already a few hundred parsecs away the parallax error of a single star is large.
+    An <a href="https://en.wikipedia.org/wiki/Open_cluster" target="_blank" rel="noopener">open cluster</a> has hundreds of stars at nearly the same distance, so their parallaxes can be averaged.
+    First, though, the cluster stars have to be told apart from the field stars in front of and behind them. Here is a simulated cluster with its field stars: find its members
+    by their <a href="https://en.wikipedia.org/wiki/Proper_motion" target="_blank" rel="noopener">proper motions</a>, check them in the colour–magnitude diagram
+    and average their parallaxes. These are the same steps as in <a href="index.html#osa-1">part 1</a> of the exercise.</p>
 
   <div class="layout">
     <section class="card">
-      <div class="tabs" role="tablist" aria-label="Teema">
-        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Parve liikmed</button>
-        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Värvus-heledusdiagramm</button>
-        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Parallakside keskmine</button>
+      <div class="tabs" role="tablist" aria-label="Teema" data-en-aria-label="Topic">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true"><span data-l="et">Parve liikmed</span><span data-l="en">Cluster members</span></button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1"><span data-l="et">Värvus-heledusdiagramm</span><span data-l="en">Colour–magnitude diagram</span></button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Parallakside keskmine</span><span data-l="en">Averaging parallaxes</span></button>
       </div>
 
       <div id="pane1" role="tabpanel" aria-labelledby="tab1">
-        <div class="views-btns" role="group" aria-label="Joonis">
-          <span>Vaade:</span>
-          <button type="button" data-mode="main">Taevas ja omaliikumised</button>
-          <button type="button" data-mode="space">3D vaade</button>
+        <div class="views-btns" role="group" aria-label="Joonis" data-en-aria-label="Drawing">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" data-mode="main"><span data-l="et">Taevas ja omaliikumised</span><span data-l="en">Sky and proper motions</span></button>
+          <button type="button" data-mode="space"><span data-l="et">3D vaade</span><span data-l="en">3D view</span></button>
         </div>
         <div id="modeMain">
-          <p class="hint">Vasakul on päringu ala taevas, paremal tähtede omaliikumised. Käivita aeg ja vaata, kuidas tähed liiguvad. Lohista omaliikumiste joonisel, et märkida lassoga tihe kogum.</p>
+          <p class="hint" data-l="et">Vasakul on päringu ala taevas, paremal tähtede omaliikumised. Käivita aeg ja vaata, kuidas tähed liiguvad. Lohista omaliikumiste joonisel, et märkida lassoga tihe kogum.</p>
+          <p class="hint" data-l="en">On the left is the field of the query on the sky, on the right the proper motions of the stars. Play the time and watch the stars move. Drag in the proper motion plot to mark a dense clump with the lasso.</p>
           <div class="duo">
             <div>
-              <p class="sub">Taevas</p>
-              <svg id="sky" class="scene" viewBox="0 0 370 370" role="img" aria-label="Päringu ala taevas, tähed liiguvad oma omaliikumisega"></svg>
+              <p class="sub"><span data-l="et">Taevas</span><span data-l="en">Sky</span></p>
+              <svg id="sky" class="scene" viewBox="0 0 370 370" role="img" aria-label="Päringu ala taevas, tähed liiguvad oma omaliikumisega" data-en-aria-label="The field of the query on the sky, the stars moving with their proper motions"></svg>
             </div>
             <div>
-              <p class="sub">Omaliikumised</p>
-              <svg id="pm" class="scene" viewBox="0 0 370 370" role="img" aria-label="Tähtede omaliikumised; lohista, et märkida lassoga"></svg>
+              <p class="sub"><span data-l="et">Omaliikumised</span><span data-l="en">Proper motions</span></p>
+              <svg id="pm" class="scene" viewBox="0 0 370 370" role="img" aria-label="Tähtede omaliikumised; lohista, et märkida lassoga" data-en-aria-label="Proper motions of the stars; drag to mark with the lasso"></svg>
             </div>
           </div>
           <p class="readout" id="hoverRead" aria-live="polite"></p>
           <div class="legend">
-            <span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>
-            <span id="lgMem1" hidden><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>
+            <span><i class="dot" style="background: var(--sel)"></i><span data-l="et">lassoga valitud</span><span data-l="en">picked with the lasso</span></span>
+            <span id="lgMem1" hidden><i class="ring" style="border-color: var(--accent)"></i><span data-l="et">tegelik parve liige</span><span data-l="en">true cluster member</span></span>
           </div>
         </div>
         <div id="modeSpace" hidden>
-          <p class="hint">Käivita aeg, et näha, kuidas parv liigub risti vaatesuunaga. Lohista joonist, et seda pöörata.
+          <p class="hint" data-l="et">Käivita aeg, et näha, kuidas parv liigub risti vaatesuunaga. Lohista joonist, et seda pöörata.
             Mõõtkava ei ole õige: parv on suurendatud. Väljatähtede kaugused on juhuslikud.</p>
-          <svg id="space" class="scene" viewBox="0 0 760 520" role="img" aria-label="Ruumiline joonis: Päike, parv ja väljatähed"></svg>
+          <p class="hint" data-l="en">Play the time to see how the cluster moves across the line of sight. Drag the drawing to turn it.
+            The scale is not true: the cluster is enlarged. The distances of the field stars are random.</p>
+          <svg id="space" class="scene" viewBox="0 0 760 520" role="img" aria-label="Ruumiline joonis: Päike, parv ja väljatähed" data-en-aria-label="3D drawing: the Sun, the cluster and the field stars"></svg>
           <div class="legend">
-            <span id="lgMem3" hidden><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>
-            <span><i class="dot" style="background: var(--text-3); width: 5px; height: 5px"></i>väljatäht</span>
-            <span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>
-            <span><i style="border-color: var(--text-3); border-top-style: dashed"></i>suund Päikesest</span>
+            <span id="lgMem3" hidden><i class="ring" style="border-color: var(--accent)"></i><span data-l="et">tegelik parve liige</span><span data-l="en">true cluster member</span></span>
+            <span><i class="dot" style="background: var(--text-3); width: 5px; height: 5px"></i><span data-l="et">väljatäht</span><span data-l="en">field star</span></span>
+            <span><i class="dot" style="background: var(--sel)"></i><span data-l="et">lassoga valitud</span><span data-l="en">picked with the lasso</span></span>
+            <span><i style="border-color: var(--text-3); border-top-style: dashed"></i><span data-l="et">suund Päikesest</span><span data-l="en">direction from the Sun</span></span>
           </div>
         </div>
       </div>
 
       <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
-        <p class="hint" id="cmdHint">Iga punkt on üks täht: paremal punasemad, üleval heledamad. Vahelehel „Parve liikmed“ lassoga valitud tähed on sinised.</p>
-        <svg id="cmd" class="scene" viewBox="0 0 760 500" role="img" aria-label="Värvus-heledusdiagramm"></svg>
+        <p class="hint" id="cmdHint"><span data-l="et">Iga punkt on üks täht: paremal punasemad, üleval heledamad. Vahelehel „Parve liikmed“ lassoga valitud tähed on sinised.</span><span data-l="en">Each point is a star: redder to the right, brighter at the top. The stars picked with the lasso in the “Cluster members” tab are blue.</span></p>
+        <svg id="cmd" class="scene" viewBox="0 0 760 500" role="img" aria-label="Värvus-heledusdiagramm" data-en-aria-label="Colour–magnitude diagram"></svg>
         <div class="legend" id="cmdLegend"></div>
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" data-view3="bias">Nihe</button>
-          <button type="button" data-view3="sys">Süstemaatika</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" data-view3="bias"><span data-l="et">Nihe</span><span data-l="en">Bias</span></button>
+          <button type="button" data-view3="sys"><span data-l="et">Süstemaatika</span><span data-l="en">Systematics</span></button>
         </div>
         <div id="view3bias">
-          <p class="hint">Parve N liikme mõõdetud parallaksid (üleval) ja neist ühekaupa arvutatud kaugused 1000/p (keskel). All on sama arvutus 200 korda uute mõõtmisvigadega.
+          <p class="hint" data-l="et">Parve N liikme mõõdetud parallaksid (üleval) ja neist ühekaupa arvutatud kaugused 1000/p (keskel). All on sama arvutus 200 korda uute mõõtmisvigadega.
             Nihe on suur, kui vead on suured: vii parv kaugemale, luba nõrgemaid tähti või lülita kaalud välja.</p>
-          <svg id="bias" class="scene" viewBox="0 0 760 530" role="img" aria-label="Parallakside ja kauguste histogrammid ning korduste tulemused"></svg>
+          <p class="hint" data-l="en">The measured parallaxes of N cluster members (top) and the distances 1000/p computed from them one by one (middle). At the bottom is the same calculation 200 times with new measurement errors.
+            The bias is large when the errors are large: move the cluster farther away, allow fainter stars or turn the weights off.</p>
+          <svg id="bias" class="scene" viewBox="0 0 760 530" role="img" aria-label="Parallakside ja kauguste histogrammid ning korduste tulemused" data-en-aria-label="Histograms of the parallaxes and distances, and the results of the repeats"></svg>
           <div class="legend">
-            <span><i style="border-color: var(--text-1)"></i>tegelik väärtus</span>
+            <span><i style="border-color: var(--text-1)"></i><span data-l="et">tegelik väärtus</span><span data-l="en">true value</span></span>
             <span><i style="border-color: var(--sel); border-top-style: dashed"></i>1000 / ⟨p⟩</span>
             <span><i style="border-color: var(--bad); border-top-style: dotted"></i>⟨1000 / p⟩</span>
           </div>
         </div>
         <div id="view3sys" hidden>
-          <p class="hint">Parve keskmise parallaksi viga tähtede arvu N järgi, logaritmteljed. Paremal on sama viga kauguse protsentides. All on 1000/⟨p⟩ 200 korda uute mõõtmisvigadega.</p>
-          <svg id="sys" class="scene" viewBox="0 0 760 450" role="img" aria-label="Keskmise parallaksi viga tähtede arvu järgi"></svg>
+          <p class="hint" data-l="et">Parve keskmise parallaksi viga tähtede arvu N järgi, logaritmteljed. Paremal on sama viga kauguse protsentides. All on 1000/⟨p⟩ 200 korda uute mõõtmisvigadega.</p>
+          <p class="hint" data-l="en">The error of the cluster's mean parallax against the number of stars N, on logarithmic axes. On the right is the same error as a percentage of the distance. At the bottom is 1000/⟨p⟩ 200 times with new measurement errors.</p>
+          <svg id="sys" class="scene" viewBox="0 0 760 450" role="img" aria-label="Keskmise parallaksi viga tähtede arvu järgi" data-en-aria-label="Error of the mean parallax against the number of stars"></svg>
           <div class="legend">
-            <span><i style="border-color: var(--sel)"></i>statistiline viga</span>
-            <span id="lgSys"><i style="border-color: var(--accent); border-top-style: dashed"></i>korreleeritud viga</span>
-            <span><i style="border-color: var(--text-1)"></i>kokku</span>
-            <span id="lgZp"><i style="border-color: var(--bad); border-top-style: dotted"></i>parandamata nullpunkt</span>
+            <span><i style="border-color: var(--sel)"></i><span data-l="et">statistiline viga</span><span data-l="en">statistical error</span></span>
+            <span id="lgSys"><i style="border-color: var(--accent); border-top-style: dashed"></i><span data-l="et">korreleeritud viga</span><span data-l="en">correlated error</span></span>
+            <span><i style="border-color: var(--text-1)"></i><span data-l="et">kokku</span><span data-l="en">total</span></span>
+            <span id="lgZp"><i style="border-color: var(--bad); border-top-style: dotted"></i><span data-l="et">parandamata nullpunkt</span><span data-l="en">uncorrected zero point</span></span>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="card controls" aria-label="Seaded">
+    <section class="card controls" aria-label="Seaded" data-en-aria-label="Settings">
       <div class="group" data-tabs="tab1 tab2 tab3">
-        <div class="slider"><label for="dist">Parve kaugus</label><input type="range" id="dist" min="0" max="1000" step="1"><output for="dist" id="distOut"></output></div>
-        <div class="slider"><label for="glim">Nõrgimad tähed (tähesuurus G)</label><input type="range" id="glim" min="15" max="21" step="0.5" value="19"><output for="glim" id="glimOut"></output></div>
-        <div class="btnrow"><button type="button" id="newCl">Uus parv</button></div>
+        <div class="slider"><label for="dist"><span data-l="et">Parve kaugus</span><span data-l="en">Cluster distance</span></label><input type="range" id="dist" min="0" max="1000" step="1"><output for="dist" id="distOut"></output></div>
+        <div class="slider"><label for="glim"><span data-l="et">Nõrgimad tähed (tähesuurus G)</span><span data-l="en">Faintest stars (magnitude G)</span></label><input type="range" id="glim" min="15" max="21" step="0.5" value="19"><output for="glim" id="glimOut"></output></div>
+        <div class="btnrow"><button type="button" id="newCl"><span data-l="et">Uus parv</span><span data-l="en">New cluster</span></button></div>
         <p class="readout" id="clRead"></p>
       </div>
 
       <div class="group" data-tabs="tab1">
-        <div class="slider"><label for="time">Aeg</label><input type="range" id="time" min="0" max="1000" step="1" value="0"><output for="time" id="timeOut"></output></div>
+        <div class="slider"><label for="time"><span data-l="et">Aeg</span><span data-l="en">Time</span></label><input type="range" id="time" min="0" max="1000" step="1" value="0"><output for="time" id="timeOut"></output></div>
         <div class="btnrow"><button type="button" class="primary" id="play">▶ Käivita</button></div>
-        <label class="toggle"><input type="checkbox" id="tracks"> Jäljed</label>
+        <label class="toggle"><input type="checkbox" id="tracks"><span data-l="et"> Jäljed</span><span data-l="en"> Tracks</span></label>
       </div>
       <div class="group" data-tabs="tab1">
         <h3>Lasso</h3>
         <p class="readout" id="lassoRead"></p>
-        <div class="btnrow"><button type="button" id="clear">Tühjenda</button></div>
+        <div class="btnrow"><button type="button" id="clear"><span data-l="et">Tühjenda</span><span data-l="en">Clear</span></button></div>
       </div>
 
       <div class="group" data-tabs="tab2">
         <div class="toggles col">
-          <label class="toggle"><input type="checkbox" id="abs"> <span>Absoluutne M<sub>G</sub></span></label>
-          <label class="toggle" id="ownLbl"><input type="checkbox" id="own"> Iga täht oma kaugusega</label>
-          <label class="toggle"><input type="checkbox" id="bin" checked> Kaksiktähed</label>
+          <label class="toggle"><input type="checkbox" id="abs"> <span data-l="et">Absoluutne M<sub>G</sub></span><span data-l="en">Absolute M<sub>G</sub></span></label>
+          <label class="toggle" id="ownLbl"><input type="checkbox" id="own"><span data-l="et"> Iga täht oma kaugusega</span><span data-l="en"> Each star at its own distance</span></label>
+          <label class="toggle"><input type="checkbox" id="bin" checked><span data-l="et"> Kaksiktähed</span><span data-l="en"> Binaries</span></label>
         </div>
-        <div class="slider"><label for="ebv">Tolm: punanemine E(BP−RP)</label><input type="range" id="ebv" min="0" max="1" step="0.05" value="0"><output for="ebv" id="ebvOut"></output></div>
+        <div class="slider"><label for="ebv"><span data-l="et">Tolm: punanemine E(BP−RP)</span><span data-l="en">Dust: reddening E(BP−RP)</span></label><input type="range" id="ebv" min="0" max="1" step="0.05" value="0"><output for="ebv" id="ebvOut"></output></div>
         <p class="readout" id="cmdRead"></p>
       </div>
 
       <div class="group" data-tabs="tab1 tab2">
         <div class="toggles">
-          <label class="toggle"><input type="checkbox" id="allStars" checked> Kõik tähed</label>
-          <label class="toggle"><input type="checkbox" id="truth"> Näita tõde</label>
+          <label class="toggle"><input type="checkbox" id="allStars" checked><span data-l="et"> Kõik tähed</span><span data-l="en"> All stars</span></label>
+          <label class="toggle"><input type="checkbox" id="truth"><span data-l="et"> Näita tõde</span><span data-l="en"> Show the truth</span></label>
         </div>
       </div>
 
       <div class="group" data-tabs="tab3">
-        <div class="slider"><label for="nst">Tähtede arv N</label><input type="range" id="nst" min="5" max="150" step="1" value="50"><output for="nst" id="nstOut"></output></div>
-        <label class="toggle"><input type="checkbox" id="weighted" checked> Kaalutud (kaal 1/σ²)</label>
+        <div class="slider"><label for="nst"><span data-l="et">Tähtede arv N</span><span data-l="en">Number of stars N</span></label><input type="range" id="nst" min="5" max="150" step="1" value="50"><output for="nst" id="nstOut"></output></div>
+        <label class="toggle"><input type="checkbox" id="weighted" checked><span data-l="et"> Kaalutud (kaal 1/σ²)</span><span data-l="en"> Weighted (weight 1/σ²)</span></label>
         <div id="biasRead"></div>
       </div>
       <div class="group" data-tabs="tab3">
-        <h3>Süstemaatilised vead</h3>
+        <h3><span data-l="et">Süstemaatilised vead</span><span data-l="en">Systematic errors</span></h3>
         <div class="toggles col">
-          <label class="toggle"><input type="checkbox" id="zp" checked> Gaia nullpunkt (−0.017 mas)</label>
-          <label class="toggle"><input type="checkbox" id="zpcorr" checked> Nullpunkti parandus (+0.017 mas)</label>
-          <label class="toggle"><input type="checkbox" id="corr" checked> Korreleeritud vead (0.010 mas)</label>
+          <label class="toggle"><input type="checkbox" id="zp" checked><span data-l="et"> Gaia nullpunkt (−0.017 mas)</span><span data-l="en"> Gaia zero point (−0.017 mas)</span></label>
+          <label class="toggle"><input type="checkbox" id="zpcorr" checked><span data-l="et"> Nullpunkti parandus (+0.017 mas)</span><span data-l="en"> Zero-point correction (+0.017 mas)</span></label>
+          <label class="toggle"><input type="checkbox" id="corr" checked><span data-l="et"> Korreleeritud vead (0.010 mas)</span><span data-l="en"> Correlated errors (0.010 mas)</span></label>
         </div>
         <p class="readout" id="sysRead"></p>
       </div>
@@ -363,8 +398,8 @@ table.res td.n { text-align: right; color: var(--text-1); }
   </div>
 
   <section class="card explain">
-    <h2>Mida joonis näitab</h2>
-    <ul data-tab="tab1">
+    <h2><span data-l="et">Mida joonis näitab</span><span data-l="en">What the drawings show</span></h2>
+    <ul data-tab="tab1" data-l="et">
       <li>Parve tähed tekkisid koos ühest gaasipilvest ja liiguvad läbi ruumi ühise kiirusega. Päikeselt vaadates on neil seepärast peaaegu ühesugune omaliikumine ja omaliikumiste joonisel moodustavad nad tiheda kogumi,
         isegi kui taevas on nad väljatähtede vahel laiali.</li>
       <li>Väljatähed on igal kaugusel ja liiguvad eri suundades, nii et nende omaliikumised on laiali. Lähedased väljatähed liiguvad taevas kiiresti, kauged aeglaselt.</li>
@@ -378,7 +413,21 @@ table.res td.n { text-align: right; color: var(--text-1); }
       <li>Kui <b>Näita tõde</b> on sees, on tegelikud parve liikmed rõngaga. Kitsas lasso jätab osa liikmeid välja, lai lasso võtab kaasa väljatähti, mis nihutavad keskmist parallaksi.</li>
       <li>Harjutuse 1. osas teed sama päris Gaia andmetega: <a href="index.html#plots">märgi lassoga omaliikumiste joonisel tihe kogum</a>.</li>
     </ul>
-    <ul data-tab="tab2" hidden>
+    <ul data-tab="tab1" data-l="en">
+      <li>The stars of a cluster formed together from one gas cloud and move through space with a common velocity. Seen from the Sun they therefore have nearly the same proper motion and form a dense clump in the proper motion plot,
+        even when on the sky they are scattered among the field stars.</li>
+      <li>Field stars are at all distances and move in different directions, so their proper motions are spread out. Nearby field stars move fast on the sky, distant ones slowly.</li>
+      <li>The proper motion depends on the velocity and the distance: μ [mas/yr] = v<sub>t</sub> [km/s] / (4.74 · d [kpc]), where v<sub>t</sub> is the component of the velocity in the plane of the sky. The same velocity gives a smaller proper motion farther away,
+        which falls close to the dense centre of the field stars. Distant stars are also fainter, and their proper motion errors are larger. This is why a distant cluster is harder to separate, and the parallax rung ends at a few kiloparsecs.</li>
+      <li>The <b>3D view</b> shows what cannot be seen on the sky or in the proper motions: the cluster stars are all at nearly the same distance, but the field stars are spread along the whole line of sight.
+        Field stars picked with the lasso (blue dots outside the cluster) are in front of or behind the cluster, so their parallaxes shift the mean.
+        If you turn the drawing to look from above, you can see that the cluster moves across the line of sight: on the sky this motion appears as the proper motion.</li>
+      <li>A nearby cluster can fill the whole field of view, so that on the sky it cannot be seen from the density of stars, but in the proper motion plot it can.</li>
+      <li>The time in the drawing is real: the stars move this much only in tens or hundreds of thousands of years. The <a href="parallaks.html">parallax</a> ellipses are too small to be seen at this scale.</li>
+      <li>With <b>Show the truth</b> on, the true cluster members are ringed. A narrow lasso leaves some members out, a wide lasso takes in field stars, which shift the mean parallax.</li>
+      <li>In part 1 of the exercise you do the same with real Gaia data: <a href="index.html#plots">mark the dense clump in the proper motion plot with the lasso</a>.</li>
+    </ul>
+    <ul data-tab="tab2" hidden data-l="et">
       <li><a href="https://et.wikipedia.org/wiki/Peajada" target="_blank" rel="noopener">Peajada</a>: tähed, mille tuumas põleb vesinik. Kuumemad (sinised, vasakul) on heledamad kui jahedamad (punased, paremal).
         Värvusindeks BP−RP on tähe sinise ja punase riba tähesuuruste vahe.</li>
       <li>Parve tähed on ühel kaugusel, ühevanused ja sama keemilise koostisega, seepärast moodustavad nad kitsa jada. Väljatähed on eri kaugustel: iga väljatäht on nihutatud oma kaugusmooduli võrra,
@@ -391,7 +440,20 @@ table.res td.n { text-align: right; color: var(--text-1); }
         Tolmust ja Wesenheiti tähesuurusest räägib <a href="tsefeiidid.html#tolm">tsefeiidide leht</a>.</li>
       <li>Harjutuse 1. osas kontrollid diagrammiga <a href="index.html#plots">lasso valikut</a>: jadast kaugel olevad tähed ei ole tõenäoliselt parve liikmed.</li>
     </ul>
-    <ul data-tab="tab3" hidden>
+    <ul data-tab="tab2" hidden data-l="en">
+      <li><a href="https://en.wikipedia.org/wiki/Main_sequence" target="_blank" rel="noopener">Main sequence</a>: stars that burn hydrogen in their cores. The hotter ones (blue, on the left) are brighter than the cooler ones (red, on the right).
+        The colour index BP−RP is the difference between the star's magnitudes in the blue and red bands.</li>
+      <li>The cluster stars are at one distance, of one age and of the same chemical composition, so they form a narrow sequence. The field stars are at different distances: each field star is shifted by its own distance modulus,
+        so the sequence spreads into a wide smear. At the top right is the branch of distant red giants.</li>
+      <li>The absolute magnitude M<sub>G</sub> = G − 5 log₁₀ d + 5 removes the distance. If the cluster sequence then falls on the reference line, the cluster distance is plausible.
+        The same idea is on the <a href="standardkuunlad.html#tahesuurused">standard candles page</a>.</li>
+      <li><b>Each star at its own distance</b> uses the true distance of each star. Then the field stars also fall on the main sequence, and the giants form their own branch above it: the smear comes from the distances, not from different stars.</li>
+      <li>Two identical stars that cannot be told apart are together 0.75 magnitudes brighter than one. This is why real clusters have a second, fainter band of binaries above the sequence.</li>
+      <li>Dust absorbs and reddens light: a star looks fainter and redder, A<sub>G</sub> ≈ 2 E(BP−RP). The absolute magnitude diagram of part 1 of the exercise does not account for dust, so the cluster sequence may fall below the reference line.
+        Dust and the Wesenheit magnitude are explained on the <a href="tsefeiidid.html#tolm">Cepheids page</a>.</li>
+      <li>In part 1 of the exercise you use the diagram to check <a href="index.html#plots">the lasso selection</a>: stars far from the sequence are probably not cluster members.</li>
+    </ul>
+    <ul data-tab="tab3" hidden data-l="et">
       <li>Parallaksi mõõtmisviga on sümmeetriline: mõni täht saab liiga suure, mõni liiga väikese, nõrk täht isegi negatiivse parallaksi. Kaugus 1/p on aga kõver funktsioon: väike p annab väga suure kauguse,
         nii et kauguste jaotus on viltune ja pika sabaga.</li>
       <li>Seepärast tuleb kõigepealt keskmistada parallaksid ja alles siis pöörata: d = 1000 / ⟨p⟩. Üksikute kauguste keskmine ⟨1/p⟩ on nihkes suuremate kauguste poole, iga tähe kohta umbes (σ/p)² võrra.
@@ -403,12 +465,26 @@ table.res td.n { text-align: right; color: var(--text-1); }
         Selline viga nihutab kõiki kaugusi korraga ja kandub <a href="standardkuunlad.html#kalibreerimine">redelil edasi</a>.</li>
       <li>Harjutuse 1. osa vahelehel <a href="index.html#dist">Kaugus</a> on samad valemid: kaalutud keskmine parallaks nullpunkti parandusega, statistiline ja süstemaatiline viga ning d = 1000 / ⟨p⟩.</li>
     </ul>
+    <ul data-tab="tab3" hidden data-l="en">
+      <li>The parallax measurement error is symmetric: some stars get too large a parallax, some too small, a faint star even a negative one. But the distance 1/p is a curved function: a small p gives a very large distance,
+        so the distribution of the distances is skewed, with a long tail.</li>
+      <li>This is why the parallaxes must be averaged first and only then inverted: d = 1000 / ⟨p⟩. The mean of the single distances ⟨1/p⟩ is biased towards larger distances, by about (σ/p)² for each star.
+        For example, at 2 kpc (p = 0.5 mas) a star with σ<sub>p</sub> = 0.25 mas already has a bias of about 25 %. But the error of ⟨p⟩ for 100 such stars is 0.025 mas, or 5 %, and 1000/⟨p⟩ is nearly unbiased.</li>
+      <li>The weights 1/σ² give bright, precise stars a larger weight. Without the weights, the faint stars spoil ⟨p⟩ too.</li>
+      <li>The statistical error decreases with the number of stars as 1/√N, but the Gaia parallax errors of stars close together on the sky are partly shared. Averaging does not reduce them,
+        so part 1 of the exercise adds 0.010 mas to the error in quadrature.</li>
+      <li>Gaia DR3 parallaxes are on average about 0.017 mas too small (the zero point, Lindegren et al. 2021). Part 1 of the exercise always corrects this. Without the correction, a cluster at 2 kpc would come out 3.5 % too far.
+        Such an error shifts all distances at once and is carried <a href="standardkuunlad.html#kalibreerimine">up the ladder</a>.</li>
+      <li>The <a href="index.html#dist">Distance</a> tab of part 1 of the exercise has the same formulas: the weighted mean parallax with the zero-point correction, the statistical and systematic errors, and d = 1000 / ⟨p⟩.</li>
+    </ul>
   </section>
 </main>
 
 <script>
 (() => {
   const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+  // A text drawn by the script, in the language of the page.
+  const L = (et, en) => (document.documentElement.lang === 'en' ? en : et);
 
   function el(tag, attrs, parent) {
     const e = document.createElementNS(NS, tag);
@@ -430,7 +506,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
   function sig(v, n = 3) {
     if (!isFinite(v) || v === 0) return '0';
     let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
-    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, L(' ', ',')));
     return minus(s);
   }
   const fmtPc = d => (d < 1000 ? sig(d) + ' pc' : sig(d / 1000) + ' kpc');
@@ -643,11 +719,11 @@ table.res td.n { text-align: right; color: var(--text-1); }
       const [x, y] = posAt(S[st.hover], t);
       el('circle', { cx: skyX(x), cy: skyY(y), r: starR(S[st.hover].G) + 4.5, class: 'skyhov' }, g);
     }
-    text(sky, 185, 24, 'P', 'nl', 'middle');
-    text(sky, 20, 190, 'I', 'nl', 'middle');
+    text(sky, 185, 24, L('P', 'N'), 'nl', 'middle');
+    text(sky, 20, 190, L('I', 'E'), 'nl', 'middle');
     const side = W >= 60 ? sig(W / 60, 2) + '°' : sig(W, 2) + '′';
     text(sky, 354, 356, `${side} × ${side}`, 'nl2', 'end');
-    text(sky, 16, 356, `t = ${sig(Math.round(t / 100) * 100 || 0, 3)} a`, 'nl2');
+    text(sky, 16, 356, `t = ${sig(Math.round(t / 100) * 100 || 0, 3)} ${L('a', 'yr')}`, 'nl2');
   }
 
   const PB = { x0: 52, x1: 360, y0: 10, y1: 318 };
@@ -664,7 +740,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
     pmScales();
     const { cx, cy, h } = pmR, step = niceStep(2 * h / 5);
     const g = el('g', {}, pmSvg);
-    frame(g, PB, pmX, pmY, ticks(cx - h, cx + h, step), ticks(cy - h, cy + h, step), 'μα* (mas/a)', 'μδ (mas/a)', 38);
+    frame(g, PB, pmX, pmY, ticks(cx - h, cx + h, step), ticks(cy - h, cy + h, step), L('μα* (mas/a)', 'μα* (mas/yr)'), L('μδ (mas/a)', 'μδ (mas/yr)'), 38);
     const inner = el('g', { 'clip-path': clipRect(pmSvg, 'pmclip', PB) }, g);
     const sel = new Set(selected());
     if (st.all) S.forEach((s, i) => { if (!sel.has(i)) el('circle', { cx: pmX(s.ma), cy: pmY(s.md), r: 1.8, class: 'fpt' }, inner); });
@@ -673,16 +749,16 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const poly = st.drawing || st.poly;
     lassoPath = el('path', { d: poly ? polyPath(poly, !st.drawing) : '', class: 'lasso' }, inner);
     if (st.hover >= 0 && S[st.hover]) el('circle', { cx: pmX(S[st.hover].ma), cy: pmY(S[st.hover].md), r: 5.5, class: 'hov' }, inner);
-    if (!st.all) text(g, PB.x1 - 6, PB.y0 + 16, 'lasso töötab, kui kõik tähed on nähtaval', 'lbl3', 'end');
-    else if (!st.poly && !st.drawing) text(g, PB.x1 - 6, PB.y0 + 16, 'lohista, et märkida lassoga', 'lbl3', 'end');
+    if (!st.all) text(g, PB.x1 - 6, PB.y0 + 16, L('lasso töötab, kui kõik tähed on nähtaval', 'the lasso works when all stars are shown'), 'lbl3', 'end');
+    else if (!st.poly && !st.drawing) text(g, PB.x1 - 6, PB.y0 + 16, L('lohista, et märkida lassoga', 'drag to mark with the lasso'), 'lbl3', 'end');
   }
   const polyPath = (P, closed) => P.map((p, i) => (i ? 'L' : 'M') + pmX(p[0]).toFixed(1) + ' ' + pmY(p[1]).toFixed(1)).join('') + (closed ? 'Z' : '');
 
   function hoverText() {
     const s = S[st.hover];
     if (!s) return '';
-    let t = `G = <b>${fmt(s.G, 2)}</b>, BP−RP = ${fmt(s.col, 2)}, μα* = ${fmt(s.ma, 2)}, μδ = ${fmt(s.md, 2)} mas/a, p = ${fmt(plx(s), 3)} ± ${fmt(s.sig, 3)} mas`;
-    if (st.truth) t += s.mem ? ' · <b>parve liige</b>' : ` · väljatäht ${fmtPc(s.dist)} kaugusel`;
+    let t = `G = <b>${fmt(s.G, 2)}</b>, BP−RP = ${fmt(s.col, 2)}, μα* = ${fmt(s.ma, 2)}, μδ = ${fmt(s.md, 2)} ${L('mas/a', 'mas/yr')}, p = ${fmt(plx(s), 3)} ± ${fmt(s.sig, 3)} mas`;
+    if (st.truth) t += s.mem ? L(' · <b>parve liige</b>', ' · <b>cluster member</b>') : L(` · väljatäht ${fmtPc(s.dist)} kaugusel`, ` · field star at ${fmtPc(s.dist)}`);
     return t;
   }
   function nearest(px, py, pos, maxd = 8) {
@@ -820,8 +896,8 @@ table.res td.n { text-align: right; color: var(--text-1); }
       });
     const pSun = cam.p([0, 0, 0]), pC = cam.p(C);
     el('circle', { cx: pSun[0], cy: pSun[1], r: 9, class: 'sun' }, front);
-    text(front, pSun[0], pSun[1] + 26, 'Päike', 'lbl', 'middle');
-    text(front, pC[0] + 14, pC[1] - 14, `parv, ${fmtPc(st.d)}`, 'lbl');
+    text(front, pSun[0], pSun[1] + 26, L('Päike', 'Sun'), 'lbl', 'middle');
+    text(front, pC[0] + 14, pC[1] - 14, `${L('parv', 'cluster')}, ${fmtPc(st.d)}`, 'lbl');
     if (planeBehind) space.append(back, front); else space.append(front, back);
 
   }
@@ -864,15 +940,16 @@ table.res td.n { text-align: right; color: var(--text-1); }
     else { ylo = Math.floor(Math.min(...S.map(s => s.G), st.glim - 6)) - 0.5; yhi = st.glim + 0.5; }
     const X = mkScale(-0.5, 3.5, CB.x0, CB.x1), Y = mkScale(ylo, yhi, CB.y0, CB.y1);
     const ystep = yhi - ylo > 12 ? 2 : 1;
-    frame(g, CB, X, Y, ticks(-0.5, 3.5, 0.5), ticks(Math.ceil(ylo), yhi, ystep), 'värvusindeks BP − RP (mag)', null);
+    frame(g, CB, X, Y, ticks(-0.5, 3.5, 0.5), ticks(Math.ceil(ylo), yhi, ystep), L('värvusindeks BP − RP (mag)', 'colour index BP − RP (mag)'), null);
     const yt = text(g, 0, 0, '', 'lbl2', 'middle');
     yt.setAttribute('transform', `translate(${CB.x0 - 44} ${(CB.y0 + CB.y1) / 2}) rotate(-90)`);
-    yt.innerHTML = own ? 'M<tspan baseline-shift="sub" font-size="9">G</tspan> tähe enda kaugusega (mag)'
-      : absMode ? 'absoluutne tähesuurus M<tspan baseline-shift="sub" font-size="9">G</tspan> (mag)' : 'näiv tähesuurus G (mag)';
+    const mg = 'M<tspan baseline-shift="sub" font-size="9">G</tspan>';
+    yt.innerHTML = own ? L(`${mg} tähe enda kaugusega (mag)`, `${mg} at the star's own distance (mag)`)
+      : absMode ? L(`absoluutne tähesuurus ${mg} (mag)`, `absolute magnitude ${mg} (mag)`) : L('näiv tähesuurus G (mag)', 'apparent magnitude G (mag)');
     const inner = el('g', { 'clip-path': clipRect(svg, 'cmdclip', CB) }, g);
     if (absMode) {
       el('polyline', { points: MS.map(([c, M]) => `${X(c).toFixed(1)},${Y(M).toFixed(1)}`).join(' '), class: 'msline' }, inner);
-      text(inner, X(2.75) + 6, Y(10.6), 'peajada', 'lbl3');
+      text(inner, X(2.75) + 6, Y(10.6), L('peajada', 'main sequence'), 'lbl3');
     }
     // With a lasso selection, the selected stars are drawn on top of the others, which are paler; without one, all stars
     // are drawn alike. With the truth on, the members are ringed.
@@ -886,15 +963,17 @@ table.res td.n { text-align: right; color: var(--text-1); }
     // The reddening vector for E(BP−RP) = 0.5 mag.
     const ax = X(2.6), ay = Y(ylo + 1.5);
     arrow(g, ax, ay, X(3.1), Y(ylo + 2.5));
-    text(g, ax - 6, ay - 4, 'tolm: E(BP−RP) = 0.5', 'lbl3', 'end');
+    text(g, ax - 6, ay - 4, L('tolm: E(BP−RP) = 0.5', 'dust: E(BP−RP) = 0.5'), 'lbl3', 'end');
 
-    $('cmdRead').innerHTML = !absMode ? '' : own ? 'Iga tähe absoluutne tähesuurus on arvutatud tema tegelikust kaugusest: M<sub>G</sub> = G − 5 log₁₀ d + 5.'
-      : est ? `M<sub>G</sub> = G − μ, kus μ = 5 log₁₀ d − 5 = <b>${fmt(mu, 2)}</b> ja d = 1000/⟨p⟩ = <b>${fmtPc(est.d)}</b> ${est.fromSel ? 'lassoga valitud tähtede' : 'parve liikmete'} keskmisest parallaksist.`
-      : 'Keskmine parallaks ei ole positiivne, kaugust ei saa arvutada.';
+    $('cmdRead').innerHTML = !absMode ? '' : own ? L('Iga tähe absoluutne tähesuurus on arvutatud tema tegelikust kaugusest: M<sub>G</sub> = G − 5 log₁₀ d + 5.',
+        'The absolute magnitude of each star is computed from its true distance: M<sub>G</sub> = G − 5 log₁₀ d + 5.')
+      : est ? L(`M<sub>G</sub> = G − μ, kus μ = 5 log₁₀ d − 5 = <b>${fmt(mu, 2)}</b> ja d = 1000/⟨p⟩ = <b>${fmtPc(est.d)}</b> ${est.fromSel ? 'lassoga valitud tähtede' : 'parve liikmete'} keskmisest parallaksist.`,
+        `M<sub>G</sub> = G − μ, where μ = 5 log₁₀ d − 5 = <b>${fmt(mu, 2)}</b> and d = 1000/⟨p⟩ = <b>${fmtPc(est.d)}</b> from the mean parallax of the ${est.fromSel ? 'stars picked with the lasso' : 'cluster members'}.`)
+      : L('Keskmine parallaks ei ole positiivne, kaugust ei saa arvutada.', 'The mean parallax is not positive, so no distance can be computed.');
     const lg = [];
-    if (hl) lg.push('<span><i class="dot" style="background: var(--sel)"></i>lassoga valitud</span>');
-    if (st.truth) lg.push('<span><i class="ring" style="border-color: var(--accent)"></i>tegelik parve liige</span>');
-    if (absMode) lg.push('<span><i style="border-color: var(--text-3); border-top-style: dashed"></i>peajada</span>');
+    if (hl) lg.push(`<span><i class="dot" style="background: var(--sel)"></i>${L('lassoga valitud', 'picked with the lasso')}</span>`);
+    if (st.truth) lg.push(`<span><i class="ring" style="border-color: var(--accent)"></i>${L('tegelik parve liige', 'true cluster member')}</span>`);
+    if (absMode) lg.push(`<span><i style="border-color: var(--text-3); border-top-style: dashed"></i>${L('peajada', 'main sequence')}</span>`);
     $('cmdLegend').innerHTML = lg.join('');
   }
 
@@ -946,7 +1025,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const svg = $('bias');
     svg.textContent = '';
     const list = used(), g = el('g', {}, svg);
-    if (list.length < 2) { text(g, 380, 200, 'Liiga vähe parve liikmeid: tõsta nõrgimate tähtede piiri.', 'lbl2', 'middle'); return; }
+    if (list.length < 2) { text(g, 380, 200, L('Liiga vähe parve liikmeid: tõsta nõrgimate tähtede piiri.', 'Too few cluster members: raise the limit of the faintest stars.'), 'lbl2', 'middle'); return; }
     const p0 = 1000 / st.d, d0 = st.d, ps = list.map(plx), m = wmean(list);
     // Parallaxes, spanning the measured values and the true one.
     const B1 = { x0: 70, x1: 740, y0: 10, y1: 140 };
@@ -956,27 +1035,27 @@ table.res td.n { text-align: right; color: var(--text-1); }
     if (lo < 0) el('rect', { x: B1.x0, y: B1.y0, width: X1(0) - B1.x0, height: B1.y1 - B1.y0, class: 'neg' }, g);
     const h1 = histogram(null, ps, X1, B1, lo, hi, 36);
     const st1 = niceStep(h1.cmax / 3);
-    frame(g, B1, X1, h1.Y, ticks(lo, hi, niceStep((hi - lo) / 7)), ticks(0, h1.cmax * 1.1, st1), 'parallaks p (mas)', 'tähti', 40);
+    frame(g, B1, X1, h1.Y, ticks(lo, hi, niceStep((hi - lo) / 7)), ticks(0, h1.cmax * 1.1, st1), L('parallaks p (mas)', 'parallax p (mas)'), L('tähti', 'stars'), 40);
     histogram(g, ps, X1, B1, lo, hi, 36);
     vline(g, X1(p0), B1, 'truth');
     if (m.p > lo && m.p < hi) vline(g, X1(m.p), B1, 'meanline');
     const neg = ps.filter(p => p <= 0).length;
-    if (neg) text(g, B1.x0 + 6, B1.y0 + 16, `${neg} negatiivset parallaksi`, 'lbl3');
+    if (neg) text(g, B1.x0 + 6, B1.y0 + 16, L(`${neg} negatiivset parallaksi`, `${neg} negative parallaxes`), 'lbl3');
 
     // Distances 1000/p of the single stars, from 0 to three times the true distance.
     const B2 = { x0: 70, x1: 740, y0: 196, y1: 326 }, dhi = 3 * d0, ds = ps.filter(p => p > 0).map(p => 1000 / p);
     const X2 = mkScale(0, dhi, B2.x0, B2.x1);
     const h2 = histogram(null, ds, X2, B2, 0, dhi, 36);
     const dstep = niceStep(dhi / 7);
-    frame(g, B2, X2, h2.Y, distTicks(0, dhi, dstep), ticks(0, h2.cmax * 1.1, niceStep(h2.cmax / 3)), 'kaugus 1000 / p', 'tähti', 40);
+    frame(g, B2, X2, h2.Y, distTicks(0, dhi, dstep), ticks(0, h2.cmax * 1.1, niceStep(h2.cmax / 3)), L('kaugus 1000 / p', 'distance 1000 / p'), L('tähti', 'stars'), 40);
     histogram(g, ds, X2, B2, 0, dhi, 36);
     vline(g, X2(d0), B2, 'truth');
     const dA = m.p > 0 ? 1000 / m.p : Infinity, dB = wmeanD(list, ps);
     if (dA < dhi) vline(g, X2(dA), B2, 'meanline');
     if (dB < dhi) vline(g, X2(dB), B2, 'invline');
     const notes = [];
-    if (h2.over) notes.push(`${h2.over} kaugemal kui ${fmtPc(dhi)}`);
-    if (neg) notes.push(`${neg} negatiivse parallaksiga tähel kaugust pole`);
+    if (h2.over) notes.push(L(`${h2.over} kaugemal kui ${fmtPc(dhi)}`, `${h2.over} farther than ${fmtPc(dhi)}`));
+    if (neg) notes.push(L(`${neg} negatiivse parallaksiga tähel kaugust pole`, `${neg} stars with a negative parallax have no distance`));
     if (notes.length) text(g, B2.x1 - 6, B2.y0 + 16, notes.join(' · '), 'lbl3', 'end');
 
     // The repeats as two strips of dots.
@@ -987,7 +1066,7 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const xt = distTicks(slo, shi, niceStep((shi - slo) / 7));
     for (const [v, L] of xt) { el('line', { x1: X3(v), y1: B3.y0, x2: X3(v), y2: B3.y1, class: 'gridline' }, g); text(g, X3(v), B3.y1 + 15, L, 'tlbl', 'middle'); }
     el('rect', { x: B3.x0, y: B3.y0, width: B3.x1 - B3.x0, height: B3.y1 - B3.y0, class: 'axisline' }, g);
-    text(g, (B3.x0 + B3.x1) / 2, B3.y1 + 32, '200 kordust: parve kaugus kahel viisil', 'lbl2', 'middle');
+    text(g, (B3.x0 + B3.x1) / 2, B3.y1 + 32, L('200 kordust: parve kaugus kahel viisil', '200 repeats: the cluster distance in two ways'), 'lbl2', 'middle');
     vline(g, X3(d0), B3, 'truth');
     strip(g, [[R.A, 'dot1', '1000/⟨p⟩'], [R.B, 'dot2', '⟨1000/p⟩']], X3, B3.y0 + 34, slo, shi);
     const mA = median(R.A), mB = median(R.B);
@@ -995,9 +1074,9 @@ table.res td.n { text-align: right; color: var(--text-1); }
     if (mB > slo && mB < shi) el('line', { x1: X3(mB), y1: B3.y0 + 48, x2: X3(mB), y2: B3.y0 + 72, class: 'invline' }, g);
 
     const row = (label, v) => `<tr><td>${label}</td><td class="n">${isFinite(v) ? fmtPc(v) : '—'}</td><td class="n">${isFinite(v) && v !== d0 ? fmtPct((v / d0 - 1) * 100) : ''}</td></tr>`;
-    $('biasRead').innerHTML = `<table class="res">${row('Tegelik kaugus', d0)}${row('1000 / ⟨p⟩', dA)}${row('⟨1000 / p⟩', dB)}` +
-      `<tr><td colspan="3" style="padding-top: 6px">200 korduse mediaan:</td></tr>${row('1000 / ⟨p⟩', mA)}${row('⟨1000 / p⟩', mB)}</table>` +
-      (neg ? `<p class="hint">⟨1000/p⟩ jätab ${neg} negatiivse parallaksiga tähte välja.</p>` : '');
+    $('biasRead').innerHTML = `<table class="res">${row(L('Tegelik kaugus', 'True distance'), d0)}${row('1000 / ⟨p⟩', dA)}${row('⟨1000 / p⟩', dB)}` +
+      `<tr><td colspan="3" style="padding-top: 6px">${L('200 korduse mediaan:', 'Median of 200 repeats:')}</td></tr>${row('1000 / ⟨p⟩', mA)}${row('⟨1000 / p⟩', mB)}</table>` +
+      (neg ? `<p class="hint">${L(`⟨1000/p⟩ jätab ${neg} negatiivse parallaksiga tähte välja.`, `⟨1000/p⟩ leaves out ${neg} stars with a negative parallax.`)}</p>` : '');
   }
   function wmeanD(list, ps) {
     let sw = 0, sd = 0;
@@ -1009,14 +1088,14 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const svg = $('sys');
     svg.textContent = '';
     const g = el('g', {}, svg), all = mems.map(i => S[i]);
-    if (all.length < 2) { text(g, 380, 200, 'Liiga vähe parve liikmeid: tõsta nõrgimate tähtede piiri.', 'lbl2', 'middle'); return; }
+    if (all.length < 2) { text(g, 380, 200, L('Liiga vähe parve liikmeid: tõsta nõrgimate tähtede piiri.', 'Too few cluster members: raise the limit of the faintest stars.'), 'lbl2', 'middle'); return; }
     const p0 = 1000 / st.d;
     const B = { x0: 70, x1: 680, y0: 10, y1: 290 }, NMAX = 1000, ELO = 0.001, EHI = 3;
     const X = mkScale(1, NMAX, B.x0, B.x1, true), Y = mkScale(ELO, EHI, B.y1, B.y0, true);
     const yt = [0.001, 0.01, 0.1, 1].map(v => [v, String(v)]);
-    frame(g, B, X, Y, [1, 10, 100, 1000].map(v => [v, String(v)]), yt, 'tähtede arv N', 'keskmise parallaksi viga (mas)', 48);
+    frame(g, B, X, Y, [1, 10, 100, 1000].map(v => [v, String(v)]), yt, L('tähtede arv N', 'number of stars N'), L('keskmise parallaksi viga (mas)', 'error of the mean parallax (mas)'), 48);
     for (const [v] of yt) text(g, B.x1 + 6, Y(v) + 4, fmtPctPlain(v / p0 * 100), 'tlbl');
-    text(g, 0, 0, 'kauguse viga', 'lbl2', 'middle').setAttribute('transform', `translate(${B.x1 + 62} ${(B.y0 + B.y1) / 2}) rotate(90)`);
+    text(g, 0, 0, L('kauguse viga', 'distance error'), 'lbl2', 'middle').setAttribute('transform', `translate(${B.x1 + 62} ${(B.y0 + B.y1) / 2}) rotate(90)`);
     // The statistical error of the first N members, extrapolated past the members there are.
     const sw = [], s2 = [];
     all.forEach((s, i) => { sw.push((sw[i - 1] || 0) + 1 / s.sig ** 2); s2.push((s2[i - 1] || 0) + s.sig ** 2); });
@@ -1030,13 +1109,13 @@ table.res td.n { text-align: right; color: var(--text-1); }
       el('polyline', { points: P.join(' '), class: cls }, inner);
     };
     line(stat, 1, n, 'statl'); if (n < NMAX) line(stat, n, NMAX, 'statl extr');
-    if (st.corr) { el('line', { x1: B.x0, y1: Y(SYS), x2: B.x1, y2: Y(SYS), class: 'sysl' }, inner); text(g, B.x1 - 6, Y(SYS) + 15, 'korreleeritud viga 0.010 mas', 'lbl3', 'end'); }
-    if (st.zp && !st.zpcorr) { el('line', { x1: B.x0, y1: Y(-ZP), x2: B.x1, y2: Y(-ZP), class: 'zpl' }, inner); text(g, B.x1 - 6, Y(-ZP) - 6, 'nullpunkti nihe 0.017 mas', 'lbl3', 'end'); }
+    if (st.corr) { el('line', { x1: B.x0, y1: Y(SYS), x2: B.x1, y2: Y(SYS), class: 'sysl' }, inner); text(g, B.x1 - 6, Y(SYS) + 15, L('korreleeritud viga 0.010 mas', 'correlated error 0.010 mas'), 'lbl3', 'end'); }
+    if (st.zp && !st.zpcorr) { el('line', { x1: B.x0, y1: Y(-ZP), x2: B.x1, y2: Y(-ZP), class: 'zpl' }, inner); text(g, B.x1 - 6, Y(-ZP) - 6, L('nullpunkti nihe 0.017 mas', 'zero-point offset 0.017 mas'), 'lbl3', 'end'); }
     line(tot, 1, n, 'totl'); if (n < NMAX) line(tot, n, NMAX, 'totl extr');
     const N = Math.min(st.N, n);
     el('circle', { cx: X(N), cy: Y(tot(N)), r: 5, class: 'curpt' }, g);
     text(g, X(N) + 8, Y(tot(N)) - 8, `N = ${N}`, 'lbl');
-    if (n < NMAX) { el('line', { x1: X(n), y1: B.y1 - 6, x2: X(n), y2: B.y1, class: 'axisline' }, g); text(g, X(n) - 4, B.y1 - 10, `kõik ${n} liiget`, 'lbl3', 'end'); }
+    if (n < NMAX) { el('line', { x1: X(n), y1: B.y1 - 6, x2: X(n), y2: B.y1, class: 'axisline' }, g); text(g, X(n) - 4, B.y1 - 10, L(`kõik ${n} liiget`, `all ${n} members`), 'lbl3', 'end'); }
 
     // The repeats of 1000/⟨p⟩ with the current toggles.
     const R = repeats(used()).A.filter(isFinite), d0 = st.d;
@@ -1045,16 +1124,20 @@ table.res td.n { text-align: right; color: var(--text-1); }
     const B3 = { x0: 70, x1: 680, y0: 350, y1: 400 }, X3 = mkScale(slo, shi, B3.x0, B3.x1);
     for (const [v, L] of distTicks(slo, shi, niceStep((shi - slo) / 6))) { el('line', { x1: X3(v), y1: B3.y0, x2: X3(v), y2: B3.y1, class: 'gridline' }, g); text(g, X3(v), B3.y1 + 15, L, 'tlbl', 'middle'); }
     el('rect', { x: B3.x0, y: B3.y0, width: B3.x1 - B3.x0, height: B3.y1 - B3.y0, class: 'axisline' }, g);
-    text(g, (B3.x0 + B3.x1) / 2, B3.y1 + 32, `200 kordust: 1000/⟨p⟩ ${N} tähest`, 'lbl2', 'middle');
+    text(g, (B3.x0 + B3.x1) / 2, B3.y1 + 32, L(`200 kordust: 1000/⟨p⟩ ${N} tähest`, `200 repeats: 1000/⟨p⟩ from ${N} stars`), 'lbl2', 'middle');
     vline(g, X3(d0), B3, 'truth');
     strip(g, [[R, 'dot1', '']], X3, B3.y0 + 25, slo, shi);
 
     const e = tot(N), m = wmean(used()), dA = 1000 / m.p;
-    let t = `${N} tähest: statistiline viga <b>${fmt(stat(N), 4)} mas</b>` + (st.corr ? `, korreleeritud ${fmt(SYS, 3)} mas` : '') +
-      `, kokku <b>${fmt(e, 4)} mas</b>, mis on kauguses <b>±${fmtPctPlain(e / p0 * 100)}</b>.`;
-    if (st.zp && !st.zpcorr) t += ` Nullpunkt on parandamata: kõik parallaksid on 0.017 mas liiga väikesed ja kaugus tuleb umbes <b>${fmtPct((p0 / (p0 + ZP) - 1) * 100)}</b> liiga suur.`;
-    if (!st.zp && st.zpcorr) t += ' Parandus ilma nullpunktita teeb parallaksid 0.017 mas liiga suureks.';
-    t += ` Selle mõõtmise kaugus: ${fmtPc(dA)} (tegelik ${fmtPc(d0)}).`;
+    const pe = fmtPctPlain(e / p0 * 100), zpe = fmtPct((p0 / (p0 + ZP) - 1) * 100);
+    let t = L(`${N} tähest: statistiline viga <b>${fmt(stat(N), 4)} mas</b>` + (st.corr ? `, korreleeritud ${fmt(SYS, 3)} mas` : '') +
+      `, kokku <b>${fmt(e, 4)} mas</b>, mis on kauguses <b>±${pe}</b>.`,
+      `From ${N} stars: statistical error <b>${fmt(stat(N), 4)} mas</b>` + (st.corr ? `, correlated ${fmt(SYS, 3)} mas` : '') +
+      `, total <b>${fmt(e, 4)} mas</b>, which is <b>±${pe}</b> in distance.`);
+    if (st.zp && !st.zpcorr) t += L(` Nullpunkt on parandamata: kõik parallaksid on 0.017 mas liiga väikesed ja kaugus tuleb umbes <b>${zpe}</b> liiga suur.`,
+      ` The zero point is uncorrected: all parallaxes are 0.017 mas too small, and the distance comes out about <b>${zpe}</b> too large.`);
+    if (!st.zp && st.zpcorr) t += L(' Parandus ilma nullpunktita teeb parallaksid 0.017 mas liiga suureks.', ' The correction without the zero point makes the parallaxes 0.017 mas too large.');
+    t += L(` Selle mõõtmise kaugus: ${fmtPc(dA)} (tegelik ${fmtPc(d0)}).`, ` Distance from this measurement: ${fmtPc(dA)} (true ${fmtPc(d0)}).`);
     $('sysRead').innerHTML = t;
   }
   function fmtPctPlain(v) { return (v < 1 ? sig(v, 2) : v < 10 ? fmt(v, 1) : sig(v, 2)) + ' %'; }
@@ -1066,19 +1149,21 @@ table.res td.n { text-align: right; color: var(--text-1); }
     $('distOut').textContent = fmtPc(st.d);
     $('glimOut').textContent = fmt(st.glim, 1);
     $('ebvOut').textContent = fmt(st.ebv, 2);
-    $('timeOut').textContent = sig(Math.round(tYears() / 100) * 100 || 0, 3) + ' a';
+    $('timeOut').textContent = sig(Math.round(tYears() / 100) * 100 || 0, 3) + L(' a', ' yr');
     const nm = mems.length, nf = S.length - nm;
-    $('clRead').innerHTML = `Parve parallaks <b>${fmt(1000 / st.d, 3)} mas</b>. Päringus on ${S.length} tähte, neist ${nm} parve liiget ja ${nf} väljatähte.`;
+    $('clRead').innerHTML = L(`Parve parallaks <b>${fmt(1000 / st.d, 3)} mas</b>. Päringus on ${S.length} tähte, neist ${nm} parve liiget ja ${nf} väljatähte.`,
+      `Cluster parallax <b>${fmt(1000 / st.d, 3)} mas</b>. The query has ${S.length} stars: ${nm} cluster members and ${nf} field stars.`);
     const sel = selected(), found = sel.filter(i => S[i].mem).length, foreign = sel.length - found;
-    if (!st.poly) $('lassoRead').innerHTML = 'Lasso on tühi. Lohista omaliikumiste joonisel ümber tiheda kogumi.';
+    if (!st.poly) $('lassoRead').innerHTML = L('Lasso on tühi. Lohista omaliikumiste joonisel ümber tiheda kogumi.', 'The lasso is empty. Drag around the dense clump in the proper motion plot.');
     else {
-      const m = sel.length ? wmean(sel.map(i => S[i])) : null;
-      $('lassoRead').innerHTML = `Valitud <b>${sel.length}</b> tähte: leitud liikmeid <b>${found}</b> / ${nm}` +
-        (nm ? ` (${Math.round(100 * found / nm)} %)` : '') + `, võõraid <b>${foreign}</b>.` +
-        (m && m.p > 0 ? `<br>Valiku kaugus 1000/⟨p⟩ = <b>${fmtPc(1000 / m.p)}</b> (tegelik ${fmtPc(st.d)}).` : '');
+      const m = sel.length ? wmean(sel.map(i => S[i])) : null, pct = nm ? ` (${Math.round(100 * found / nm)} %)` : '';
+      $('lassoRead').innerHTML = L(`Valitud <b>${sel.length}</b> tähte: leitud liikmeid <b>${found}</b> / ${nm}${pct}, võõraid <b>${foreign}</b>.`,
+          `Picked <b>${sel.length}</b> stars: members found <b>${found}</b> / ${nm}${pct}, others <b>${foreign}</b>.`) +
+        (m && m.p > 0 ? L(`<br>Valiku kaugus 1000/⟨p⟩ = <b>${fmtPc(1000 / m.p)}</b> (tegelik ${fmtPc(st.d)}).`,
+          `<br>Distance of the selection 1000/⟨p⟩ = <b>${fmtPc(1000 / m.p)}</b> (true ${fmtPc(st.d)}).`) : '');
     }
     $('clear').disabled = !st.poly;
-    const label = st.playing ? '❚❚ Peata' : '▶ Käivita';
+    const label = st.playing ? L('❚❚ Peata', '❚❚ Pause') : L('▶ Käivita', '▶ Play');
     if ($('play').textContent !== label) $('play').textContent = label;
     $('lgMem1').hidden = $('lgMem3').hidden = !st.truth;
     pmSvg.style.cursor = st.all ? '' : 'default';
@@ -1184,7 +1269,35 @@ table.res td.n { text-align: right; color: var(--text-1); }
   };
   window.addEventListener('hashchange', fromHash);
 
+  /* ---------- Language ---------- */
+  // The language buttons switch the page in place. Texts in the markup are switched by the CSS; the title and the
+  // attributes with a data-en-* translation are set here, keeping the Estonian in data-et-*, and the drawings and
+  // readouts are drawn again. The choice goes into the address and is remembered.
+  const ATTRS = ['aria-label', 'title', 'content', 'placeholder'];
+  function applyLang() {
+    const lang = document.documentElement.lang;
+    document.title = L('Hajusparvede kaugused', 'Distances of open clusters');
+    for (const e of document.querySelectorAll(ATTRS.map(a => `[data-en-${a}]`).join())) {
+      for (const a of ATTRS) {
+        if (!e.hasAttribute('data-en-' + a)) continue;
+        if (!e.hasAttribute('data-et-' + a)) e.setAttribute('data-et-' + a, e.getAttribute(a));
+        e.setAttribute(a, e.getAttribute(`data-${lang}-${a}`));
+      }
+    }
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+    document.documentElement.lang = b.dataset.lang;
+    try { localStorage.setItem('lang', b.dataset.lang); } catch (e) {}
+    const u = new URL(location.href);
+    u.searchParams.set('lang', b.dataset.lang);
+    history.replaceState(null, '', u);
+    applyLang();
+    render();
+  }));
+
   derive();
+  applyLang();
   fromHash();
 })();
 </script>

@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Standardküünlad</title>
-<meta name="description" content="Interaktiivsed joonised standardküünaldest: pöördruutude seadus, tähesuurused, kalibreerimine, hea küünla omadused, tsefeiidid ja Ia tüüpi supernoovad.">
+<meta name="description" content="Interaktiivsed joonised standardküünaldest: pöördruutude seadus, tähesuurused, kalibreerimine, hea küünla omadused, tsefeiidid ja Ia tüüpi supernoovad."
+  data-en-content="Interactive drawings of standard candles: the inverse-square law, magnitudes, calibration, what makes a good candle, Cepheids and type Ia supernovae.">
+<script>
+// The language is set before the page is drawn: ?lang=et or ?lang=en in the address (remembered), else the last
+// choice, else Estonian.
+(() => {
+  let l = new URLSearchParams(location.search).get('lang');
+  if (l === 'et' || l === 'en') { try { localStorage.setItem('lang', l); } catch (e) {} }
+  else { try { l = localStorage.getItem('lang'); } catch (e) {} }
+  document.documentElement.lang = l === 'en' ? 'en' : 'et';
+})();
+</script>
 <style>
 :root {
   color-scheme: light;
@@ -83,6 +94,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* The page has both languages side by side; data-l marks the text of one, and the other is hidden. */
+:root[lang="et"] [data-l="en"], :root[lang="en"] [data-l="et"] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--bg);
@@ -90,7 +103,11 @@ body {
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
-.back { font-size: 0.88rem; margin: 0 0 14px; color: var(--text-3); }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 14px; }
+.back { font-size: 0.88rem; margin: 0; color: var(--text-3); }
+.langs { display: flex; gap: 4px; }
+.langs button { font-size: 0.8rem; padding: 2px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; color: var(--text-2); }
+.top .langs button[aria-pressed="true"] { background: var(--btn); color: var(--btn-text); border-color: transparent; }
 .back a { color: var(--text-2); text-decoration: none; }
 .back a:hover { color: var(--sel); }
 .back .sep { margin: 0 6px; }
@@ -259,7 +276,7 @@ select { width: 100%; }
 .overlap { fill: color-mix(in srgb, var(--text-3) 16%, transparent); }
 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-2); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
 
 .explain { margin-top: 14px; }
@@ -277,180 +294,200 @@ select { width: 100%; }
 </head>
 <body>
 <main>
-  <p class="back"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span>Standardküünlad<span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
-  <h1>Standardküünlad</h1>
-  <p class="byline">Taavi Tuvikene<br>TÜ Tartu observatoorium</p>
-  <p class="intro">Kui valgusallika tegelik heledus on teada, annab selle näiv heledus kauguse: mida kaugemal on allikas, seda nõrgemana see paistab.
+  <div class="top">
+    <p class="back" data-l="et"><a href="index.html">← Kosmiliste kauguste redel</a><span class="sep">·</span><a href="parallaks.html">Parallaks</a><span class="sep">·</span><a href="hajusparved.html">Hajusparved</a><span class="sep">·</span>Standardküünlad<span class="sep">·</span><a href="tsefeiidid.html">Tsefeiidid</a><span class="sep">·</span><a href="supernoovad.html">Ia tüüpi supernoovad</a><span class="sep">·</span><a href="hubble.html">Hubble'i seadus</a></p>
+    <p class="back" data-l="en"><a href="index.html">← The cosmic distance ladder</a><span class="sep">·</span><a href="parallaks.html">Parallax</a><span class="sep">·</span><a href="hajusparved.html">Open clusters</a><span class="sep">·</span>Standard candles<span class="sep">·</span><a href="tsefeiidid.html">Cepheids</a><span class="sep">·</span><a href="supernoovad.html">Type Ia supernovae</a><span class="sep">·</span><a href="hubble.html">Hubble's law</a></p>
+    <div class="langs" role="group" aria-label="Keel" data-en-aria-label="Language">
+      <button type="button" data-lang="et" lang="et">Eesti</button>
+      <button type="button" data-lang="en" lang="en">English</button>
+    </div>
+  </div>
+  <h1><span data-l="et">Standardküünlad</span><span data-l="en">Standard candles</span></h1>
+  <p class="byline">Taavi Tuvikene<br><span data-l="et">TÜ Tartu observatoorium</span><span data-l="en">Tartu Observatory, University of Tartu</span></p>
+  <p class="intro" data-l="et">Kui valgusallika tegelik heledus on teada, annab selle näiv heledus kauguse: mida kaugemal on allikas, seda nõrgemana see paistab.
     Selliseid allikaid nimetatakse <a class="en" href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder#Standard_candles" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">standardküünaldeks</a>.
     Vali valgusallikas (lamp, <a class="en" href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">tsefeiid</a> või Ia tüüpi <a href="https://et.wikipedia.org/wiki/Supernoova" target="_blank" rel="noopener">supernoova</a>),
     vii see kaugemale ja vaata, kuidas muutuvad selle näiv heledus ja <a href="https://et.wikipedia.org/wiki/Tähesuurus" target="_blank" rel="noopener">tähesuurus</a>. Seejärel kalibreeri küünal tuntud kaugusel
     ja mõõda sellega tundmatu kaugus.</p>
+  <p class="intro" data-l="en">If the true luminosity of a light source is known, its apparent brightness gives its distance: the farther away the source, the fainter it looks.
+    Such sources are called <a href="https://en.wikipedia.org/wiki/Cosmic_distance_ladder#Standard_candles" target="_blank" rel="noopener">standard candles</a>.
+    Choose a light source (a lamp, a <a href="https://en.wikipedia.org/wiki/Cepheid_variable" target="_blank" rel="noopener">Cepheid</a> or a type Ia <a href="https://en.wikipedia.org/wiki/Supernova" target="_blank" rel="noopener">supernova</a>),
+    move it farther away and see how its apparent brightness and <a href="https://en.wikipedia.org/wiki/Magnitude_(astronomy)" target="_blank" rel="noopener">magnitude</a> change. Then calibrate the candle at a known distance
+    and measure an unknown distance with it.</p>
 
   <div class="layout">
     <section class="card">
-      <div class="tabs" role="tablist" aria-label="Teema">
-        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true">Pöördruutude seadus</button>
-        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1">Tähesuurused</button>
-        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1">Kalibreerimine</button>
-        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1">Hea küünal</button>
-        <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1">Tsefeiidid ja supernoovad</button>
+      <div class="tabs" role="tablist" aria-label="Teema" data-en-aria-label="Topic">
+        <button type="button" role="tab" id="tab1" aria-controls="pane1" aria-selected="true"><span data-l="et">Pöördruutude seadus</span><span data-l="en">Inverse-square law</span></button>
+        <button type="button" role="tab" id="tab2" aria-controls="pane2" aria-selected="false" tabindex="-1"><span data-l="et">Tähesuurused</span><span data-l="en">Magnitudes</span></button>
+        <button type="button" role="tab" id="tab3" aria-controls="pane3" aria-selected="false" tabindex="-1"><span data-l="et">Kalibreerimine</span><span data-l="en">Calibration</span></button>
+        <button type="button" role="tab" id="tab4" aria-controls="pane4" aria-selected="false" tabindex="-1"><span data-l="et">Hea küünal</span><span data-l="en">A good candle</span></button>
+        <button type="button" role="tab" id="tab5" aria-controls="pane5" aria-selected="false" tabindex="-1"><span data-l="et">Tsefeiidid ja supernoovad</span><span data-l="en">Cepheids and supernovae</span></button>
       </div>
 
       <div id="pane1" role="tabpanel" aria-labelledby="tab1">
-        <p class="hint">Valgusallikas eemaldub teleskoobist. Lohista allikat või kasuta paremal liugurit. Rada on logaritmilises skaalas: iga jaotis on eelmisest 10 korda kaugemal.</p>
-        <svg id="side" class="scene" viewBox="0 0 760 230" role="img" aria-label="Kõrvalvaade: teleskoop ja valgusallikas logaritmilisel kaugusteljel"></svg>
+        <p class="hint" data-l="et">Valgusallikas eemaldub teleskoobist. Lohista allikat või kasuta paremal liugurit. Rada on logaritmilises skaalas: iga jaotis on eelmisest 10 korda kaugemal.</p>
+        <p class="hint" data-l="en">The light source moves away from the telescope. Drag the source or use the slider on the right. The track is on a logarithmic scale: each division is 10 times farther than the one before.</p>
+        <svg id="side" class="scene" viewBox="0 0 760 230" role="img" aria-label="Kõrvalvaade: teleskoop ja valgusallikas logaritmilisel kaugusteljel" data-en-aria-label="Side view: the telescope and the light source on a logarithmic distance axis"></svg>
         <div class="row2">
           <div>
-            <p class="sub">Vaatleja vaade</p>
-            <svg id="eye" class="scene" viewBox="0 0 240 240" role="img" aria-label="Allikas taevas koos võrdlustähtedega"></svg>
+            <p class="sub"><span data-l="et">Vaatleja vaade</span><span data-l="en">Observer's view</span></p>
+            <svg id="eye" class="scene" viewBox="0 0 240 240" role="img" aria-label="Allikas taevas koos võrdlustähtedega" data-en-aria-label="The source on the sky with comparison stars"></svg>
           </div>
           <div>
-            <p class="sub">Voog ja kaugus</p>
-            <svg id="flux" class="scene" viewBox="0 0 500 240" role="img" aria-label="Voo sõltuvus kaugusest"></svg>
+            <p class="sub"><span data-l="et">Voog ja kaugus</span><span data-l="en">Flux and distance</span></p>
+            <svg id="flux" class="scene" viewBox="0 0 500 240" role="img" aria-label="Voo sõltuvus kaugusest" data-en-aria-label="Flux against distance"></svg>
           </div>
         </div>
       </div>
 
       <div id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
-        <p class="hint">Vasakul on tähesuuruste skaala: ülal heledad, all nõrgad objektid. Paremal olev kauguste skaala on nihutatud nii, et allika kaugus on samal kõrgusel kui selle näiv tähesuurus m.</p>
-        <svg id="mag" class="scene" viewBox="0 0 760 540" role="img" aria-label="Tähesuuruste ja kauguste skaala"></svg>
+        <p class="hint" data-l="et">Vasakul on tähesuuruste skaala: ülal heledad, all nõrgad objektid. Paremal olev kauguste skaala on nihutatud nii, et allika kaugus on samal kõrgusel kui selle näiv tähesuurus m.</p>
+        <p class="hint" data-l="en">On the left is the magnitude scale: bright objects at the top, faint ones at the bottom. The distance scale on the right is shifted so that the distance of the source is at the same height as its apparent magnitude m.</p>
+        <svg id="mag" class="scene" viewBox="0 0 760 540" role="img" aria-label="Tähesuuruste ja kauguste skaala" data-en-aria-label="Scales of magnitude and distance"></svg>
       </div>
 
       <div id="pane3" role="tabpanel" aria-labelledby="tab3" hidden>
-        <p class="hint">Kaks ühesugust allikat: ülemise kaugus on teada, alumise kaugus on peidetud. Mõlema heledus on mõõdetud, lambil luksmeetriga, tsefeiidil ja supernooval teleskoobiga. Leia paremal alumise allika kaugus.</p>
-        <svg id="cal" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kaks ühesugust allikat: üks tuntud, teine tundmatu kaugusel"></svg>
+        <p class="hint" data-l="et">Kaks ühesugust allikat: ülemise kaugus on teada, alumise kaugus on peidetud. Mõlema heledus on mõõdetud, lambil luksmeetriga, tsefeiidil ja supernooval teleskoobiga. Leia paremal alumise allika kaugus.</p>
+        <p class="hint" data-l="en">Two identical sources: the distance of the upper one is known, that of the lower one is hidden. The brightness of both has been measured, for the lamp with a lux meter, for the Cepheid and the supernova with a telescope. Find the distance of the lower source on the right.</p>
+        <svg id="cal" class="scene" viewBox="0 0 760 300" role="img" aria-label="Kaks ühesugust allikat: üks tuntud, teine tundmatu kaugusel" data-en-aria-label="Two identical sources: one at a known, the other at an unknown distance"></svg>
         <div class="row-cal">
           <div>
-            <p class="sub">Mõõdetud ja tegelik kaugus</p>
-            <svg id="calplot" class="scene" viewBox="0 0 460 280" role="img" aria-label="Mõõdetud kaugus tegeliku kauguse vastu"></svg>
+            <p class="sub"><span data-l="et">Mõõdetud ja tegelik kaugus</span><span data-l="en">Measured and true distance</span></p>
+            <svg id="calplot" class="scene" viewBox="0 0 460 280" role="img" aria-label="Mõõdetud kaugus tegeliku kauguse vastu" data-en-aria-label="Measured distance against true distance"></svg>
             <div class="legend">
-              <span><i style="border-color: var(--text-3)"></i>mõõdetud = tegelik</span>
-              <span><i style="border-color: var(--accent); border-top-style: dashed"></i>kalibreerimisviga</span>
+              <span><i style="border-color: var(--text-3)"></i><span data-l="et">mõõdetud = tegelik</span><span data-l="en">measured = true</span></span>
+              <span><i style="border-color: var(--accent); border-top-style: dashed"></i><span data-l="et">kalibreerimisviga</span><span data-l="en">calibration error</span></span>
             </div>
           </div>
           <div>
-            <p class="sub">Vead kanduvad redelil edasi</p>
-            <svg id="ladder" class="scene" viewBox="0 0 280 280" role="img" aria-label="Kauguste redeli kolm pulka ja nende vead"></svg>
+            <p class="sub"><span data-l="et">Vead kanduvad redelil edasi</span><span data-l="en">Errors are carried up the ladder</span></p>
+            <svg id="ladder" class="scene" viewBox="0 0 280 280" role="img" aria-label="Kauguste redeli kolm pulka ja nende vead" data-en-aria-label="Three rungs of the distance ladder and their errors"></svg>
           </div>
         </div>
       </div>
 
       <div id="pane4" role="tabpanel" aria-labelledby="tab4" hidden>
-        <div class="views-btns" role="group" aria-label="Vaade">
-          <span>Vaade:</span>
-          <button type="button" class="chip" data-view4="galaxy">Ühe galaktika küünlad</button>
-          <button type="button" class="chip" data-view4="reach">Ulatus ja täpsus</button>
+        <div class="views-btns" role="group" aria-label="Vaade" data-en-aria-label="View">
+          <span><span data-l="et">Vaade:</span><span data-l="en">View:</span></span>
+          <button type="button" class="chip" data-view4="galaxy"><span data-l="et">Ühe galaktika küünlad</span><span data-l="en">Candles in one galaxy</span></button>
+          <button type="button" class="chip" data-view4="reach"><span data-l="et">Ulatus ja täpsus</span><span data-l="en">Reach and precision</span></button>
         </div>
         <div id="view4galaxy">
-          <p class="hint">Kujutle galaktikat 10 Mpc kaugusel, milles on N sama tüüpi küünalt. Iga küünla heledus erineb veidi keskmisest, nii et igaüks annab veidi erineva kauguse.</p>
-          <svg id="galaxy" class="scene" viewBox="0 0 760 300" role="img" aria-label="Galaktika küünaldega ja nende kauguste histogramm"></svg>
+          <p class="hint" data-l="et">Kujutle galaktikat 10 Mpc kaugusel, milles on N sama tüüpi küünalt. Iga küünla heledus erineb veidi keskmisest, nii et igaüks annab veidi erineva kauguse.</p>
+          <p class="hint" data-l="en">Imagine a galaxy 10 Mpc away with N candles of the same kind. The luminosity of each candle differs a little from the mean, so each one gives a slightly different distance.</p>
+          <svg id="galaxy" class="scene" viewBox="0 0 760 300" role="img" aria-label="Galaktika küünaldega ja nende kauguste histogramm" data-en-aria-label="A galaxy with candles, and the histogram of their distances"></svg>
           <div class="legend">
-            <span><i style="border-color: var(--text-1)"></i>tegelik kaugus</span>
-            <span><i style="border-color: var(--accent); border-top-style: dashed"></i>valimi keskmine</span>
-            <span><i style="border-color: color-mix(in srgb, var(--sel) 30%, transparent); border-top-width: 8px"></i>keskmise oodatav viga</span>
+            <span><i style="border-color: var(--text-1)"></i><span data-l="et">tegelik kaugus</span><span data-l="en">true distance</span></span>
+            <span><i style="border-color: var(--accent); border-top-style: dashed"></i><span data-l="et">valimi keskmine</span><span data-l="en">mean of the sample</span></span>
+            <span><i style="border-color: color-mix(in srgb, var(--sel) 30%, transparent); border-top-width: 8px"></i><span data-l="et">keskmise oodatav viga</span><span data-l="en">expected error of the mean</span></span>
           </div>
         </div>
         <div id="view4reach" hidden>
-          <p class="hint">Iga punkt on üks küünla tüüp: paremal ulatub kaugemale, all on täpsem. Hea küünal on all paremal. Klõpsa punktil, et selle kohta lugeda.</p>
-          <svg id="reach" class="scene" viewBox="0 0 760 340" role="img" aria-label="Küünalde ulatus ja hajuvus"></svg>
+          <p class="hint" data-l="et">Iga punkt on üks küünla tüüp: paremal ulatub kaugemale, all on täpsem. Hea küünal on all paremal. Klõpsa punktil, et selle kohta lugeda.</p>
+          <p class="hint" data-l="en">Each point is a kind of candle: farther to the right reaches farther, lower down is more precise. A good candle is at the bottom right. Click a point to read about it.</p>
+          <svg id="reach" class="scene" viewBox="0 0 760 340" role="img" aria-label="Küünalde ulatus ja hajuvus" data-en-aria-label="Reach and scatter of the candles"></svg>
         </div>
       </div>
 
       <div id="pane5" role="tabpanel" aria-labelledby="tab5" hidden>
-        <p class="hint">Tsefeiidid ja Ia supernoovad ei ole kõik ühesuguse heledusega, kuid nende heledust saab ennustada millestki, mida saab mõõta. Lülita paremal sisse <b>Kasuta seost</b> ja vaata, kuidas hajuvus väheneb. Andmed on simuleeritud.</p>
+        <p class="hint" data-l="et">Tsefeiidid ja Ia supernoovad ei ole kõik ühesuguse heledusega, kuid nende heledust saab ennustada millestki, mida saab mõõta. Lülita paremal sisse <b>Kasuta seost</b> ja vaata, kuidas hajuvus väheneb. Andmed on simuleeritud.</p>
+        <p class="hint" data-l="en">Cepheids and type Ia supernovae are not all equally luminous, but their luminosity can be predicted from something that can be measured. Turn on <b>Use the relation</b> on the right and see how the scatter shrinks. The data are simulated.</p>
         <div class="duo">
           <div>
-            <p class="sub">Tsefeiidid: periood annab heleduse</p>
-            <svg id="cepfig" class="scene" viewBox="0 0 370 430" role="img" aria-label="Pulseeriv tsefeiid, heleduskõver ja perioodi-heleduse seos"></svg>
-            <p class="links"><a href="tsefeiidid.html">Tsefeiidide leht</a> · Harjutus: <a href="index.html#osa-2">2. osa</a>, <a href="index.html#osa-3">3. osa</a></p>
+            <p class="sub"><span data-l="et">Tsefeiidid: periood annab heleduse</span><span data-l="en">Cepheids: the period gives the luminosity</span></p>
+            <svg id="cepfig" class="scene" viewBox="0 0 370 430" role="img" aria-label="Pulseeriv tsefeiid, heleduskõver ja perioodi-heleduse seos" data-en-aria-label="A pulsating Cepheid, its light curve and the period–luminosity relation"></svg>
+            <p class="links" data-l="et"><a href="tsefeiidid.html">Tsefeiidide leht</a> · Harjutus: <a href="index.html#osa-2">2. osa</a>, <a href="index.html#osa-3">3. osa</a></p>
+            <p class="links" data-l="en"><a href="tsefeiidid.html">Cepheids page</a> · Exercise: <a href="index.html#osa-2">part 2</a>, <a href="index.html#osa-3">part 3</a></p>
           </div>
           <div>
-            <p class="sub">Ia supernoovad: nõrgenemise kiirus annab heleduse</p>
-            <svg id="snfig" class="scene" viewBox="0 0 370 430" role="img" aria-label="Supernoova heleduskõver ja Phillipsi seos"></svg>
-            <p class="links"><a href="supernoovad.html">Ia tüüpi supernoovade leht</a> · Harjutus: <a href="index.html#osa-4">4. osa</a></p>
+            <p class="sub"><span data-l="et">Ia supernoovad: nõrgenemise kiirus annab heleduse</span><span data-l="en">Type Ia supernovae: the rate of fading gives the luminosity</span></p>
+            <svg id="snfig" class="scene" viewBox="0 0 370 430" role="img" aria-label="Supernoova heleduskõver ja Phillipsi seos" data-en-aria-label="A supernova light curve and the Phillips relation"></svg>
+            <p class="links" data-l="et"><a href="supernoovad.html">Ia tüüpi supernoovade leht</a> · Harjutus: <a href="index.html#osa-4">4. osa</a></p>
+            <p class="links" data-l="en"><a href="supernoovad.html">Type Ia supernovae page</a> · Exercise: <a href="index.html#osa-4">part 4</a></p>
           </div>
         </div>
-        <p class="sub">Meetodite ulatus</p>
-        <svg id="ranges" class="scene" viewBox="0 0 760 160" role="img" aria-label="Parallaksi, tsefeiidide ja Ia supernoovade ulatus kaugusteljel"></svg>
+        <p class="sub"><span data-l="et">Meetodite ulatus</span><span data-l="en">Reach of the methods</span></p>
+        <svg id="ranges" class="scene" viewBox="0 0 760 160" role="img" aria-label="Parallaksi, tsefeiidide ja Ia supernoovade ulatus kaugusteljel" data-en-aria-label="Reach of parallax, Cepheids and type Ia supernovae on the distance axis"></svg>
       </div>
     </section>
 
-    <section class="card controls" aria-label="Seaded">
+    <section class="card controls" aria-label="Seaded" data-en-aria-label="Settings">
       <div class="group" data-tabs="tab1 tab2 tab3">
-        <h3 id="srcLbl">Valgusallikas</h3>
+        <h3 id="srcLbl"><span data-l="et">Valgusallikas</span><span data-l="en">Light source</span></h3>
         <div class="seg" role="radiogroup" aria-labelledby="srcLbl">
-          <button type="button" role="radio" data-src="lamp">Lamp</button>
-          <button type="button" role="radio" data-src="cep">Tsefeiid</button>
-          <button type="button" role="radio" data-src="sn">Ia supernoova</button>
+          <button type="button" role="radio" data-src="lamp"><span data-l="et">Lamp</span><span data-l="en">Lamp</span></button>
+          <button type="button" role="radio" data-src="cep"><span data-l="et">Tsefeiid</span><span data-l="en">Cepheid</span></button>
+          <button type="button" role="radio" data-src="sn"><span data-l="et">Ia supernoova</span><span data-l="en">Type Ia supernova</span></button>
         </div>
         <p class="readout" id="srcInfo"></p>
       </div>
 
       <div class="group" data-tabs="tab1 tab2">
-        <div class="slider wide"><label for="dist">Kaugus</label><input type="range" id="dist" min="0" max="1000" step="1"><output for="dist" id="distOut"></output></div>
+        <div class="slider wide"><label for="dist"><span data-l="et">Kaugus</span><span data-l="en">Distance</span></label><input type="range" id="dist" min="0" max="1000" step="1"><output for="dist" id="distOut"></output></div>
         <div class="limits" id="limits" aria-hidden="true"></div>
         <p class="readout" id="distRead"></p>
       </div>
 
       <div class="group" data-tabs="tab1">
         <div class="toggles">
-          <label class="toggle"><input type="checkbox" id="squares"> Näita ruute</label>
-          <label class="toggle"><input type="checkbox" id="logAxes"> Logaritmteljed</label>
+          <label class="toggle"><input type="checkbox" id="squares"><span data-l="et"> Näita ruute</span><span data-l="en"> Show squares</span></label>
+          <label class="toggle"><input type="checkbox" id="logAxes"><span data-l="et"> Logaritmteljed</span><span data-l="en"> Logarithmic axes</span></label>
         </div>
         <p class="readout" id="fluxRead"></p>
         <p class="formula" id="fluxFormula"></p>
         <div class="btnrow">
-          <button type="button" id="setD0">Määra lähtekohaks d₀</button>
-          <button type="button" id="same" aria-pressed="false">Sama heledus, eri kaugus</button>
+          <button type="button" id="setD0"><span data-l="et">Määra lähtekohaks d₀</span><span data-l="en">Set as starting point d₀</span></button>
+          <button type="button" id="same" aria-pressed="false"><span data-l="et">Sama heledus, eri kaugus</span><span data-l="en">Same brightness, different distance</span></button>
         </div>
         <p class="readout" id="sameRead"></p>
       </div>
 
       <div class="group" data-tabs="tab2">
-        <h3>Kaugusmoodul</h3>
+        <h3><span data-l="et">Kaugusmoodul</span><span data-l="en">Distance modulus</span></h3>
         <p class="readout" id="magRead"></p>
         <p class="formula" id="magFormula"></p>
       </div>
       <div class="group" data-tabs="tab2">
-        <h3>Heleduste suhe</h3>
-        <div class="slider"><label for="m1">Täht 1: tähesuurus m₁</label><input type="range" id="m1" min="-2" max="20" step="0.1" value="1"><output for="m1" id="m1Out"></output></div>
-        <div class="slider"><label for="m2">Täht 2: tähesuurus m₂</label><input type="range" id="m2" min="-2" max="20" step="0.1" value="6"><output for="m2" id="m2Out"></output></div>
-        <svg id="ratio" class="scene" viewBox="0 0 300 80" role="img" aria-label="Kaks tähte valitud tähesuurustega"></svg>
+        <h3><span data-l="et">Heleduste suhe</span><span data-l="en">Brightness ratio</span></h3>
+        <div class="slider"><label for="m1"><span data-l="et">Täht 1: tähesuurus m₁</span><span data-l="en">Star 1: magnitude m₁</span></label><input type="range" id="m1" min="-2" max="20" step="0.1" value="1"><output for="m1" id="m1Out"></output></div>
+        <div class="slider"><label for="m2"><span data-l="et">Täht 2: tähesuurus m₂</span><span data-l="en">Star 2: magnitude m₂</span></label><input type="range" id="m2" min="-2" max="20" step="0.1" value="6"><output for="m2" id="m2Out"></output></div>
+        <svg id="ratio" class="scene" viewBox="0 0 300 80" role="img" aria-label="Kaks tähte valitud tähesuurustega" data-en-aria-label="Two stars with the chosen magnitudes"></svg>
         <p class="readout" id="ratioRead"></p>
       </div>
 
       <div class="group" data-tabs="tab3">
-        <h3>1. Tuntud kaugusega allikas</h3>
+        <h3><span data-l="et">1. Tuntud kaugusega allikas</span><span data-l="en">1. Source at a known distance</span></h3>
         <p class="readout" id="calText"></p>
-        <div class="inrow">Soovi korral: <button type="button" id="calcM">Arvuta M</button></div>
+        <div class="inrow"><span data-l="et">Soovi korral:</span><span data-l="en">Optionally:</span> <button type="button" id="calcM">Arvuta M</button></div>
         <p class="formula" id="calFormula"></p>
       </div>
       <div class="group" data-tabs="tab3">
-        <h3>2. Mõõda kaugus</h3>
+        <h3><span data-l="et">2. Mõõda kaugus</span><span data-l="en">2. Measure the distance</span></h3>
         <p class="readout" id="measText"></p>
         <p class="hint" id="measHint"></p>
         <div class="inrow">
-          <label for="guess">Sinu kaugus</label><input type="text" inputmode="decimal" class="numin" id="guess" autocomplete="off"><span id="guessUnit"></span>
-          <button type="button" id="check">Kontrolli</button>
+          <label for="guess"><span data-l="et">Sinu kaugus</span><span data-l="en">Your distance</span></label><input type="text" inputmode="decimal" class="numin" id="guess" autocomplete="off"><span id="guessUnit"></span>
+          <button type="button" id="check"><span data-l="et">Kontrolli</span><span data-l="en">Check</span></button>
         </div>
         <div class="btnrow">
-          <button type="button" id="calcD">Arvuta kaugus</button>
-          <button type="button" id="newHid">Uus allikas</button>
+          <button type="button" id="calcD"><span data-l="et">Arvuta kaugus</span><span data-l="en">Compute the distance</span></button>
+          <button type="button" id="newHid"><span data-l="et">Uus allikas</span><span data-l="en">New source</span></button>
         </div>
         <p class="formula" id="measFormula"></p>
         <p class="readout" id="measResult" aria-live="polite"></p>
       </div>
       <div class="group" data-tabs="tab3">
-        <div class="slider"><label for="err">Kalibreerimise viga (tuntud kauguse viga)</label><input type="range" id="err" min="-20" max="20" step="1" value="0"><output for="err" id="errOut"></output></div>
+        <div class="slider"><label for="err"><span data-l="et">Kalibreerimise viga (tuntud kauguse viga)</span><span data-l="en">Calibration error (error of the known distance)</span></label><input type="range" id="err" min="-20" max="20" step="1" value="0"><output for="err" id="errOut"></output></div>
         <p class="readout" id="errRead"></p>
       </div>
 
       <div class="group" data-tabs="tab4">
-        <label class="sub" for="ctype" style="margin: 0">Küünla tüüp</label>
+        <label class="sub" for="ctype" style="margin: 0"><span data-l="et">Küünla tüüp</span><span data-l="en">Kind of candle</span></label>
         <select id="ctype"></select>
-        <div class="slider"><label for="sigma">Hajuvus σ<sub>M</sub> (tähesuurustes)</label><input type="range" id="sigma" min="0" max="1.5" step="0.01"><output for="sigma" id="sigmaOut"></output></div>
-        <div class="slider"><label for="nc">Küünalde arv N</label><input type="range" id="nc" min="1" max="100" step="1" value="20"><output for="nc" id="ncOut"></output></div>
-        <div class="btnrow"><button type="button" id="resample">Uus valim</button></div>
+        <div class="slider"><label for="sigma"><span data-l="et">Hajuvus σ<sub>M</sub> (tähesuurustes)</span><span data-l="en">Scatter σ<sub>M</sub> (magnitudes)</span></label><input type="range" id="sigma" min="0" max="1.5" step="0.01"><output for="sigma" id="sigmaOut"></output></div>
+        <div class="slider"><label for="nc"><span data-l="et">Küünalde arv N</span><span data-l="en">Number of candles N</span></label><input type="range" id="nc" min="1" max="100" step="1" value="20"><output for="nc" id="ncOut"></output></div>
+        <div class="btnrow"><button type="button" id="resample"><span data-l="et">Uus valim</span><span data-l="en">New sample</span></button></div>
         <p class="readout" id="goodRead"></p>
       </div>
       <div class="group" data-tabs="tab4">
@@ -460,23 +497,23 @@ select { width: 100%; }
       </div>
 
       <div class="group" data-tabs="tab5">
-        <h3>Tsefeiidid</h3>
-        <div class="slider"><label for="period">Periood P (päevades)</label><input type="range" id="period" min="0" max="1000" step="1"><output for="period" id="periodOut"></output></div>
-        <label class="toggle"><input type="checkbox" id="usePL"> Kasuta seost</label>
+        <h3><span data-l="et">Tsefeiidid</span><span data-l="en">Cepheids</span></h3>
+        <div class="slider"><label for="period"><span data-l="et">Periood P (päevades)</span><span data-l="en">Period P (days)</span></label><input type="range" id="period" min="0" max="1000" step="1"><output for="period" id="periodOut"></output></div>
+        <label class="toggle"><input type="checkbox" id="usePL"><span data-l="et"> Kasuta seost</span><span data-l="en"> Use the relation</span></label>
         <p class="readout" id="cepRead"></p>
       </div>
       <div class="group" data-tabs="tab5">
-        <h3>Ia supernoovad</h3>
-        <div class="slider"><label for="dm15">Nõrgenemine 15 päevaga Δm₁₅</label><input type="range" id="dm15" min="0.8" max="1.8" step="0.01" value="1.1"><output for="dm15" id="dm15Out"></output></div>
-        <label class="toggle"><input type="checkbox" id="usePh"> Kasuta seost</label>
+        <h3><span data-l="et">Ia supernoovad</span><span data-l="en">Type Ia supernovae</span></h3>
+        <div class="slider"><label for="dm15"><span data-l="et">Nõrgenemine 15 päevaga Δm₁₅</span><span data-l="en">Decline in 15 days Δm₁₅</span></label><input type="range" id="dm15" min="0.8" max="1.8" step="0.01" value="1.1"><output for="dm15" id="dm15Out"></output></div>
+        <label class="toggle"><input type="checkbox" id="usePh"><span data-l="et"> Kasuta seost</span><span data-l="en"> Use the relation</span></label>
         <p class="readout" id="snRead"></p>
       </div>
     </section>
   </div>
 
   <section class="card explain">
-    <h2>Mida joonis näitab</h2>
-    <ul data-tab="tab1">
+    <h2><span data-l="et">Mida joonis näitab</span><span data-l="en">What the drawings show</span></h2>
+    <ul data-tab="tab1" data-l="et">
       <li>Allikas kiirgab valgust kõigis suundades. Kaugusel d jaotub sama valgus sfäärile, mille pindala on 4πd², seega jõuab pinnaühikule voog F = L / (4πd²), kus L on allika tegelik heledus.
         Kaks korda kaugemal on allikas 4 korda nõrgem, kümme korda kaugemal 100 korda nõrgem. Ruudud näitavad sama: valgus, mis läbib kaugusel d ühe ruudu, katab kaugusel 2d neli ja kaugusel 3d üheksa ruutu.</li>
       <li>Teleskoobi peegli pindala ei muutu, nii et kaugemalt allikalt püüab see vähem footoneid. Footonite arvust saab mõõta allika näiva heleduse.</li>
@@ -485,7 +522,16 @@ select { width: 100%; }
       <li>Nupp <b>Sama heledus, eri kaugus</b> näitab, et näiv heledus üksi kaugust ei anna: lähedal olev lamp ja kaugel olev supernoova võivad paista ühtemoodi. Kauguse leidmiseks peab allika tegelik heledus olema teada, ja just seda standardküünal annab.</li>
       <li>Ekraan ei suuda näidata 10²⁰-kordseid heleduse erinevusi, seepärast on allika suurus ja helendus joonisel seotud tähesuurusega nagu tähekaartidel.</li>
     </ul>
-    <ul data-tab="tab2" hidden>
+    <ul data-tab="tab1" data-l="en">
+      <li>A source emits light in all directions. At a distance d the same light is spread over a sphere with an area of 4πd², so the flux reaching a unit area is F = L / (4πd²), where L is the true luminosity of the source.
+        Twice as far away, the source is 4 times fainter; ten times as far, 100 times fainter. The squares show the same: the light that passes through one square at distance d covers four squares at 2d and nine at 3d.</li>
+      <li>The area of the telescope mirror does not change, so it catches fewer photons from a more distant source. The number of photons gives the apparent brightness of the source.</li>
+      <li>A 100 W incandescent bulb at 1 km looks as bright as Venus (m ≈ −4), and at 100 km it is barely visible to the naked eye (m ≈ 6). At the distance of the Moon it would be about 24th magnitude, so a large telescope would still see it.
+        A type Ia supernova at 10 parsecs would look exactly as bright as the lamp at 1 metre (m ≈ −19.3).</li>
+      <li>The <b>Same brightness, different distance</b> button shows that the apparent brightness alone does not give the distance: a nearby lamp and a distant supernova can look the same. To find the distance, the true luminosity of the source must be known, and that is what a standard candle provides.</li>
+      <li>A screen cannot show differences in brightness of 10²⁰ times, so the size and glow of the source in the drawing follow its magnitude, as on star charts.</li>
+    </ul>
+    <ul data-tab="tab2" hidden data-l="et">
       <li>Tähesuurus on logaritmiline heleduse mõõt: 5 tähesuurust vastab täpselt 100-kordsele heleduste suhtele ja 1 tähesuurus umbes 2.5-kordsele. Mida suurem on tähesuurus, seda nõrgem on objekt.
         Skaala pärineb Vana-Kreekast, kus kõige heledamaid tähti nimetati esimese suurusjärgu tähtedeks. Ka silm tajub heledust ligikaudu logaritmiliselt.</li>
       <li>Näiv tähesuurus m näitab, kui heledana objekt meile paistab. Absoluutne tähesuurus M näitab, kui heledana paistaks objekt 10 parseki kauguselt, nii et see sõltub ainult objekti enda heledusest.</li>
@@ -494,7 +540,16 @@ select { width: 100%; }
       <li>Lambi absoluutne tähesuurus on umbes +68: 10 parseki kauguselt ei näeks seda ükski teleskoop.</li>
       <li>Harjutuse 2.–4. osa kasutab just neid valemeid: 2. osas leiad tsefeiidide M parvede kaugustest, 3. osas galaktikate kaugusmoodulid μ ja 4. osas supernoovade M.</li>
     </ul>
-    <ul data-tab="tab3" hidden>
+    <ul data-tab="tab2" hidden data-l="en">
+      <li>Magnitude is a logarithmic measure of brightness: 5 magnitudes are exactly a factor of 100 in brightness, and 1 magnitude about a factor of 2.5. The larger the magnitude, the fainter the object.
+        The scale comes from ancient Greece, where the brightest stars were called stars of the first magnitude. The eye also perceives brightness roughly logarithmically.</li>
+      <li>The apparent magnitude m tells how bright an object looks to us. The absolute magnitude M tells how bright the object would look from 10 parsecs, so it depends only on the object's own luminosity.</li>
+      <li>Their difference is the distance modulus μ = m − M = 5 log₁₀ d − 5, with d in parsecs. From this d = 10<sup>μ/5+1</sup> pc: μ = 0 is 10 pc, μ = 5 is 100 pc, μ = 10 is 1 kpc and μ = 30 is 10 Mpc.
+        Every 5 magnitudes of distance modulus mean a 10 times larger distance, which is why the divisions of the distance axis in the drawing are 5 magnitudes apart.</li>
+      <li>The absolute magnitude of the lamp is about +68: from 10 parsecs no telescope could see it.</li>
+      <li>Parts 2–4 of the exercise use exactly these formulas: in part 2 you find the M of the Cepheids from the cluster distances, in part 3 the distance moduli μ of the galaxies, and in part 4 the M of the supernovae.</li>
+    </ul>
+    <ul data-tab="tab3" hidden data-l="et">
       <li>Kui kaks küünalt on ühesugused, annab nende heleduste suhe kauguste suhte. Kui ühelt jõuab N korda vähem valgust, on see √N korda kaugemal: 4 korda vähem valgust tähendab 2 korda suuremat kaugust, 100 korda vähem 10 korda suuremat.
         Tähesuurustes on heleduste suhe N = 10<sup>0.4 Δm</sup>, kus Δm on tähesuuruste vahe.</li>
       <li>Selleks peab vähemalt ühe küünla kaugus olema teada. Selle annab eelmine redelipulk, ja seda nimetatakse kalibreerimiseks. Tavaliselt arvutatakse kalibreerimisel välja küünla absoluutne tähesuurus M = m − 5 log₁₀ d + 5
@@ -505,12 +560,28 @@ select { width: 100%; }
       <li>Kui kalibreerimiskaugus on vale, on vale ka M ja kõik sellega mõõdetud kaugused on sama palju nihkes. Selline süstemaatiline viga ei vähene, kui mõõta rohkem allikaid, ja kandub redelil edasi järgmistele pulkadele.
         Seepärast liidetakse harjutuses H₀ veale perioodi-heleduse seose nullpunkti viga.</li>
     </ul>
-    <ul data-tab="tab4" hidden>
+    <ul data-tab="tab3" hidden data-l="en">
+      <li>If two candles are identical, the ratio of their brightnesses gives the ratio of their distances. If N times less light arrives from one, it is √N times farther away: 4 times less light means a 2 times larger distance, 100 times less a 10 times larger one.
+        In magnitudes, the brightness ratio is N = 10<sup>0.4 Δm</sup>, where Δm is the difference in magnitude.</li>
+      <li>For this, the distance of at least one candle must be known. It comes from the previous rung, and this is called calibration. Usually the calibration gives the candle's absolute magnitude M = m − 5 log₁₀ d + 5,
+        and with it the distance of other candles d = 10<sup>(m − M)/5 + 1</sup> pc. This gives the same result as the brightness ratio.</li>
+      <li>The brightness of a lamp is measured in photometric units. A lux meter shows the illuminance E in lux, the luminous intensity of the lamp is I = E d² in candelas, and its luminous flux is Φ = 4π I in lumens.
+        The unknown distance is then d = √(I / E). With magnitudes the calculation is the same, only on a logarithmic scale: the absolute magnitude M corresponds to the luminous intensity I, and the apparent magnitude m to the illuminance E.</li>
+      <li>The exercise works the same way: in part 2 you calibrate the Cepheids with the cluster parallaxes, in part 3 you measure the distances of galaxies with them, and in part 4 you calibrate type Ia supernovae in the same galaxies.</li>
+      <li>If the calibration distance is wrong, M is wrong too, and all distances measured with it are off by the same amount. Such a systematic error does not shrink when more sources are measured, and it is carried up the ladder to the next rungs.
+        This is why the exercise adds the error of the zero point of the period–luminosity relation to the error of H₀.</li>
+    </ul>
+    <ul data-tab="tab4" hidden data-l="et">
       <li>Hea standardküünal on <b>hele</b>, et seda kaugelt näha; <b>äratuntav</b>, et seda teistest objektidest eristada; <b>väikese hajuvusega</b>, et iga küünal annaks täpse kauguse; ja <b>kalibreeritav</b>, see tähendab, et leidub piisavalt lähedasi näiteid tuntud kaugusel.</li>
       <li>Tähesuuruse hajuvus σ<sub>M</sub> annab kauguse suhtelise vea σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub>: 0.2 tähesuurust tähendab umbes 10 % viga kauguses. N küünla keskmine on √N korda täpsem, kui küünlad on üksteisest sõltumatud.</li>
       <li>Ükski küünal pole ideaalne. Heledamad ulatuvad kaugemale, kuid neid on vähem ja neid on raskem kalibreerida. Seepärast koosneb kauguste redel mitmest pulgast.</li>
     </ul>
-    <ul data-tab="tab5" hidden>
+    <ul data-tab="tab4" hidden data-l="en">
+      <li>A good standard candle is <b>bright</b>, to be seen from far away; <b>recognisable</b>, to be told apart from other objects; of <b>small scatter</b>, so that each candle gives a precise distance; and <b>calibratable</b>, which means that there are enough nearby examples at known distances.</li>
+      <li>A scatter σ<sub>M</sub> in magnitude gives a relative distance error σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub>: 0.2 magnitudes means an error of about 10 % in the distance. The mean of N candles is √N times more precise, if the candles are independent of each other.</li>
+      <li>No candle is perfect. Brighter ones reach farther, but there are fewer of them and they are harder to calibrate. This is why the distance ladder has several rungs.</li>
+    </ul>
+    <ul data-tab="tab5" hidden data-l="et">
       <li>Tsefeiidid on pulseerivad hiidtähed. Mida heledam on tsefeiid, seda pikem on tema pulsatsiooniperiood. Selle perioodi-heleduse seose avastas Henrietta Leavitt 1912. aastal (vt <a href="tsefeiidid.html#leavitt">tsefeiidide lehte</a>).
         Periood annab tsefeiidi absoluutse tähesuuruse ja seega kauguse. Harjutuse 2. osas kalibreerid seose ise ja 3. osas mõõdad sellega galaktikate kaugusi.</li>
       <li>Ia tüüpi supernoova on valge kääbuse termotuumaplahvatus. Heledamad supernoovad nõrgenevad aeglasemalt (<a class="en" href="https://en.wikipedia.org/wiki/Phillips_relationship" target="_blank" rel="noopener" title="Ingliskeelne Vikipeedia">Phillipsi seos</a>): Δm₁₅ on tähesuuruse muutus 15 päeva jooksul pärast maksimumi.
@@ -519,12 +590,25 @@ select { width: 100%; }
       <li>Alumine telg näitab, kuidas meetodid kattuvad: parallaks ulatub lähimate tsefeiidideni, tsefeiidid lähimate Ia supernoovade galaktikateni. Kattuvates piirkondades kalibreeritakse iga järgmine pulk.
         Klõpsa ribal, et minna harjutuse vastavasse ossa.</li>
     </ul>
+    <ul data-tab="tab5" hidden data-l="en">
+      <li>Cepheids are pulsating giant stars. The more luminous a Cepheid, the longer its pulsation period. This period–luminosity relation was discovered by Henrietta Leavitt in 1912 (see the <a href="tsefeiidid.html#leavitt">Cepheids page</a>).
+        The period gives the Cepheid's absolute magnitude, and so its distance. In part 2 of the exercise you calibrate the relation yourself, and in part 3 you measure the distances of galaxies with it.</li>
+      <li>A type Ia supernova is the thermonuclear explosion of a white dwarf. Brighter supernovae fade more slowly (the <a href="https://en.wikipedia.org/wiki/Phillips_relationship" target="_blank" rel="noopener">Phillips relation</a>): Δm₁₅ is the change in magnitude in the 15 days after the peak.
+        Real standardisation also accounts for the colour of the supernova, which shows the effect of dust. Part 4 of the exercise uses magnitudes that have already been standardised (see the <a href="supernoovad.html#standardiseerimine">supernovae page</a>).</li>
+      <li>In both cases the candle is not uniform by itself, but a relation with a measurable quantity (the period or the rate of fading) makes it <i>standardisable</i>.</li>
+      <li>The bottom axis shows how the methods overlap: parallax reaches the nearest Cepheids, Cepheids reach the galaxies of the nearest type Ia supernovae. Each next rung is calibrated where they overlap.
+        Click a bar to go to that part of the exercise.</li>
+    </ul>
   </section>
 </main>
 
 <script>
 (() => {
   const NS = 'http://www.w3.org/2000/svg', $ = id => document.getElementById(id);
+  // A text drawn by the script, in the language of the page.
+  const L = (et, en) => (document.documentElement.lang === 'en' ? en : et);
+  // A translated field of a data entry: o.k in Estonian, o.kEn in English (or o.k when the two are the same).
+  const tr = (o, k) => L(o[k], o[k + 'En'] ?? o[k]);
   const PC = 3.0857e16, LY = 3.2616, AU = 206265;  // metres in a parsec, light years in a parsec, au in a parsec
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -548,7 +632,7 @@ select { width: 100%; }
   function sig(v, n = 3) {
     if (!isFinite(v) || v === 0) return '0';
     let s = v.toFixed(clamp(n - 1 - Math.floor(Math.log10(Math.abs(v))), 0, 8));
-    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, ' '));
+    if (Math.abs(v) >= 1e4) s = s.replace(/^-?\d+/, i => i.replace(/\B(?=(\d{3})+$)/g, L(' ', ',')));
     return minus(s);
   }
   const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
@@ -588,15 +672,15 @@ select { width: 100%; }
   // Distances are kept in metres. The lamp is a 100 W incandescent bulb of about 1700 lm, which is m = −4.3 at 1 km,
   // so M = +68.1 at 10 pc. The Cepheid has P = 10 d (M_V ≈ −4.0), the supernova is a type Ia at its peak (M_B ≈ −19.3).
   const SRC = {
-    lamp: { name: 'Lamp', short: 'Lamp', what: '100 W hõõglamp', lum: 'valgusvoog umbes 1700 luumenit', M: 68.1, lo: 1, hi: 1e9, d: 10,
-      marks: [['Tallinn–Tartu', 1.6e5], ['Kuu', 3.844e8]], cal: 2, calHow: 'mõõdulindiga', hid: [4, 40], unit: ['m', 1], gen: 'lambi' },
-    cep: { name: 'Tsefeiid', short: 'Tsefeiid', what: 'tsefeiid perioodiga 10 päeva', lum: 'umbes 3000 korda heledam kui Päike', M: -4.0, lo: 10 * PC, hi: 1e8 * PC, d: 1e3 * PC,
-      marks: [['Linnutee kese', 8.2e3 * PC], ['Andromeeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', hid: [5e4 * PC, 2e7 * PC], unit: ['kpc', 1e3 * PC], gen: 'tsefeiidi' },
-    sn: { name: 'Ia supernoova', short: 'Supernoova', what: 'Ia tüüpi supernoova heleduse maksimumis', lum: 'umbes 5 miljardit korda heledam kui Päike', M: -19.3, lo: 10 * PC, hi: 5e9 * PC, d: 1e6 * PC,
-      marks: [['Andromeeda', 7.8e5 * PC], ['Neitsi parv', 1.65e7 * PC]], cal: 2e7 * PC, calHow: 'galaktikasse kuuluvate tsefeiidide järgi (3. osa)', hid: [4e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC], gen: 'supernoova' },
+    lamp: { name: 'Lamp', short: 'Lamp', lowEn: 'lamp', what: '100 W hõõglamp', whatEn: '100 W incandescent bulb', lum: 'valgusvoog umbes 1700 luumenit', lumEn: 'luminous flux about 1700 lumens', M: 68.1, lo: 1, hi: 1e9, d: 10,
+      marks: [['Tallinn–Tartu', 1.6e5], ['Kuu', 3.844e8, 'Moon']], cal: 2, calHow: 'mõõdulindiga', calHowEn: 'with a tape measure', hid: [4, 40], unit: ['m', 1], gen: 'lambi' },
+    cep: { name: 'Tsefeiid', short: 'Tsefeiid', shortEn: 'Cepheid', lowEn: 'Cepheid', what: 'tsefeiid perioodiga 10 päeva', whatEn: 'Cepheid with a period of 10 days', lum: 'umbes 3000 korda heledam kui Päike', lumEn: 'about 3000 times as luminous as the Sun', M: -4.0, lo: 10 * PC, hi: 1e8 * PC, d: 1e3 * PC,
+      marks: [['Linnutee kese', 8.2e3 * PC, 'Galactic Centre'], ['Andromeeda', 7.8e5 * PC, 'Andromeda'], ['Neitsi parv', 1.65e7 * PC, 'Virgo Cluster']], cal: 2e3 * PC, calHow: 'parve parallaksist (1. osa)', calHowEn: 'from the cluster parallax (part 1)', hid: [5e4 * PC, 2e7 * PC], unit: ['kpc', 1e3 * PC], gen: 'tsefeiidi' },
+    sn: { name: 'Ia supernoova', short: 'Supernoova', shortEn: 'Supernova', lowEn: 'supernova', what: 'Ia tüüpi supernoova heleduse maksimumis', whatEn: 'type Ia supernova at its peak brightness', lum: 'umbes 5 miljardit korda heledam kui Päike', lumEn: 'about 5 billion times as luminous as the Sun', M: -19.3, lo: 10 * PC, hi: 5e9 * PC, d: 1e6 * PC,
+      marks: [['Andromeeda', 7.8e5 * PC, 'Andromeda'], ['Neitsi parv', 1.65e7 * PC, 'Virgo Cluster']], cal: 2e7 * PC, calHow: 'galaktikasse kuuluvate tsefeiidide järgi (3. osa)', calHowEn: 'from the Cepheids in the galaxy (part 3)', hid: [4e7 * PC, 1e9 * PC], unit: ['Mpc', 1e6 * PC], gen: 'supernoova' },
   };
   const KEYS = ['lamp', 'cep', 'sn'];
-  const LIMITS = [{ m: 6, short: 'silm', slider: 'silm' }, { m: 24, short: 'suur teleskoop', slider: 'teleskoop' }, { m: 29, short: 'Hubble', slider: 'Hubble' }];
+  const LIMITS = [{ m: 6, short: 'silm', shortEn: 'eye', slider: 'silm', sliderEn: 'eye' }, { m: 24, short: 'suur teleskoop', shortEn: 'large telescope', slider: 'teleskoop', sliderEn: 'telescope' }, { m: 29, short: 'Hubble', slider: 'Hubble' }];
   const mag = (s, d) => SRC[s].M + 5 * Math.log10(d / PC) - 5;
   const distFor = (s, m) => PC * 10 ** ((m - SRC[s].M) / 5 + 1);
   // Photons per second on a 1 m² mirror in the V band: about 10¹⁰ × 10^(−0.4 m).
@@ -614,7 +698,7 @@ select { width: 100%; }
   function fmtD(s, d) {
     if (s === 'lamp') return d < 1000 ? sig(d) + ' m' : sig(d / 1000) + ' km';
     const pc = d / PC;
-    if (pc < 0.1) return sig(pc * AU) + ' aü';
+    if (pc < 0.1) return sig(pc * AU) + L(' aü', ' au');
     if (pc < 1e3) return sig(pc) + ' pc';
     if (pc < 1e6) return sig(pc / 1e3) + ' kpc';
     if (pc < 1e9) return sig(pc / 1e6) + ' Mpc';
@@ -622,14 +706,14 @@ select { width: 100%; }
   }
   function fmtLy(d) {
     const ly = d / PC * LY;
-    return ly < 1e6 ? sig(ly) + ' valgusaastat' : ly < 1e9 ? sig(ly / 1e6) + ' mln valgusaastat' : sig(ly / 1e9) + ' mld valgusaastat';
+    return ly < 1e6 ? sig(ly) + L(' valgusaastat', ' light years') : ly < 1e9 ? sig(ly / 1e6) + L(' mln valgusaastat', ' million light years') : sig(ly / 1e9) + L(' mld valgusaastat', ' billion light years');
   }
   const fmtPc = v => (v < 0.01 ? fmtExp(v) : sig(v, 4));
   function visibility(m) {
-    if (m <= 6) return 'Paistab <b>palja silmaga</b>.';
-    if (m <= 24) return 'Palja silmaga enam ei paista, <b>suure teleskoobiga</b> on näha.';
-    if (m <= 29) return "Näha ainult <b>Hubble'i</b> teleskoobiga.";
-    return "Liiga nõrk ka <b>Hubble'ile</b>.";
+    if (m <= 6) return L('Paistab <b>palja silmaga</b>.', 'Visible to the <b>naked eye</b>.');
+    if (m <= 24) return L('Palja silmaga enam ei paista, <b>suure teleskoobiga</b> on näha.', 'No longer visible to the naked eye, but seen with a <b>large telescope</b>.');
+    if (m <= 29) return L("Näha ainult <b>Hubble'i</b> teleskoobiga.", 'Seen only with the <b>Hubble</b> Space Telescope.');
+    return L("Liiga nõrk ka <b>Hubble'ile</b>.", 'Too faint even for <b>Hubble</b>.');
   }
 
   const st = { tab: 'tab1', src: 'lamp', d: {}, d0: {}, squares: false, logAxes: false, same: false, m1: 1, m2: 6, err: 0 };
@@ -664,20 +748,20 @@ select { width: 100%; }
       el('line', { x1: x, y1: y - 4, x2: x, y2: y + 4, class: 'tick' }, g);
       if (L) text(g, x, y + 18, L, 'tlbl', 'middle');
     }
-    if (o.landmarks) for (const [name, d] of S.marks) {
+    if (o.landmarks) for (const [name, d, en] of S.marks) {
       const x = trackX(s, d);
       el('path', { d: `M${x.toFixed(1)} ${y + 24} l-4 6 h8 z`, class: 'lmk' }, g);
-      text(g, x, y + 43, name, 'lmklbl', 'middle');
+      text(g, x, y + 43, L(name, en || name), 'lmklbl', 'middle');
     }
     // The limit labels alternate between two rows, as two limits can be only a decade apart.
-    if (o.limits) LIMITS.forEach((L, i) => {
-      const d = distFor(s, L.m);
+    if (o.limits) LIMITS.forEach((lim, i) => {
+      const d = distFor(s, lim.m);
       if (d < S.lo || d > S.hi) return;
       const x = trackX(s, d), ly = o.limTop - 6 - (i % 2) * 14;
       el('line', { x1: x, y1: ly + 4, x2: x, y2: y, class: 'lim' }, g);
       // Near the right edge the label ends at its line instead of being centred on it.
       const right = x > 680;
-      text(g, right ? x + 4 : Math.max(x, 70), ly, `${L.short} (${L.m} mag)`, 'limlbl', right ? 'end' : 'middle');
+      text(g, right ? x + 4 : Math.max(x, 70), ly, `${tr(lim, 'short')} (${lim.m} mag)`, 'limlbl', right ? 'end' : 'middle');
     });
   }
   const SN_PTS = [[0, -13], [1.9, -4.6], [9.2, -9.2], [4.6, -1.9], [13, 0], [4.6, 1.9], [9.2, 9.2], [1.9, 4.6], [0, 13], [-1.9, 4.6], [-9.2, 9.2], [-4.6, 1.9], [-13, 0], [-4.6, -1.9], [-9.2, -9.2], [-1.9, -4.6]];
@@ -698,7 +782,7 @@ select { width: 100%; }
     el('line', { x1: 64, y1: y + 14, x2: 76, y2: y + 44, class: 'leg' }, g);
     el('rect', { x: 32, y: y - 14, width: 66, height: 28, rx: 3, class: 'tube' }, g);
     el('line', { x1: 37, y1: y - 10, x2: 37, y2: y + 10, class: 'mirror' }, g);
-    if (label) text(g, 64, y + 60, 'Teleskoop', 'lbl3', 'middle');
+    if (label) text(g, 64, y + 60, L('Teleskoop', 'Telescope'), 'lbl3', 'middle');
   }
   // Night-sky views draw the brightness of a source as the size of a glow, as on star charts: from a dot at the
   // Hubble limit (m ≈ 29.5) to a large disc for the brightest sources.
@@ -764,7 +848,7 @@ select { width: 100%; }
         el('line', { x1: p[0], y1: p[1], x2: q[0], y2: q[1], class: 'sqgrid' }, g);
       }
       const top = P(u, a, a), bot = P(u, -a, -a);
-      text(g, top[0], top[1] - 6, n === 1 ? '1 ruut' : `${n * n} ruutu`, 'lbl3', 'middle');
+      text(g, top[0], top[1] - 6, n === 1 ? L('1 ruut', '1 square') : `${n * n} ${L('ruutu', 'squares')}`, 'lbl3', 'middle');
       text(g, bot[0], bot[1] + 14, n === 1 ? 'd' : `${n}d`, 'lbl2', 'middle');
     }
   }
@@ -787,7 +871,7 @@ select { width: 100%; }
     text(g, lx, SY + 34, `d = ${fmtD(s, d)}`, 'lbl2', 'middle');
     // The photon rate on a 1 m² mirror, as a bar on a log scale from 10⁻² to 10¹⁸ per second.
     const N = photons(m), f = clamp((Math.log10(N) + 2) / 20, 0, 1);
-    text(g, 20, 34, 'footoneid sekundis', 'lbl3');
+    text(g, 20, 34, L('footoneid sekundis', 'photons per second'), 'lbl3');
     el('rect', { x: 20, y: 40, width: 90, height: 8, rx: 2, class: 'bar-bg' }, g);
     el('rect', { x: 20, y: 40, width: 90 * f, height: 8, rx: 2, class: 'bar' }, g);
     text(g, 116, 48, fmtExp(N), 'lbl2');
@@ -842,16 +926,16 @@ select { width: 100%; }
       KEYS.forEach((k, i) => {
         const x = 42 + 78 * i;
         glow(eye, g, x, 100, m, k);
-        text(g, x, 192, SRC[k].short, 'nl', 'middle');
+        text(g, x, 192, tr(SRC[k], 'short'), 'nl', 'middle');
         text(g, x, 208, fmtD(k, k === s ? st.d[s] : distFor(k, m)), 'nl2', 'middle');
       });
-      text(g, 120, 230, `kõik m = ${fmt(m, 1)}`, 'nl2', 'middle');
+      text(g, 120, 230, `${L('kõik', 'all')} m = ${fmt(m, 1)}`, 'nl2', 'middle');
       return;
     }
     // Two comparison stars, 5 magnitudes (100 times) apart, that bracket the source.
     const c1 = clamp(5 * Math.floor(m / 5), -25, 25), c2 = c1 + 5;
     glow(eye, g, 80, 112, m, s);
-    if (m > 30.5) text(g, 80, 116, 'ei paista', 'nl2', 'middle');
+    if (m > 30.5) text(g, 80, 116, L('ei paista', 'not visible'), 'nl2', 'middle');
     text(g, 80, 222, `m = ${fmt(m, 1)}`, 'nl', 'middle');
     glow(eye, g, 192, 64, c1, 'star');
     glow(eye, g, 192, 164, c2, 'star');
@@ -870,7 +954,7 @@ select { width: 100%; }
     const lab = String;
     const xt = log ? [0.1, 0.2, 0.5, 1, 2, 5, 10].map(v => [v, [0.1, 1, 10].includes(v) ? lab(v) : null]) : [0, 1, 2, 3, 4].map(v => [v, String(v)]);
     const yt = log ? [0.01, 0.1, 1, 10, 100].map(v => [v, lab(v)]) : [0, 1, 2, 3, 4].map(v => [v, String(v)]);
-    frame(g, B, X, Y, xt, yt, 'kaugus d / d₀', 'voog F / F₀');
+    frame(g, B, X, Y, xt, yt, L('kaugus d / d₀', 'distance d / d₀'), L('voog F / F₀', 'flux F / F₀'));
     const clip = el('g', { 'clip-path': clipRect(flux, 'fluxClip', B) }, g);
     const curve = [];
     for (let i = 0; i <= 200; i++) {
@@ -888,24 +972,25 @@ select { width: 100%; }
       el('line', { x1: px, y1: py, x2: B.x0, y2: py, class: 'guide' }, g);
     }
     el('circle', { cx: px, cy: py, r: inside ? 6 : 5, class: inside ? 'pt' : 'pt hollow' }, g);
-    if (!inside) text(g, clamp(px, B.x0 + 60, B.x1 - 60), clamp(py + (py > B.y1 - 20 ? -12 : 18), B.y0 + 14, B.y1 - 6), 'väljaspool joonist', 'lbl3', 'middle');
-    text(g, B.x1 - 8, B.y0 + 18, log ? 'tõus −2: F ∝ 1/d²' : 'F/F₀ = (d₀/d)²', 'lbl2', 'end');
+    if (!inside) text(g, clamp(px, B.x0 + 60, B.x1 - 60), clamp(py + (py > B.y1 - 20 ? -12 : 18), B.y0 + 14, B.y1 - 6), L('väljaspool joonist', 'outside the plot'), 'lbl3', 'middle');
+    text(g, B.x1 - 8, B.y0 + 18, log ? L('tõus −2: F ∝ 1/d²', 'slope −2: F ∝ 1/d²') : 'F/F₀ = (d₀/d)²', 'lbl2', 'end');
   }
 
   /* ---------- Tab 2: magnitudes ---------- */
   const magSvg = $('mag');
   const MY = m => 34 + (m + 28) * 8;   // magnitudes −28 … 33, bright at the top
   const MX = 120, AXX = 380, DX = 530, MTOP = -28, MBOT = 33;
-  const REFS = [['Päike', -26.7], ['täiskuu', -12.7], ['Veenus', -4.6], ['Siirius', -1.5], ['Vega', 0], ['palja silma piir', 6], ['Pluuto', 14], ['suure teleskoobi piir', 24], ["Hubble'i piir", 29]];
+  const REFS = [['Päike', -26.7, 'Sun'], ['täiskuu', -12.7, 'full Moon'], ['Veenus', -4.6, 'Venus'], ['Siirius', -1.5, 'Sirius'], ['Vega', 0], ['palja silma piir', 6, 'naked-eye limit'], ['Pluuto', 14, 'Pluto'],
+    ['suure teleskoobi piir', 24, 'large telescope limit'], ["Hubble'i piir", 29, 'Hubble limit']];
   function renderMag() {
     const s = st.src, S = SRC[s], d = st.d[s], m = mag(s, d), M = S.M;
     magSvg.textContent = '';
     magSvg.style.setProperty('--src', `var(--${s})`);
     const g = el('g', {}, magSvg), top = MY(MTOP), bot = MY(MBOT), yIn = v => clamp(MY(v), top, bot);
-    text(g, MX, 18, 'Tähesuurus', 'lbl', 'middle');
-    text(g, DX, 18, 'Kaugus', 'lbl', 'middle');
-    text(g, 18, MY(-24), '↑ heledam', 'lbl3');
-    text(g, 18, MY(31), '↓ nõrgem', 'lbl3');
+    text(g, MX, 18, L('Tähesuurus', 'Magnitude'), 'lbl', 'middle');
+    text(g, DX, 18, L('Kaugus', 'Distance'), 'lbl', 'middle');
+    text(g, 18, MY(-24), L('↑ heledam', '↑ brighter'), 'lbl3');
+    text(g, 18, MY(31), L('↓ nõrgem', '↓ fainter'), 'lbl3');
     el('line', { x1: MX, y1: top, x2: MX, y2: bot, class: 'axisline' }, g);
     for (let k = MTOP; k <= MBOT; k++) {
       const y = MY(k), major = k % 5 === 0;
@@ -934,11 +1019,11 @@ select { width: 100%; }
     for (const r of REFS) {
       const y = MY(r[1]);
       el('line', { x1: MX, y1: y, x2: MX + 9, y2: y, class: 'tick' }, g);
-      text(g, MX + 13, y + 4, `${r[0]} ${fmt(r[1], 1)}`, 'lbl2');
+      text(g, MX + 13, y + 4, `${L(r[0], r[2] || r[0])} ${fmt(r[1], 1)}`, 'lbl2');
     }
     if (Math.abs(ym - yM) > 4) arrow(g, AXX, yM, AXX, ym);
     text(g, AXX - 8, ym + (ym < yM ? -6 : 15), `m = ${fmt(m, 1)}`, 'srclbl', 'end');
-    text(g, AXX - 8, yM + (yM <= ym ? -6 : 15), Moff ? `M = ${fmtMag(M)} (${M > MBOT ? 'allpool' : 'ülalpool'})` : `M = ${fmtMag(M)}`, 'srclbl', 'end');
+    text(g, AXX - 8, yM + (yM <= ym ? -6 : 15), Moff ? `M = ${fmtMag(M)} (${M > MBOT ? L('allpool', 'below') : L('ülalpool', 'above')})` : `M = ${fmtMag(M)}`, 'srclbl', 'end');
     const ymid = (ym + yM) / 2;
     text(g, AXX + 8, ymid, `μ = ${fmt(m - M, 1)}`, 'lbl');
     text(g, AXX + 8, ymid + 16, 'μ = m − M', 'lbl3');
@@ -1017,7 +1102,7 @@ select { width: 100%; }
     el('rect', { x: 44, y: y - 18, width: 40, height: 36, rx: 5, class: 'tube' }, g);
     el('rect', { x: 50, y: y - 10, width: 22, height: 12, rx: 2, class: 'lcd' }, g);
     el('path', { d: `M84 ${y - 9} a 9 9 0 0 1 0 18 z`, class: 'sensor' }, g);
-    text(g, 64, y + 34, 'Luksmeeter', 'lbl3', 'middle');
+    text(g, 64, y + 34, L('Luksmeeter', 'Lux meter'), 'lbl3', 'middle');
   }
   const meter = (g, s, y) => (s === 'lamp' ? luxmeter(g, y) : telescope(g, y));
 
@@ -1028,42 +1113,42 @@ select { width: 100%; }
     const g = el('g', {}, calSvg);
     // Upper track: the calibrator at its true distance, and the assumed one when the calibration distance is off.
     const R = CAL_R[s], X = d => trackX(s, d, R);
-    text(g, 20, 18, '1. Tuntud kaugusega allikas', 'lbl');
+    text(g, 20, 18, L('1. Tuntud kaugusega allikas', '1. Source at a known distance'), 'lbl');
     drawTrack(g, s, 118, { R });
     meter(g, s, 72);
     const xc = X(S.cal);
     if (st.err !== 0) {
       const xa = X(assumed(s));
       sourceGlyph(g, s, xa, 72, 'ghost');
-      text(g, xa, 46, 'eeldatud', 'lbl3', 'middle');
+      text(g, xa, 46, L('eeldatud', 'assumed'), 'lbl3', 'middle');
     }
     sourceGlyph(g, s, xc, 72);
     const L1 = xc > 480;  // labels go left of the source when it is far to the right
     text(g, L1 ? xc - 22 : xc + 20, 68, reading(s, S.cal), 'srclbl', L1 ? 'end' : 'start');
-    text(g, L1 ? xc - 22 : xc + 20, 84, `d = ${fmtU(s, assumed(s))} (${S.calHow})`, 'lbl3', L1 ? 'end' : 'start');
+    text(g, L1 ? xc - 22 : xc + 20, 84, `d = ${fmtU(s, assumed(s))} (${tr(S, 'calHow')})`, 'lbl3', L1 ? 'end' : 'start');
     // Lower track: the source at a hidden distance, shown once it has been measured.
-    text(g, 20, 160, '2. Tundmatu kaugusega allikas', 'lbl');
+    text(g, 20, 160, L('2. Tundmatu kaugusega allikas', '2. Source at an unknown distance'), 'lbl');
     drawTrack(g, s, 258, { R });
     meter(g, s, 212);
-    const less = `${fmtInt(nOf(s) ** 2)} korda vähem valgust`;
+    const less = L(`${fmtInt(nOf(s) ** 2)} korda vähem valgust`, `${fmtInt(nOf(s) ** 2)} times less light`);
     if (!C.shown) {
       el('rect', { x: 400, y: 190, width: 46, height: 44, rx: 6, class: 'qbox' }, g);
       sourceGlyph(g, s, 423, 212, 'ghost');
       text(g, 423, 220, '?', 'qmark', 'middle');
       text(g, 456, 204, reading(s, C.hid), 'srclbl');
       text(g, 456, 220, less, 'lbl2');
-      text(g, 456, 235, 'kaugus teadmata', 'lbl3');
+      text(g, 456, 235, L('kaugus teadmata', 'distance unknown'), 'lbl3');
     } else {
       // The measured distance as an open circle on the track, labelled below the tick labels; it differs from the true
       // one only when the calibration distance is wrong.
       const xm = X(measure(s, C.hid)), xt = X(C.hid);
       el('circle', { cx: xm, cy: 258, r: 4.5, class: 'pt hollow' }, g);
-      text(g, xm, 293, 'mõõdetud', 'lbl3', 'middle');
+      text(g, xm, 293, L('mõõdetud', 'measured'), 'lbl3', 'middle');
       sourceGlyph(g, s, xt, 212);
       const L2 = xt > 480;
       text(g, L2 ? xt - 22 : xt + 20, 204, reading(s, C.hid), 'srclbl', L2 ? 'end' : 'start');
       text(g, L2 ? xt - 22 : xt + 20, 220, less, 'lbl2', L2 ? 'end' : 'start');
-      text(g, L2 ? xt - 22 : xt + 20, 235, `tegelik d = ${fmtU(s, C.hid)}`, 'lbl3', L2 ? 'end' : 'start');
+      text(g, L2 ? xt - 22 : xt + 20, 235, `${L('tegelik', 'true')} d = ${fmtU(s, C.hid)}`, 'lbl3', L2 ? 'end' : 'start');
     }
   }
 
@@ -1075,13 +1160,13 @@ select { width: 100%; }
     const X = mkScale(lo, hi, B.x0, B.x1, true), Y = mkScale(lo, hi, B.y1, B.y0, true);
     const ticks = ticks125(s, lo, hi).filter(t => t[2] || t[1]).map(t => [t[0], t[1]]);
     const g = el('g', {}, calPlot);
-    frame(g, B, X, Y, ticks, ticks, 'tegelik kaugus', 'mõõdetud kaugus', 68);
+    frame(g, B, X, Y, ticks, ticks, L('tegelik kaugus', 'true distance'), L('mõõdetud kaugus', 'measured distance'), 68);
     const clip = el('g', { 'clip-path': clipRect(calPlot, 'calClip', B) }, g);
     el('line', { x1: X(lo), y1: Y(lo), x2: X(hi), y2: Y(hi), class: 'one2one' }, clip);
     const k = 1 + st.err / 100;
     if (st.err !== 0) el('line', { x1: X(lo), y1: Y(lo * k), x2: X(hi), y2: Y(hi * k), class: 'shifted' }, clip);
     for (const dt of C.pts) el('circle', { cx: X(dt), cy: Y(measure(s, dt)), r: 5, class: 'pt' }, clip);
-    if (!C.pts.length) text(g, B.x0 + 12, B.y0 + 20, 'Mõõdetud allikad ilmuvad siia.', 'lbl3');
+    if (!C.pts.length) text(g, B.x0 + 12, B.y0 + 20, L('Mõõdetud allikad ilmuvad siia.', 'The measured sources appear here.'), 'lbl3');
   }
 
   function renderLadder() {
@@ -1090,45 +1175,53 @@ select { width: 100%; }
     const g = el('g', {}, ladder);
     el('line', { x1: 34, y1: 262, x2: 48, y2: 30, class: 'rail' }, g);
     el('line', { x1: 124, y1: 262, x2: 110, y2: 30, class: 'rail' }, g);
-    const rungs = [['Parallaks', 'var(--sel)', 224, 3, null], ['Tsefeiidid', 'var(--cep)', 144, 7, 'cep'], ['Ia supernoovad', 'var(--sn)', 64, 11, 'sn']];
+    const rungs = [[L('Parallaks', 'Parallax'), 'var(--sel)', 224, 3, null], [L('Tsefeiidid', 'Cepheids'), 'var(--cep)', 144, 7, 'cep'], [L('Ia supernoovad', 'Ia supernovae'), 'var(--sn)', 64, 11, 'sn']];
     rungs.forEach(([name, c, y, e, key], i) => {
       const x0 = 38 + (224 - y) * 0.06, x1 = 120 - (224 - y) * 0.06;
       el('rect', { x: x0 - 4, y: y - e, width: x1 - x0 + 8, height: 2 * e, rx: e, fill: c, class: 'errband' }, g);
       el('line', { x1: x0, y1: y, x2: x1, y2: y, stroke: c, class: 'rung' }, g);
       text(g, 136, y + 1, name, 'lbl');
-      text(g, 136, y + 17, ['viga väike', 'viga suurem', 'viga veel suurem'][i], 'lbl3');
+      text(g, 136, y + 17, L(['viga väike', 'viga suurem', 'viga veel suurem'], ['small error', 'larger error', 'even larger error'])[i], 'lbl3');
       if (key === s) el('rect', { x: x0 - 12, y: y - e - 8, width: 270 - x0, height: 2 * e + 32, rx: 8, class: 'rung-hi' }, g);
       if (i) arrow(g, 79, y + 74 - e - 12, 79, y + e + 8);
     });
-    text(g, 140, 274, s === 'lamp' ? 'Lambi kaugus tuleb mõõdulindiga.' : '', 'lbl3', 'middle');
+    text(g, 140, 274, s === 'lamp' ? L('Lambi kaugus tuleb mõõdulindiga.', 'The lamp distance comes from a tape measure.') : '', 'lbl3', 'middle');
   }
 
   /* ---------- Tab 4: what makes a good candle ---------- */
   // Reach: roughly how far each kind has been measured (pc). The lamp, at m = 29, is far off the left of the plot.
   const TYPES = [
-    { id: 'lamp', name: 'Tundmatu võimsusega lambid', short: 'Lamp', s: 1.5, reach: 1.5e-7, c: 'lamp',
-      check: [['no', 'paistab vaid mõne miljoni km kauguselt'], ['yes', ''], ['no', 'võimsus pole teada'], ['yes', 'kaugus mõõdulindiga']],
-      card: 'Lambid on hea näide pöördruutude seadusest, kuid mitte standardküünal: 5 W ja 500 W lamp erinevad 100 korda ehk 5 tähesuurust.' },
-    { id: 'cepRaw', name: 'Tsefeiidid ilma perioodita', short: 'Tsefeiidid ilma perioodita', s: 0.8, reach: 4e7, c: 'cep',
-      check: [['yes', 'kuni ~40 Mpc'], ['yes', 'heleduse muutuse järgi'], ['no', 'heledus sõltub perioodist'], ['yes', 'parvedes ja Gaia parallaksidega']],
-      card: 'Kui perioodi ei arvestata, erinevad tsefeiidide heledused mitu korda, sest pika perioodiga tsefeiidid on palju heledamad.' },
-    { id: 'cep', name: 'Tsefeiidid perioodi-heleduse seosega', short: 'Tsefeiidid (P–L)', s: 0.15, reach: 4e7, c: 'cep',
-      check: [['yes', 'kuni ~40 Mpc'], ['yes', 'heleduse muutuse järgi'], ['yes', '≈ 0.15 mag Wesenheiti tähesuurustes'], ['yes', 'parvedes ja Gaia parallaksidega']],
-      card: 'Periood annab tsefeiidi heleduse. Kauguste redelis on need teine pulk: harjutuse 2. ja 3. osa.' },
-    { id: 'rr', name: 'RR Lüüra tähed', short: 'RR Lüüra', s: 0.2, reach: 1e6, c: 'rr',
-      check: [['no', 'umbes 50 korda nõrgemad kui tsefeiidid'], ['yes', 'lühike periood, alla päeva'], ['yes', ''], ['yes', 'palju lähedasi näiteid']],
-      card: 'Vanad pulseerivad tähed, mida on palju Linnutee halos ja kerasparvedes. Need on täpsed, kuid ulatuvad vaid naabergalaktikateni.' },
-    { id: 'trgb', name: 'Punaste hiidude haru tipp (TRGB)', short: 'TRGB', s: 0.1, reach: 2e7, c: 'trgb',
-      check: [['part', 'kuni ~20 Mpc'], ['part', 'vaja palju tähti, mitte üht'], ['yes', ''], ['yes', '']],
-      card: 'Punased hiiud ei saa olla heledamad kui teatud piir, kus heelium süttib. Selle piiri annab galaktika paljude tähtede jaotus, mitte üks täht.' },
-    { id: 'snRaw', name: 'Ia supernoovad ilma korrektsioonita', short: 'Ia ilma korrektsioonita', s: 0.4, reach: 5e9, c: 'sn',
-      check: [['yes', 'üle miljardi parseki'], ['yes', 'spektri järgi'], ['no', '≈ 0.4 mag'], ['part', 'lähedasi supernoovasid on vähe']],
-      card: 'Ia supernoovad on väga heledad, kuid ilma korrektsioonita erinevad nende maksimumheledused umbes 40 %.' },
-    { id: 'sn', name: 'Ia supernoovad, standardiseeritud', short: 'Ia standardiseeritud', s: 0.13, reach: 5e9, c: 'sn',
-      check: [['yes', 'üle miljardi parseki'], ['yes', 'spektri järgi'], ['yes', 'pärast korrektsiooni ≈ 0.13 mag'], ['part', 'umbes 40 tsefeiididega galaktikat']],
-      card: 'Nõrgenemise kiirus ja värv annavad korrektsiooni, mis teeb Ia supernoovadest täpseima kauge küünla. Kauguste redelis on need kolmas pulk: harjutuse 4. osa.' },
+    // Each check is [mark, Estonian note, English note].
+    { id: 'lamp', name: 'Tundmatu võimsusega lambid', nameEn: 'Lamps of unknown power', short: 'Lamp', s: 1.5, reach: 1.5e-7, c: 'lamp',
+      check: [['no', 'paistab vaid mõne miljoni km kauguselt', 'visible only from a few million km'], ['yes', ''], ['no', 'võimsus pole teada', 'the power is not known'], ['yes', 'kaugus mõõdulindiga', 'distance with a tape measure']],
+      card: 'Lambid on hea näide pöördruutude seadusest, kuid mitte standardküünal: 5 W ja 500 W lamp erinevad 100 korda ehk 5 tähesuurust.',
+      cardEn: 'Lamps are a good example of the inverse-square law, but not a standard candle: a 5 W and a 500 W lamp differ by a factor of 100, or 5 magnitudes.' },
+    { id: 'cepRaw', name: 'Tsefeiidid ilma perioodita', nameEn: 'Cepheids without the period', short: 'Tsefeiidid ilma perioodita', shortEn: 'Cepheids without the period', s: 0.8, reach: 4e7, c: 'cep',
+      check: [['yes', 'kuni ~40 Mpc', 'up to ~40 Mpc'], ['yes', 'heleduse muutuse järgi', 'by their changing brightness'], ['no', 'heledus sõltub perioodist', 'the luminosity depends on the period'], ['yes', 'parvedes ja Gaia parallaksidega', 'in clusters and with Gaia parallaxes']],
+      card: 'Kui perioodi ei arvestata, erinevad tsefeiidide heledused mitu korda, sest pika perioodiga tsefeiidid on palju heledamad.',
+      cardEn: 'If the period is ignored, the luminosities of Cepheids differ several times over, because long-period Cepheids are much more luminous.' },
+    { id: 'cep', name: 'Tsefeiidid perioodi-heleduse seosega', nameEn: 'Cepheids with the period–luminosity relation', short: 'Tsefeiidid (P–L)', shortEn: 'Cepheids (P–L)', s: 0.15, reach: 4e7, c: 'cep',
+      check: [['yes', 'kuni ~40 Mpc', 'up to ~40 Mpc'], ['yes', 'heleduse muutuse järgi', 'by their changing brightness'], ['yes', '≈ 0.15 mag Wesenheiti tähesuurustes', '≈ 0.15 mag in Wesenheit magnitudes'], ['yes', 'parvedes ja Gaia parallaksidega', 'in clusters and with Gaia parallaxes']],
+      card: 'Periood annab tsefeiidi heleduse. Kauguste redelis on need teine pulk: harjutuse 2. ja 3. osa.',
+      cardEn: 'The period gives the luminosity of a Cepheid. They are the second rung of the distance ladder: parts 2 and 3 of the exercise.' },
+    { id: 'rr', name: 'RR Lüüra tähed', nameEn: 'RR Lyrae stars', short: 'RR Lüüra', shortEn: 'RR Lyrae', s: 0.2, reach: 1e6, c: 'rr',
+      check: [['no', 'umbes 50 korda nõrgemad kui tsefeiidid', 'about 50 times fainter than Cepheids'], ['yes', 'lühike periood, alla päeva', 'short period, under a day'], ['yes', ''], ['yes', 'palju lähedasi näiteid', 'many nearby examples']],
+      card: 'Vanad pulseerivad tähed, mida on palju Linnutee halos ja kerasparvedes. Need on täpsed, kuid ulatuvad vaid naabergalaktikateni.',
+      cardEn: 'Old pulsating stars, common in the halo of the Milky Way and in globular clusters. They are precise, but reach only the neighbouring galaxies.' },
+    { id: 'trgb', name: 'Punaste hiidude haru tipp (TRGB)', nameEn: 'Tip of the red giant branch (TRGB)', short: 'TRGB', s: 0.1, reach: 2e7, c: 'trgb',
+      check: [['part', 'kuni ~20 Mpc', 'up to ~20 Mpc'], ['part', 'vaja palju tähti, mitte üht', 'needs many stars, not one'], ['yes', ''], ['yes', '']],
+      card: 'Punased hiiud ei saa olla heledamad kui teatud piir, kus heelium süttib. Selle piiri annab galaktika paljude tähtede jaotus, mitte üks täht.',
+      cardEn: 'Red giants cannot be brighter than a certain limit, where helium ignites. The limit is given by the distribution of many stars in a galaxy, not by one star.' },
+    { id: 'snRaw', name: 'Ia supernoovad ilma korrektsioonita', nameEn: 'Type Ia supernovae without correction', short: 'Ia ilma korrektsioonita', shortEn: 'Ia without correction', s: 0.4, reach: 5e9, c: 'sn',
+      check: [['yes', 'üle miljardi parseki', 'over a billion parsecs'], ['yes', 'spektri järgi', 'by the spectrum'], ['no', '≈ 0.4 mag'], ['part', 'lähedasi supernoovasid on vähe', 'few nearby supernovae']],
+      card: 'Ia supernoovad on väga heledad, kuid ilma korrektsioonita erinevad nende maksimumheledused umbes 40 %.',
+      cardEn: 'Type Ia supernovae are very luminous, but without correction their peak luminosities differ by about 40 %.' },
+    { id: 'sn', name: 'Ia supernoovad, standardiseeritud', nameEn: 'Type Ia supernovae, standardised', short: 'Ia standardiseeritud', shortEn: 'Ia standardised', s: 0.13, reach: 5e9, c: 'sn',
+      check: [['yes', 'üle miljardi parseki', 'over a billion parsecs'], ['yes', 'spektri järgi', 'by the spectrum'], ['yes', 'pärast korrektsiooni ≈ 0.13 mag', 'after correction ≈ 0.13 mag'], ['part', 'umbes 40 tsefeiididega galaktikat', 'about 40 galaxies with Cepheids']],
+      card: 'Nõrgenemise kiirus ja värv annavad korrektsiooni, mis teeb Ia supernoovadest täpseima kauge küünla. Kauguste redelis on need kolmas pulk: harjutuse 4. osa.',
+      cardEn: 'The rate of fading and the colour give a correction that makes type Ia supernovae the most precise distant candle. They are the third rung of the distance ladder: part 4 of the exercise.' },
   ];
-  const CHECKS = ['hele', 'äratuntav', 'väike hajuvus', 'kalibreeritav'];
+  const CHECKS = ['hele', 'äratuntav', 'väike hajuvus', 'kalibreeritav'], CHECKS_EN = ['bright', 'recognisable', 'small scatter', 'calibratable'];
   const T4 = { type: 'cep', sigma: 0.15, N: 20, view: 'galaxy' };
   const type4 = () => TYPES.find(t => t.id === T4.type);
   let Z = [], POS = [];
@@ -1177,14 +1270,14 @@ select { width: 100%; }
     const yt = [];
     const step = ymax > 40 ? 10 : ymax > 16 ? 5 : ymax > 8 ? 2 : 1;
     for (let v = 0; v <= ymax * 1.1; v += step) yt.push([v, String(v)]);
-    frame(g, B, X, Y, [0, 5, 10, 15, 20, 25, 30].map(v => [v, String(v)]), yt, 'kaugus (Mpc)', 'küünlaid');
+    frame(g, B, X, Y, [0, 5, 10, 15, 20, 25, 30].map(v => [v, String(v)]), yt, L('kaugus (Mpc)', 'distance (Mpc)'), L('küünlaid', 'candles'));
     const e = 0.4605 * T4.sigma / Math.sqrt(T4.N);
     el('rect', { x: X(D4 * (1 - e)), y: B.y0, width: Math.max(1, X(D4 * (1 + e)) - X(D4 * (1 - e))), height: B.y1 - B.y0, class: 'band' }, g);
     counts.forEach((c, i) => { if (c) el('rect', { x: X(i) + 0.5, y: Y(c), width: X(1) - X(0) - 1, height: B.y1 - Y(c), class: 'hist' }, g); });
     el('line', { x1: X(D4), y1: B.y0, x2: X(D4), y2: B.y1, class: 'truth' }, g);
     const dm = D4 * 10 ** (mean(Z.slice(0, T4.N)) * T4.sigma / 5);
     if (dm < XMAX) el('line', { x1: X(dm), y1: B.y0, x2: X(dm), y2: B.y1, class: 'meanline' }, g);
-    if (over) text(g, B.x1 - 6, B.y0 + 16, `+ ${over} kaugemal kui ${XMAX} Mpc`, 'lbl3', 'end');
+    if (over) text(g, B.x1 - 6, B.y0 + 16, L(`+ ${over} kaugemal kui ${XMAX} Mpc`, `+ ${over} farther than ${XMAX} Mpc`), 'lbl3', 'end');
   }
 
   function renderReach() {
@@ -1195,9 +1288,10 @@ select { width: 100%; }
     const X = mkScale(1, 2e10, B.x0, B.x1, true), Y = mkScale(0, 1.6, B.y1, B.y0);
     const xt = [];
     for (let k = 0; k <= 10; k++) xt.push([10 ** k, k % 3 === 0 ? decadeLabel('cep', k) : null]);
-    frame(g, B, X, Y, xt, [0, 0.4, 0.8, 1.2, 1.6].map(v => [v, v.toFixed(1)]), 'ulatus (kaugus, kuhu seda tüüpi küünlaid on mõõdetud)', 'hajuvus σ (mag)');
+    frame(g, B, X, Y, xt, [0, 0.4, 0.8, 1.2, 1.6].map(v => [v, v.toFixed(1)]), L('ulatus (kaugus, kuhu seda tüüpi küünlaid on mõõdetud)', 'reach (the distance to which candles of this kind have been measured)'), L('hajuvus σ (mag)', 'scatter σ (mag)'));
     // Reference distances along the top.
-    [['lähim täht', 1.3], ['Linnutee kese', 8.2e3], ['Andromeeda', 7.8e5], ['Neitsi parv', 1.65e7], ['nähtava Universumi serv', 1.4e10]].forEach(([n, d], i) => {
+    [[L('lähim täht', 'nearest star'), 1.3], [L('Linnutee kese', 'Galactic Centre'), 8.2e3], [L('Andromeeda', 'Andromeda'), 7.8e5], [L('Neitsi parv', 'Virgo Cluster'), 1.65e7],
+      [L('nähtava Universumi serv', 'edge of the observable Universe'), 1.4e10]].forEach(([n, d], i) => {
       const x = X(d);
       el('line', { x1: x, y1: B.y0, x2: x, y2: B.y1, class: 'guide' }, g);
       text(g, x, B.y0 - 8 - (i % 2) * 14, n, 'lbl3', i === 4 ? 'end' : 'middle');
@@ -1205,11 +1299,11 @@ select { width: 100%; }
     for (const T of TYPES) {
       const off = T.reach < 1;
       const x = off ? B.x0 + 12 : X(T.reach), y = Y(T.s);
-      const a = el('g', { class: 'reachpt' + (T.id === T4.type ? ' sel' : ''), tabindex: 0, role: 'button', 'aria-label': `${T.name}: hajuvus ${T.s} mag` }, g);
+      const a = el('g', { class: 'reachpt' + (T.id === T4.type ? ' sel' : ''), tabindex: 0, role: 'button', 'aria-label': `${tr(T, 'name')}: ${L('hajuvus', 'scatter')} ${T.s} mag` }, g);
       el('circle', { cx: x, cy: y, r: 7, fill: `var(--${T.c})` }, a);
       // Each label is placed by hand where its neighbours leave room: [dx, dy, anchor].
       const [dx, dy, anc] = { rr: [0, -12, 'middle'], trgb: [-11, 4, 'end'], cep: [8, -12, 'start'], sn: [-11, 4, 'end'], snRaw: [-11, 4, 'end'] }[T.id] || [11, 4, 'start'];
-      text(a, x + dx, y + dy, off ? `← ${T.short} (~5 mln km)` : T.short, 'lbl2', anc);
+      text(a, x + dx, y + dy, off ? `← ${tr(T, 'short')} (~5 ${L('mln', 'million')} km)` : tr(T, 'short'), 'lbl2', anc);
       const pick = () => { T4.type = T.id; T4.sigma = T.s; syncTab4(); render(); };
       a.addEventListener('click', pick);
       a.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
@@ -1250,10 +1344,10 @@ select { width: 100%; }
     svg.style.setProperty('--src', 'var(--cep)');
     const g = el('g', {}, svg);
     // Light curve over two periods.
-    const L = { x0: 116, x1: 356, y0: 16, y1: 128 };
-    cepLC = { L, X: mkScale(0, 2 * P, L.x0, L.x1), Y: mkScale(Mv - 0.6, Mv + 0.6, L.y0, L.y1), P, A, Mv };
+    const LC = { x0: 116, x1: 356, y0: 16, y1: 128 };
+    cepLC = { L: LC, X: mkScale(0, 2 * P, LC.x0, LC.x1), Y: mkScale(Mv - 0.6, Mv + 0.6, LC.y0, LC.y1), P, A, Mv };
     const xt = [0, P / 2, P, 1.5 * P, 2 * P].map((v, i) => [v, i % 2 ? null : sig(v, 2)]);
-    frame(g, L, cepLC.X, cepLC.Y, xt, [[Mv - 0.5, fmt(Mv - 0.5, 1)], [Mv, fmt(Mv, 1)], [Mv + 0.5, fmt(Mv + 0.5, 1)]], 'aeg (päevades)', null);
+    frame(g, LC, cepLC.X, cepLC.Y, xt, [[Mv - 0.5, fmt(Mv - 0.5, 1)], [Mv, fmt(Mv, 1)], [Mv + 0.5, fmt(Mv + 0.5, 1)]], L('aeg (päevades)', 'time (days)'), null);
     const c = [];
     for (let i = 0; i <= 200; i++) { const t = 2 * P * i / 200; c.push([cepLC.X(t), cepLC.Y(Mv + cepDm(t / P, A))]); }
     el('polyline', { points: pts(c), class: 'curve src' }, g);
@@ -1263,7 +1357,7 @@ select { width: 100%; }
     const B = { x0: 52, x1: 280, y0: 190, y1: 380 }, lo = -10.4, hi = -2.4;
     const X = mkScale(0.3, 2.0, B.x0, B.x1), Y = mkScale(hi, lo, B.y1, B.y0);
     const yt = [-10, -8, -6, -4].map(v => [v, fmt(v, 0)]);
-    frame(g, B, X, Y, [0.5, 1, 1.5, 2].map(v => [v, v.toFixed(1)]), yt, 'log P (P päevades)', T5.usePL ? 'M − seos + nullpunkt' : 'absoluutne tähesuurus M');
+    frame(g, B, X, Y, [0.5, 1, 1.5, 2].map(v => [v, v.toFixed(1)]), yt, L('log P (P päevades)', 'log P (P in days)'), T5.usePL ? L('M − seos + nullpunkt', 'M − relation + zero point') : L('absoluutne tähesuurus M', 'absolute magnitude M'));
     const corr = ([lp, M]) => (T5.usePL ? M - PL.a * (lp - 1) : M);
     const line = T5.usePL ? [[0.3, PL.b], [2, PL.b]] : [[0.3, PL.b + PL.a * -0.7], [2, PL.b + PL.a]];
     el('line', { x1: X(line[0][0]), y1: Y(line[0][1]), x2: X(line[1][0]), y2: Y(line[1][1]), class: 'curve ref' }, g);
@@ -1273,15 +1367,15 @@ select { width: 100%; }
     el('circle', { cx: X(T5.lp), cy: Y(yc), r: 6, class: 'pt hollow' }, g);
     el('line', { x1: 292, y1: B.y0, x2: 292, y2: B.y1, class: 'axisline' }, g);
     sideHist(g, cepSample.map(corr), Y, lo, hi, 292, 358, 0.4);
-    text(g, 325, B.y1 + 15, 'jaotus', 'tlbl', 'middle');
-    text(g, 358, 178, `hajuvus σ = ${fmt(std(cepSample.map(corr)), 2)} mag`, 'lbl', 'end');
+    text(g, 325, B.y1 + 15, L('jaotus', 'distribution'), 'tlbl', 'middle');
+    text(g, 358, 178, `${L('hajuvus', 'scatter')} σ = ${fmt(std(cepSample.map(corr)), 2)} mag`, 'lbl', 'end');
   }
   function drawCepDyn() {
     if (!cepDyn || !cepLC) return;
     const { X, Y, P, A, Mv } = cepLC, phi = T5.phase % 2, dm = cepDm(phi, A), k = -dm / (A / 2);
     cepDyn.textContent = '';
     el('circle', { cx: 54, cy: 70, r: 21 + 6 * k, fill: `hsl(${(36 + 12 * k).toFixed(0)} 95% ${(55 + 10 * k).toFixed(0)}%)` }, cepDyn);
-    text(cepDyn, 54, 120, `P = ${sig(P, 2)} p`, 'lbl3', 'middle');
+    text(cepDyn, 54, 120, `P = ${sig(P, 2)} ${L('p', 'd')}`, 'lbl3', 'middle');
     el('circle', { cx: X(phi * P), cy: Y(Mv + dm), r: 4.5, class: 'pt' }, cepDyn);
   }
   function renderSn() {
@@ -1289,9 +1383,9 @@ select { width: 100%; }
     svg.textContent = '';
     svg.style.setProperty('--src', 'var(--sn)');
     const g = el('g', {}, svg);
-    const L = { x0: 52, x1: 356, y0: 16, y1: 128 };
-    const X = mkScale(-15, 45, L.x0, L.x1), Y = mkScale(-20, -14.5, L.y0, L.y1);
-    frame(g, L, X, Y, [-10, 0, 15, 30, 45].map(v => [v, fmt(v, 0)]), [-20, -18, -16].map(v => [v, fmt(v, 0)]), 'päevi pärast maksimumi', 'M');
+    const LC = { x0: 52, x1: 356, y0: 16, y1: 128 };
+    const X = mkScale(-15, 45, LC.x0, LC.x1), Y = mkScale(-20, -14.5, LC.y0, LC.y1);
+    frame(g, LC, X, Y, [-10, 0, 15, 30, 45].map(v => [v, fmt(v, 0)]), [-20, -18, -16].map(v => [v, fmt(v, 0)]), L('päevi pärast maksimumi', 'days after the peak'), 'M');
     const curve = x => { const c = []; for (let i = 0; i <= 120; i++) { const t = -15 + 60 * i / 120; c.push([X(t), Y(snM(t, x))]); } return c; };
     el('polyline', { points: pts(curve(1.1)), class: 'curve ref' }, g);
     el('polyline', { points: pts(curve(T5.dm15)), class: 'curve src' }, g);
@@ -1303,7 +1397,7 @@ select { width: 100%; }
     // Peak magnitude against Δm₁₅.
     const B = { x0: 52, x1: 280, y0: 190, y1: 380 }, lo = -20.1, hi = -18.3;
     const X2 = mkScale(0.75, 1.75, B.x0, B.x1), Y2 = mkScale(hi, lo, B.y1, B.y0);
-    frame(g, B, X2, Y2, [0.8, 1.0, 1.2, 1.4, 1.6].map(v => [v, v.toFixed(1)]), [-20, -19.5, -19, -18.5].map(v => [v, fmt(v, 1)]), 'Δm₁₅ (mag)', T5.usePh ? 'M − seos + nullpunkt' : 'maksimumi M');
+    frame(g, B, X2, Y2, [0.8, 1.0, 1.2, 1.4, 1.6].map(v => [v, v.toFixed(1)]), [-20, -19.5, -19, -18.5].map(v => [v, fmt(v, 1)]), 'Δm₁₅ (mag)', T5.usePh ? L('M − seos + nullpunkt', 'M − relation + zero point') : L('maksimumi M', 'peak M'));
     const corr = ([x, M]) => (T5.usePh ? M - PH.a * (x - 1.1) : M);
     const line = T5.usePh ? [[0.75, PH.b], [1.75, PH.b]] : [[0.75, PH.b + PH.a * -0.35], [1.75, PH.b + PH.a * 0.65]];
     el('line', { x1: X2(line[0][0]), y1: Y2(line[0][1]), x2: X2(line[1][0]), y2: Y2(line[1][1]), class: 'curve ref' }, g);
@@ -1313,12 +1407,15 @@ select { width: 100%; }
     el('circle', { cx: X2(T5.dm15), cy: Y2(yc), r: 6, class: 'pt hollow' }, g);
     el('line', { x1: 292, y1: B.y0, x2: 292, y2: B.y1, class: 'axisline' }, g);
     sideHist(g, snSample.map(corr), Y2, lo, hi, 292, 358, 0.1);
-    text(g, 325, B.y1 + 15, 'jaotus', 'tlbl', 'middle');
-    text(g, 358, 178, `hajuvus σ = ${fmt(std(snSample.map(corr)), 2)} mag`, 'lbl', 'end');
+    text(g, 325, B.y1 + 15, L('jaotus', 'distribution'), 'tlbl', 'middle');
+    text(g, 358, 178, `${L('hajuvus', 'scatter')} σ = ${fmt(std(snSample.map(corr)), 2)} mag`, 'lbl', 'end');
   }
+  let rangesLang = null;
   function renderRanges() {
     const svg = $('ranges');
-    if (svg.childNodes.length) return;  // static
+    if (rangesLang === document.documentElement.lang) return;  // static, but for the language
+    rangesLang = document.documentElement.lang;
+    svg.textContent = '';
     const g = el('g', {}, svg);
     const X = mkScale(1, 1e10, 40, 740, true), y0 = 22, y1 = 122;
     for (let k = 0; k <= 10; k++) {
@@ -1329,12 +1426,13 @@ select { width: 100%; }
     // Where two rungs overlap, the upper one is calibrated with the lower one.
     for (const [a, b] of [[100, 5e3], [7e6, 4e7]]) {
       el('rect', { x: X(a), y: y0, width: X(b) - X(a), height: y1 - y0, class: 'overlap' }, g);
-      text(g, (X(a) + X(b)) / 2, y0 - 6, 'kalibreerimine', 'lbl3', 'middle');
+      text(g, (X(a) + X(b)) / 2, y0 - 6, L('kalibreerimine', 'calibration'), 'lbl3', 'middle');
     }
-    const bars = [['Parallaks', 1, 5e3, 'var(--sel)', 'index.html#osa-1', '1. osa'], ['Tsefeiidid', 100, 4e7, 'var(--cep)', 'index.html#osa-2', '2.–3. osa'], ['Ia supernoovad', 7e6, 1e10, 'var(--sn)', 'index.html#osa-4', '4. osa']];
+    const bars = [[L('Parallaks', 'Parallax'), 1, 5e3, 'var(--sel)', 'index.html#osa-1', L('1. osa', 'part 1')], [L('Tsefeiidid', 'Cepheids'), 100, 4e7, 'var(--cep)', 'index.html#osa-2', L('2.–3. osa', 'parts 2–3')],
+      [L('Ia supernoovad', 'Ia supernovae'), 7e6, 1e10, 'var(--sn)', 'index.html#osa-4', L('4. osa', 'part 4')]];
     bars.forEach(([n, a, b, c, href, part], i) => {
       const y = 34 + 28 * i;
-      const link = el('a', { href, class: 'range-link', 'aria-label': `${n}: harjutuse ${part}` }, g);
+      const link = el('a', { href, class: 'range-link', 'aria-label': L(`${n}: harjutuse ${part}`, `${n}: ${part} of the exercise`) }, g);
       el('rect', { x: X(a), y, width: X(b) - X(a), height: 16, rx: 8, fill: c, class: 'bar2' }, link);
       const right = X(b) + 8 < 640;
       text(link, right ? X(b) + 8 : X(a) - 8, y + 12, `${n} · ${part}`, 'lbl', right ? 'start' : 'end');
@@ -1345,84 +1443,107 @@ select { width: 100%; }
   function readouts() {
     const s = st.src, S = SRC[s], d = st.d[s], m = mag(s, d);
     document.querySelectorAll('[data-src]').forEach(b => b.setAttribute('aria-checked', b.dataset.src === s));
-    $('srcInfo').innerHTML = `${S.what[0].toUpperCase() + S.what.slice(1)}: ${S.lum}, ` + (s === 'lamp' && st.tab === 'tab3'
-      ? `valgustugevus umbes <b>${sig(LAMP_I)} kandelat</b>.` : `absoluutne tähesuurus <b>M = ${fmtMag(S.M)}</b>.`);
+    const what = tr(S, 'what');
+    $('srcInfo').innerHTML = `${what[0].toUpperCase() + what.slice(1)}: ${tr(S, 'lum')}, ` + (s === 'lamp' && st.tab === 'tab3'
+      ? L(`valgustugevus umbes <b>${sig(LAMP_I)} kandelat</b>.`, `luminous intensity about <b>${sig(LAMP_I)} candelas</b>.`)
+      : L(`absoluutne tähesuurus <b>M = ${fmtMag(S.M)}</b>.`, `absolute magnitude <b>M = ${fmtMag(S.M)}</b>.`));
     $('distOut').textContent = fmtD(s, d);
-    $('distRead').innerHTML = (s === 'lamp' ? '' : `${fmtLy(d)}.<br>`) + `Näiv tähesuurus <b>m = ${fmt(m, 2)}</b>. ${visibility(m)}`;
+    $('distRead').innerHTML = (s === 'lamp' ? '' : `${fmtLy(d)}.<br>`) + `${L('Näiv tähesuurus', 'Apparent magnitude')} <b>m = ${fmt(m, 2)}</b>. ${visibility(m)}`;
     // Tab 1
     const r = d / st.d0[s], f = 1 / (r * r);
-    const rel = f >= 1 ? `${sig(f)} korda heledam` : `${sig(1 / f)} korda nõrgem`;
-    $('fluxRead').innerHTML = `Lähtekoht <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Praegu d/d₀ = ${sig(r)}, seega <b>F/F₀ = (d₀/d)² = ${sig(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'sama hele' : rel}.`;
-    $('fluxFormula').textContent = `F = L / (4π d²). 1 m² peeglile jõuab umbes ${fmtExp(photons(m))} footonit sekundis.`;
+    const rel = f >= 1 ? L(`${sig(f)} korda heledam`, `${sig(f)} times brighter`) : L(`${sig(1 / f)} korda nõrgem`, `${sig(1 / f)} times fainter`);
+    $('fluxRead').innerHTML = L(`Lähtekoht <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Praegu d/d₀ = ${sig(r)}, seega <b>F/F₀ = (d₀/d)² = ${sig(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'sama hele' : rel}.`,
+      `Starting point <b>d₀ = ${fmtD(s, st.d0[s])}</b>. Now d/d₀ = ${sig(r)}, so <b>F/F₀ = (d₀/d)² = ${sig(f)}</b>: ${Math.abs(f - 1) < 1e-3 ? 'equally bright' : rel}.`);
+    $('fluxFormula').textContent = L(`F = L / (4π d²). 1 m² peeglile jõuab umbes ${fmtExp(photons(m))} footonit sekundis.`,
+      `F = L / (4π d²). About ${fmtExp(photons(m))} photons per second reach a 1 m² mirror.`);
     $('same').setAttribute('aria-pressed', st.same);
-    $('sameRead').innerHTML = st.same ? `Sama heledusega (m = ${fmt(m, 1)}): ` + KEYS.map(k => `${SRC[k].short.toLowerCase()} ${fmtD(k, k === s ? d : distFor(k, m))}`).join(', ') + '.' : '';
+    $('sameRead').innerHTML = st.same ? `${L('Sama heledusega', 'Equally bright')} (m = ${fmt(m, 1)}): ` + KEYS.map(k => `${L(SRC[k].short.toLowerCase(), SRC[k].lowEn)} ${fmtD(k, k === s ? d : distFor(k, m))}`).join(', ') + '.' : '';
     // Tab 2
     const mu = m - S.M;
-    $('magRead').innerHTML = `<b>m = ${fmt(m, 2)}</b>, <b>M = ${fmtMag(S.M, 2)}</b>, seega <b>μ = m − M = ${fmt(mu, 2)}</b>.`;
+    $('magRead').innerHTML = `<b>m = ${fmt(m, 2)}</b>, <b>M = ${fmtMag(S.M, 2)}</b>, ${L('seega', 'so')} <b>μ = m − M = ${fmt(mu, 2)}</b>.`;
     $('magFormula').textContent = `μ = 5 log₁₀(d / 1 pc) − 5 = 5 log₁₀(${fmtPc(d / PC)}) − 5 = ${fmt(mu, 2)}; d = 10^(μ/5 + 1) pc = 10^(${fmt(mu / 5 + 1, 2)}) pc = ${fmtD(s, d)}`;
     $('m1Out').textContent = fmt(st.m1, 1);
     $('m2Out').textContent = fmt(st.m2, 1);
     const dm = st.m2 - st.m1, q = 10 ** (0.4 * Math.abs(dm));
-    $('ratioRead').innerHTML = Math.abs(dm) < 0.05 ? 'Tähed on ühesuguse heledusega.'
-      : `Δm = ${fmt(Math.abs(dm), 1)}, seega on täht ${dm > 0 ? 1 : 2} <b>${sig(q)} korda heledam</b>: 10^(0.4 · ${fmt(Math.abs(dm), 1)}) = 100^(${fmt(Math.abs(dm), 1)}/5).`;
+    $('ratioRead').innerHTML = Math.abs(dm) < 0.05 ? L('Tähed on ühesuguse heledusega.', 'The stars are equally bright.')
+      : L(`Δm = ${fmt(Math.abs(dm), 1)}, seega on täht ${dm > 0 ? 1 : 2} <b>${sig(q)} korda heledam</b>`, `Δm = ${fmt(Math.abs(dm), 1)}, so star ${dm > 0 ? 1 : 2} is <b>${sig(q)} times brighter</b>`) +
+        `: 10^(0.4 · ${fmt(Math.abs(dm), 1)}) = 100^(${fmt(Math.abs(dm), 1)}/5).`;
     // Tab 3
     const C = cal[s], mc = mCal(s), da = assumed(s), u = S.unit, isLamp = s === 'lamp';
-    const calcName = isLamp ? 'Arvuta valgustugevus' : 'Arvuta M';
+    const calcName = isLamp ? L('Arvuta valgustugevus', 'Compute the intensity') : L('Arvuta M', 'Compute M');
     $('calcM').textContent = calcName;
     const Ec = lux(SRC.lamp.cal), Eh = lux(C.hid), mh = mag(s, C.hid), n = nOf(s), N = n * n, dmeas = measure(s, C.hid);
-    $('calText').innerHTML = `Ülemine ${S.short.toLowerCase()} on <b>${fmtU(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. ` +
+    $('calText').innerHTML = L(`Ülemine ${S.short.toLowerCase()} on <b>${fmtU(s, da)}</b> kaugusel, mõõdetud ${S.calHow}. ` +
       (isLamp ? `Luksmeeter näitab seal valgustatust <b>E = ${fmtLux(Ec)} lx</b>.` : `Selle näiv tähesuurus on <b>m = ${fmt(mc, 2)}</b>.`) +
-      (s === 'cep' ? ' <a href="hajusparved.html#keskmine">Kuidas parve kaugus leitakse?</a>' : '');
+      (s === 'cep' ? ' <a href="hajusparved.html#keskmine">Kuidas parve kaugus leitakse?</a>' : ''),
+      `The upper ${S.lowEn} is <b>${fmtU(s, da)}</b> away, measured ${S.calHowEn}. ` +
+      (isLamp ? `The lux meter there shows an illuminance of <b>E = ${fmtLux(Ec)} lx</b>.` : `Its apparent magnitude is <b>m = ${fmt(mc, 2)}</b>.`) +
+      (s === 'cep' ? ' <a href="hajusparved.html#keskmine">How is the cluster distance found?</a>' : ''));
     $('calFormula').textContent = !C.done ? ''
-      : isLamp ? `Valgustugevus I = E d² = ${fmtLux(Ec)} lx × (${fmtU(s, da)})² = ${sig(Iest())} cd. Valgusvoog Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`
+      : isLamp ? L(`Valgustugevus I = E d² = ${fmtLux(Ec)} lx × (${fmtU(s, da)})² = ${sig(Iest())} cd. Valgusvoog Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`,
+        `Luminous intensity I = E d² = ${fmtLux(Ec)} lx × (${fmtU(s, da)})² = ${sig(Iest())} cd. Luminous flux Φ = 4π I = ${sig(4 * Math.PI * Iest())} lm.`)
       : `M = m − 5 log₁₀(d / 1 pc) + 5 = ${fmt(mc, 2)} − 5 log₁₀(${fmtPc(da / PC)}) + 5 = ${fmtMag(Mest(s), 2)}`;
     $('measText').innerHTML = isLamp
-      ? `Alumise lambi juures näitab luksmeeter <b>E = ${fmtLux(Eh)} lx</b>. See on <b>${fmtInt(N)} korda vähem</b> kui ülemise lambi juures (${fmtLux(Ec)} lx).`
-      : `Alumise ${S.gen} näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>, ülemisest Δm = ${fmt(mh - mc, 2)} võrra suurem. Sealt jõuab <b>${fmtInt(N)} korda vähem valgust</b>.`;
-    $('measHint').textContent = 'Kui valgust jõuab N korda vähem, on allikas √N korda kaugemal kui ülemine.';
+      ? L(`Alumise lambi juures näitab luksmeeter <b>E = ${fmtLux(Eh)} lx</b>. See on <b>${fmtInt(N)} korda vähem</b> kui ülemise lambi juures (${fmtLux(Ec)} lx).`,
+        `At the lower lamp the lux meter shows <b>E = ${fmtLux(Eh)} lx</b>. This is <b>${fmtInt(N)} times less</b> than at the upper lamp (${fmtLux(Ec)} lx).`)
+      : L(`Alumise ${S.gen} näiv tähesuurus on <b>m = ${fmt(mh, 2)}</b>, ülemisest Δm = ${fmt(mh - mc, 2)} võrra suurem. Sealt jõuab <b>${fmtInt(N)} korda vähem valgust</b>.`,
+        `The apparent magnitude of the lower ${S.lowEn} is <b>m = ${fmt(mh, 2)}</b>, Δm = ${fmt(mh - mc, 2)} larger than the upper one. <b>${fmtInt(N)} times less light</b> arrives from it.`);
+    $('measHint').textContent = L('Kui valgust jõuab N korda vähem, on allikas √N korda kaugemal kui ülemine.', 'If N times less light arrives, the source is √N times farther away than the upper one.');
     $('guessUnit').textContent = u[0];
     $('measFormula').textContent = !C.shown ? ''
-      : `Valgust jõuab ${fmtInt(N)} korda vähem, seega on ${S.short.toLowerCase()} √${fmtInt(N)} = ${n} korda kaugemal: d = ${n} × ${fmtU(s, da)} = ${fmtU(s, dmeas)}.` +
-        (C.done && !isLamp ? ` Absoluutse tähesuurusega: d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtU(s, dmeas)}.` : '');
+      : L(`Valgust jõuab ${fmtInt(N)} korda vähem, seega on ${S.short.toLowerCase()} √${fmtInt(N)} = ${n} korda kaugemal: d = ${n} × ${fmtU(s, da)} = ${fmtU(s, dmeas)}.`,
+        `${fmtInt(N)} times less light arrives, so the ${S.lowEn} is √${fmtInt(N)} = ${n} times farther away: d = ${n} × ${fmtU(s, da)} = ${fmtU(s, dmeas)}.`) +
+        (C.done && !isLamp ? ` ${L('Absoluutse tähesuurusega', 'With the absolute magnitude')}: d = 10^((m − M)/5 + 1) pc = 10^((${fmt(mh, 2)} − (${fmtMag(Mest(s), 2)}))/5 + 1) pc = ${fmtU(s, dmeas)}.` : '');
     let res = '';
-    if (C.msg === 'wrong') res = `Sinu vastus ${fmtU(s, C.guess)} ei ole õige. Proovi uuesti: kui palju on √${fmtInt(N)}?`;
+    if (C.msg === 'wrong') res = L(`Sinu vastus ${fmtU(s, C.guess)} ei ole õige. Proovi uuesti: kui palju on √${fmtInt(N)}?`, `Your answer ${fmtU(s, C.guess)} is not right. Try again: what is √${fmtInt(N)}?`);
     else if (C.shown) {
-      res = C.msg === 'right' ? `<b class="ok">✓ Õige!</b> Kaugus on ${fmtU(s, dmeas)}.` : `Kaugus on ${fmtU(s, dmeas)}.`;
-      if (st.err !== 0) res += ` Tegelik kaugus on aga <b>${fmtU(s, C.hid)}</b>: ülemise allika kaugus oli ${fmtPct(st.err)} vale, nii et sama palju on vale ka mõõdetud kaugus.`;
+      res = (C.msg === 'right' ? `<b class="ok">${L('✓ Õige!', '✓ Correct!')}</b> ` : '') + L(`Kaugus on ${fmtU(s, dmeas)}.`, `The distance is ${fmtU(s, dmeas)}.`);
+      if (st.err !== 0) res += L(` Tegelik kaugus on aga <b>${fmtU(s, C.hid)}</b>: ülemise allika kaugus oli ${fmtPct(st.err)} vale, nii et sama palju on vale ka mõõdetud kaugus.`,
+        ` The true distance, however, is <b>${fmtU(s, C.hid)}</b>: the distance of the upper source was off by ${fmtPct(st.err)}, so the measured distance is off by as much.`);
     }
     $('measResult').innerHTML = res;
     $('errOut').textContent = fmtPct(st.err);
-    $('errRead').innerHTML = st.err === 0 ? 'Tuntud kaugus on õige.'
-      : `Eeldatud kaugus on ${fmtPct(st.err)} vale, seega ` + (isLamp
+    $('errRead').innerHTML = st.err === 0 ? L('Tuntud kaugus on õige.', 'The known distance is right.')
+      : L(`Eeldatud kaugus on ${fmtPct(st.err)} vale, seega ` + (isLamp
         ? `on valgustugevus I = E d² ${fmtPct(((1 + st.err / 100) ** 2 - 1) * 100)} vale`
         : `on M viga ${fmt(5 * Math.log10(1 + st.err / 100), 3)} mag`) +
-        ` ja kõik mõõdetud kaugused on <b>${fmtPct(st.err)}</b> nihkes. Rohkem ${isLamp ? 'lampe' : 'allikaid'} seda ei paranda.`;
+        ` ja kõik mõõdetud kaugused on <b>${fmtPct(st.err)}</b> nihkes. Rohkem ${isLamp ? 'lampe' : 'allikaid'} seda ei paranda.`,
+        `The assumed distance is off by ${fmtPct(st.err)}, so ` + (isLamp
+        ? `the luminous intensity I = E d² is off by ${fmtPct(((1 + st.err / 100) ** 2 - 1) * 100)}`
+        : `M is off by ${fmt(5 * Math.log10(1 + st.err / 100), 3)} mag`) +
+        ` and all measured distances are off by <b>${fmtPct(st.err)}</b>. More ${isLamp ? 'lamps' : 'sources'} will not fix this.`);
     // Tab 4
     const T = type4();
     $('sigmaOut').textContent = T4.sigma.toFixed(2);
     $('ncOut').textContent = T4.N;
     const e1 = 0.4605 * T4.sigma * 100, eN = e1 / Math.sqrt(T4.N);
     const dmean = D4 * 10 ** (mean(Z.slice(0, T4.N)) * T4.sigma / 5);
-    $('goodRead').innerHTML = `Ühe küünla kauguse viga σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub> = <b>${fmt(e1, e1 < 10 ? 1 : 0)} %</b>.<br>` +
-      `${T4.N} küünla keskmine: ${fmt(e1, 1)} % / √${T4.N} = <b>${fmt(eN, 1)} %</b>.<br>Selle valimi keskmine kaugus ${fmt(dmean, 2)} Mpc (${fmtPct((dmean / D4 - 1) * 100)}).`;
-    $('checkTitle').textContent = T.name;
+    $('goodRead').innerHTML = L(`Ühe küünla kauguse viga σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub> = <b>${fmt(e1, e1 < 10 ? 1 : 0)} %</b>.<br>` +
+      `${T4.N} küünla keskmine: ${fmt(e1, 1)} % / √${T4.N} = <b>${fmt(eN, 1)} %</b>.<br>Selle valimi keskmine kaugus ${fmt(dmean, 2)} Mpc (${fmtPct((dmean / D4 - 1) * 100)}).`,
+      `Distance error of one candle σ<sub>d</sub>/d ≈ 0.46 σ<sub>M</sub> = <b>${fmt(e1, e1 < 10 ? 1 : 0)} %</b>.<br>` +
+      `Mean of ${T4.N} candles: ${fmt(e1, 1)} % / √${T4.N} = <b>${fmt(eN, 1)} %</b>.<br>Mean distance of this sample ${fmt(dmean, 2)} Mpc (${fmtPct((dmean / D4 - 1) * 100)}).`);
+    $('checkTitle').textContent = tr(T, 'name');
     $('checklist').innerHTML = CHECKS.map((c, i) => {
-      const [k, note] = T.check[i], mk = { yes: '✓', no: '✗', part: '≈' }[k];
-      return `<li><span class="mk ${k}" aria-label="${{ yes: 'jah', no: 'ei', part: 'osaliselt' }[k]}">${mk}</span><span>${c}</span>${note ? `<small>${note}</small>` : ''}</li>`;
+      const [k, note, noteEn] = T.check[i], mk = { yes: '✓', no: '✗', part: '≈' }[k], nt = L(note, noteEn ?? note);
+      return `<li><span class="mk ${k}" aria-label="${L({ yes: 'jah', no: 'ei', part: 'osaliselt' }, { yes: 'yes', no: 'no', part: 'partly' })[k]}">${mk}</span><span>${L(c, CHECKS_EN[i])}</span>${nt ? `<small>${nt}</small>` : ''}</li>`;
     }).join('');
-    $('typecard').textContent = T.card;
+    $('typecard').textContent = tr(T, 'card');
     document.querySelectorAll('[data-view4]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view4 === T4.view));
     $('view4galaxy').hidden = T4.view !== 'galaxy';
     $('view4reach').hidden = T4.view !== 'reach';
     // Tab 5
     const P = 10 ** T5.lp, sc = cepSample.map(([lp, M]) => M), scc = cepSample.map(([lp, M]) => M - PL.a * (lp - 1));
     $('periodOut').textContent = sig(P, 3);
-    $('cepRead').innerHTML = `Seos: M = ${fmt(PL.b, 2)} − 3.29 (log P − 1). Selle perioodiga tsefeiid: <b>M = ${fmt(PL.b + PL.a * (T5.lp - 1), 2)}</b>.<br>` +
-      `Hajuvus ilma seoseta ${fmt(std(sc), 2)} mag, seosega <b>${fmt(std(scc), 2)} mag</b>.`;
+    $('cepRead').innerHTML = L(`Seos: M = ${fmt(PL.b, 2)} − 3.29 (log P − 1). Selle perioodiga tsefeiid: <b>M = ${fmt(PL.b + PL.a * (T5.lp - 1), 2)}</b>.<br>` +
+      `Hajuvus ilma seoseta ${fmt(std(sc), 2)} mag, seosega <b>${fmt(std(scc), 2)} mag</b>.`,
+      `Relation: M = ${fmt(PL.b, 2)} − 3.29 (log P − 1). A Cepheid with this period: <b>M = ${fmt(PL.b + PL.a * (T5.lp - 1), 2)}</b>.<br>` +
+      `Scatter without the relation ${fmt(std(sc), 2)} mag, with it <b>${fmt(std(scc), 2)} mag</b>.`);
     const ss = snSample.map(([x, M]) => M), ssc = snSample.map(([x, M]) => M - PH.a * (x - 1.1));
     $('dm15Out').textContent = T5.dm15.toFixed(2);
-    $('snRead').innerHTML = `Seos: M = ${fmt(PH.b, 2)} + 0.8 (Δm₁₅ − 1.1). Selle nõrgenemisega supernoova: <b>M = ${fmt(PH.b + PH.a * (T5.dm15 - 1.1), 2)}</b>.<br>` +
-      `Hajuvus ilma seoseta ${fmt(std(ss), 2)} mag, seosega <b>${fmt(std(ssc), 2)} mag</b>.`;
+    $('snRead').innerHTML = L(`Seos: M = ${fmt(PH.b, 2)} + 0.8 (Δm₁₅ − 1.1). Selle nõrgenemisega supernoova: <b>M = ${fmt(PH.b + PH.a * (T5.dm15 - 1.1), 2)}</b>.<br>` +
+      `Hajuvus ilma seoseta ${fmt(std(ss), 2)} mag, seosega <b>${fmt(std(ssc), 2)} mag</b>.`,
+      `Relation: M = ${fmt(PH.b, 2)} + 0.8 (Δm₁₅ − 1.1). A supernova with this decline: <b>M = ${fmt(PH.b + PH.a * (T5.dm15 - 1.1), 2)}</b>.<br>` +
+      `Scatter without the relation ${fmt(std(ss), 2)} mag, with it <b>${fmt(std(ssc), 2)} mag</b>.`);
   }
 
   function render() {
@@ -1439,9 +1560,9 @@ select { width: 100%; }
   function syncSlider() {
     const s = st.src, S = SRC[s];
     $('dist').value = Math.round(SL * (Math.log10(st.d[s]) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo)));
-    $('limits').innerHTML = LIMITS.map((L, i) => {
-      const f = (Math.log10(distFor(s, L.m)) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo));
-      return f >= 0 && f <= 1 ? `<span style="left: calc(8px + (100% - 16px) * ${f.toFixed(4)}); padding-top: ${6 + 12 * (i % 2)}px">${L.slider}</span>` : '';
+    $('limits').innerHTML = LIMITS.map((lim, i) => {
+      const f = (Math.log10(distFor(s, lim.m)) - Math.log10(S.lo)) / (Math.log10(S.hi) - Math.log10(S.lo));
+      return f >= 0 && f <= 1 ? `<span style="left: calc(8px + (100% - 16px) * ${f.toFixed(4)}); padding-top: ${6 + 12 * (i % 2)}px">${tr(lim, 'slider')}</span>` : '';
     }).join('');
   }
   $('dist').addEventListener('input', e => {
@@ -1488,7 +1609,7 @@ select { width: 100%; }
   // A guess within 0.5 % of the measured distance is right and reveals the source; otherwise the user can try again.
   $('check').addEventListener('click', () => {
     const s = st.src, C = cal[s], v = parseFloat($('guess').value.replace(',', '.').replace(/\s/g, ''));
-    if (!(v > 0)) { $('measResult').textContent = 'Sisesta kaugus positiivse arvuna.'; return; }
+    if (!(v > 0)) { $('measResult').textContent = L('Sisesta kaugus positiivse arvuna.', 'Enter the distance as a positive number.'); return; }
     C.guess = v * SRC[s].unit[1];
     const right = Math.abs(C.guess / measure(s, C.hid) - 1) < 0.005;
     C.msg = right ? 'right' : 'wrong';
@@ -1513,7 +1634,8 @@ select { width: 100%; }
   });
   $('err').addEventListener('input', e => { st.err = +e.target.value; render(); });
 
-  $('ctype').innerHTML = TYPES.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  function fillTypes() { $('ctype').innerHTML = TYPES.map(t => `<option value="${t.id}">${tr(t, 'name')}</option>`).join(''); }
+  fillTypes();
   function syncTab4() { $('ctype').value = T4.type; $('sigma').value = T4.sigma; $('nc').value = T4.N; }
   $('ctype').addEventListener('change', e => { T4.type = e.target.value; T4.sigma = type4().s; syncTab4(); render(); });
   $('sigma').addEventListener('input', e => { T4.sigma = +e.target.value; render(); });
@@ -1573,8 +1695,36 @@ select { width: 100%; }
     requestAnimationFrame(loop);
   }
 
+  /* ---------- Language ---------- */
+  // The language buttons switch the page in place. Texts in the markup are switched by the CSS; the title and the
+  // attributes with a data-en-* translation are set here, keeping the Estonian in data-et-*, and the drawings and
+  // readouts are drawn again. The choice goes into the address and is remembered.
+  const ATTRS = ['aria-label', 'title', 'content', 'placeholder'];
+  function applyLang() {
+    const lang = document.documentElement.lang;
+    document.title = L('Standardküünlad', 'Standard candles');
+    for (const e of document.querySelectorAll(ATTRS.map(a => `[data-en-${a}]`).join())) {
+      for (const a of ATTRS) {
+        if (!e.hasAttribute('data-en-' + a)) continue;
+        if (!e.hasAttribute('data-et-' + a)) e.setAttribute('data-et-' + a, e.getAttribute(a));
+        e.setAttribute(a, e.getAttribute(`data-${lang}-${a}`));
+      }
+    }
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+    document.documentElement.lang = b.dataset.lang;
+    try { localStorage.setItem('lang', b.dataset.lang); } catch (e) {}
+    const u = new URL(location.href);
+    u.searchParams.set('lang', b.dataset.lang);
+    history.replaceState(null, '', u);
+    applyLang();
+    fillTypes(); syncTab4(); syncSlider(); render();
+  }));
+
   syncSlider();
   syncTab4();
+  applyLang();
   fromHash();
   if (!reduced) requestAnimationFrame(loop);
 })();
