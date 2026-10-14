@@ -222,7 +222,8 @@ ol.steps li > span { padding-top: 4px; }
 .pane.fit { height: var(--pane-h); display: flex; flex-direction: column; }
 .pane.fit > .card.fill, .pane.fit > .grid.quad { flex: 1 1 0; min-height: 0; }
 /* a Hubble diagram with its results in a column to the right */
-.plot-side { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; margin-top: 6px; }
+.plot-side { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; grid-template-rows: minmax(0, 1fr); gap: 16px; margin-top: 6px; }
+.plot-side .side { min-height: 0; overflow-y: auto; }   /* a long result column scrolls instead of running over the buttons below */
 .plot-side .plot { height: auto; min-height: 0; margin-top: 0; }
 .plot-side .side .tiles { grid-template-columns: 1fr; margin-top: 0; }
 /* the Hubble tension plot of part 4, an SVG scaled to fit its cell */
@@ -435,7 +436,8 @@ footer a { color: inherit; }
   .grid.quad > .card { display: block; grid-row: auto; }
   .grid.quad .plot { height: 340px; margin-top: 6px; }
   .card.fill .plot { flex: none; height: 340px; }
-  .plot-side { grid-template-columns: minmax(0, 1fr); }
+  .plot-side { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .plot-side .side { overflow-y: visible; }
   #ten { height: auto; }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
   .tiles { grid-template-columns: 1fr; }
@@ -3292,9 +3294,9 @@ $("allPm").addEventListener("change", (e) => toggleAllStars("pm", e.target.check
 $("allCmd").addEventListener("change", (e) => toggleAllStars("cmd", e.target.checked, S.d && S.d.bprp, S.d && S.d.g.map((g) => g + S.cmdShift)));
 $("restore").addEventListener("click", restoreSelection);
 $("dropOutliers").addEventListener("click", dropOutliers);
-$("results").addEventListener("click", (e) => { if (e.target.id === "saveDist") storeDistance(); });
+$("results").addEventListener("click", (e) => { if (e.target.closest("#saveDist")) storeDistance(); });
 $("plxStats").addEventListener("click", (e) => {
-  if (e.target.id !== "calcDist") return;
+  if (!e.target.closest("#calcDist")) return;
   S.distOn = true;
   drawPlxStats();
   drawResults();
@@ -3456,8 +3458,8 @@ function showHelp(card) {
 }
 $("plots").addEventListener("click", (e) => {
   const card = e.target.closest(".card");
-  if (e.target.matches(".expand")) setFull(card === fullCard ? null : card);
-  else if (e.target.matches(".help-key")) showHelp(card === helpCard ? null : card);
+  if (e.target.closest(".expand")) setFull(card === fullCard ? null : card);
+  else if (e.target.closest(".help-key")) showHelp(card === helpCard ? null : card);
 });
 document.addEventListener("click", (e) => {
   if (helpCard && !e.target.closest(".help, .help-key")) showHelp(null);
@@ -3499,7 +3501,8 @@ for (const m of document.querySelectorAll("select.calib-menu")) m.addEventListen
 for (const b of document.querySelectorAll(".calib-apply")) b.addEventListener("click", () => { S.calibUsed = S.calib; drawHubble(); });
 for (const key of ["gal", "sn"]) $(`${key}Pager`).addEventListener("click", (e) => {
   const p = S.pages[key];
-  const step = { first: -Infinity, prev: -1, next: 1, last: Infinity }[e.target.dataset.page];
+  const btn = e.target.closest("[data-page]");
+  const step = btn && { first: -Infinity, prev: -1, next: 1, last: Infinity }[btn.dataset.page];
   if (!step) return;
   p.page = isFinite(step) ? p.page + step : step > 0 ? Infinity : 0;   // pageRange clamps it
   drawHubble();
