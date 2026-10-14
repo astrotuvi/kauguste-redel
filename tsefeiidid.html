@@ -585,10 +585,10 @@ table.res tr.hl td { font-weight: 650; }
       <li>The colour–magnitude diagram of part 1 of the exercise does not account for dust (see the <a href="hajusparved.html#varvus-heledus">open clusters page</a>).</li>
     </ul>
     <p class="src" data-tab="tab3" hidden data-l="et">Andmed: 1. samm Leavitt &amp; Pickering (1912, Harvard College Observatory Circular 173), tähtede asukohad joonisel on välja mõeldud.
-      2. samm: harjutuse 2. osa väljatsefeiidid, W<sub>H</sub> Riess jt (2021), parallaksid Gaia DR3 nullpunkti parandusega. SMC kaugusmoodul 18.98 (62 kpc): Graczyk jt (2020).
+      2. samm: harjutuse 2. osa väljatsefeiidid, W<sub>H</sub> Riess jt (2021), parallaksid Gaia DR3 iga tähe nullpunkti parandusega (Lindegren jt 2021). SMC kaugusmoodul 18.98 (62 kpc): Graczyk jt (2020).
       SMC ja kauge galaktika tsefeiidid on simuleeritud seosest M<sub>H</sub><sup>W</sup> = −5.914 − 3.29 (log P − 1) (Cruz Reyes &amp; Anderson 2023).</p>
     <p class="src" data-tab="tab3" hidden data-l="en">Data: step 1 Leavitt &amp; Pickering (1912, Harvard College Observatory Circular 173); the positions of the stars in the drawing are made up.
-      Step 2: the field Cepheids of part 2 of the exercise, W<sub>H</sub> Riess et al. (2021), parallaxes from Gaia DR3 with the zero-point correction. SMC distance modulus 18.98 (62 kpc): Graczyk et al. (2020).
+      Step 2: the field Cepheids of part 2 of the exercise, W<sub>H</sub> Riess et al. (2021), parallaxes from Gaia DR3 with each star's zero-point correction (Lindegren et al. 2021). SMC distance modulus 18.98 (62 kpc): Graczyk et al. (2020).
       The Cepheids of the SMC and of the distant galaxy are simulated from the relation M<sub>H</sub><sup>W</sup> = −5.914 − 3.29 (log P − 1) (Cruz Reyes &amp; Anderson 2023).</p>
   </section>
 </main>
@@ -1139,14 +1139,15 @@ table.res tr.hl td { font-weight: 650; }
     $('leavRead').innerHTML = t;
   }
 
-  // Step 2: Milky Way Cepheids with Gaia DR3 parallaxes (the field Cepheids of part 2), with the zero-point correction.
+  // Step 2: Milky Way Cepheids with Gaia DR3 parallaxes (the field Cepheids of part 2), each corrected by
+  // its own zero-point (the last number, mas; Lindegren et al. 2021), as in part 2.
   const MW = [
-    ['R TrA', 3.38927, 4.668, 1.5432, 0.0161], ['V386 Cyg', 5.25766, 5.146, 0.8638, 0.0125], ['R Mus', 7.50988, 4.222, 1.0656, 0.0175],
-    ['DR Vel', 11.19846, 5.433, 0.5047, 0.0134], ['U Car', 38.791, 3.226, 0.5530, 0.0226], ['WZ Sgr', 21.84748, 4.196, 0.5742, 0.0277],
-    ['RY Sco', 20.3295, 3.639, 0.7279, 0.0321], ['VY Car', 18.88145, 4.467, 0.5535, 0.0167], ['X Cyg', 16.37655, 3.583, 0.8842, 0.0199],
-    ['SZ Cyg', 15.1144, 5.283, 0.4186, 0.0124], ['TX Cyg', 14.7122, 3.816, 0.7954, 0.0186], ['SV Vel', 14.09568, 5.471, 0.4211, 0.0175],
-  ].map(([name, P, WH, plx, e]) => {
-    const p = plx + 0.017;
+    ['R TrA', 3.38927, 4.668, 1.5432, 0.0161, -0.0164], ['V386 Cyg', 5.25766, 5.146, 0.8638, 0.0125, -0.0298], ['R Mus', 7.50988, 4.222, 1.0656, 0.0175, -0.0101],
+    ['DR Vel', 11.19846, 5.433, 0.5047, 0.0134, -0.0149], ['U Car', 38.791, 3.226, 0.5530, 0.0226, -0.0084], ['WZ Sgr', 21.84748, 4.196, 0.5742, 0.0277, -0.0377],
+    ['RY Sco', 20.3295, 3.639, 0.7279, 0.0321, -0.0359], ['VY Car', 18.88145, 4.467, 0.5535, 0.0167, -0.0115], ['X Cyg', 16.37655, 3.583, 0.8842, 0.0199, -0.0255],
+    ['SZ Cyg', 15.1144, 5.283, 0.4186, 0.0124, -0.0265], ['TX Cyg', 14.7122, 3.816, 0.7954, 0.0186, -0.0337], ['SV Vel', 14.09568, 5.471, 0.4211, 0.0175, -0.0131],
+  ].map(([name, P, WH, plx, e, zp]) => {
+    const p = plx - zp;
     return { name, lp: Math.log10(P), M: WH + 5 * Math.log10(p) - 10, eM: 5 / Math.LN10 * e / p };
   });
   const MWFIT = linfit(MW.map(c => c.lp - 1), MW.map(c => c.M), MW.map(c => 1 / (c.eM ** 2 + 0.08 ** 2)));

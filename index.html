@@ -252,6 +252,9 @@ ol.steps li > span { padding-top: 4px; }
 .grid.quad .card-head { position: relative; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .card-head .tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px 10px; margin-left: auto; }
 .card-head .tools button { padding: 3px 10px; font-size: 0.82rem; }
+/* the period-luminosity card: on a narrow screen its checkbox goes below the text */
+#plHead { flex-wrap: wrap; }
+#plHead > div:first-child { flex: 1 1 320px; }
 /* the explanation of a plot opens over it from a keyword after the title */
 .help-key {
   border: none; background: none; padding: 0 2px; margin-left: 6px; font-size: 0.8rem; font-weight: 500;
@@ -330,6 +333,7 @@ table.data-table tr.hl td:first-child { box-shadow: inset 3px 0 0 var(--accent);
 .pager { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: flex-end; margin-top: 10px; font-size: 0.85rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
 .pager button { padding: 4px 12px; font-size: 0.85rem; }
 .pager button:disabled { cursor: default; opacity: 0.4; }
+.data-table .act button:disabled { cursor: default; }
 
 /* Part 2: Cepheids */
 /* The page shows either the home view (introduction and contents) or one part, which fills the window. */
@@ -781,13 +785,13 @@ footer a { color: inherit; }
     <ol class="steps" data-l="et">
       <li><span>Vali parv ja vajuta „Mõõda“: see täidab 1. osa päringu vormi. <a class="go" href="#cepCluster" data-go="cepCluster">Parvede tsefeiidid →</a></span></li>
       <li><span>Mõõda 1. osas parve kaugus ja salvesta see vahelehel „Kaugus“. Iga salvestatud parv lisab oma tsefeiidid seosesse. <a class="go" href="#dist" data-go="dist">1. osa: Kaugus →</a></span></li>
-      <li><span>Parvedes on pikaperioodilisi tsefeiide vähe. Soovi korral lisa seosesse väljatsefeiide, mille kauguse annab nende enda Gaia parallaks. <a class="go" href="#cepField" data-go="cepField">Väljatsefeiidid →</a></span></li>
+      <li><span>Parvedes on pikaperioodilisi tsefeiide vähe. Kui vähemalt kahe parve kaugus on salvestatud, lisa seosesse väljatsefeiide, mille kauguse annab nende enda Gaia parallaks: siin või perioodi-heleduse joonisel, kus nad on hallid rombid. <a class="go" href="#cepField" data-go="cepField">Väljatsefeiidid →</a></span></li>
       <li><span>Vaata perioodi-heleduse seost ja sinu sobitatud sirget. <a class="go" href="#cepPL" data-go="cepPL">Periood-heledus →</a></span></li>
     </ol>
     <ol class="steps" data-l="en">
       <li><span>Choose a cluster and press “Measure”: this fills in the query form of part 1. <a class="go" href="#cepCluster" data-go="cepCluster">Cepheids in clusters →</a></span></li>
       <li><span>Measure the distance of the cluster in part 1 and save it in the “Distance” tab. Each saved cluster adds its Cepheids to the relation. <a class="go" href="#dist" data-go="dist">Part 1: Distance →</a></span></li>
-      <li><span>There are few long-period Cepheids in clusters. If you like, add field Cepheids to the relation, whose distances come from their own Gaia parallaxes. <a class="go" href="#cepField" data-go="cepField">Field Cepheids →</a></span></li>
+      <li><span>There are few long-period Cepheids in clusters. Once the distances of at least two clusters are saved, add field Cepheids to the relation, whose distances come from their own Gaia parallaxes: here or in the period–luminosity plot, where they are grey diamonds. <a class="go" href="#cepField" data-go="cepField">Field Cepheids →</a></span></li>
       <li><span>Look at the period–luminosity relation and the line you fitted. <a class="go" href="#cepPL" data-go="cepPL">Period–luminosity →</a></span></li>
     </ol>
     <p class="hint" data-l="et">Periood: Gaia DR3. W<sub>H</sub> = F160W − 0,386 (F555W − F814W) on Hubble'i kosmoseteleskoobi mõõtmistest leitud Wesenheiti tähesuurus,
@@ -823,11 +827,12 @@ footer a { color: inherit; }
       <div class="card-head">
         <div>
           <h2><span data-l="et">Väljatsefeiidid</span><span data-l="en">Field Cepheids</span></h2>
-          <p class="hint" data-l="et">Need tsefeiidid ei ole parvedes; nende kauguse annab nende enda Gaia parallaks. Neid saab seosesse lisada ükshaaval, joonisel on nad rombid.</p>
-          <p class="hint" data-l="en">These Cepheids are not in clusters; their distances come from their own Gaia parallaxes. They can be added to the relation one at a time, and in the plot they are diamonds.</p>
+          <p class="hint" data-l="et">Need tsefeiidid ei ole parvedes; nende kauguse annab nende enda Gaia parallaks. Neid saab seosesse lisada ükshaaval siin või perioodi-heleduse joonisel. Joonisel on nad rombid: hallid ei ole seoses, värvilised on.</p>
+          <p class="hint" data-l="en">These Cepheids are not in clusters; their distances come from their own Gaia parallaxes. They can be added to the relation one at a time, here or in the period–luminosity plot. In the plot they are diamonds: grey ones are not in the relation, coloured ones are.</p>
         </div>
         <span class="count" id="fieldCount"></span>
       </div>
+      <p class="hint" id="fieldLock" hidden><span data-l="et">Väljatsefeiide saab seosesse lisada, kui vähemalt kahe parve kaugus on salvestatud (vaheleht „Parvede tsefeiidid“).</span><span data-l="en">Field Cepheids can be added to the relation once the distances of at least two clusters are saved (the “Cepheids in clusters” tab).</span></p>
       <div class="table-wrap">
         <table class="data-table">
             <thead><tr>
@@ -842,11 +847,18 @@ footer a { color: inherit; }
 
     <div role="tabpanel" class="pane fit" id="paneCepPL" aria-labelledby="tabCepPL" hidden>
     <section class="card fill">
-      <div class="card-head">
+      <div class="card-head" id="plHead">
         <div>
           <h2><span data-l="et">Perioodi-heleduse seos</span><span data-l="en">Period–luminosity relation</span></h2>
-          <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud; rombid on seosesse lisatud väljatsefeiidid. Katkendjoon: sinu kaalutud vähimruutude sirge; punktiir: avaldatud seos. Shift + klõps väljatsefeiidil eemaldab selle seosest. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
-          <p class="hint" data-l="en">Each point is a Cepheid whose cluster distance is saved; diamonds are field Cepheids added to the relation. Dashed line: your weighted least-squares line; dotted line: the published relation. Shift + click on a field Cepheid removes it from the relation. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
+          <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud. Kui kahe parve kaugus on salvestatud, on joonisel ka väljatsefeiidid: hallid rombid ei ole seoses, värvilised on seosesse lisatud.
+            Parvedes on vähe pika perioodiga tsefeiide, nii et sirge tõusu määravad paremini väljatsefeiidid. Märkeruuduga „Klõps lisab väljatsefeiidi“ lisab või eemaldab klõps väljatsefeiidi seosest.
+            Katkendjoon: sinu kaalutud vähimruutude sirge, kus iga tsefeiidi kaal on 1/(σ<sup>2</sup> + 0,08<sup>2</sup>): 0,08 mag on seose enda laius, sest tsefeiidid ei asu täpselt ühel sirgel. Punktiir: avaldatud seos. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+          <p class="hint" data-l="en">Each point is a Cepheid whose cluster distance is saved. Once two cluster distances are saved, the plot also shows the field Cepheids: grey diamonds are not in the relation, coloured ones have been added to it.
+            Clusters have few long-period Cepheids, so the field Cepheids pin down the slope of the line better. With the “Click adds field Cepheids” box ticked, a click adds a field Cepheid to the relation or removes it.
+            Dashed line: your weighted least-squares line, where each Cepheid has the weight 1/(σ<sup>2</sup> + 0.08<sup>2</sup>): 0.08 mag is the width of the relation itself, as Cepheids do not lie exactly on one line. Dotted line: the published relation. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
+        </div>
+        <div class="tools" id="plTools" hidden>
+          <label class="toggle"><input type="checkbox" id="plClick" autocomplete="off"><span data-l="et"> Klõps lisab väljatsefeiidi</span><span data-l="en"> Click adds field Cepheids</span></label>
         </div>
       </div>
       <div class="plot" id="pl"></div>
@@ -1100,7 +1112,7 @@ footer a { color: inherit; }
     <a href="https://gaia.ari.uni-heidelberg.de/" target="_blank" rel="noopener">ARI Heidelbergi Gaia-andmekeskus</a>,
     <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">ESA Gaia arhiiv</a>
     ja <a href="https://gaia.aip.de/" target="_blank" rel="noopener">AIP Potsdam</a>).
-    Nimed lahendatakse SIMBADi ja Sesame abil (CDS, Strasbourg), taevapildid on DSS2 värviline ülevaade (CDS hips2fits). Parallaksi nullpunkt −0,017 mas pärineb tööst Lindegren jt (2021);
+    Nimed lahendatakse SIMBADi ja Sesame abil (CDS, Strasbourg), taevapildid on DSS2 värviline ülevaade (CDS hips2fits). Iga tähe parallaksi nullpunkt (sõltub tähe heledusest, värvist ja ekliptilisest laiusest) arvutatakse tööst Lindegren jt (2021), nagu Gaia paketis gaiadr3_zeropoint;
     lisatud on ~0,010 mas süstemaatiline viga, sest nurga järgi korreleeruvad parallaksivead keskmistamisel ei vähene
     (Lindegren jt 2021; Maíz Apellániz jt 2021). Absoluutse tähesuurusega HR-diagrammil on ekstinktsioon arvestamata.
     Tsefeiidide ja parvede seosed pärinevad tööst Cruz Reyes &amp; Anderson (2023; liikmesuse tõenäosus ≥ 0,5, ainult põhitoonis pulseerivad tsefeiidid);
@@ -1119,7 +1131,7 @@ footer a { color: inherit; }
     <a href="https://gaia.ari.uni-heidelberg.de/" target="_blank" rel="noopener">ARI Heidelberg Gaia data centre</a>,
     <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">ESA Gaia archive</a>
     and <a href="https://gaia.aip.de/" target="_blank" rel="noopener">AIP Potsdam</a>).
-    Names are resolved with SIMBAD and Sesame (CDS, Strasbourg), and the sky images are the DSS2 colour survey (CDS hips2fits). The parallax zero point of −0.017 mas is from Lindegren et al. (2021);
+    Names are resolved with SIMBAD and Sesame (CDS, Strasbourg), and the sky images are the DSS2 colour survey (CDS hips2fits). The parallax zero point of each star (which depends on its brightness, colour and ecliptic latitude) is computed from Lindegren et al. (2021), as in the Gaia package gaiadr3_zeropoint;
     a systematic error of ~0.010 mas is added, because parallax errors correlated over angle do not shrink with averaging
     (Lindegren et al. 2021; Maíz Apellániz et al. 2021). The HR diagram in absolute magnitudes does not account for extinction.
     The Cepheids and their clusters are from Cruz Reyes &amp; Anderson (2023; membership probability ≥ 0.5, fundamental-mode Cepheids only);
@@ -1157,27 +1169,27 @@ const GAIA_SOURCES = [
     url: "https://dc.g-vo.org/tap/sync",
     async: "https://dc.g-vo.org/tap/async",
     table: "gaia.dr3lite",
-    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe" },
+    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe", pscol: "pseudocolour", solved: "astrometric_params_solved" },
   },
   {
     name: "VizieR (CDS)",
     url: TAP_PROXY + "/vizier/sync",
     async: TAP_PROXY + "/vizier/async",
     table: '"I/355/gaiadr3"',
-    cols: { src: "Source", ra: "RA_ICRS", dec: "DE_ICRS", plx: "Plx", eplx: "e_Plx", pmra: "pmRA", pmdec: "pmDE", g: "Gmag", bprp: '"BP-RP"', ruwe: "RUWE" },
+    cols: { src: "Source", ra: "RA_ICRS", dec: "DE_ICRS", plx: "Plx", eplx: "e_Plx", pmra: "pmRA", pmdec: "pmDE", g: "Gmag", bprp: '"BP-RP"', ruwe: "RUWE", pscol: "pscol", solved: "Solved" },
   },
   {
     name: "ARI Heidelberg",
     url: TAP_PROXY + "/ari/sync",
     async: TAP_PROXY + "/ari/async",
     table: "gaiadr3.gaia_source",
-    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe" },
+    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe", pscol: "pseudocolour", solved: "astrometric_params_solved" },
   },
   {
     name: "ESA Gaia arhiiv", nameEn: "ESA Gaia archive",
     url: TAP_PROXY + "/esa/sync",          // no async: see above
     table: "gaiadr3.gaia_source",
-    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe" },
+    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe", pscol: "pseudocolour", solved: "astrometric_params_solved" },
   },
   {
     name: "AIP Potsdam",
@@ -1185,7 +1197,7 @@ const GAIA_SOURCES = [
     asyncOnly: true,                       // see above
     params: { RESPONSEFORMAT: "csv" },
     table: "gaiadr3.gaia_source",
-    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe" },
+    cols: { src: "source_id", ra: "ra", dec: "dec", plx: "parallax", eplx: "parallax_error", pmra: "pmra", pmdec: "pmdec", g: "phot_g_mean_mag", bprp: "phot_bp_mean_mag - phot_rp_mean_mag", ruwe: "ruwe", pscol: "pseudocolour", solved: "astrometric_params_solved" },
   },
 ];
 // Name resolvers, all asked at once: SIMBAD plus the Sesame mirrors (Strasbourg, Harvard).
@@ -1197,7 +1209,74 @@ const SESAME_MIRRORS = [
 const MAXREC = 150000;
 const ASYNC_RADIUS = 1.5;  // deg; larger fields are queried as async jobs
 const ASYNC_LIMIT = 300;   // s; give up on an async job after this long
-const ZP = -0.017;   // mas, Gaia DR3 global parallax zero-point
+// Gaia DR3 parallax zero-point of each star (Lindegren et al. 2021, A&A 649, A4), as in the
+// gaiadr3_zeropoint package (zpt.py, coefficient tables of 2020-07-20): it depends on G, colour and
+// ecliptic latitude, and is about -0.03 mas for the faint members of a cluster. j and k pick the
+// colour and latitude basis functions of each column; g are the magnitude nodes; q the
+// coefficients (µas) at each node, interpolated linearly in G.
+const ZPT5 = {   // five-parameter solutions (astrometric_params_solved = 31), colour nu_eff
+  j: [0, 0, 0, 1, 1, 2, 3, 4], k: [0, 1, 2, 0, 1, 0, 0, 0],
+  g: [6.0, 10.8, 11.2, 11.8, 12.2, 12.9, 13.1, 15.9, 16.1, 17.5, 19.0, 20.0, 21.0],
+  q: [
+    [-26.98, -9.62, 27.40, -25.1, -0.0, -1257, 0, 0],
+    [-27.23, -3.07, 23.04, 35.3, 15.7, -1257, 0, 0],
+    [-30.33, -9.23, 9.08, -88.4, -11.8, -1257, 0, 0],
+    [-33.54, -10.08, 13.28, -126.7, 11.6, -1257, 0, 0],
+    [-13.65, -0.07, 9.35, -111.4, 40.6, -1257, 0, 0],
+    [-19.53, -1.64, 15.86, -66.8, 20.6, -1257, 0, 0],
+    [-37.99, 2.63, 16.14, -5.7, 14.0, -1257, 107.9, 104.3],
+    [-38.33, 5.61, 15.42, 0, 18.7, -1189, 243.8, 155.2],
+    [-31.05, 2.83, 8.59, 0, 15.5, -1404, 105.5, 170.7],
+    [-29.18, -0.09, 2.41, 0, 24.5, -1165, 189.7, 325.0],
+    [-18.40, 5.98, -6.46, 0, 5.5, 0, 0, 276.6],
+    [-12.65, -4.57, -7.46, 0, 97.9, 0, 0, 0],
+    [-18.22, -15.24, -18.54, 0, 128.2, 0, 0, 0],
+  ],
+};
+const ZPT6 = {   // six-parameter solutions (95), colour pseudocolour
+  j: [0, 0, 0, 1, 1, 1, 2], k: [0, 1, 2, 0, 1, 2, 0],
+  g: ZPT5.g,
+  q: [
+    [-27.85, -7.78, 27.47, -32.1, 14.4, 9.5, -67],
+    [-28.91, -3.57, 22.92, 7.7, 12.6, 1.6, -572],
+    [-26.72, -8.74, 9.36, -30.3, 5.6, 17.2, -1104],
+    [-29.04, -9.69, 13.63, -49.4, 36.3, 17.7, -1129],
+    [-12.39, -2.16, 10.23, -92.6, 19.8, 27.6, -365],
+    [-18.99, -1.93, 15.90, -57.2, -8.0, 19.9, -554],
+    [-38.29, 2.59, 16.20, -10.5, 1.4, 0.4, -960],
+    [-36.83, 4.20, 15.76, 22.3, 11.1, 10.0, -1367],
+    [-28.37, 1.99, 9.28, 50.4, 17.2, 13.7, -1351],
+    [-24.68, -1.37, 3.52, 86.8, 19.8, 21.3, -1380],
+    [-15.32, 4.01, -6.03, 29.2, 14.1, 0.4, -563],
+    [-13.73, -10.92, -8.30, -74.4, 196.4, -42.0, 536],
+    [-29.53, -20.34, -18.74, -39.5, 326.8, -262.3, 1598],
+  ],
+};
+const OBLIQUITY = 23.4392911 * Math.PI / 180;   // of the ecliptic, J2000
+
+// zero-point (mas) of a star with magnitude G, colour BP - RP, pseudocolour pc, ICRS position
+// (deg) and astrometric_params_solved; parallax_corrected = parallax - zero-point. For a
+// five-parameter solution nu_eff is computed from BP - RP as Gaia did (Lindegren et al. 2021,
+// eq. 3), since GAVO's table lacks nu_eff_used_in_astrometry; it matches the catalogue values to
+// better than 1 µas in the zero-point. Outside 6 < G < 21 and 1.24 < pc < 1.72 the values at the
+// limits are used.
+function zeroPoint(g, bprp, pc, ra, dec, solved) {
+  const six = solved === 95;
+  const t = six ? ZPT6 : ZPT5;
+  const nu = six ? Math.min(1.72, Math.max(1.24, pc ?? 1.48))
+    : bprp === null ? 1.48 : Math.min(1.72, Math.max(1.24, 1.76 - (1.61 / Math.PI) * Math.atan(0.531 * bprp)));
+  const r = Math.PI / 180;
+  const sb = Math.sin(dec * r) * Math.cos(OBLIQUITY) - Math.cos(dec * r) * Math.sin(OBLIQUITY) * Math.sin(ra * r);
+  const c = [1, Math.max(-0.24, Math.min(0.24, nu - 1.48)), Math.min(0.24, Math.max(0, 1.48 - nu)) ** 3,
+    Math.min(0, nu - 1.24), Math.max(0, nu - 1.72)];
+  const b = [1, sb, sb * sb - 1 / 3];
+  let ig = 0;
+  while (ig < t.g.length - 2 && g >= t.g[ig + 1]) ig++;
+  const h = Math.max(0, Math.min(1, (g - t.g[ig]) / (t.g[ig + 1] - t.g[ig])));
+  let z = 0;
+  for (let i = 0; i < t.j.length; i++) z += ((1 - h) * t.q[ig][i] + h * t.q[ig + 1][i]) * c[t.j[i]] * b[t.k[i]];
+  return z / 1000;
+}
 const SYS = 0.010;   // mas, systematic floor for a cluster-mean parallax
 const RUWE_MAX = 1.4; // astrometric quality cut applied in every query
 const PAGE_MIN = 10;   // rows per page of the star, galaxy and supernova tables at least; more when they fit the tab
@@ -1317,20 +1396,21 @@ const R_H = 0.386;                   // W_H = F160W - 0.386 (V - I)
 // for the six Cepheids in both catalogues, Riess et al. are 0.046 +- 0.003 mag fainter than the
 // Cruz Reyes & Anderson (2023) values used for the clusters. P from Gaia DR3
 // vari_cepheid. Long periods (P > 14 d) with parallax errors below 5 %; four shorter ones spread
-// evenly in log P, chosen for the smallest parallax errors (below 3 %).
+// evenly in log P, chosen for the smallest parallax errors (below 3 %). zp is the star's
+// parallax zero-point (mas) from gaiadr3_zeropoint with its catalogue nu_eff or pseudocolour.
 const FIELD_CEPHEIDS = [
-  { cep: "R TrA", src: "5824464493705913472", P: 3.38927, WH: 4.668, plx: 1.5432, ePlx: 0.0161 },
-  { cep: "V386 Cyg", src: "1968971582984827136", P: 5.25766, WH: 5.146, plx: 0.8638, ePlx: 0.0125 },
-  { cep: "R Mus", src: "5855468247702904704", P: 7.50988, WH: 4.222, plx: 1.0656, ePlx: 0.0175 },
-  { cep: "DR Vel", src: "5313887130948758016", P: 11.19846, WH: 5.433, plx: 0.5047, ePlx: 0.0134 },
-  { cep: "U Car", src: "5338359442320395904", P: 38.79100, G: 5.9048, BP: 6.5351, RP: 5.0971, WH: 3.226, plx: 0.5530, ePlx: 0.0226 },
-  { cep: "WZ Sgr", src: "4094784475310672128", P: 21.84748, G: 7.5338, BP: 8.3985, RP: 6.6522, WH: 4.196, plx: 0.5742, ePlx: 0.0277 },
-  { cep: "RY Sco", src: "4041690364529590144", P: 20.32950, G: 7.3083, BP: 8.2758, RP: 6.3582, WH: 3.639, plx: 0.7279, ePlx: 0.0321 },
-  { cep: "VY Car", src: "5351161399793209984", P: 18.88145, G: 7.1617, BP: 7.8409, RP: 6.4025, WH: 4.467, plx: 0.5535, ePlx: 0.0167 },
-  { cep: "X Cyg", src: "1870258975238302208", P: 16.37655, G: 6.0862, BP: 6.6361, RP: 5.3242, WH: 3.583, plx: 0.8842, ePlx: 0.0199 },
-  { cep: "SZ Cyg", src: "2071433765909167232", P: 15.11440, G: 8.8054, BP: 9.7145, RP: 7.9060, WH: 5.283, plx: 0.4186, ePlx: 0.0124 },
-  { cep: "TX Cyg", src: "2161786374436607616", P: 14.71220, G: 8.4159, BP: 9.6853, RP: 7.2638, WH: 3.816, plx: 0.7954, ePlx: 0.0186 },
-  { cep: "SV Vel", src: "5351331755370445056", P: 14.09568, G: 8.1620, BP: 8.7907, RP: 7.3610, WH: 5.471, plx: 0.4211, ePlx: 0.0175 },
+  { cep: "R TrA", src: "5824464493705913472", P: 3.38927, WH: 4.668, plx: 1.5432, ePlx: 0.0161, zp: -0.0164 },
+  { cep: "V386 Cyg", src: "1968971582984827136", P: 5.25766, WH: 5.146, plx: 0.8638, ePlx: 0.0125, zp: -0.0298 },
+  { cep: "R Mus", src: "5855468247702904704", P: 7.50988, WH: 4.222, plx: 1.0656, ePlx: 0.0175, zp: -0.0101 },
+  { cep: "DR Vel", src: "5313887130948758016", P: 11.19846, WH: 5.433, plx: 0.5047, ePlx: 0.0134, zp: -0.0149 },
+  { cep: "U Car", src: "5338359442320395904", P: 38.79100, G: 5.9048, BP: 6.5351, RP: 5.0971, WH: 3.226, plx: 0.5530, ePlx: 0.0226, zp: -0.0084 },
+  { cep: "WZ Sgr", src: "4094784475310672128", P: 21.84748, G: 7.5338, BP: 8.3985, RP: 6.6522, WH: 4.196, plx: 0.5742, ePlx: 0.0277, zp: -0.0377 },
+  { cep: "RY Sco", src: "4041690364529590144", P: 20.32950, G: 7.3083, BP: 8.2758, RP: 6.3582, WH: 3.639, plx: 0.7279, ePlx: 0.0321, zp: -0.0359 },
+  { cep: "VY Car", src: "5351161399793209984", P: 18.88145, G: 7.1617, BP: 7.8409, RP: 6.4025, WH: 4.467, plx: 0.5535, ePlx: 0.0167, zp: -0.0115 },
+  { cep: "X Cyg", src: "1870258975238302208", P: 16.37655, G: 6.0862, BP: 6.6361, RP: 5.3242, WH: 3.583, plx: 0.8842, ePlx: 0.0199, zp: -0.0255 },
+  { cep: "SZ Cyg", src: "2071433765909167232", P: 15.11440, G: 8.8054, BP: 9.7145, RP: 7.9060, WH: 5.283, plx: 0.4186, ePlx: 0.0124, zp: -0.0265 },
+  { cep: "TX Cyg", src: "2161786374436607616", P: 14.71220, G: 8.4159, BP: 9.6853, RP: 7.2638, WH: 3.816, plx: 0.7954, ePlx: 0.0186, zp: -0.0337 },
+  { cep: "SV Vel", src: "5351331755370445056", P: 14.09568, G: 8.1620, BP: 8.7907, RP: 7.3610, WH: 5.471, plx: 0.4211, ePlx: 0.0175, zp: -0.0131 },
 ];
 const FIELD_KEY = "kauguste-redel:valjatsefeiidid-seoses";
 
@@ -1505,7 +1585,7 @@ async function resolveTarget(text) {
 
 /* ---------- Gaia query ---------- */
 
-const FIELDS = ["src", "ra", "dec", "plx", "eplx", "pmra", "pmdec", "g", "bprp", "ruwe"];
+const FIELDS = ["src", "ra", "dec", "plx", "eplx", "pmra", "pmdec", "g", "bprp", "ruwe", "pscol", "solved"];
 
 async function querySource(s, c, radius, gmax, onWait) {
   const k = s.cols;
@@ -1601,6 +1681,9 @@ function parseCSV(text) {
     d.src[i] = f[0].replace(/"/g, "");
     for (let j = 1; j < FIELDS.length; j++) d[FIELDS[j]][i] = num(f[j]);
   }
+  // each star's zero-point and its corrected parallax, which every calculation uses
+  d.zp = d.g.map((g, i) => zeroPoint(g, d.bprp[i], d.pscol[i], d.ra[i], d.dec[i], d.solved[i]));
+  d.pc = d.plx.map((p, i) => p - d.zp[i]);
   return d;
 }
 
@@ -1616,34 +1699,35 @@ function percentile(a, q) {
 
 function computeStats(idx) {
   const d = S.d;
-  const off = -ZP;     // the zero-point correction is always applied
   const use = idx;
 
   let sw = 0, swp = 0;
   for (const i of use) {
     const w = 1 / (d.eplx[i] * d.eplx[i]);
     sw += w;
-    swp += w * (d.plx[i] + off);
+    swp += w * d.pc[i];
   }
   const n = use.length;
   const wmean = swp / sw;
   const estat = 1 / Math.sqrt(sw);
   const etot = Math.hypot(estat, SYS);
   let chi2 = 0;
-  for (const i of use) chi2 += ((d.plx[i] + off - wmean) / d.eplx[i]) ** 2;
+  for (const i of use) chi2 += ((d.pc[i] - wmean) / d.eplx[i]) ** 2;
+  // mean correction of the stars, for the text of the formula
+  const zcorr = -use.reduce((a, i) => a + d.zp[i], 0) / use.length;
 
   // parallax outliers beyond 3 IQR from the quartiles (Tukey's far-out fences); only marked, not left out
   let fences = null;
   const outliers = new Set();
   if (n >= 5) {
-    const p = use.map((i) => d.plx[i] + off);
+    const p = use.map((i) => d.pc[i]);
     const q1 = percentile(p, 0.25), q3 = percentile(p, 0.75), iqr = q3 - q1;
     fences = [q1 - 3 * iqr, q3 + 3 * iqr];
     use.forEach((i, k) => { if (p[k] < fences[0] || p[k] > fences[1]) outliers.add(i); });
   }
 
   return {
-    use, off, n, wmean, estat, etot, fences, outliers,
+    use, n, wmean, estat, etot, zcorr, fences, outliers,
     redchi2: n > 1 ? chi2 / (n - 1) : NaN,
   };
 }
@@ -1712,8 +1796,8 @@ function baseLayout(extra = {}) {
   };
 }
 
-// Shift-click on a point of a plot calls fn with the point's customdata (the name of a field Cepheid
-// or a galaxy); points without customdata cannot be clicked. The handler is bound once per plot.
+// Shift-click on a point of a plot calls fn with the point's customdata (the name of a galaxy);
+// points without customdata cannot be clicked. The handler is bound once per plot.
 function onShiftClick(id, fn) {
   const gd = $(id);
   if (gd.dataset.shiftClick) return;
@@ -1938,7 +2022,7 @@ function drawHist() {
     return;
   }
   const d = S.d;
-  const all = st.use.map((i) => d.plx[i] + st.off);
+  const all = st.use.map((i) => d.pc[i]);
   let lo = Math.min(...all), hi = Math.max(...all);
   if (hi - lo < 1e-3) { lo -= 0.05; hi += 0.05; }
   const q1 = percentile(all, 0.25), q3 = percentile(all, 0.75);
@@ -1954,9 +2038,9 @@ function drawHist() {
   const showAll = $("histAll").checked;
   let field = null, cutNote = "";
   if (showAll) {
-    const q1 = percentile(d.plx, 0.25) + st.off, q3 = percentile(d.plx, 0.75) + st.off;
-    const cutHi = Math.max(hi, percentile(d.plx, 0.99) + st.off), cutLo = Math.min(lo, q1 - 3 * (q3 - q1));
-    const every = d.plx.map((p) => p + st.off);
+    const q1 = percentile(d.pc, 0.25), q3 = percentile(d.pc, 0.75);
+    const cutHi = Math.max(hi, percentile(d.pc, 0.99)), cutLo = Math.min(lo, q1 - 3 * (q3 - q1));
+    const every = d.pc;
     field = every.filter((p) => p >= cutLo && p <= cutHi);
     const nHi = every.filter((p) => p > cutHi).length, nLo = every.length - field.length - nHi;
     cutNote = [nHi && L(`${fmt(nHi)} tähte, kus p > ${fmtN(cutHi, 2)} mas`, `${fmt(nHi)} stars with p > ${fmtN(cutHi, 2)} mas`), nLo && L(`${fmt(nLo)} tähte, kus p < ${fmtN(cutLo, 2)} mas`, `${fmt(nLo)} stars with p < ${fmtN(cutLo, 2)} mas`)]
@@ -1984,7 +2068,7 @@ function drawHist() {
   });
   // a narrow short line above the x-axis for the parallax of every outlier, the selected stars beyond the
   // dotted limits, so that they stand out even where a bin holds just one star; one path keeps it fast
-  const rugPath = st.use.filter((i) => st.outliers.has(i)).map((i) => `M${d.plx[i] + st.off},0V0.06`).join("");
+  const rugPath = st.use.filter((i) => st.outliers.has(i)).map((i) => `M${d.pc[i]},0V0.06`).join("");
   const rug = {
     type: "path", xref: "x", yref: "paper", layer: "above", path: rugPath,
     line: { color: css("--text-1"), width: 1.5 }, opacity: 0.8,
@@ -2025,7 +2109,7 @@ function updateHistStar() {
   S.histStarOn = S.hl != null;
   if (S.histStarOn) {
     const [r0, r1] = gd._fullLayout.xaxis.range;
-    const p = S.d.plx[S.hl] + st.off, f = (p - r0) / (r1 - r0);
+    const p = S.d.pc[S.hl], f = (p - r0) / (r1 - r0);
     const color = css("--accent"), label = `${fmtN(p, 4)} mas`, y = 0.76;   // below the label of the mean at the top
     const font = { size: 12, color: css("--text-1") }, bgcolor = css("--surface");
     if (f >= 0 && f <= 1) {
@@ -2063,9 +2147,9 @@ function drawPlxStats() {
       <div class="tile"><div class="label">${L("Ühe tähe tüüpiline viga", "Typical error of one star")} σ<sub>p</sub></div><div class="value">${fmtN(typ, typ < 0.1 ? 3 : 2)}</div><div class="unit">${L("mas (mediaan)", "mas (median)")}</div></div>
       <div class="tile"><div class="label">${L("Keskmise statistiline viga", "Statistical error of the mean")} 1/√Σw<sub>i</sub></div><div class="value">${valErr(st.estat, st.estat)[1]}</div><div class="unit">mas</div></div>
     </div>
-    <p class="formula">${L(`Kaalutud keskmine ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, kaal w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, parallaksi nullpunkti parandusega +${fmtN(-ZP, 3)} mas.
+    <p class="formula">${L(`Kaalutud keskmine ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, kaal w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, iga tähe parallaksile on liidetud tema nullpunkti parandus (Lindegren jt 2021), mis sõltub tähe heledusest, värvist ja asukohast; nendel tähtedel keskmiselt +${fmtN(st.zcorr, 3)} mas.
     Viga: statistiline 1/√Σw<sub>i</sub> = ${fmtN(st.estat, 4)} mas ja Gaia süsteemne ${fmtN(SYS, 3)} mas, liidetud ruutudena.`,
-    `Weighted mean ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, weight w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, with the parallax zero-point correction of +${fmtN(-ZP, 3)} mas.
+    `Weighted mean ⟨p⟩ = Σ w<sub>i</sub>p<sub>i</sub> / Σ w<sub>i</sub>, weight w<sub>i</sub> = 1/σ<sub>i</sub><sup>2</sup>, where each star's parallax has its own zero-point correction added (Lindegren et al. 2021), which depends on the brightness, colour and position of the star; for these stars +${fmtN(st.zcorr, 3)} mas on average.
     Error: statistical 1/√Σw<sub>i</sub> = ${fmtN(st.estat, 4)} mas and the Gaia systematic ${fmtN(SYS, 3)} mas, added in quadrature.`)}</p>
     <div class="calib-row"><button type="button" class="primary" id="calcDist"${S.distOn ? " disabled" : ""}>${L("Arvuta kaugus", "Compute the distance")}</button>` +
     (S.distOn ? `<span class="hint">${L("Kaugus on allpool ja muutub koos valikuga.", "The distance is below and changes with the selection.")}</span>` : "") + `</div>`;
@@ -2201,8 +2285,8 @@ function measureCluster(cl) {
   $("go").focus({ preventScroll: true });
 }
 
-// own parallax of a field Cepheid, with the same zero-point correction and systematic floor as a cluster
-const fieldPlx = (x) => ({ plx: x.plx - ZP, e: Math.hypot(x.ePlx, SYS) });
+// own parallax of a field Cepheid, corrected by its own zero-point, with the systematic floor of a cluster
+const fieldPlx = (x) => ({ plx: x.plx - x.zp, e: Math.hypot(x.ePlx, SYS) });
 
 // Cepheid with a distance s and its absolute Wesenheit magnitude M_H^W, or null without a distance
 function cepheidPoint(x, s, field) {
@@ -2218,11 +2302,15 @@ function cepheidPoints(clusterOnly) {
   return pts.filter(Boolean);
 }
 
+// Intrinsic width of the W_H period-luminosity relation (mag), added in quadrature to each
+// Cepheid's error in the fit: without it the two or three most precise clusters set the line.
+const PL_SCATTER = 0.08;
+
 // Weighted least-squares line M = a (log P - 1) + b.
 function fitPL(pts) {
   let sw = 0, sx = 0, sy = 0, sxx = 0, sxy = 0;
   for (const p of pts) {
-    const w = 1 / (p.eM * p.eM), x = p.logP - 1;
+    const w = 1 / (p.eM * p.eM + PL_SCATTER * PL_SCATTER), x = p.logP - 1;
     sw += w; sx += w * x; sy += w * p.M; sxx += w * x * x; sxy += w * x * p.M;
   }
   const det = sw * sxx - sx * sx;
@@ -2259,10 +2347,13 @@ function drawCepheids() {
     return row(x, s, cepheidPoint(x, s, false), `<td>${esc(x.cluster)}</td>`, act);
   });
   $("cepBody").innerHTML = rows.join("");
+  // field Cepheids can be added only with two cluster distances saved; removing always works
+  const locked = done.size < 2;
+  $("fieldLock").hidden = !locked;
   $("fieldBody").innerHTML = byPeriod(FIELD_CEPHEIDS).map((x) => {
     const on = S.fieldOn.has(x.cep);
     const s = fieldPlx(x);
-    const act = `<button type="button" data-field="${esc(x.cep)}"${on ? "" : ' class="primary"'}>${on ? L("Eemalda seosest", "Remove from the relation") : L("Lisa seosesse", "Add to the relation")}</button>`;
+    const act = `<button type="button" data-field="${esc(x.cep)}"${on ? "" : locked ? " disabled" : ' class="primary"'}>${on ? L("Eemalda seosest", "Remove from the relation") : L("Lisa seosesse", "Add to the relation")}</button>`;
     return row(x, s, on ? cepheidPoint(x, s, true) : null, "", act);
   }).join("");
   drawPL();
@@ -2275,12 +2366,17 @@ function drawPL() {
   const sub = "H";
   const pubText = `${L("Avaldatud seos", "Published relation")} (${pub.ref}): ${plFormula(pub, sub, false)}.`;
   if (!pts.length) {
+    $("plTools").hidden = true;
     emptyPlot("pl", L("Salvesta ülal vähemalt kahe parve kaugus.", "Save the distances of at least two clusters above."));
     $("fit").innerHTML = pubText;
     return;
   }
   const fit = pts.length >= 2 ? fitPL(pts) : null;
-  const xs = pts.map((p) => p.logP);
+  // with two cluster distances saved, the field Cepheids not in the relation are shown in grey
+  const showField = cepheidPoints(true).length >= 2;
+  $("plTools").hidden = !showField;
+  const spare = showField ? FIELD_CEPHEIDS.filter((x) => !S.fieldOn.has(x.cep)).map((x) => cepheidPoint(x, fieldPlx(x), true)) : [];
+  const xs = [...pts, ...spare].map((p) => p.logP);
   const lo = Math.min(0.5, ...xs) - 0.05, hi = Math.max(1.2, ...xs) + 0.05;
   const line = (f) => [lo, hi].map((x) => f.a * (x - 1) + f.b);
   const traces = [{
@@ -2291,17 +2387,20 @@ function drawPL() {
     type: "scatter", mode: "lines", x: [lo, hi], y: line(fit),
     hoverinfo: "skip", line: { color: css("--accent"), width: 2, dash: "dash" },
   });
-  for (const field of [false, true]) {
-    const q = pts.filter((p) => p.field === field);
+  const groups = [
+    [spare, true, { size: 9, symbol: "diamond-open", color: css("--field"), line: { width: 1.5 } }, L("ei ole seoses", "not in the relation")],
+    [pts.filter((p) => !p.field), false, { size: 8, color: css("--sel"), line: { width: 1, color: css("--surface") } }, ""],
+    [pts.filter((p) => p.field), true, { size: 9, symbol: "diamond-open", color: css("--accent"), line: { width: 1.5 } }, ""],
+  ];
+  for (const [q, field, marker, note] of groups) {
     if (!q.length) continue;
     traces.push({
       type: "scatter", mode: "markers", x: q.map((p) => p.logP), y: q.map((p) => p.M),
       error_y: { type: "data", array: q.map((p) => p.eM), color: css("--field"), thickness: 1, width: 0 },
-      text: q.map((p) => `${p.cep} (${field ? L("väljatsefeiid", "field Cepheid") : p.cluster})<br>P = ${fmtN(p.P, 3)} ${L("ööp", "d")}<br>M<sub>${sub}</sub><sup>W</sup> = ${fmtN(p.M, 2)} ± ${fmtN(p.eM, 2)} mag`),
+      text: q.map((p) => `${p.cep} (${field ? L("väljatsefeiid", "field Cepheid") : p.cluster}${note ? `, ${note}` : ""})<br>P = ${fmtN(p.P, 3)} ${L("ööp", "d")}<br>M<sub>${sub}</sub><sup>W</sup> = ${fmtN(p.M, 2)} ± ${fmtN(p.eM, 2)} mag`),
       hovertemplate: "%{text}<extra></extra>",
       customdata: field ? q.map((p) => p.cep) : undefined,
-      marker: field ? { size: 9, symbol: "diamond-open", color: css("--accent"), line: { width: 1.5 } }
-                    : { size: 8, color: css("--sel"), line: { width: 1, color: css("--surface") } },
+      marker,
     });
   }
   Plotly.react("pl", traces, baseLayout({
@@ -2309,14 +2408,29 @@ function drawPL() {
     xaxis: axis(L("log P (P ööpäevades)", "log P (P in days)"), { range: [lo, hi] }),
     yaxis: axis(`M<sub>${sub}</sub><sup>W</sup> (mag)`, { autorange: "reversed" }),
   }), CONFIG);
-  onShiftClick("pl", toggleField);
+  onFieldClick();
   const nf = pts.filter((p) => p.field).length;
   const n = L(`${fmt(pts.length)} ${pts.length === 1 ? "tsefeiid" : "tsefeiidi"}` + (nf ? `, neist ${fmt(nf)} väljatsefeiidi` : ""),
     `${fmt(pts.length)} ${pts.length === 1 ? "Cepheid" : "Cepheids"}` + (nf ? `, ${fmt(nf)} of them field Cepheids` : ""));
   const own = !fit ? `${n}. ${L("Sirge sobitamiseks on vaja vähemalt kahte tsefeiidi.", "Fitting a line needs at least two Cepheids.")}`
     : pts.length >= 3 ? `${L("Sinu seos", "Your relation")}: <b>${plFormula(fit, sub, true)}</b> · ${n}.`
     : `${L("Sinu seos", "Your relation")}: <b>${plFormula(fit, sub, false)}</b> · ${n}; ${L("vigade hindamiseks on vaja vähemalt kolme tsefeiidi.", "estimating the errors needs at least three Cepheids.")}`;
-  $("fit").innerHTML = `${own}<br>${pubText}`;
+  const tip = showField && !nf ? `<br>${L("Parvedes on vähe pika perioodiga tsefeiide. Lisa seosesse hallid väljatsefeiidid, et sirge tõus oleks täpsem.",
+    "Clusters have few long-period Cepheids. Add the grey field Cepheids to the relation to pin down the slope of the line.")}` : "";
+  $("fit").innerHTML = `${own}${tip}<br>${pubText}`;
+}
+
+// with the "Klõps lisab väljatsefeiidi" box ticked, a click on a field Cepheid adds it to the
+// relation or removes it (the handler is attached once; Plotly keeps it across redraws)
+function onFieldClick() {
+  const gd = $("pl");
+  if (gd.dataset.fieldClick) return;
+  gd.dataset.fieldClick = "1";
+  gd.on("plotly_click", (ev) => {
+    if (!$("plClick").checked) return;
+    const p = ev.points && ev.points.find((q) => q.customdata != null);
+    if (p) toggleField(p.customdata);
+  });
 }
 
 /* ---------- Part 3: Hubble law ---------- */
@@ -3032,7 +3146,7 @@ function makeHover() {
   S.hover = d.src.map((_, i) =>
     `Gaia DR3 ${d.src[i]}<br>G = ${fmtN(d.g[i], 2)}` +
     (d.bprp[i] !== null ? `, BP−RP = ${fmtN(d.bprp[i], 2)}` : "") +
-    `<br>p = ${fmtN(d.plx[i], 3)} ± ${fmtN(d.eplx[i], 3)} mas` +
+    `<br>p = ${fmtN(d.plx[i], 3)} ± ${fmtN(d.eplx[i], 3)} mas (${L("nullpunkt", "zero point")} ${fmtN(d.zp[i], 3)} mas)` +
     `<br>μ = (${fmtN(d.pmra[i], 2)}; ${fmtN(d.pmdec[i], 2)}) ${L("mas/a", "mas/yr")}`);
 }
 
@@ -3066,9 +3180,9 @@ function clearSelection() {
 function downloadSelection() {
   if (!S.idx || !S.idx.length) return;
   const d = S.d;
-  const rows = ["source_id,ra,dec,parallax,parallax_error,pmra,pmdec,phot_g_mean_mag,bp_rp,ruwe"];
+  const rows = ["source_id,ra,dec,parallax,parallax_error,pmra,pmdec,phot_g_mean_mag,bp_rp,ruwe,pseudocolour,astrometric_params_solved,zero_point"];
   for (const i of S.idx) {
-    rows.push([d.src[i], d.ra[i], d.dec[i], d.plx[i], d.eplx[i], d.pmra[i], d.pmdec[i], d.g[i], d.bprp[i] ?? "", d.ruwe[i]].join(","));
+    rows.push([d.src[i], d.ra[i], d.dec[i], d.plx[i], d.eplx[i], d.pmra[i], d.pmdec[i], d.g[i], d.bprp[i] ?? "", d.ruwe[i], d.pscol[i] ?? "", d.solved[i], d.zp[i].toFixed(4)].join(","));
   }
   const blob = new Blob([rows.join("\n") + "\n"], { type: "text/csv" });
   const a = document.createElement("a");

@@ -441,8 +441,12 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
 - The distance is `d = 1000 / ⟨p⟩` pc, where `⟨p⟩` is the inverse-variance
   weighted mean parallax in mas. The parallaxes are averaged before inverting,
   because the mean of 1/p is biased.
-- The global DR3 parallax zero-point of −0.017 mas (Lindegren et al. 2021)
-  is always corrected.
+- Each star's parallax is corrected by its own DR3 zero-point (Lindegren et
+  al. 2021), which depends on G, colour and ecliptic latitude, as in the
+  `gaiadr3_zeropoint` package. For five-parameter solutions `nu_eff` is
+  computed from BP − RP, because GAVO's table lacks it. For faint cluster
+  members the zero-point is about −0.03 mas; the global −0.017 mas would
+  put the cluster Cepheids about 0.1 mag above the published relation.
 - A 0.010 mas systematic error is added in quadrature to the statistical
   error. Angularly correlated parallax errors do not average down
   (Lindegren et al. 2021; Maíz Apellániz et al. 2021).
@@ -456,8 +460,14 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
   `W_H = F160W − 0.386 (F555W − F814W)`, the same system as the galaxy
   Cepheids. The absolute magnitude is `M_H^W = W_H + 5 log10(p / mas) − 10`.
   Here p is the stored cluster parallax, or for a field Cepheid its own
-  *Gaia* parallax with the same zero-point correction. The fit is
-  `M_H^W = a (log P − 1) + b`, weighted by the parallax errors.
+  *Gaia* parallax corrected by its own zero-point, stored in the code. The fit is
+  `M_H^W = a (log P − 1) + b`, weighted by `1/(σ² + 0.08²)`: the parallax
+  error plus the 0.08 mag intrinsic width of the relation, so that the few
+  most precise clusters do not set the line alone. Once two cluster
+  distances are saved, the field Cepheids not in the relation show as grey
+  diamonds; with the "Klõps lisab väljatsefeiidi" box ticked, a click adds
+  or removes one. Clusters have few long-period Cepheids, so the field
+  Cepheids pin down the slope.
 - The published relation is `M_H^W = −5.914 − 3.29 (log P − 1)` (Cruz Reyes &
   Anderson 2023).
 - A galaxy distance modulus is the weighted mean of `W_H − M_H^W(P)` over its
