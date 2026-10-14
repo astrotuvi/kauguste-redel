@@ -53,7 +53,7 @@ The English tab names are:
 - **Cepheids:** Pulsation, Measuring the period, Leavitt's law, Dust and Wesenheit.
 - **Supernovae:** Explosion, Light curve, Standardisation, Small scatter.
 - **Hubble law:** Redshift, Expansion, Accelerating expansion, Hubble time, Hubble tension.
-- **Exercise:** Introduction, Query, Table, Plots, Distance; Cepheids in clusters, Field Cepheids, Period–luminosity; Galaxies, Hubble law; Supernovae.
+- **Exercise:** Introduction, Query, Table, Plots, Distance; Cepheids in clusters, Field Cepheids, Period–luminosity; Galaxies, Hubble law; Supernovae, Hubble tension.
 
 Links between pages name tabs by these English names (for example "Small
 scatter" on the Hubble law page), so a renamed tab must be renamed in its

@@ -225,6 +225,16 @@ ol.steps li > span { padding-top: 4px; }
 .plot-side { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; margin-top: 6px; }
 .plot-side .plot { height: auto; min-height: 0; margin-top: 0; }
 .plot-side .side .tiles { grid-template-columns: 1fr; margin-top: 0; }
+/* the Hubble tension plot of part 4, an SVG scaled to fit its cell */
+.ten-wrap { min-height: 0; }
+#ten { display: block; width: 100%; height: 100%; font-family: inherit; }
+#ten .gridline { stroke: var(--grid); stroke-width: 1; }
+#ten .axisline { stroke: var(--axis); stroke-width: 1; fill: none; }
+#ten .tick { fill: var(--text-2); font-size: 11px; }
+#ten .grp { fill: var(--text-1); font-size: 13px; font-weight: 600; }
+#ten .row { fill: var(--text-2); font-size: 12px; }
+#ten .val { fill: var(--text-3); font-size: 11px; }
+#ten .note { fill: var(--text-3); font-size: 12px; }
 .side-choice { margin-bottom: 12px; }
 .side-choice label { font-size: 0.78rem; color: var(--text-2); font-weight: 550; }
 .side-choice .calib-row { margin-top: 4px; }
@@ -420,6 +430,7 @@ footer a { color: inherit; }
   .grid.quad .plot { height: 340px; margin-top: 6px; }
   .card.fill .plot { flex: none; height: 340px; }
   .plot-side { grid-template-columns: minmax(0, 1fr); }
+  #ten { height: auto; }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
   .tiles { grid-template-columns: 1fr; }
   .query-layout { grid-template-columns: minmax(0, 1fr); }
@@ -549,7 +560,7 @@ footer a { color: inherit; }
       <li><a class="toc-part" href="#osa-4"><span data-l="et">4. osa: Ia tüüpi supernoovad</span><span data-l="en">Part 4: Type Ia supernovae</span></a>
         <p data-l="et">Supernoovadega mõõda Universumi paisumist sadade megaparsekite kaugusel.</p>
         <p data-l="en">Measure the expansion of the Universe hundreds of megaparsecs away with supernovae.</p>
-        <div class="toc-tabs"><a href="#snIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#supernovae"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></a><a href="#snHubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
+        <div class="toc-tabs"><a href="#snIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#supernovae"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></a><a href="#snHubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a><a href="#snTension"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></a></div></li>
     </ol>
   </nav>
   </div>
@@ -956,6 +967,7 @@ footer a { color: inherit; }
         <button type="button" role="tab" id="tabSnIntro" data-tab="snIntro" aria-controls="paneSnIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
         <button type="button" role="tab" id="tabSn" data-tab="supernovae" aria-controls="paneSn" aria-selected="false" tabindex="-1"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></button>
         <button type="button" role="tab" id="tabSnHub" data-tab="snHubble" aria-controls="paneSnHub" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></button>
+        <button type="button" role="tab" id="tabSnTen" data-tab="snTension" aria-controls="paneSnTen" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></button>
       </div>
     </div>
 
@@ -972,11 +984,13 @@ footer a { color: inherit; }
       <li><span>Vali supernoovade heledus ja vajuta „Kasuta heledust“: galaktikate kaugused tulevad 3. osast. <a class="go" href="#supernovae" data-go="supernovae">Supernoovad →</a></span></li>
       <li><span>Vaata tabelist, kui heledad on supernoovad 3. osa galaktikates. <a class="go" href="#supernovae" data-go="supernovae">Supernoovad →</a></span></li>
       <li><span>Loe kaugete supernoovade kiiruse ja kauguse seosest Hubble'i konstant ja võrdle seda 3. osa ja Plancki satelliidi väärtusega. <a class="go" href="#snHubble" data-go="snHubble">Hubble'i seadus →</a></span></li>
+      <li><span>Võrdle oma 3. ja 4. osa tulemust teiste H<sub>0</sub> mõõtmistega. <a class="go" href="#snTension" data-go="snTension">Hubble'i pinge →</a></span></li>
     </ol>
     <ol class="steps" data-l="en">
       <li><span>Choose the supernova luminosity and press “Use the luminosity”: the distances of the galaxies come from part 3. <a class="go" href="#supernovae" data-go="supernovae">Supernovae →</a></span></li>
       <li><span>See in the table how bright the supernovae in the galaxies of part 3 are. <a class="go" href="#supernovae" data-go="supernovae">Supernovae →</a></span></li>
       <li><span>Read off the Hubble constant from the velocity and distance of the distant supernovae, and compare it with the value of part 3 and that of the Planck satellite. <a class="go" href="#snHubble" data-go="snHubble">Hubble law →</a></span></li>
+      <li><span>Compare your results of parts 3 and 4 with other measurements of H<sub>0</sub>. <a class="go" href="#snTension" data-go="snTension">Hubble tension →</a></span></li>
     </ol>
     </div>
 
@@ -1051,6 +1065,24 @@ footer a { color: inherit; }
       </div>
     </section>
     <section class="card" id="snHubEmpty"><p class="empty"><span data-l="et">Kaugete supernoovade Hubble'i seadus ilmub, kui vahelehel „Supernoovad“ on heledus rakendatud.</span><span data-l="en">The Hubble law of the distant supernovae appears once a luminosity has been applied in the “Supernovae” tab.</span></p></section>
+    </div>
+
+    <div role="tabpanel" class="pane fit compact" id="paneSnTen" aria-labelledby="tabSnTen" hidden>
+    <section class="card fill" id="tenCard">
+      <div class="card-head">
+        <div>
+          <h2><span data-l="et">H<sub>0</sub> mõõtmised ja sinu tulemused</span><span data-l="en">Measurements of H<sub>0</sub> and your results</span></h2>
+          <p class="hint" data-l="et">Iga rida on üks H<sub>0</sub> mõõtmine 1σ veaga: sinised varasest Universumist, punased kauguste redelist, hallid muude meetoditega ja oranžid sinu enda: 3. osa sinu perioodi-heleduse seosega ja 4. osa sinu supernoovade heledusega M<sub>B</sub>, sõltumata menüüdes valitust.
+            Ribad on Plancki ja SH0ES-i väärtused koos veaga. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a></p>
+          <p class="hint" data-l="en">Each row is a measurement of H<sub>0</sub> with its 1σ error: blue from the early Universe, red from the distance ladder, grey with other methods and orange your own: part 3 with your period–luminosity relation and part 4 with your supernova luminosity M<sub>B</sub>, whatever is chosen in the menus.
+            The bands are the Planck and SH0ES values with their errors. <a class="more" href="hubble.html#pinge">Read more →</a></p>
+        </div>
+      </div>
+      <div class="plot-side">
+        <div class="ten-wrap"><svg id="ten" preserveAspectRatio="xMidYMin meet" role="img" aria-label="H₀ mõõtmised eri meetoditega ja sinu tulemused" data-en-aria-label="Measurements of H₀ with different methods and your results"></svg></div>
+        <div class="side" id="tenSide"></div>
+      </div>
+    </section>
     </div>
   </div>
 
@@ -1257,6 +1289,24 @@ const FAR_SN = [0.02343,15.605,0.02344,15.580,0.02352,15.586,0.02357,15.319,0.02
 const C_KMS = 299792.458;
 const H0_PLANCK = 67.4;              // km/s/Mpc, Planck Collaboration (2020)
 const MB_SH0ES = { M: -19.253, e: 0.027 };   // supernova absolute magnitude, Riess et al. (2022)
+// Published H0 values for the Hubble tension tab of part 4 (km/s/Mpc, 1σ; lo and hi for unequal errors), by group
+// (e early Universe, l distance ladder, o other methods). A copy of H0_DATA in hubble.html.
+const H0_DATA = [
+  { grp: "Varane Universum", en: "Early Universe" },
+  { name: "Planck (taustkiirgus)", en: "Planck (CMB)", v: 67.4, e: 0.5, k: "e", ref: "Planck Collaboration 2020" },
+  { name: "ACT DR6 (taustkiirgus)", en: "ACT DR6 (CMB)", v: 66.11, e: 0.79, k: "e", ref: "Louis et al. 2025" },
+  { name: "SPT-3G (taustkiirgus)", en: "SPT-3G (CMB)", v: 66.66, e: 0.6, k: "e", ref: "Camphuis et al. 2025" },
+  { name: "DESI: BAO + nukleosüntees", en: "DESI: BAO + nucleosynthesis", v: 68.51, e: 0.58, k: "e", ref: "DESI Collaboration 2025" },
+  { grp: "Kauguste redel", en: "Distance ladder" },
+  { name: "SH0ES: tsefeiidid ja Ia (HST)", en: "SH0ES: Cepheids and Ia (HST)", v: 73.04, e: 1.04, k: "l", ref: "Riess et al. 2022" },
+  { name: "SH0ES: JWST valim", en: "SH0ES: JWST sample", v: 72.6, e: 2.0, k: "l", ref: "Riess et al. 2024" },
+  { name: "CCHP: TRGB ja Ia", en: "CCHP: TRGB and Ia", v: 70.39, e: 1.94, k: "l", ref: "Freedman et al. 2025" },
+  { grp: "Muud meetodid", en: "Other methods" },
+  { name: "gravitatsiooniläätsed (TDCOSMO)", en: "gravitational lenses (TDCOSMO)", v: 71.6, lo: 3.3, hi: 3.9, k: "o", ref: "TDCOSMO Collaboration 2025" },
+  { name: "maserid (MCP)", en: "masers (MCP)", v: 73.9, e: 3.0, k: "o", ref: "Pesce et al. 2020" },
+  { name: "gravitatsioonilained (GW170817)", en: "gravitational waves (GW170817)", v: 70.0, lo: 8, hi: 12, k: "o", ref: "Abbott et al. 2017" },
+];
+const H0_SH0ES = { H: 73.04, e: 1.04 }, E_PLANCK = 0.5;
 // Small correction for the expansion of the Universe while the light travelled:
 // v = cz (1 + (1 - q0) z / 2) with deceleration parameter q0 = -0.55, as in SH0ES.
 const EXPANSION = (1 - -0.55) / 2;
@@ -2311,7 +2361,12 @@ function fitHubble(gals, cal) {
 
 // The Hubble law, and the choice of relation, appear only once the user has fitted an own
 // W_H period-luminosity relation in part 2 (at least two Cepheids).
+// parts 3 and 4 and the Hubble tension tab, which shows their H0 values
 function drawHubble() {
+  drawHubbleParts();
+  drawTension();
+}
+function drawHubbleParts() {
   const ready = cepheidPoints(true).length >= 2;   // field Cepheids alone do not unlock it
   // derived quantities appear only after a relation has been applied with "Kasuta seost"
   const used = ready && S.calibUsed;
@@ -2428,6 +2483,35 @@ function pageRange(key, n) {
 // Until "Kasuta heledust" is pressed only the supernova magnitudes are shown; afterwards the derived
 // quantities, the plot and H0 follow the current results of part 3, with the supernova luminosity
 // chosen in the menu: the mean M_B of the part 3 galaxies or the SH0ES value.
+// mean absolute peak magnitude of the supernovae in the given galaxies, with its standard error and the
+// scatter; null for fewer than two galaxies
+function meanMB(gals) {
+  const n = gals.length;
+  if (n < 2) return null;
+  const Ms = gals.map((g) => g.mb - g.mu);
+  const M = Ms.reduce((a, b) => a + b, 0) / n;
+  const sd = Math.sqrt(Ms.reduce((a, v) => a + (v - M) ** 2, 0) / (n - 1));
+  return { M, e: sd / Math.sqrt(n), sd, n };
+}
+
+// H0 from the distant supernovae with the luminosity { M, e }: the fit through the origin, with the
+// scatter about the line and the error of M added in quadrature
+function fitFarSN(cal) {
+  const pts = [];
+  for (let k = 0; k < FAR_SN.length; k += 2) {
+    const z = FAR_SN[k], m = FAR_SN[k + 1];
+    pts.push({ d: 10 ** ((m - cal.M) / 5 - 5), v: C_KMS * z * (1 + EXPANSION * z) });
+  }
+  let sdd = 0, sdv = 0;
+  for (const p of pts) { sdd += p.d * p.d; sdv += p.d * p.v; }
+  const H = sdv / sdd;
+  let rss = 0;
+  for (const p of pts) rss += (p.v - H * p.d) ** 2;
+  const eStat = Math.sqrt(rss / (pts.length - 1) / sdd);
+  const eCal = H * (Math.LN10 / 5) * cal.e;
+  return { pts, H, eH: Math.hypot(eStat, eCal) };
+}
+
 function drawSupernovae(gals) {
   $("snInfo").textContent = "";
   const used = gals.filter((g) => !S.galOff.has(g.name));
@@ -2445,13 +2529,10 @@ function drawSupernovae(gals) {
   }
 
   // the mean M_B of the selected galaxies is always shown; the chosen value is used below
-  let own = null, ownLine;
-  if (used.length >= 2) {
-    const Ms = used.map((g) => g.mb - g.mu);
-    const n = Ms.length;
-    const M = Ms.reduce((a, b) => a + b, 0) / n;
-    const sd = Math.sqrt(Ms.reduce((a, v) => a + (v - M) ** 2, 0) / (n - 1));
-    own = { M, e: sd / Math.sqrt(n) };
+  const own = meanMB(used);
+  let ownLine;
+  if (own) {
+    const { M, sd, n } = own;
     const [mV, mE] = valErr(M, own.e);
     ownLine = L(`Supernoovade keskmine absoluutne tähesuurus maksimumis 3. osa galaktikatest: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
       (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag).`, `Mean absolute peak magnitude of the supernovae from the galaxies of part 3: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
@@ -2467,21 +2548,7 @@ function drawSupernovae(gals) {
     $("snH0").innerHTML = "";
     return;
   }
-  const M = cal.M, eM = cal.e;
-
-  const pts = [];
-  for (let k = 0; k < FAR_SN.length; k += 2) {
-    const z = FAR_SN[k], m = FAR_SN[k + 1];
-    pts.push({ d: 10 ** ((m - M) / 5 - 5), v: C_KMS * z * (1 + EXPANSION * z) });
-  }
-  let sdd = 0, sdv = 0;
-  for (const p of pts) { sdd += p.d * p.d; sdv += p.d * p.v; }
-  const H = sdv / sdd;
-  let rss = 0;
-  for (const p of pts) rss += (p.v - H * p.d) ** 2;
-  const eStat = Math.sqrt(rss / (pts.length - 1) / sdd);
-  const eCal = H * (Math.LN10 / 5) * eM;
-  const eH = Math.hypot(eStat, eCal);
+  const { pts, H, eH } = fitFarSN(cal);
   const dMax = Math.max(...pts.map((p) => p.d)) * 1.05;
   Plotly.react("snHub", [
     { type: "scatter", mode: "lines", x: [0, dMax], y: [0, H * dMax], hoverinfo: "skip", line: { color: css("--accent"), width: 2, dash: "dash" } },
@@ -2507,6 +2574,105 @@ function drawSupernovae(gals) {
     Kauguste redeli ja kosmilise taustkiirguse põhjal leitud H<sub>0</sub> erinevus on tuntud kui Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a>`,
     `${fmt(pts.length)} supernovae. For comparison: ${local}the Planck satellite (cosmic microwave background) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
     The difference between the H<sub>0</sub> from the distance ladder and from the microwave background is known as the Hubble tension. <a class="more" href="hubble.html#pinge">Read more →</a>`) + `</p>`;
+}
+
+// The Hubble tension tab: the published H0 values and the user's own from parts 3 and 4, as rows with
+// error bars from the top down, with the Planck and SH0ES values as bands behind them. Drawn in SVG,
+// as the same plot on the Hubble law page.
+// The user's own H0 values, whatever is chosen in the menus of parts 3 and 4: part 3 with the user's
+// own period-luminosity relation, and part 4 with the user's own M_B. That M_B comes from the galaxy
+// distances of part 3 with the relation applied there, which may be the published one; the H0 from it is
+// still the user's own. The galaxies left out in part 3 are left out here too.
+function ownH0() {
+  if (cepheidPoints(true).length < 2) return [];
+  const own = fitPL(cepheidPoints()), rel = S.calibUsed === "pub" ? calibration() : own;
+  const keep = (cal) => GALAXIES.map((g) => galaxyFit(g, cal)).filter((g) => !S.galOff.has(g.name));
+  const g3 = keep(own), g4 = rel === own ? g3 : keep(rel);
+  if (!g3.length) return [];
+  const p3 = fitHubble(g3, own), mb = meanMB(g4), p4 = mb && fitFarSN(mb);
+  return [
+    { name: "Sinu 3. osa: tsefeiidid", en: "Your part 3: Cepheids", v: p3.H, e: p3.e, k: "u" },
+    ...(p4 ? [{ name: "Sinu 4. osa: supernoovad", en: "Your part 4: supernovae", v: p4.H, e: p4.eH, k: "u",
+      note: rel === own ? "" : L("Sinu M<sub>B</sub> on leitud 3. osas kasutatud avaldatud perioodi-heleduse seosega.",
+        "Your M<sub>B</sub> was found with the published period–luminosity relation used in part 3.") }] : []),
+  ];
+}
+
+function drawTension() {
+  const mine = ownH0();
+  const rows = H0_DATA.concat([{ grp: "Sinu tulemused", en: "Your results" }], mine);
+  const label = (r) => L(r.name, r.en);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    parent.appendChild(e);
+    return e;
+  };
+  // text with "M_B" drawn as M with a subscript B
+  const text = (parent, x, y, str, cls, anchor = "start") => {
+    const e = el("text", { x, y, class: cls, "text-anchor": anchor }, parent);
+    const [before, after] = str.split("M_B");
+    e.append(before);
+    if (after !== undefined) {
+      e.append("M");
+      el("tspan", { dy: 4, "font-size": "0.78em" }, e).textContent = "B";
+      el("tspan", { dy: -4 }, e).textContent = after;
+    }
+    return e;
+  };
+  const RH = 21, H = 40 + rows.length * RH + 40;
+  const svg = $("ten");
+  svg.setAttribute("viewBox", `0 0 760 ${H}`);
+  svg.textContent = "";
+  // 60–84 km/s/Mpc fits the published values; the axis widens to fit the user's own values with their errors,
+  // with a coarser tick step when it becomes wide
+  const ends = mine.flatMap((m) => [m.v - m.e - 1, m.v + m.e + 1]);
+  const span = Math.max(84, ...ends) - Math.min(60, ...ends);
+  const step = span <= 30 ? 2 : span <= 75 ? 5 : 10;
+  const lo = Math.floor(Math.min(60, ...ends) / step) * step, hi = Math.ceil(Math.max(84, ...ends) / step) * step;
+  const B = { x0: 270, x1: 748, y0: 22, y1: H - 40 };
+  const X = (v) => B.x0 + (v - lo) / (hi - lo) * (B.x1 - B.x0);
+  for (let v = lo; v <= hi; v += step) {
+    el("line", { x1: X(v), y1: B.y0, x2: X(v), y2: B.y1, class: "gridline" }, svg);
+    text(svg, X(v), B.y1 + 15, String(v), "tick", "middle");
+  }
+  el("rect", { x: B.x0, y: B.y0, width: B.x1 - B.x0, height: B.y1 - B.y0, class: "axisline" }, svg);
+  text(svg, (B.x0 + B.x1) / 2, B.y1 + 32, "H₀ (km/s/Mpc)", "row", "middle");
+  // the labels lean away from each other, Planck to the left and SH0ES to the right, so that they never overlap
+  for (const [v, e, color, name, left] of [[H0_PLANCK, E_PLANCK, "--sel", "Planck", true], [H0_SH0ES.H, H0_SH0ES.e, "--cep", "SH0ES", false]]) {
+    el("rect", { x: X(v - e), y: B.y0, width: X(v + e) - X(v - e), height: B.y1 - B.y0, fill: `var(${color})`, opacity: 0.14 }, svg);
+    text(svg, left ? X(v + e) : X(v - e), B.y0 - 6, name, "row", left ? "end" : "start").setAttribute("fill", `var(${color})`);
+  }
+  const COL = { e: "var(--sel)", l: "var(--cep)", o: "var(--field)", u: "var(--accent)" };
+  rows.forEach((r, k) => {
+    const y = B.y0 + 20 + k * RH;
+    if (r.grp) { text(svg, 8, y + 4, L(r.grp, r.en), "grp"); return; }
+    text(svg, 20, y + 4, label(r), "row");
+    const a = r.v - (r.lo ?? r.e), b = r.v + (r.hi ?? r.e);
+    const g = el("g", {}, svg);
+    el("title", {}, g).textContent = `${label(r)}: H₀ = ${fmtN(r.v, r.k === "u" ? 1 : 2)} ` +
+      (r.lo ? `−${fmtN(r.lo, 1)} +${fmtN(r.hi, 1)}` : `± ${fmtN(r.e, r.k === "u" ? 1 : 2)}`) + " km/s/Mpc" + (r.ref ? ` (${r.ref})` : "");
+    el("line", { x1: X(Math.max(lo, a)), y1: y, x2: X(Math.min(hi, b)), y2: y, stroke: COL[r.k], "stroke-width": 2 }, g);
+    el("circle", { cx: X(Math.min(hi, Math.max(lo, r.v))), cy: y, r: 4.5, fill: COL[r.k], stroke: "var(--surface)", "stroke-width": 1.5 }, g);
+    text(svg, B.x0 - 8, y + 4, r.k === "u" ? fmtN(r.v, 1) : fmtN(r.v, String(r.v).split(".")[1]?.length ?? 0), "val", "end");
+  });
+  if (!mine.length) text(svg, (B.x0 + B.x1) / 2, B.y0 + 20 + (rows.length - 1) * RH + 4, L("Salvesta 2. osas vähemalt kahe parve kaugus.", "Save the distances of at least two clusters in part 2."), "note", "middle");
+
+  // the differences in km/s/Mpc, per cent and σ
+  const d = H0_SH0ES.H - H0_PLANCK, s = Math.hypot(H0_SH0ES.e, E_PLANCK);
+  const vs = (m, H, e, name) => `${name} ${fmtN(m.v - H, 1).replace(/^(?!−)/, "+")} km/s/Mpc (${fmtN(Math.abs(m.v - H) / Math.hypot(m.e, e), 1)}σ)`;
+  $("tenSide").innerHTML = `<p class="fit">${L(`SH0ES ja Plancki vahe on <b>${fmtN(d, 2)} km/s/Mpc</b>, ${fmtN(100 * d / H0_PLANCK, 1)} %, ehk ${fmtN(d / s, 1)}σ.`,
+    `The difference between SH0ES and Planck is <b>${fmtN(d, 2)} km/s/Mpc</b>, ${fmtN(100 * d / H0_PLANCK, 1)} %, or ${fmtN(d / s, 1)}σ.`)}</p>` +
+    (mine.length ? mine.map((m) => {
+      const [hV, hE] = valErr(m.v, m.e);
+      return `<p class="fit">${label(m)}: <b>H<sub>0</sub> = ${hV} ± ${hE}</b>. ${L("Erinevus", "Difference from")} ${vs(m, H0_PLANCK, E_PLANCK, L("Planckist", "Planck"))}, ${vs(m, H0_SH0ES.H, H0_SH0ES.e, L("SH0ES-ist", "SH0ES"))}.${m.note ? ` ${m.note}` : ""}</p>`;
+    }).join("") : `<p class="fit">${L("Sinu tulemusi veel pole. Need tulevad sinu enda perioodi-heleduse seosest, milleks salvesta 2. osas vähemalt kahe parve kaugus.", "No results of yours yet. They come from your own period–luminosity relation; for it, save the distances of at least two clusters in part 2.")}</p>`) +
+    `<p class="formula">${L(`Kauguste redel mõõdab H<sub>0</sub> praegu, samm-sammult nagu see harjutus. Taustkiirgus annab H<sub>0</sub>, mida kosmoloogia standardmudel ennustab 380 000 aasta vanuse Universumi järgi.
+      Need erinevad umbes 8 %: see on Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a>`,
+      `The distance ladder measures H<sub>0</sub> today, step by step like this exercise. The microwave background gives the H<sub>0</sub> that the standard model of cosmology predicts from the Universe at 380,000 years.
+      They differ by about 8 %: this is the Hubble tension. <a class="more" href="hubble.html#pinge">Read more →</a>`)}</p>` +
+    `<p class="hint">${H0_DATA.filter((r) => r.ref).map((r) => r.ref).join("; ")}.</p>`;
 }
 
 function drawGalaxyPL(g, cal) {

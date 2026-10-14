@@ -156,11 +156,23 @@ time 1/H₀. Galaxies can be left out of the fit with the checkboxes.
 
 ### Type Ia supernovae
 
-The fourth part has three tabs like the third: **Sissejuhatus** (the
-steps), **Supernoovad** (the choice of luminosity and the paged supernova
-table) and **Hubble'i seadus** (the velocity–distance plot of the distant
-supernovae, with H₀ to the right of it). In both parts the H₀ and Hubble time
-tiles and the explanation sit in a column to the right of the plot.
+The fourth part has four tabs: **Sissejuhatus** (the steps), **Supernoovad**
+(the choice of luminosity and the paged supernova table), **Hubble'i seadus**
+(the velocity–distance plot of the distant supernovae, with H₀ to the right
+of it) and **Hubble'i pinge**. In parts 3 and 4 the H₀ and Hubble time tiles
+and the explanation sit in a column to the right of the plot.
+
+**Hubble'i pinge** plots published values of H₀ from the early Universe, the
+distance ladder and other methods, the same as the **Mõõtmised** view on the
+Hubble law page, with the Planck and SH0ES values as bands. It always adds
+the user's own H₀ values, whatever is chosen in the menus of parts 3 and 4,
+as soon as the period–luminosity relation of part 2 exists: part 3 with that
+relation, and part 4 with the user's own M_B. That M_B comes from the galaxy
+distances of part 3 with the relation applied there, which may be the
+published one; the column to the right then says so. The galaxies left out
+in part 3 are left out here too. The x-axis widens to fit these values. The
+column to the right gives their difference from Planck and from SH0ES in
+km/s/Mpc and σ. The published values are copied from `hubble.html`.
 
 Its content appears once a relation has been applied in the third part. At
 first it lists only the supernova peak magnitudes. Choose the supernova
@@ -380,8 +392,9 @@ follows from the Phillips relation of the standard candles page.
 ### Hubble law page
 
 `hubble.html` is linked from the table of contents, from the words "Hubble'i
-seaduseni" in the introduction, from the H₀ texts of parts 3 and 4 and the
-expansion note of the distant supernova plot, from the supernovae page and
+seaduseni" in the introduction, from the H₀ texts of parts 3 and 4, the
+expansion note of the distant supernova plot and the Hubble'i pinge tab of
+part 4, from the supernovae page and
 from the sentence on Edwin Hubble on the Cepheids page. It has five tabs, and
 the address keeps the tab (`#punanihe`, `#paisumine`, `#kiirenemine`, `#vanus`,
 `#pinge`). Distances and ages come from a flat model with matter and dark
