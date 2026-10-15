@@ -2860,10 +2860,8 @@ function drawSupernovae(gals, rel) {
       <div class="tile"><div class="label">${L("Hubble'i konstant", "Hubble constant")} H<sub>0</sub></div><div class="value">${hV} <small>± ${hE}</small></div><div class="unit">km/s/Mpc</div></div>
       <div class="tile"><div class="label">${L("Hubble'i aeg", "Hubble time")} 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">${L("miljardit aastat", "billion years")}</div></div>
     </div>
-    <p class="formula">` + L(`${fmt(pts.length)} supernoovat. Võrdluseks: ${local}Plancki satelliit (kosmiline taustkiirgus) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
-    Kauguste redeli ja kosmilise taustkiirguse põhjal leitud H<sub>0</sub> erinevus on tuntud kui Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a>`,
-    `${fmt(pts.length)} supernovae. For comparison: ${local}the Planck satellite (cosmic microwave background) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.
-    The difference between the H<sub>0</sub> from the distance ladder and from the microwave background is known as the Hubble tension. <a class="more" href="hubble.html#pinge">Read more →</a>`) + `</p>`;
+    <p class="formula">` + L(`${fmt(pts.length)} supernoovat. Võrdluseks: ${local}Plancki satelliit (kosmiline taustkiirgus) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.`,
+    `${fmt(pts.length)} supernovae. For comparison: ${local}the Planck satellite (cosmic microwave background) ${fmtN(H0_PLANCK, 1)} km/s/Mpc.`) + `</p>`;
 }
 
 // The Hubble tension tab: the published H0 values and the user's own from parts 3 and 4, as rows with
