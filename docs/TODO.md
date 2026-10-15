@@ -41,7 +41,8 @@ kilometres, standardised, recognisable, neighbour. Check that this is wanted.
 | Mõõda ise / Lõpeta | Measure / Finish | Hubble law page |
 | taustkiirgus | microwave background, CMB in tight places | Hubble law page |
 | Sobitusse | In the fit | part 3 |
-| Kasuta seost / Kasuta heledust | Use the relation / Use the luminosity | parts 3–4 |
+| Kontrolli / Kustuta | Check / Delete | part 3 |
+| Kasuta heledust | Use the luminosity | part 4 |
 
 ### Tab and view names
 
@@ -53,7 +54,7 @@ The English tab names are:
 - **Cepheids:** Pulsation, Measuring the period, Leavitt's law, Dust and Wesenheit.
 - **Supernovae:** Explosion, Light curve, Standardisation, Small scatter.
 - **Hubble law:** Redshift, Expansion, Accelerating expansion, Hubble time, Hubble tension.
-- **Exercise:** Introduction, Query, Table, Plots, Distance; Cepheids in clusters, Field Cepheids, Period–luminosity; Galaxies, Hubble law; Supernovae, Hubble tension.
+- **Exercise:** Introduction, Query, Table, Plots, Distance; Cepheids in clusters, Field Cepheids, Period–luminosity; Galaxies, Distances, Hubble law; Supernovae, Hubble tension.
 
 Links between pages name tabs by these English names (for example "Small
 scatter" on the Hubble law page), so a renamed tab must be renamed in its

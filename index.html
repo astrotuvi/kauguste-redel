@@ -39,6 +39,7 @@
   --warn-text: #7a4a00;
   --err-bg: #fdeaea;
   --err-text: #9b2323;
+  --good: #1f8a4c;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -63,6 +64,7 @@
     --warn-text: #f0c56e;
     --err-bg: #3a1a1a;
     --err-text: #f29a9a;
+    --good: #4cc27a;
   }
 }
 :root[data-theme="dark"] {
@@ -87,6 +89,7 @@
   --warn-text: #f0c56e;
   --err-bg: #3a1a1a;
   --err-text: #f29a9a;
+  --good: #4cc27a;
 }
 
 * { box-sizing: border-box; }
@@ -240,6 +243,7 @@ ol.steps li > span { padding-top: 4px; }
 .side-choice label { font-size: 0.78rem; color: var(--text-2); font-weight: 550; }
 .side-choice .calib-row { margin-top: 4px; }
 .side-choice select { flex: 1 1 100%; min-width: 0; }
+#hubPubInfo .hint { margin-top: 4px; }
 /* a single plot card that fills its tab */
 .pane.fit > .card.fill { display: flex; flex-direction: column; container-type: normal; }
 .card.fill .plot { flex: 1 1 0; min-height: 0; height: auto; }
@@ -418,9 +422,24 @@ table.data-table tr.cur td { background: color-mix(in srgb, var(--accent) 12%, t
 .cluster-name { color: var(--text-2); font-weight: 500; }
 .cluster-name:not(:empty)::before { content: " · "; }
 table.data-table tr[data-gal] { cursor: pointer; }
-table.data-table tr.gal-detail > td { text-align: left; padding: 8px 4px 12px; background: var(--bg); }
-.gal-detail .hint { margin: 0 4px; white-space: normal; }
-.plot.small { height: 300px; max-width: 720px; }
+table.data-table tr[data-gal]:focus-visible { outline: 2px solid var(--btn); outline-offset: -2px; }
+table.data-table td .done { color: var(--good); margin-left: 6px; }
+/* the galaxies of part 3: their list on the left, and the Cepheids of the chosen one with the distance
+   modulus slider on the right, filling the height of the tab */
+#galInfo { margin: 0 0 10px; }
+.gal-fit { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 14px; }
+.pane > .gal-fit > .card + .card { margin-top: 0; }
+#galListCard { align-self: start; }   /* its own height, from which rowsThatFit finds the rows that fit */
+#galFitCard { display: flex; flex-direction: column; min-height: 0; }
+#gpl { flex: 1 1 0; min-height: 240px; height: auto; }
+#galRead { min-height: 2.6em; }
+/* the distance modulus slider under the Cepheids of a galaxy */
+.mu-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 10px; }
+.mu-row label { font-size: 0.85rem; color: var(--text-2); }
+.mu-row input[type="range"] { flex: 1 1 200px; min-width: 0; accent-color: var(--btn); }
+.mu-row output { min-width: 3.5em; font-variant-numeric: tabular-nums; color: var(--text-1); }
+.ok { color: var(--good); font-weight: 600; }
+.off { color: var(--err-text); font-weight: 600; }
 
 footer { margin-top: 28px; font-size: 0.78rem; color: var(--text-3); max-width: 90ch; }
 footer a { color: inherit; }
@@ -437,6 +456,8 @@ footer a { color: inherit; }
   .grid.quad .plot { height: 340px; margin-top: 6px; }
   .card.fill .plot { flex: none; height: 340px; }
   .plot-side { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .gal-fit { grid-template-columns: minmax(0, 1fr); }
+  #gpl { flex: none; height: 340px; }
   .plot-side .side { overflow-y: visible; }
   #ten { height: auto; }
   .plot-side .side .tiles { grid-template-columns: 1fr 1fr; }
@@ -564,7 +585,7 @@ footer a { color: inherit; }
       <li><a class="toc-part" href="#osa-3"><span data-l="et">3. osa: Hubble'i seadus</span><span data-l="en">Part 3: The Hubble law</span></a>
         <p data-l="et">Tsefeiididest leia galaktikate kaugused ja Hubble'i konstant.</p>
         <p data-l="en">From Cepheids, find the distances of galaxies and the Hubble constant.</p>
-        <div class="toc-tabs"><a href="#hubIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#galaxies"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></a><a href="#hubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
+        <div class="toc-tabs"><a href="#hubIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#galaxies"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></a><a href="#galDist"><span data-l="et">Kaugused</span><span data-l="en">Distances</span></a><a href="#hubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
       <li><a class="toc-part" href="#osa-4"><span data-l="et">4. osa: Ia tüüpi supernoovad</span><span data-l="en">Part 4: Type Ia supernovae</span></a>
         <p data-l="et">Supernoovadega mõõda Universumi paisumist sadade megaparsekite kaugusel.</p>
         <p data-l="en">Measure the expansion of the Universe hundreds of megaparsecs away with supernovae.</p>
@@ -877,6 +898,7 @@ footer a { color: inherit; }
       <div class="tabs" role="tablist" id="p3Tabs" aria-label="3. osa" data-en-aria-label="Part 3">
         <button type="button" role="tab" id="tabHubIntro" data-tab="hubIntro" aria-controls="paneHubIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
         <button type="button" role="tab" id="tabGal" data-tab="galaxies" aria-controls="paneGal" aria-selected="false" tabindex="-1"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></button>
+        <button type="button" role="tab" id="tabGalDist" data-tab="galDist" aria-controls="paneGalDist" aria-selected="false" tabindex="-1"><span data-l="et">Kaugused</span><span data-l="en">Distances</span></button>
         <button type="button" role="tab" id="tabHub" data-tab="hubble" aria-controls="paneHub" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></button>
       </div>
     </div>
@@ -888,61 +910,96 @@ footer a { color: inherit; }
       magnitude</a> from the <a href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener">period–luminosity relation</a>, and comparing it with the <a href="https://en.wikipedia.org/wiki/Apparent_magnitude" target="_blank" rel="noopener">apparent magnitude</a> gives the distance of the galaxy. Together with the recession velocity of the galaxy (from its <a href="https://en.wikipedia.org/wiki/Redshift" target="_blank" rel="noopener">redshift</a>) this gives the <a href="https://en.wikipedia.org/wiki/Hubble%27s_law" target="_blank" rel="noopener">Hubble constant</a>.</p>
 
     <ol class="steps" data-l="et">
-      <li><span>Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
-      <li><span>Vaata galaktikate kaugusi tabelis. Klõps galaktika real näitab selle tsefeiide. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
-      <li><span>Vali, millised galaktikad lähevad Hubble'i seaduse sobitusse. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
+      <li><span>Vali galaktika ja nihuta selle tsefeiidid liuguriga oma perioodi-heleduse seosele: nihe on galaktika kauguse moodul. Mida täpsemalt need seosele sätid, seda väiksem on kauguse viga. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
+      <li><span>Vaata galaktikate kaugusi tabelis ja vali, millised galaktikad lähevad Hubble'i seaduse sobitusse. <a class="go" href="#galDist" data-go="galDist">Kaugused →</a></span></li>
       <li><span>Loe kiiruse ja kauguse seosest Hubble'i konstant H<sub>0</sub>. <a class="go" href="#hubble" data-go="hubble">Hubble'i seadus →</a></span></li>
     </ol>
     <ol class="steps" data-l="en">
-      <li><span>Choose a period–luminosity relation and press “Use the relation” to find the distances of the galaxies. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
-      <li><span>Look at the distances of the galaxies in the table. A click on the row of a galaxy shows its Cepheids. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
-      <li><span>Choose which galaxies go into the fit of the Hubble law. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
+      <li><span>Choose a galaxy and shift its Cepheids with the slider onto your period–luminosity relation: the shift is the distance modulus of the galaxy. The more precisely you put them on the relation, the smaller the error of the distance. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
+      <li><span>Look at the distances of the galaxies in the table and choose which galaxies go into the fit of the Hubble law. <a class="go" href="#galDist" data-go="galDist">Distances →</a></span></li>
       <li><span>Read off the Hubble constant H<sub>0</sub> from the relation between velocity and distance. <a class="go" href="#hubble" data-go="hubble">Hubble law →</a></span></li>
     </ol>
     <p class="hint" data-l="et">Nendes 29 galaktikas on Hubble'i kosmoseteleskoop mõõtnud kokku üle 2000 tsefeiidi.</p>
     <p class="hint" data-l="en">In these 29 galaxies the Hubble Space Telescope has measured more than 2000 Cepheids in all.</p>
     </div>
 
-    <div role="tabpanel" class="pane" id="paneGal" aria-labelledby="tabGal" hidden>
-    <section class="card">
+    <div role="tabpanel" class="pane fit" id="paneGal" aria-labelledby="tabGal" hidden>
+    <p class="fit" id="galInfo"></p>
+    <div class="gal-fit" id="galFit">
+    <section class="card" id="galListCard">
       <div class="card-head">
         <div>
           <h2><span data-l="et">Tsefeiididega galaktikad</span><span data-l="en">Galaxies with Cepheids</span></h2>
-          <p class="hint" data-l="et">Rakenda galaktikate tsefeiididele oma perioodi-heleduse seos, et leida galaktikate kaugused.</p>
-          <p class="hint" data-l="en">Apply your period–luminosity relation to the Cepheids of the galaxies to find their distances.</p>
+          <p class="hint" data-l="et">Klõpsa galaktika real, et selle tsefeiide paremal seosele nihutada. ✓ märgib mõõdetud galaktikaid.</p>
+          <p class="hint" data-l="en">Click the row of a galaxy to shift its Cepheids onto the relation on the right. ✓ marks the measured galaxies.</p>
         </div>
       </div>
-      <p class="hint calib-prompt" id="calibPrompt"><span data-l="et">Vali perioodi-heleduse seos ja vajuta „Kasuta seost“, et leida galaktikate kaugused.</span><span data-l="en">Choose a period–luminosity relation and press “Use the relation” to find the distances of the galaxies.</span></p>
-      <div class="calib-row" id="calibRow">
-        <select id="calib" class="calib-menu" aria-label="Perioodi-heleduse seos" data-en-aria-label="Period–luminosity relation">
-          <option value="own" data-en-text="My relation (part 2)">Minu seos (2. osa)</option>
-          <option value="pub" data-en-text="Published relation">Avaldatud seos</option>
-        </select>
-        <button type="button" class="primary calib-apply" id="calibApply"><span data-l="et">Kasuta seost</span><span data-l="en">Use the relation</span></button>
+      <div class="table-wrap">
+        <table class="data-table">
+        <thead><tr>
+          <th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas mõõdetud tsefeiidide arv" data-en-title="Number of Cepheids measured in the galaxy"><span data-l="et">Tsefeiide</span><span data-l="en">Cepheids</span></th><th title="Eemaldumiskiirus v = cz galaktika punanihkest, mis on parandatud pekuliaarse kiiruse jaoks" data-en-title="Recession velocity v = cz from the redshift of the galaxy, corrected for its peculiar velocity"><span data-l="et">Kiirus (km/s)</span><span data-l="en">Velocity (km/s)</span></th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses" data-en-title="Whether the galaxy is used in the fit of the Hubble law"><span data-l="et">Sobitusse</span><span data-l="en">In the fit</span></th>
+        </tr></thead>
+          <tbody id="galBody"></tbody>
+        </table>
       </div>
-      <p class="fit" id="calibInfo"></p>
-      <p class="hint table-note" id="galNote"><span data-l="et">Kauguse moodul μ on galaktika tsefeiidide W<sub>H</sub> − M<sub>H</sub><sup>W</sup>(P) kaalutud keskmine. Kiirus v = cz,
-        kus z on galaktikas plahvatanud supernoova punanihe, mis on parandatud galaktika pekuliaarse kiiruse jaoks. Klõpsa galaktika real, et näha selle tsefeiide; uus klõps peidab need. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></span>
-        <span data-l="en">The distance modulus μ is the weighted mean of W<sub>H</sub> − M<sub>H</sub><sup>W</sup>(P) of the Cepheids of the galaxy. The velocity v = cz,
-        where z is the redshift of the supernova that exploded in the galaxy, corrected for the peculiar velocity of the galaxy. Click the row of a galaxy to see its Cepheids; another click hides them. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></span></p>
-      <div id="galWrap">
-        <div class="table-wrap">
-          <table class="data-table">
-          <thead><tr>
-            <th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas plahvatanud Ia tüüpi supernoova" data-en-title="Type Ia supernova that exploded in the galaxy"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th><th title="Galaktikas mõõdetud tsefeiidide arv" data-en-title="Number of Cepheids measured in the galaxy"><span data-l="et">Tsefeiide</span><span data-l="en">Cepheids</span></th><th title="Kauguse moodul μ = m − M: tsefeiidide W_H − M_H^W(P) kaalutud keskmine" data-en-title="Distance modulus μ = m − M: weighted mean of W_H − M_H^W(P) of the Cepheids">μ (mag)</th><th title="Kaugus d = 10^(μ/5 − 5) megaparsekites" data-en-title="Distance d = 10^(μ/5 − 5) in megaparsecs"><span data-l="et">Kaugus (Mpc)</span><span data-l="en">Distance (Mpc)</span></th><th title="Eemaldumiskiirus v = cz supernoova punanihkest" data-en-title="Recession velocity v = cz from the redshift of the supernova"><span data-l="et">Kiirus (km/s)</span><span data-l="en">Velocity (km/s)</span></th><th title="Selle galaktika kiiruse ja kauguse suhe — üksiku galaktika hinnang Hubble'i konstandile" data-en-title="Ratio of the velocity and distance of this galaxy — the estimate of the Hubble constant from a single galaxy">v / d (km/s/Mpc)</th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses" data-en-title="Whether the galaxy is used in the fit of the Hubble law"><span data-l="et">Sobitusse</span><span data-l="en">In the fit</span></th>
-          </tr></thead>
-            <tbody id="galBody"></tbody>
-          </table>
-        </div>
-        <div class="pager" id="galPager">
-          <span id="galPageInfo"></span>
-          <button type="button" data-page="first" aria-label="Esimene lehekülg" data-en-aria-label="First page"><span data-l="et">« Esimene</span><span data-l="en">« First</span></button>
-          <button type="button" data-page="prev" aria-label="Eelmine lehekülg" data-en-aria-label="Previous page"><span data-l="et">‹ Eelmine</span><span data-l="en">‹ Previous</span></button>
-          <button type="button" data-page="next" aria-label="Järgmine lehekülg" data-en-aria-label="Next page"><span data-l="et">Järgmine ›</span><span data-l="en">Next ›</span></button>
-          <button type="button" data-page="last" aria-label="Viimane lehekülg" data-en-aria-label="Last page"><span data-l="et">Viimane »</span><span data-l="en">Last »</span></button>
-        </div>
+      <div class="pager" id="galPager">
+        <span id="galPageInfo"></span>
+        <button type="button" data-page="first" aria-label="Esimene lehekülg" data-en-aria-label="First page">«</button>
+        <button type="button" data-page="prev" aria-label="Eelmine lehekülg" data-en-aria-label="Previous page">‹</button>
+        <button type="button" data-page="next" aria-label="Järgmine lehekülg" data-en-aria-label="Next page">›</button>
+        <button type="button" data-page="last" aria-label="Viimane lehekülg" data-en-aria-label="Last page">»</button>
       </div>
     </section>
+    <section class="card" id="galFitCard">
+      <div class="card-head">
+        <div>
+          <h2 id="galFitTitle"></h2>
+          <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mida on nihutatud sinu kauguse mooduli μ võrra; joon on sinu perioodi-heleduse seos. Nihuta tsefeiidid liuguriga joonele ja vajuta „Kontrolli“.
+            Mida rohkem sinu μ parimast sobitusest erineb, seda suurem on selle viga. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+          <p class="hint" data-l="en">Each point is a Cepheid, shifted by your distance modulus μ; the line is your period–luminosity relation. Shift the Cepheids onto the line with the slider and press “Check”.
+            The more your μ differs from the best fit, the larger its error. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
+        </div>
+      </div>
+      <div class="plot" id="gpl"></div>
+      <div class="mu-row"><label for="galMuIn"><span data-l="et">Kauguse moodul μ</span><span data-l="en">Distance modulus μ</span></label>
+        <input type="range" id="galMuIn" min="27" max="36" step="0.01" value="30"><output for="galMuIn" id="galMuOut"></output>
+        <button type="button" class="primary" id="galCheck"><span data-l="et">Kontrolli</span><span data-l="en">Check</span></button>
+        <button type="button" id="galDelete" title="Kustutab selle galaktika kauguse mõõtmise" data-en-title="Deletes the distance measurement of this galaxy"><span data-l="et">Kustuta</span><span data-l="en">Delete</span></button></div>
+      <p class="fit" id="galRead" aria-live="polite"></p>
+    </section>
+    </div>
+    </div>
+
+    <div role="tabpanel" class="pane" id="paneGalDist" aria-labelledby="tabGalDist" hidden>
+    <section class="card" id="distCard">
+      <div class="card-head">
+        <div>
+          <h2><span data-l="et">Galaktikate kaugused</span><span data-l="en">Distances of the galaxies</span></h2>
+          <p class="hint" data-l="et">Kauguse moodulid, mille leidsid vahelehel „Galaktikad“. Klõps galaktika real viib selle juurde tagasi.</p>
+          <p class="hint" data-l="en">The distance moduli that you found in the “Galaxies” tab. A click on the row of a galaxy takes you back to it.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+        <thead><tr>
+          <th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas mõõdetud tsefeiidide arv" data-en-title="Number of Cepheids measured in the galaxy"><span data-l="et">Tsefeiide</span><span data-l="en">Cepheids</span></th><th title="Eemaldumiskiirus v = cz galaktika punanihkest, mis on parandatud pekuliaarse kiiruse jaoks" data-en-title="Recession velocity v = cz from the redshift of the galaxy, corrected for its peculiar velocity"><span data-l="et">Kiirus (km/s)</span><span data-l="en">Velocity (km/s)</span></th><th title="Kauguse moodul μ = m − M, mille leidsid tsefeiide seosele nihutades" data-en-title="Distance modulus μ = m − M that you found by shifting the Cepheids onto the relation">μ (mag)</th><th title="Kaugus d = 10^(μ/5 − 5) megaparsekites" data-en-title="Distance d = 10^(μ/5 − 5) in megaparsecs"><span data-l="et">Kaugus (Mpc)</span><span data-l="en">Distance (Mpc)</span></th><th title="Selle galaktika kiiruse ja kauguse suhe — üksiku galaktika hinnang Hubble'i konstandile" data-en-title="Ratio of the velocity and distance of this galaxy — the estimate of the Hubble constant from a single galaxy">v / d (km/s/Mpc)</th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses" data-en-title="Whether the galaxy is used in the fit of the Hubble law"><span data-l="et">Sobitusse</span><span data-l="en">In the fit</span></th><th title="Galaktikas plahvatanud Ia tüüpi supernoova, mida kasutatakse 4. osas" data-en-title="Type Ia supernova that exploded in the galaxy, used in part 4"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th>
+        </tr></thead>
+          <tbody id="distBody"></tbody>
+        </table>
+      </div>
+      <div class="pager" id="distPager">
+        <span id="distPageInfo"></span>
+        <button type="button" data-page="first" aria-label="Esimene lehekülg" data-en-aria-label="First page"><span data-l="et">« Esimene</span><span data-l="en">« First</span></button>
+        <button type="button" data-page="prev" aria-label="Eelmine lehekülg" data-en-aria-label="Previous page"><span data-l="et">‹ Eelmine</span><span data-l="en">‹ Previous</span></button>
+        <button type="button" data-page="next" aria-label="Järgmine lehekülg" data-en-aria-label="Next page"><span data-l="et">Järgmine ›</span><span data-l="en">Next ›</span></button>
+        <button type="button" data-page="last" aria-label="Viimane lehekülg" data-en-aria-label="Last page"><span data-l="et">Viimane »</span><span data-l="en">Last »</span></button>
+      </div>
+      <p class="hint table-note"><span data-l="et">Viga sisaldab seda, kui palju sinu μ parimast sobitusest erineb. Kiirus v = cz, kus z on galaktika punanihe,
+        mis on parandatud galaktika pekuliaarse kiiruse jaoks. Mõõtmata galaktikad ei lähe sobitusse.</span>
+        <span data-l="en">The error includes how much your μ differs from the best fit. The velocity v = cz, where z is the redshift of the galaxy,
+        corrected for its peculiar velocity. Galaxies not yet measured do not go into the fit.</span></p>
+    </section>
+    <section class="card" id="distEmpty"><p class="empty"><span data-l="et">Kaugused ilmuvad, kui oled 2. osas leidnud oma perioodi-heleduse seose.</span><span data-l="en">The distances appear once you have found your period–luminosity relation in part 2.</span></p></section>
     </div>
 
     <div role="tabpanel" class="pane fit compact" id="paneHub" aria-labelledby="tabHub" hidden>
@@ -958,21 +1015,14 @@ footer a { color: inherit; }
         <div class="plot" id="hub"></div>
         <div class="side">
           <div class="side-choice">
-            <label for="calibHub"><span data-l="et">Perioodi-heleduse seos</span><span data-l="en">Period–luminosity relation</span></label>
-            <div class="calib-row">
-              <select id="calibHub" class="calib-menu">
-                <option value="own" data-en-text="My relation (part 2)">Minu seos (2. osa)</option>
-                <option value="pub" data-en-text="Published relation">Avaldatud seos</option>
-              </select>
-              <button type="button" class="primary calib-apply"><span data-l="et">Kasuta seost</span><span data-l="en">Use the relation</span></button>
-            </div>
-            <p class="hint" id="calibHubInfo"></p>
+            <label class="toggle"><input type="checkbox" id="hubPub" autocomplete="off"><span data-l="et"> Võrdlus avaldatud seosega</span><span data-l="en"> Compare with the published relation</span></label>
+            <div id="hubPubInfo"></div>
           </div>
           <div id="h0"></div>
         </div>
       </div>
     </section>
-    <section class="card" id="hubEmpty"><p class="empty"><span data-l="et">Hubble'i seadus ilmub, kui vahelehel „Galaktikad“ on perioodi-heleduse seos rakendatud.</span><span data-l="en">The Hubble law appears once a period–luminosity relation has been applied in the “Galaxies” tab.</span></p></section>
+    <section class="card" id="hubEmpty"><p class="empty"><span data-l="et">Hubble'i seadus ilmub, kui oled 2. osas leidnud oma perioodi-heleduse seose.</span><span data-l="en">The Hubble law appears once you have found your period–luminosity relation in part 2.</span></p></section>
     </div>
   </div>
 
@@ -1333,7 +1383,7 @@ const CEPHEIDS = [
 // Type Ia supernova host galaxies with HST Cepheids of SH0ES (Riess et al. 2022, ApJL 934, L7;
 // table 2 of the Pantheon+/SH0ES data release), keeping the 29 hosts with at least 20 Cepheids. c lists, per Cepheid, period (d), F160W, V - I
 // (F555W - F814W) and the total F160W error. sn names the host's supernovae; z is their Pantheon+
-// redshift zHD, corrected for peculiar velocities, and mb their standardised peak magnitude m_b_corr
+// redshift zHD, which is the redshift of the host galaxy (Carr et al. 2022) corrected for peculiar velocities, and mb their standardised peak magnitude m_b_corr
 // (mean over surveys, then over the host's supernovae; Scolnic et al. 2022, Brout et al. 2022).
 const GALAXIES = [
   { name: "M101", sn: "2011fe", mb: 9.774, z: 0.00122, c: [6.054,24.19,0.99,0.46,6.075,23.94,0.83,0.53,6.158,24.96,0.94,0.68,6.373,24.44,0.84,0.43,6.603,24,0.87,0.67,6.853,24.04,0.91,0.44,6.854,24.28,0.81,0.7,6.873,23.36,1.05,0.62,6.963,23.86,0.83,0.74,7.145,23.59,1.07,0.76,7.249,23.79,0.87,0.45,7.271,24.17,1.1,0.65,7.358,24.6,0.95,0.69,7.453,24.28,0.92,0.55,7.546,24.21,0.89,0.46,7.565,24.04,0.86,0.6,7.862,24.4,0.83,0.6,8.166,24.02,0.97,0.47,8.263,24.26,0.92,0.37,8.354,24,0.9,0.68,8.368,24.32,1.03,0.65,8.44,23.71,1.15,0.42,8.761,23.97,0.83,0.57,8.772,23.59,1,0.35,9.057,23.27,0.96,0.32,9.159,23.75,1.03,0.55,9.261,23.64,0.9,0.55,9.267,23.47,0.99,0.33,9.271,23.68,0.81,0.55,9.642,23.78,1.08,0.48,9.644,23.74,0.92,0.44,9.675,23.94,1.09,0.54,9.683,23.84,1.06,0.52,9.874,23.39,1.05,0.58,9.942,24.11,0.88,0.56,9.965,23.83,0.94,0.54,10.01,24.39,1.04,0.69,10.16,23.44,1.01,0.69,10.25,23.34,1.1,0.3,10.25,23.68,0.98,0.5,10.26,23.49,0.92,0.56,10.37,23.33,1.07,0.62,10.38,23.59,0.9,0.33,10.45,22.73,1.29,0.55,10.47,23.01,1.04,0.54,10.49,23.35,1.16,0.52,10.58,23.16,0.94,0.38,10.67,23.26,0.85,0.52,10.68,23.16,0.92,0.46,10.68,23.14,0.92,0.47,10.75,22.87,1.08,0.43,10.78,22.87,1.21,0.43,10.85,23.44,1.04,0.46,10.86,23.62,1.13,0.37,10.86,23.16,1.16,0.59,10.95,23.28,0.82,0.49,10.95,23.21,0.92,0.56,10.97,22.66,1.28,0.5,11.07,23.63,0.88,0.38,11.08,23.42,1.01,0.59,11.15,23.74,1.37,0.52,11.26,22.87,0.99,0.48,11.26,23.5,0.97,0.46,11.27,23.88,1.22,0.56,11.29,23.68,0.95,0.43,11.35,23.88,0.94,0.54,11.37,24.05,0.97,0.37,11.38,24,0.97,0.5,11.46,23.81,1.04,0.56,11.47,23.44,1.21,0.54,11.48,22.66,1.16,0.55,11.49,23.04,0.88,0.52,11.55,23.15,0.92,0.25,11.66,23.54,0.98,0.24,11.66,23.31,1.03,0.23,11.68,23.48,0.89,0.46,11.69,23.78,1.06,0.57,11.74,23.14,1.08,0.61,11.75,23.9,0.96,0.45,11.85,23.97,0.97,0.34,11.85,23.03,1.08,0.31,11.87,23.2,1,0.57,11.89,22.89,1.52,0.39,12.06,23.19,1.06,0.59,12.14,23.56,0.97,0.56,12.14,23.87,1.22,0.42,12.17,23.46,0.92,0.51,12.2,23.18,1.09,0.35,12.28,23.84,1.24,0.44,12.29,23.16,0.96,0.48,12.34,23.75,1.18,0.54,12.47,24.25,1.5,0.5,12.48,23.04,1.3,0.49,12.54,23.47,1.11,0.45,12.55,22.71,1.06,0.51,12.77,23.32,0.99,0.4,12.79,23.29,1.08,0.53,12.85,23,1.15,0.44,12.88,22.41,0.95,0.44,12.89,23.38,0.91,0.42,12.9,23.35,1.27,0.6,12.9,24.19,1.08,0.46,12.97,22.63,0.94,0.5,12.99,23.74,1.02,0.37,13.01,23.45,1.08,0.42,13.19,23.21,1.75,0.4,13.2,23.9,1.19,0.44,13.38,23.56,1.03,0.41,13.51,23.26,0.93,0.56,13.57,22.92,1.05,0.46,13.66,23.08,0.91,0.61,13.77,23.3,1.23,0.3,13.92,22.73,1.07,0.51,13.92,23.24,1.02,0.39,13.99,23.56,1.05,0.39,13.99,23.19,1.55,0.62,14.02,23.4,0.95,0.36,14.09,23.21,1.23,0.37,14.11,23.18,1.12,0.38,14.15,22.87,1.57,0.43,14.16,22.55,1.35,0.31,14.31,22.61,1.07,0.46,14.42,23.71,1.24,0.38,14.42,22.72,0.86,0.29,14.46,22.8,1.37,0.36,14.48,23.18,0.97,0.52,14.65,23.21,1.58,0.43,14.81,23.27,1.53,0.34,14.91,23.01,1.12,0.36,14.98,23.07,0.98,0.42,15.02,23.25,1,0.37,15.05,23.82,1.36,0.43,15.08,23.16,1.25,0.42,15.19,22.66,1.02,0.26,15.23,23.15,1.04,0.39,15.27,23.7,1.59,0.35,15.3,22.78,0.97,0.25,15.36,23.93,1.77,0.41,15.36,23.24,1.01,0.45,15.47,22.48,1.03,0.51,15.5,23.13,1.23,0.25,15.51,23.06,1.26,0.31,15.55,23.35,1.33,0.55,15.59,23.22,1.14,0.51,15.69,23.22,1.13,0.42,15.84,22.97,1.21,0.4,15.87,22.69,1.08,0.53,16.07,22.84,1.2,0.23,16.18,23.3,1.22,0.31,16.42,23.04,1.29,0.27,16.59,23.86,1.31,0.31,16.76,23.63,1.13,0.38,16.77,23.44,0.93,0.29,16.79,22.64,1.56,0.52,16.87,22.98,1.05,0.24,16.89,22.93,0.9,0.32,16.91,23.43,0.93,0.45,16.97,23.29,1.24,0.27,17.04,23.09,1.01,0.3,17.05,23.48,1.43,0.41,17.06,22.48,0.98,0.38,17.17,23.15,1.36,0.27,17.18,22.42,1.36,0.24,17.2,23.3,1.01,0.3,17.24,22.49,1.01,0.35,17.26,23.32,1.05,0.32,17.28,22.95,1.18,0.41,17.29,23.08,1.15,0.26,17.39,23.11,0.92,0.39,17.56,23.28,1.07,0.24,17.57,23.06,1.11,0.45,17.69,23.87,1.14,0.36,17.76,22.87,1.1,0.27,17.82,22.59,1.13,0.4,17.91,22.68,0.97,0.44,17.94,22.75,0.96,0.26,17.95,23.22,0.93,0.28,18.06,22.9,1.07,0.38,18.08,23.14,0.9,0.32,18.23,22.74,0.99,0.26,18.26,22.48,1.05,0.44,18.35,22.91,0.87,0.3,18.49,22.75,1.56,0.4,18.73,22.65,1.45,0.3,18.8,22.93,1.06,0.36,18.88,22.03,0.92,0.34,18.88,23.29,1.08,0.35,19.04,23.01,1.39,0.21,19.1,22.97,1.06,0.35,19.15,22.44,1.04,0.42,19.18,22.84,1.21,0.38,19.2,22.85,1.05,0.24,19.24,22.93,1.76,0.23,19.29,22.66,1.56,0.38,19.3,22.47,0.92,0.35,19.37,22.56,0.95,0.36,19.44,22.29,1,0.42,19.45,23,1.21,0.28,19.53,22.75,0.99,0.26,19.54,22.63,1.07,0.26,19.57,22.79,0.96,0.37,19.61,22.83,1.07,0.35,19.82,22.37,1.1,0.39,19.88,23.1,1.17,0.47,19.89,22.17,0.97,0.47,19.89,22.9,0.96,0.39,20.16,23.09,0.94,0.34,20.46,22.2,0.88,0.24,20.47,22.26,0.89,0.22,20.59,22.7,1.16,0.3,20.62,22.71,0.98,0.31,20.72,22.6,1.53,0.28,20.86,23.05,1.14,0.39,21.17,22.3,1.01,0.18,21.49,22.36,0.85,0.23,21.59,22.68,1.69,0.42,22.74,22.36,1.02,0.4,22.94,22.18,1.21,0.26,23.03,22.34,1.18,0.22,23.06,22.68,1.08,0.27,23.36,22.78,1.13,0.29,23.59,22.1,1.39,0.37,23.87,22.7,1.04,0.37,23.87,22.35,1.11,0.32,24.02,22.71,1.24,0.38,24.03,22.44,1.43,0.29,24.09,23.03,1.21,0.3,24.43,22.4,1.39,0.26,24.58,22.37,1.12,0.33,24.63,22.34,1.23,0.27,24.81,22.62,1.08,0.24,24.82,22.95,1.22,0.27,24.86,22.72,1.11,0.19,24.97,21.99,0.95,0.33,25.25,22.38,1.33,0.25,25.55,22.71,1.12,0.22,25.58,22.49,1.07,0.17,25.64,22.95,1.08,0.22,25.77,21.95,1.16,0.23,25.95,22.16,0.88,0.29,25.98,22.32,1.02,0.18,26.1,22.22,1,0.22,26.15,23.3,1.21,0.34,26.23,22.73,1.47,0.24,26.44,22.08,0.99,0.21,26.58,22.38,1.18,0.37,26.59,22.53,0.94,0.22,26.73,22.3,1.16,0.3,26.88,22.61,1.25,0.19,27.23,22.49,1.19,0.23,27.28,22.21,1.1,0.34,27.57,22.09,0.93,0.17,28.27,22.42,1.14,0.23,28.48,22.77,1.24,0.27,28.65,22.17,1.48,0.3,28.68,21.91,1.17,0.18,28.91,22.17,1.24,0.27,29.02,22.1,0.95,0.3,29.5,22.4,1.53,0.18] },
@@ -1417,6 +1467,12 @@ const FIELD_CEPHEIDS = [
   { cep: "SV Vel", src: "5351331755370445056", P: 14.09568, G: 8.1620, BP: 8.7907, RP: 7.3610, WH: 5.471, plx: 0.4211, ePlx: 0.0175, zp: -0.0131 },
 ];
 const FIELD_KEY = "kauguste-redel:valjatsefeiidid-seoses";
+// Distance moduli of the part 3 galaxies that the user has measured by shifting their Cepheids onto the
+// user's own period-luminosity relation, by galaxy name: { mu }. A measurement counts while it is within MU_TOL (mag)
+// of the best fit with the current relation, as the relation may change in part 2; its offset from the best fit adds
+// to its error.
+const GALMU_KEY = "kauguste-redel:galaktikate-kaugused";
+const MU_TOL = 0.15;
 
 // published period-luminosity relation in W_H, M = a (log P - 1) + b, for comparison; the errors are those of
 // their eq. 17, where the intercept is fitted with the slope fixed to -3.299 +- 0.015 of SH0ES
@@ -1437,7 +1493,7 @@ const S = {
   cmdRemoved: [],     // star indices of the removed-star trace in the HR diagram
   idx: null,          // combined selection (sorted indices) or null
   stats: null,
-  pages: { gal: { page: 0, size: PAGE_MIN }, sn: { page: 0, size: PAGE_MIN } },   // galaxy and supernova tables
+  pages: { gal: { page: 0, size: PAGE_MIN }, dist: { page: 0, size: PAGE_MIN }, sn: { page: 0, size: PAGE_MIN } },   // galaxy, distance and supernova tables
   distOn: false,      // cluster distance shown after "Arvuta kaugus"; reset with each new dataset
   rev: 0,             // uirevision, bumped per dataset
   token: 0,
@@ -1458,9 +1514,10 @@ const S = {
   cmdShift: 0,        // magnitude shift of the HR diagram (absolute magnitudes), for its crosshair
   stored: {},         // stored cluster parallaxes for part 2, by cluster name
   fieldOn: new Set(), // field Cepheids added to the period-luminosity relation, by name
-  calib: "own",       // period-luminosity relation chosen in the menu
-  calibUsed: null,    // relation applied with "Kasuta seost" ("own" or "pub"), or null before that
-  gal: null,          // galaxy whose Cepheids are shown below its table row, or null
+  gal: null,          // galaxy whose Cepheids are shown beside the list of part 3 (the first one to begin with)
+  galMu: {},          // distance moduli measured in part 3, by galaxy (see GALMU_KEY)
+  galTry: {},         // distance modulus slider position of each galaxy, by name
+  galCheck: null,     // { name, d } after a "Kontrolli" that was too far off: the galaxy and its μ minus the best fit
   galOff: new Set(),  // galaxies left out of the Hubble fit and the supernova calibration
   h0Local: null,      // H0 from part 3, for comparison in part 4
   ceph: [],           // listed Cepheids inside the queried field, marked in the plots
@@ -1801,6 +1858,25 @@ function baseLayout(extra = {}) {
   };
 }
 
+// Plotly.react keeps the axis ranges of a plot's first draw as the ones that "Reset axes" in the mode bar returns
+// to (a double-click uses the current ones), so after a redraw with other fixed ranges, such as another galaxy or
+// a changed relation, the button would return to stale ones. This draws a plot and makes its fixed ranges the
+// ones to return to; autoranged axes are left to Plotly. The ranges are copied first, as Plotly writes a kept
+// zoom into the layout it is given.
+function react(id, data, layout) {
+  const ranges = Object.fromEntries(["xaxis", "yaxis"].map((a) => [a, layout[a] && layout[a].range && [...layout[a].range]]));
+  return Plotly.react(id, data, layout, CONFIG).then((gd) => {
+    for (const a of ["xaxis", "yaxis"]) {
+      const r = ranges[a], ax = gd._fullLayout[a];
+      if (!r || !ax) continue;
+      ax._rangeInitial0 = r[0];
+      ax._rangeInitial1 = r[1];
+      ax._autorangeInitial = false;
+    }
+    return gd;
+  });
+}
+
 // Shift-click on a point of a plot calls fn with the point's customdata (the name of a galaxy);
 // points without customdata cannot be clicked. The handler is bound once per plot.
 function onShiftClick(id, fn) {
@@ -1936,7 +2012,7 @@ function drawSky() {
   const image = $("skyImage").checked;
   const traces = linkedTraces(raPlot, S.d.dec, true, S.ceph.map((c) => unwrapRA(c.at[0], ra0)), S.ceph.map((c) => c.at[1]), $("allSky").checked);
   traces.push(crosshairTrace("sky"));
-  return Plotly.react("sky", traces, baseLayout({
+  return react("sky", traces, baseLayout({
     dragmode: "zoom",
     // with the image, δ has a fixed range and the plot widens the α range to the shape of the plot
     xaxis: axis(L("Otsetõus α (°)", "Right ascension α (°)"), { autorange: "reversed", scaleanchor: "y", scaleratio: cosd, showgrid: !image }),
@@ -1963,7 +2039,7 @@ function drawPM() {
     dragmode: "pan",            // pan first to find the clump; the lasso is chosen from the toolbar
     xaxis: axis(`μ<sub>α*</sub> (${L("mas/a", "mas/yr")})`, { range: xr }),
     yaxis: axis(`μ<sub>δ</sub> (${L("mas/a", "mas/yr")})`, { range: yr, scaleanchor: "x", scaleratio: 1 }),
-  }), CONFIG);
+  }));
 }
 
 function drawCMD() {
@@ -2258,12 +2334,15 @@ function toggleField(name) {
 
 // remove everything this app has stored in the browser (all keys with the app prefix)
 function resetAll() {
-  if (!confirm(L("Kas kustutada kõik salvestatud parvede kaugused ja väljatsefeiidide valik?", "Delete all saved cluster distances and the choice of field Cepheids?"))) return;
+  if (!confirm(L("Kas kustutada kõik salvestatud parvede kaugused, väljatsefeiidide valik ja galaktikate kaugused?", "Delete all saved cluster distances, the choice of field Cepheids and the distances of the galaxies?"))) return;
   try {
     for (const k of Object.keys(localStorage)) if (k.startsWith("kauguste-redel:")) localStorage.removeItem(k);
   } catch { /* nothing stored */ }
   S.stored = {};
   S.fieldOn = new Set();
+  S.galMu = {};
+  S.galTry = {};
+  S.galCheck = null;
   drawResults();
   drawCepheids();
 }
@@ -2408,11 +2487,11 @@ function drawPL() {
       marker,
     });
   }
-  Plotly.react("pl", traces, baseLayout({
+  react("pl", traces, baseLayout({
     dragmode: "zoom",
     xaxis: axis(L("log P (P ööpäevades)", "log P (P in days)"), { range: [lo, hi] }),
     yaxis: axis(`M<sub>${sub}</sub><sup>W</sup> (mag)`, { autorange: "reversed" }),
-  }), CONFIG);
+  }));
   onFieldClick();
   const nf = pts.filter((p) => p.field).length;
   const n = L(`${fmt(pts.length)} ${pts.length === 1 ? "tsefeiid" : "tsefeiidi"}` + (nf ? `, neist ${fmt(nf)} väljatsefeiidi` : ""),
@@ -2440,16 +2519,19 @@ function onFieldClick() {
 
 /* ---------- Part 3: Hubble law ---------- */
 
-// the W_H period-luminosity relation chosen for the galaxies, or null when it cannot be formed
+// the user's own W_H period-luminosity relation from part 2, with which the galaxies are measured, or null when
+// it cannot be formed; the published one is only compared with in the Hubble law tab
 function calibration() {
-  const pub = PL_PUB;
-  if (S.calibUsed === "pub") return { a: pub.a, b: pub.b, ea: pub.ea, eb: pub.eb, cov: 0 };
   const pts = cepheidPoints();
   return pts.length >= 2 ? fitPL(pts) : null;
 }
+const PL_PUB_CAL = { a: PL_PUB.a, b: PL_PUB.b, ea: PL_PUB.ea, eb: PL_PUB.eb, cov: 0 };
 
-// Cepheids of a galaxy and its distance modulus, the weighted mean of W - M(P)
-function galaxyFit(g, cal) {
+// Cepheids of a galaxy and its best-fit distance modulus muFit ± eFit, the weighted mean of W - M(P). With mine,
+// the galaxy is measured (done) when the user's distance modulus is within MU_TOL of muFit; then mu is the user's,
+// off its offset from muFit and eMu adds the offset to eFit in quadrature. Otherwise mu = muFit: without mine that
+// is the automatic fit, and for an unmeasured galaxy it only sets the scale of the plots.
+function galaxyFit(g, cal, mine = true) {
   const ceph = [];
   let sw = 0, swm = 0;
   for (let k = 0; k < g.c.length; k += 4) {
@@ -2459,9 +2541,33 @@ function galaxyFit(g, cal) {
     sw += 1 / (e * e);
     swm += (W - M) / (e * e);
   }
-  const mu = swm / sw, eMu = Math.sqrt(1 / sw);
+  const muFit = swm / sw, eFit = Math.sqrt(1 / sw);
+  const u = mine ? S.galMu[g.name] : null, off = u ? u.mu - muFit : 0;
+  const done = !!u && Math.abs(off) <= MU_TOL;
+  const mu = done ? u.mu : muFit, eMu = done ? Math.hypot(eFit, off) : eFit;
   const d = 10 ** (mu / 5 - 5);                       // Mpc
-  return { ...g, ceph, mu, eMu, d, eD: d * (Math.LN10 / 5) * eMu, v: C_KMS * g.z };
+  return { ...g, ceph, muFit, eFit, mu, eMu, done, off: done ? off : 0, stale: !!u && !done,
+    d, eD: d * (Math.LN10 / 5) * eMu, v: C_KMS * g.z };
+}
+
+// rms offset (mag) of the user's distance moduli of the galaxies from their best fits. It is kept whole in the errors
+// of H0 and M_B, as the user may have shifted all the galaxies the same way.
+function alignError(gals) {
+  return gals.length ? Math.sqrt(gals.reduce((a, g) => a + g.off ** 2, 0) / gals.length) : 0;
+}
+
+// the slider position of a galaxy's distance modulus: where the user left it, the user's measurement, or 1.5 mag off
+// the best fit to start with, alternately on either side
+function galTryMu(g) {
+  const u = S.galMu[g.name];
+  if (S.galTry[g.name] != null) return S.galTry[g.name];
+  if (u) return u.mu;
+  const side = GALAXIES.findIndex((x) => x.name === g.name) % 2 ? 1 : -1;
+  return Math.min(36, Math.max(27, Math.round(10 * (g.muFit + 1.5 * side)) / 10));
+}
+
+function saveGalMu() {
+  try { localStorage.setItem(GALMU_KEY, JSON.stringify(S.galMu)); } catch { /* kept in memory only */ }
 }
 
 // mean log P - 1 of the Cepheids in the galaxies, weighted as in galaxyFit and averaged over the
@@ -2484,8 +2590,9 @@ function calError(cal) {
   return Math.sqrt(cal.eb ** 2 + HOST_X ** 2 * cal.ea ** 2 + 2 * HOST_X * (cal.cov || 0));
 }
 
-// least squares v = H0 d through the origin; the error combines the scatter about the line
-// the error of the period-luminosity relation and the systematic error MU_SYS, which scale all distances
+// least squares v = H0 d through the origin; the error combines the scatter about the line,
+// the error of the period-luminosity relation and the systematic error MU_SYS, which scale all distances,
+// and the offsets of the user's distance moduli from their best fits (alignError)
 function fitHubble(gals, cal) {
   const n = gals.length;
   let sdd = 0, sdv = 0;
@@ -2495,11 +2602,12 @@ function fitHubble(gals, cal) {
   for (const g of gals) rss += (g.v - H * g.d) ** 2;
   const eStat = n > 1 ? Math.sqrt(rss / (n - 1) / sdd) : NaN;
   const eCal = H * (Math.LN10 / 5) * calError(cal), eSys = H * (Math.LN10 / 5) * MU_SYS;
-  return { H, eStat, eCal, eSys, e: Math.hypot(eStat, eCal, eSys), n };
+  const eAlign = H * (Math.LN10 / 5) * alignError(gals);
+  // with one galaxy there is no scatter to estimate (eStat is NaN), and the error is the rest
+  return { H, eStat, eCal, eSys, eAlign, e: Math.hypot(isFinite(eStat) ? eStat : 0, eCal, eSys, eAlign), n };
 }
 
-// The Hubble law, and the choice of relation, appear only once the user has fitted an own
-// W_H period-luminosity relation in part 2 (at least two Cepheids).
+// Part 3 opens once the user has fitted an own W_H period-luminosity relation in part 2 (at least two Cepheids).
 // parts 3 and 4 and the Hubble tension tab, which shows their H0 values
 function drawHubble() {
   drawHubbleParts();
@@ -2507,63 +2615,65 @@ function drawHubble() {
 }
 function drawHubbleParts() {
   const ready = cepheidPoints(true).length >= 2;   // field Cepheids alone do not unlock it
-  // derived quantities appear only after a relation has been applied with "Kasuta seost"
-  const used = ready && S.calibUsed;
-  $("calibPrompt").hidden = $("calibRow").hidden = $("galWrap").hidden = $("galNote").hidden = !ready;
-  for (const id of ["hubCard", "snCalCard", "snHubCard"]) $(id).hidden = !used;
-  $("hubEmpty").hidden = $("snCalEmpty").hidden = $("snHubEmpty").hidden = !!used;   // drawSupernovae sets snHubEmpty
-  const [first, last] = pageRange("gal", GALAXIES.length);
-  if (!used) {
+  $("galFit").hidden = $("distCard").hidden = !ready;
+  $("distEmpty").hidden = !!ready;
+  for (const id of ["hubCard", "snCalCard", "snHubCard"]) $(id).hidden = !ready;
+  $("hubEmpty").hidden = $("snCalEmpty").hidden = $("snHubEmpty").hidden = ready;   // drawSupernovae sets snHubEmpty
+  if (!ready) {
     S.snUsed = null;
     $("snInfo").textContent = L("See osa avaneb, kui 3. osas on galaktikate kaugused leitud.", "This part opens once the distances of the galaxies have been found in part 3.");
-  }
-  if (ready && !used) {
-    $("calibInfo").textContent = "";
-    $("galBody").innerHTML = GALAXIES.slice(first, last).map((g) => `<tr><td>${esc(g.name)}</td><td>SN ${esc(g.sn)}</td><td>${fmt(g.c.length / 4)}</td>` +
-      `<td class="muted">—</td><td class="muted">—</td><td>${fmtN(C_KMS * g.z, 0)}</td><td class="muted">—</td>` +
-      `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} ${L("sobitusse", "in the fit")}"></td></tr>`).join("");
-    return;
-  }
-  if (!ready) {
-    S.calibUsed = null;
-    S.calib = "own";
-    syncMenus("calib-menu", "own");
-    $("calibInfo").innerHTML = L(`Hubble'i seaduse jaoks on vaja sinu enda perioodi-heleduse seost. Salvesta 2. osas vähemalt kahe parve kaugus. Väljatsefeiidid ainult täiendavad seost.`,
-      `The Hubble law needs your own period–luminosity relation. Save the distances of at least two clusters in part 2. Field Cepheids only add to the relation.`);
+    $("galInfo").innerHTML = L(`Galaktikate kauguste jaoks on vaja sinu enda perioodi-heleduse seost. Salvesta 2. osas vähemalt kahe parve kaugus. Väljatsefeiidid ainult täiendavad seost.`,
+      `The distances of the galaxies need your own period–luminosity relation. Save the distances of at least two clusters in part 2. Field Cepheids only add to the relation.`);
     return;
   }
   const cal = calibration();
-  const nH = cepheidPoints().length;
-  const what = S.calibUsed === "pub" ? `${L("avaldatud seos", "the published relation")} (${PL_PUB.ref})`
-    : L(`sinu seos ${nH} tsefeiidist`, `your relation from ${nH} Cepheids`);
-  $("calibInfo").innerHTML = `${L("Kasutusel", "In use")}: <b>${plFormula(cal, "H", S.calibUsed !== "pub")}</b> — ${what}.`;
-  $("calibHubInfo").innerHTML = `${L("Kasutusel", "In use")}: ${what}.`;
+  $("galInfo").innerHTML = `${L("Sinu seos", "Your relation")}: <b>${plFormula(cal, "H", true)}</b> — ${L(`${cepheidPoints().length} tsefeiidist 2. osas`, `from ${cepheidPoints().length} Cepheids in part 2`)}.`;
 
   const gals = GALAXIES.map((g) => galaxyFit(g, cal));
-  // a clicked galaxy opens a row with its Cepheid plot right below it; clicking again closes it
+  if (!gals.some((g) => g.name === S.gal)) S.gal = GALAXIES[0].name;
+  const use = (g) => `<td><input type="checkbox" data-use="${esc(g.name)}"${g.done && !S.galOff.has(g.name) ? " checked" : ""}${g.done ? "" : " disabled"} aria-label="${esc(g.name)} ${L("sobitusse", "in the fit")}"></td>`;
+
+  // the list of galaxies; a click on a row puts its Cepheids beside the list
+  let [first, last] = pageRange("gal", gals.length);
   $("galBody").innerHTML = gals.slice(first, last).map((g) => {
+    const cur = g.name === S.gal;
+    const mark = g.done ? `<span class="done" title="${L("mõõdetud", "measured")}">✓</span>` : "";
+    return `<tr data-gal="${esc(g.name)}" tabindex="0"${cur ? ' class="cur" aria-current="true"' : ""}><td>${esc(g.name)}${mark}</td><td>${fmt(g.ceph.length)}</td><td>${fmtN(g.v, 0)}</td>${use(g)}</tr>`;
+  }).join("");
+  drawGalFit(gals.find((g) => g.name === S.gal), cal);
+
+  // the distances; only the galaxies measured with the slider have one and can go into the fit
+  const dash = `<td class="muted">—</td>`;
+  [first, last] = pageRange("dist", gals.length);
+  $("distBody").innerHTML = gals.slice(first, last).map((g) => {
     const [dV, dE] = valErr(g.d, g.eD);
-    const open = g.name === S.gal;
-    return `<tr data-gal="${esc(g.name)}" aria-expanded="${open}"${open ? ' class="cur"' : ""}><td>${esc(g.name)}</td><td>SN ${esc(g.sn)}</td><td>${fmt(g.ceph.length)}</td>` +
-      `<td>${fmtN(g.mu, 2)} ± ${fmtN(g.eMu, 2)}</td><td>${dV} ± ${dE}</td><td>${fmtN(g.v, 0)}</td><td>${fmtN(g.v / g.d, 0)}</td>` +
-      `<td><input type="checkbox" data-use="${esc(g.name)}"${S.galOff.has(g.name) ? "" : " checked"} aria-label="${esc(g.name)} ${L("sobitusse", "in the fit")}"></td></tr>` +
-      (open ? `<tr class="gal-detail"><td colspan="8"><p class="hint">${L(`Galaktika ${esc(g.name)} tsefeiidid. Iga punkt on üks tsefeiid;
-        joon on perioodi-heleduse seos, mida on nihutatud galaktika kauguse mooduli võrra.`, `The Cepheids of ${esc(g.name)}. Each point is a Cepheid;
-        the line is the period–luminosity relation shifted by the distance modulus of the galaxy.`)}</p><div class="plot small" id="gpl"></div></td></tr>` : "");
+    return `<tr data-gal="${esc(g.name)}" tabindex="0"><td>${esc(g.name)}</td><td>${fmt(g.ceph.length)}</td><td>${fmtN(g.v, 0)}</td>` +
+      (g.done ? `<td>${fmtN(g.mu, 2)} ± ${fmtN(g.eMu, 2)}</td><td>${dV} ± ${dE}</td><td>${fmtN(g.v / g.d, 0)}</td>` : dash + dash + dash) + use(g) + `<td>SN ${esc(g.sn)}</td></tr>`;
   }).join("");
 
-  const cur = gals.find((g) => g.name === S.gal);
-  if (cur) drawGalaxyPL(cur, cal);
-
-  const inFit = gals.filter((g) => !S.galOff.has(g.name));
+  const done = gals.filter((g) => g.done), inFit = done.filter((g) => !S.galOff.has(g.name));
   const fit = inFit.length ? fitHubble(inFit, cal) : null;
-  const dMax = Math.max(...gals.map((g) => g.d + g.eD)) * 1.08;
+  // for comparison only: the automatic fit of the same galaxies with the published relation, measured or not
+  const pubOn = $("hubPub").checked;
+  const pub = pubOn ? GALAXIES.map((g) => galaxyFit(g, PL_PUB_CAL, false)).filter((g) => !S.galOff.has(g.name)) : [];
+  const pubFit = pub.length ? fitHubble(pub, PL_PUB_CAL) : null;
+  // the axes cover all the galaxies, so that they stay put while the galaxies are measured one by one
+  const dMax = Math.max(...gals.concat(pub).map((g) => g.d + g.eD)) * 1.08, vMax = Math.max(...gals.map((g) => g.v)) * 1.08;
   const traces = [];
+  if (pubFit) traces.push({
+    type: "scatter", mode: "lines", x: [0, dMax], y: [0, pubFit.H * dMax], hoverinfo: "skip",
+    line: { color: css("--field"), width: 1.5, dash: "dot" },
+  }, {
+    type: "scatter", mode: "markers", x: pub.map((g) => g.d), y: pub.map((g) => g.v),
+    text: pub.map((g) => `${g.name}, ${L("avaldatud seos", "published relation")}<br>d = ${fmtN(g.d, 1)} Mpc<br>v = ${fmtN(g.v, 0)} km/s`),
+    hovertemplate: "%{text}<extra></extra>",
+    marker: { size: 8, color: "rgba(0,0,0,0)", line: { width: 1.2, color: css("--field") } },
+  });
   if (fit) traces.push({
     type: "scatter", mode: "lines", x: [0, dMax], y: [0, fit.H * dMax], hoverinfo: "skip",
     line: { color: css("--accent"), width: 2, dash: "dash" },
   });
-  for (const [list, color] of [[inFit, css("--sel")], [gals.filter((g) => S.galOff.has(g.name)), css("--field-dim")]]) {
+  for (const [list, color] of [[inFit, css("--sel")], [done.filter((g) => S.galOff.has(g.name)), css("--field-dim")]]) {
     if (!list.length) continue;
     traces.push({
       type: "scatter", mode: "markers", x: list.map((g) => g.d), y: list.map((g) => g.v),
@@ -2574,19 +2684,31 @@ function drawHubbleParts() {
       marker: { size: 9, color, line: { width: 1, color: css("--surface") } },
     });
   }
-  Plotly.react("hub", traces, baseLayout({
+  react("hub", traces, baseLayout({
     dragmode: "zoom",
     xaxis: axis(L("Kaugus d (Mpc)", "Distance d (Mpc)"), { range: [0, dMax] }),
-    yaxis: axis(L("Kiirus v (km/s)", "Velocity v (km/s)"), { rangemode: "tozero" }),
-  }), CONFIG);
+    yaxis: axis(L("Kiirus v (km/s)", "Velocity v (km/s)"), { range: [0, vMax] }),
+  }));
   onShiftClick("hub", (name) => {
     if (S.galOff.has(name)) S.galOff.delete(name); else S.galOff.add(name);
     drawHubble();
   });
+  if (pubFit) {
+    const [pV, pE] = valErr(pubFit.H, pubFit.e);
+    $("hubPubInfo").innerHTML = `<p class="hint">${L(`Hallid ringid ja punktiirjoon: sama ${fmt(pubFit.n)} galaktikat, mõõdetud automaatselt ${PL_PUB.ref} avaldatud seosega,
+      H<sub>0</sub> = <b>${pV} ± ${pE}</b> km/s/Mpc. See on ainult võrdluseks; 4. osa ja Hubble'i pinge kasutavad sinu tulemust.`,
+      `Grey circles and dotted line: the same ${fmt(pubFit.n)} galaxies, measured automatically with the relation published by ${PL_PUB.ref},
+      H<sub>0</sub> = <b>${pV} ± ${pE}</b> km/s/Mpc. This is for comparison only; part 4 and the Hubble tension use your result.`)}</p>`;
+  } else $("hubPubInfo").innerHTML = "";
 
   S.h0Local = fit ? fit.H : null;
   drawSupernovae(gals, cal);
-  if (!fit) { $("h0").innerHTML = `<p class="empty">${L("Vali sobitusse vähemalt üks galaktika.", "Choose at least one galaxy for the fit.")}</p>`; return; }
+  if (!fit) {
+    $("h0").innerHTML = `<p class="empty">${done.length ? L("Vali sobitusse vähemalt üks galaktika.", "Choose at least one galaxy for the fit.")
+      : L("Mõõda vähemalt ühe galaktika kaugus: vali vahelehel „Galaktikad“ galaktika ja nihuta selle tsefeiidid seosele.",
+        "Measure the distance of at least one galaxy: in the “Galaxies” tab, choose a galaxy and shift its Cepheids onto the relation.")}</p>`;
+    return;
+  }
   const [hV, hE] = valErr(fit.H, fit.e);
   const tH = 977.8 / fit.H;                              // 1/H0 in Gyr
   const [tV, tE] = valErr(tH, tH * fit.e / fit.H);
@@ -2595,13 +2717,19 @@ function drawHubbleParts() {
       <div class="tile"><div class="label">${L("Hubble'i aeg", "Hubble time")} 1/H<sub>0</sub></div><div class="value">${tV} <small>± ${tE}</small></div><div class="unit">${L("miljardit aastat", "billion years")}</div></div>
     </div>
     <p class="formula">` + L(`${fmt(fit.n)} galaktikat. Viga: hajuvus sirge ümber ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
-    (fit.eCal ? `, perioodi-heleduse seos (nullpunkt ja tõus) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `,
-    süstemaatiline viga ${fmtN(fit.eSys, 1)} km/s/Mpc, liidetud ruutudena. Süstemaatiline viga (${fmtN(MU_SYS, 2)} mag kauguse moodulis) tuleb lihtsustustest:
+    (fit.eCal ? `, perioodi-heleduse seos (nullpunkt ja tõus) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") +
+    (fit.eAlign ? `, sinu tsefeiidide nihutamine ${fmtN(fit.eAlign, 1)} km/s/Mpc` : "") + `,
+    süstemaatiline viga ${fmtN(fit.eSys, 1)} km/s/Mpc, liidetud ruutudena.` +
+    (fit.eAlign ? ` Nihutamise viga tuleb sellest, kui palju sinu kauguse moodulid parimast sobitusest erinevad (ruutkeskmiselt ${fmtN(alignError(inFit), 2)} mag).` : "") +
+    ` Süstemaatiline viga (${fmtN(MU_SYS, 2)} mag kauguse moodulis) tuleb lihtsustustest:
     siin ei arvestata tsefeiidide metallilisuse mõju ega fotomeetria parandusi, mida SH0ES kasutab.
     Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus. <a class="more" href="hubble.html#vanus">Loe lähemalt →</a>`,
     `${fmt(fit.n)} galaxies. Error: scatter about the line ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
-    (fit.eCal ? `, period–luminosity relation (zero point and slope) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") + `,
-    systematic error ${fmtN(fit.eSys, 1)} km/s/Mpc, added in quadrature. The systematic error (${fmtN(MU_SYS, 2)} mag in the distance modulus) comes from simplifications:
+    (fit.eCal ? `, period–luminosity relation (zero point and slope) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") +
+    (fit.eAlign ? `, your shifting of the Cepheids ${fmtN(fit.eAlign, 1)} km/s/Mpc` : "") + `,
+    systematic error ${fmtN(fit.eSys, 1)} km/s/Mpc, added in quadrature.` +
+    (fit.eAlign ? ` The shifting error comes from how much your distance moduli differ from the best fits (${fmtN(alignError(inFit), 2)} mag rms).` : "") +
+    ` The systematic error (${fmtN(MU_SYS, 2)} mag in the distance modulus) comes from simplifications:
     the effect of the Cepheids' metallicity and the photometric corrections that SH0ES uses are left out here.
     The peculiar velocities of nearby galaxies (a few hundred km/s) cause scatter. The Hubble time is roughly the age of the Universe. <a class="more" href="hubble.html#vanus">Read more →</a>`) + `</p>`;
 }
@@ -2628,15 +2756,16 @@ function pageRange(key, n) {
 // chosen in the menu: the mean M_B of the part 3 galaxies or the SH0ES value.
 // mean absolute peak magnitude of the supernovae in the given galaxies, whose distances come from the
 // relation cal, and the scatter; null for fewer than two galaxies. The error e combines the standard error
-// of the mean eMean, the error of the relation eCal and MU_SYS; the mean reduces neither of the last two.
+// of the mean eMean, the error of the relation eCal, MU_SYS and the offsets of the user's distance moduli from
+// their best fits eAlign; the mean reduces none of the last three.
 function meanMB(gals, cal) {
   const n = gals.length;
   if (n < 2) return null;
   const Ms = gals.map((g) => g.mb - g.mu);
   const M = Ms.reduce((a, b) => a + b, 0) / n;
   const sd = Math.sqrt(Ms.reduce((a, v) => a + (v - M) ** 2, 0) / (n - 1));
-  const eMean = sd / Math.sqrt(n), eCal = calError(cal);
-  return { M, e: Math.hypot(eMean, eCal, MU_SYS), eMean, eCal, sd, n };
+  const eMean = sd / Math.sqrt(n), eCal = calError(cal), eAlign = alignError(gals);
+  return { M, e: Math.hypot(eMean, eCal, MU_SYS, eAlign), eMean, eCal, eAlign, sd, n };
 }
 
 // H0 from the distant supernovae with the luminosity { M, e }: the fit through the origin, with the
@@ -2659,13 +2788,13 @@ function fitFarSN(cal) {
 
 function drawSupernovae(gals, rel) {
   $("snInfo").textContent = "";
-  const used = gals.filter((g) => !S.galOff.has(g.name));
+  const used = gals.filter((g) => g.done && !S.galOff.has(g.name));
   const dash = `<td class="muted">—</td>`;
   const applied = !!S.snUsed;
   const [first, last] = pageRange("sn", gals.length);
   $("snBody").innerHTML = gals.slice(first, last).map((g) =>
-    `<tr${applied && !S.galOff.has(g.name) ? ' class="sel"' : ""}><td>${esc(g.name)}</td><td>SN ${esc(g.sn)}</td><td>${fmtN(g.mb, 2)}</td>` +
-    (applied ? `<td>${fmtN(g.mu, 2)}</td><td>${fmtN(g.mb - g.mu, 2)}</td>` : dash + dash) + `</tr>`).join("");
+    `<tr${applied && g.done && !S.galOff.has(g.name) ? ' class="sel"' : ""}><td>${esc(g.name)}</td><td>SN ${esc(g.sn)}</td><td>${fmtN(g.mb, 2)}</td>` +
+    (applied && g.done ? `<td>${fmtN(g.mu, 2)}</td><td>${fmtN(g.mb - g.mu, 2)}</td>` : dash + dash) + `</tr>`).join("");
   $("snHubCard").hidden = !applied;
   $("snHubEmpty").hidden = applied;
   if (!applied) {
@@ -2677,15 +2806,15 @@ function drawSupernovae(gals, rel) {
   const own = meanMB(used, rel);
   let ownLine;
   if (own) {
-    const { M, sd, n, eMean, eCal } = own;
+    const { M, sd, n, eMean, eCal, eAlign } = own;
     const [mV, mE] = valErr(M, own.e);
     ownLine = L(`Supernoovade keskmine absoluutne tähesuurus maksimumis 3. osa galaktikatest: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
-      (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag). Viga: keskmise viga ${fmtN(eMean, 3)} mag, perioodi-heleduse seose viga ${fmtN(eCal, 3)} mag
-      ja süstemaatiline viga ${fmtN(MU_SYS, 3)} mag, liidetud ruutudena. Kaks viimast nihutavad kõiki galaktikaid koos, nii et need keskmistamisel ei vähene.`,
+      (${fmt(n)} galaktikat, hajuvus ${fmtN(sd, 2)} mag). Viga: keskmise viga ${fmtN(eMean, 3)} mag, perioodi-heleduse seose viga ${fmtN(eCal, 3)} mag,
+      ${eAlign ? `sinu tsefeiidide nihutamise viga ${fmtN(eAlign, 3)} mag ` : ""}ja süstemaatiline viga ${fmtN(MU_SYS, 3)} mag, liidetud ruutudena. Kõik peale esimese võivad nihutada kõiki galaktikaid koos, nii et need keskmistamisel ei vähene.`,
       `Mean absolute peak magnitude of the supernovae from the galaxies of part 3: <b>M<sub>B</sub> = ${mV} ± ${mE} mag</b>
-      (${fmt(n)} galaxies, scatter ${fmtN(sd, 2)} mag). Error: error of the mean ${fmtN(eMean, 3)} mag, error of the period–luminosity relation ${fmtN(eCal, 3)} mag
-      and systematic error ${fmtN(MU_SYS, 3)} mag, added in quadrature. The last two shift all the galaxies together, so averaging does not reduce them.`);
-  } else ownLine = L("Oma M<sub>B</sub> leidmiseks vali 3. osas sobitusse vähemalt kaks galaktikat.", "To find your own M<sub>B</sub>, choose at least two galaxies for the fit in part 3.");
+      (${fmt(n)} galaxies, scatter ${fmtN(sd, 2)} mag). Error: error of the mean ${fmtN(eMean, 3)} mag, error of the period–luminosity relation ${fmtN(eCal, 3)} mag,
+      ${eAlign ? `error of your shifting of the Cepheids ${fmtN(eAlign, 3)} mag ` : ""}and systematic error ${fmtN(MU_SYS, 3)} mag, added in quadrature. All but the first may shift all the galaxies together, so averaging does not reduce them.`);
+  } else ownLine = L("Oma M<sub>B</sub> leidmiseks mõõda 3. osas vähemalt kahe galaktika kaugus ja vali need sobitusse.", "To find your own M<sub>B</sub>, measure the distances of at least two galaxies in part 3 and choose them for the fit.");
   const cal = S.snUsed === "pub" ? MB_SH0ES : own;
   const [uV, uE] = cal ? valErr(cal.M, cal.e) : [];
   const whose = S.snUsed === "pub" ? L("SH0ES (Riess jt 2022).", "SH0ES (Riess et al. 2022).") : L("sinu väärtus 3. osa galaktikatest.", "your value from the galaxies of part 3.");
@@ -2698,7 +2827,7 @@ function drawSupernovae(gals, rel) {
   }
   const { pts, H, eH } = fitFarSN(cal);
   const dMax = Math.max(...pts.map((p) => p.d)) * 1.05;
-  Plotly.react("snHub", [
+  react("snHub", [
     { type: "scatter", mode: "lines", x: [0, dMax], y: [0, H * dMax], hoverinfo: "skip", line: { color: css("--accent"), width: 2, dash: "dash" } },
     {
       type: "scatter", mode: "markers", x: pts.map((p) => p.d), y: pts.map((p) => p.v), hoverinfo: "none",
@@ -2708,7 +2837,7 @@ function drawSupernovae(gals, rel) {
     dragmode: "zoom",
     xaxis: axis(L("Kaugus d (Mpc)", "Distance d (Mpc)"), { range: [0, dMax] }),
     yaxis: axis(L("Kiirus v (km/s)", "Velocity v (km/s)"), { rangemode: "tozero" }),
-  }), CONFIG);
+  }));
 
   const [hV, hE] = valErr(H, eH);
   const tH = 977.8 / H;
@@ -2733,16 +2862,12 @@ function drawSupernovae(gals, rel) {
 // still the user's own. The galaxies left out in part 3 are left out here too.
 function ownH0() {
   if (cepheidPoints(true).length < 2) return [];
-  const own = fitPL(cepheidPoints()), rel = S.calibUsed === "pub" ? calibration() : own;
-  const keep = (cal) => GALAXIES.map((g) => galaxyFit(g, cal)).filter((g) => !S.galOff.has(g.name));
-  const g3 = keep(own), g4 = rel === own ? g3 : keep(rel);
-  if (!g3.length) return [];
-  const p3 = fitHubble(g3, own), mb = meanMB(g4, rel), p4 = mb && fitFarSN(mb);
+  const own = calibration();
+  const g3 = GALAXIES.map((g) => galaxyFit(g, own)).filter((g) => g.done && !S.galOff.has(g.name));
+  const p3 = g3.length ? fitHubble(g3, own) : null, mb = meanMB(g3, own), p4 = mb && fitFarSN(mb);
   return [
-    { name: "Sinu 3. osa: tsefeiidid", en: "Your part 3: Cepheids", v: p3.H, e: p3.e, k: "u" },
-    ...(p4 ? [{ name: "Sinu 4. osa: supernoovad", en: "Your part 4: supernovae", v: p4.H, e: p4.eH, k: "u",
-      note: rel === own ? "" : L("Sinu M<sub>B</sub> on leitud 3. osas kasutatud avaldatud perioodi-heleduse seosega.",
-        "Your M<sub>B</sub> was found with the published period–luminosity relation used in part 3.") }] : []),
+    ...(p3 ? [{ name: "Sinu 3. osa: tsefeiidid", en: "Your part 3: Cepheids", v: p3.H, e: p3.e, k: "u" }] : []),
+    ...(p4 ? [{ name: "Sinu 4. osa: supernoovad", en: "Your part 4: supernovae", v: p4.H, e: p4.eH, k: "u" }] : []),
   ];
 }
 
@@ -2815,7 +2940,7 @@ function drawTension() {
     (mine.length ? mine.map((m) => {
       const [hV, hE] = valErr(m.v, m.e);
       return `<p class="fit">${label(m)}: <b>H<sub>0</sub> = ${hV} ± ${hE}</b>. ${L("Erinevus", "Difference from")} ${vs(m, H0_PLANCK, E_PLANCK, L("Planckist", "Planck"))}, ${vs(m, H0_SH0ES.H, H0_SH0ES.e, L("SH0ES-ist", "SH0ES"))}.${m.note ? ` ${m.note}` : ""}</p>`;
-    }).join("") : `<p class="fit">${L("Sinu tulemusi veel pole. Need tulevad sinu enda perioodi-heleduse seosest, milleks salvesta 2. osas vähemalt kahe parve kaugus.", "No results of yours yet. They come from your own period–luminosity relation; for it, save the distances of at least two clusters in part 2.")}</p>`) +
+    }).join("") : `<p class="fit">${L("Sinu tulemusi veel pole. Need tulevad sinu enda perioodi-heleduse seosest, milleks salvesta 2. osas vähemalt kahe parve kaugus, ja galaktikate kaugustest, mille mõõdad 3. osas.", "No results of yours yet. They come from your own period–luminosity relation, for which you save the distances of at least two clusters in part 2, and from the distances of the galaxies that you measure in part 3.")}</p>`) +
     `<p class="formula">${L(`Kauguste redel mõõdab H<sub>0</sub> praegu, samm-sammult nagu see harjutus. Taustkiirgus annab H<sub>0</sub>, mida kosmoloogia standardmudel ennustab 380 000 aasta vanuse Universumi järgi.
       Need erinevad umbes 8 %: see on Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a>`,
       `The distance ladder measures H<sub>0</sub> today, step by step like this exercise. The microwave background gives the H<sub>0</sub> that the standard model of cosmology predicts from the Universe at 380,000 years.
@@ -2823,16 +2948,30 @@ function drawTension() {
     `<p class="hint">${H0_DATA.filter((r) => r.ref).map((r) => r.ref).join("; ")}.</p>`;
 }
 
+// the chosen galaxy beside the list: its name, the slider, the plot and what the check says
+function drawGalFit(g, cal) {
+  $("galFitTitle").innerHTML = L(`Galaktika ${esc(g.name)} tsefeiidid`, `The Cepheids of ${esc(g.name)}`);
+  const mu = galTryMu(g);
+  $("galMuIn").value = mu.toFixed(2);
+  $("galMuOut").textContent = fmtN(mu, 2);
+  $("galRead").innerHTML = galRead(g);
+  $("galDelete").disabled = !S.galMu[g.name];
+  drawGalaxyPL(g, cal);
+}
+
+// the Cepheids of a galaxy on the absolute magnitude scale, shifted by the distance modulus on its slider, and the
+// relation; the axes stay put, so the Cepheids move when the slider does
 function drawGalaxyPL(g, cal) {
+  const mu = galTryMu(g), M = (x) => cal.a * (x - 1) + cal.b;
   const xs = g.ceph.map((c) => Math.log10(c.P));
   const lo = Math.min(...xs) - 0.05, hi = Math.max(...xs) + 0.05;
-  Plotly.react("gpl", [
+  react("gpl", [
     {
-      type: "scatter", mode: "lines", x: [lo, hi], y: [lo, hi].map((x) => cal.a * (x - 1) + cal.b + g.mu),
+      type: "scatter", mode: "lines", x: [lo, hi], y: [M(lo), M(hi)],
       hoverinfo: "skip", line: { color: css("--accent"), width: 2, dash: "dash" },
     },
     {
-      type: "scatter", mode: "markers", x: xs, y: g.ceph.map((c) => c.W),
+      type: "scatter", mode: "markers", x: xs, y: g.ceph.map((c) => c.W - mu),
       hoverinfo: "none",
       marker: { size: 6, color: css("--sel"), opacity: 0.8, line: { width: 0.5, color: css("--surface") } },
     },
@@ -2840,13 +2979,48 @@ function drawGalaxyPL(g, cal) {
     uirevision: g.name,
     dragmode: "zoom",
     xaxis: axis(L("log P (P ööpäevades)", "log P (P in days)"), { range: [lo, hi] }),
-    yaxis: axis("W<sub>H</sub> (mag)", { autorange: "reversed" }),
+    yaxis: axis("M<sub>H</sub><sup>W</sup> = W<sub>H</sub> − μ (mag)", { range: [M(lo) + 3, M(hi) - 3] }),
     annotations: [{
       xref: "paper", yref: "paper", x: 0.02, y: 0.98, xanchor: "left", yanchor: "top", showarrow: false, align: "left",
-      text: `μ = ${fmtN(g.mu, 2)} ± ${fmtN(g.eMu, 2)} mag<br>d = ${fmtN(g.d, 1)} Mpc`, font: { size: 12, color: css("--text-1") },
+      text: `μ = ${fmtN(mu, 2)} mag<br>d = ${fmtN(10 ** (mu / 5 - 5), 1)} Mpc`, font: { size: 12, color: css("--text-1") },
       bgcolor: css("--surface"),
     }],
-  }), CONFIG);
+  }));
+}
+
+// what the check of a galaxy's distance modulus says
+function galRead(g) {
+  const ck = S.galCheck && S.galCheck.name === g.name ? S.galCheck : null;
+  if (ck) return L(`<span class="off">Veel mitte:</span> ${ck.d < 0 ? "galaktika on kaugemal, suurenda μ" : "galaktika on lähemal, vähenda μ"}.`,
+    `<span class="off">Not yet:</span> ${ck.d < 0 ? "the galaxy is farther away, increase μ" : "the galaxy is closer, decrease μ"}.`);
+  if (g.done) {
+    const [dV, dE] = valErr(g.d, g.eD);
+    const val = `μ = <b>${fmtN(g.mu, 2)} ± ${fmtN(g.eMu, 2)}</b> mag, ${L("kaugus", "distance")} <b>${dV} ± ${dE} Mpc</b>`;
+    return L(`<span class="ok">Õige!</span> Sinu ${val}. Viga kasvab, mida rohkem sinu μ parimast sobitusest erineb; selle vähendamiseks sea tsefeiidid täpsemini joonele ja kontrolli uuesti.`,
+      `<span class="ok">Correct!</span> Your ${val}. The error grows the more your μ differs from the best fit; to reduce it, put the Cepheids more precisely on the line and check again.`);
+  }
+  if (g.stale) {
+    const mu = fmtN(S.galMu[g.name].mu, 2);
+    return L(`Sinu varasem μ = ${mu} ei sobi selle seosega. Nihuta tsefeiidid uuesti joonele ja vajuta „Kontrolli“.`,
+      `Your earlier μ = ${mu} does not fit this relation. Shift the Cepheids onto the line again and press “Check”.`);
+  }
+  return "";
+}
+
+// "Kontrolli": a distance modulus within MU_TOL of the best fit is the galaxy's measurement
+function checkGalaxy() {
+  const cal = calibration(), g = galaxyFit(GALAXIES.find((x) => x.name === S.gal), cal);
+  const mu = galTryMu(g), d = mu - g.muFit;
+  if (Math.abs(d) > MU_TOL) {
+    S.galCheck = { name: g.name, d };
+    $("galRead").innerHTML = galRead(g);
+    return;
+  }
+  S.galCheck = null;
+  S.galMu[g.name] = { mu };
+  saveGalMu();
+  drawHubble();
+  $("galCheck").focus();
 }
 
 /* ---------- Data table ---------- */
@@ -2888,7 +3062,7 @@ function drawTable() {
 // as many table rows per page as fit the table tab; the first row shown stays on the page
 function fitPageSize() {
   let redraw = false;
-  for (const [key, body] of [["gal", "galBody"], ["sn", "snBody"]]) {
+  for (const [key, body] of [["gal", "galBody"], ["dist", "distBody"], ["sn", "snBody"]]) {
     const p = S.pages[key], size = rowsThatFit($(body));
     if (!size || size === p.size) continue;
     p.page = Math.floor((p.page * p.size) / size);
@@ -2903,15 +3077,16 @@ function fitPageSize() {
     drawTable();
   }
 }
-// rows of a table that fit the window height of its tab beside the rest of its card and the buttons
-// below it (at least PAGE_MIN), or null while the tab is hidden; an opened galaxy row does not count
+// rows of a table that fit the window height of its tab beside the rest of its card, what is above
+// the card and the buttons below it (at least PAGE_MIN), or null while the tab is hidden
 function rowsThatFit(body) {
-  const pane = body.closest(".pane"), card = body.closest(".card"), row = body.querySelector("tr:not(.gal-detail)");
+  const pane = body.closest(".pane"), card = body.closest(".card"), row = body.querySelector("tr");
   if (pane.hidden || !row || !row.offsetHeight) return null;
   const cs = getComputedStyle(pane), nav = pane.querySelector(".pane-nav");
+  const above = card.getBoundingClientRect().top - pane.getBoundingClientRect().top - parseFloat(cs.paddingTop);
   const room = parseFloat(cs.minHeight) - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
     - nav.offsetHeight - parseFloat(getComputedStyle(nav).marginTop)
-    - (card.offsetHeight - body.offsetHeight);
+    - above - (card.offsetHeight - body.offsetHeight);
   return Math.max(PAGE_MIN, Math.floor(room / row.offsetHeight));
 }
 
@@ -3496,10 +3671,7 @@ try {
 $("source").addEventListener("change", () => {
   try { localStorage.setItem(SOURCE_KEY, $("source").value); } catch { /* kept for this visit */ }
 });
-// the menu only chooses; "Kasuta seost" applies the chosen relation
-for (const m of document.querySelectorAll("select.calib-menu")) m.addEventListener("change", () => { S.calib = m.value; syncMenus("calib-menu", m.value); });
-for (const b of document.querySelectorAll(".calib-apply")) b.addEventListener("click", () => { S.calibUsed = S.calib; drawHubble(); });
-for (const key of ["gal", "sn"]) $(`${key}Pager`).addEventListener("click", (e) => {
+for (const key of ["gal", "dist", "sn"]) $(`${key}Pager`).addEventListener("click", (e) => {
   const p = S.pages[key];
   const btn = e.target.closest("[data-page]");
   const step = btn && { first: -Infinity, prev: -1, next: 1, last: Infinity }[btn.dataset.page];
@@ -3507,18 +3679,56 @@ for (const key of ["gal", "sn"]) $(`${key}Pager`).addEventListener("click", (e) 
   p.page = isFinite(step) ? p.page + step : step > 0 ? Infinity : 0;   // pageRange clamps it
   drawHubble();
 });
-$("galBody").addEventListener("change", (e) => {
+// the checkboxes of the list and of the distance table both choose the galaxies of the fit
+for (const id of ["galBody", "distBody"]) $(id).addEventListener("change", (e) => {
   const name = e.target.dataset.use;
   if (!name) return;
   if (e.target.checked) S.galOff.delete(name); else S.galOff.add(name);
   drawHubble();
 });
-$("galBody").addEventListener("click", (e) => {
-  const tr = e.target.closest("tr[data-gal]");
-  if (!tr || e.target.matches("input") || !S.calibUsed) return;
-  S.gal = S.gal === tr.dataset.gal ? null : tr.dataset.gal;
+// a galaxy chosen in the list, or in the distance table, which leads back to the list
+function pickGalaxy(name, fromDist) {
+  S.gal = name;
+  S.galCheck = null;
+  if (fromDist) {
+    const p = S.pages.gal;
+    p.page = Math.floor(GALAXIES.findIndex((g) => g.name === name) / p.size);
+    pickTab("galaxies");
+  }
   drawHubble();
+}
+for (const id of ["galBody", "distBody"]) {
+  $(id).addEventListener("click", (e) => {
+    const tr = e.target.closest("tr[data-gal]");
+    if (tr && !e.target.matches("input")) pickGalaxy(tr.dataset.gal, id === "distBody");
+  });
+  $(id).addEventListener("keydown", (e) => {
+    const tr = e.target.closest("tr[data-gal]");
+    if (!tr || e.target !== tr || (e.key !== "Enter" && e.key !== " ")) return;
+    e.preventDefault();
+    pickGalaxy(tr.dataset.gal, id === "distBody");
+    if (id === "galBody") $("galBody").querySelector(`tr[data-gal="${CSS.escape(tr.dataset.gal)}"]`)?.focus();
+  });
+}
+// the distance modulus slider moves only the Cepheids of the chosen galaxy; "Kontrolli" takes it into use
+$("galMuIn").addEventListener("input", (e) => {
+  const cal = calibration(), g = galaxyFit(GALAXIES.find((x) => x.name === S.gal), cal);
+  S.galTry[g.name] = +e.target.value;
+  S.galCheck = null;
+  $("galMuOut").textContent = fmtN(+e.target.value, 2);
+  $("galRead").innerHTML = galRead(g);
+  drawGalaxyPL(g, cal);
 });
+$("galCheck").addEventListener("click", checkGalaxy);
+// "Kustuta": the galaxy is no longer measured; the slider stays where it is
+$("galDelete").addEventListener("click", () => {
+  delete S.galMu[S.gal];
+  S.galCheck = null;
+  saveGalMu();
+  drawHubble();
+  $("galCheck").focus();
+});
+$("hubPub").addEventListener("change", drawHubble);
 for (const id of ["cepBody", "fieldBody"]) $(id).addEventListener("click", (e) => {
   const b = e.target.closest("button");
   if (!b) return;
@@ -3580,6 +3790,10 @@ applyLang();
 
 S.stored = loadStored();
 try { S.fieldOn = new Set(JSON.parse(localStorage.getItem(FIELD_KEY)) || []); } catch { /* none added */ }
+try {
+  const m = JSON.parse(localStorage.getItem(GALMU_KEY));
+  if (m && typeof m === "object") S.galMu = m;
+} catch { /* none measured */ }
 redrawAll();
 drawResults();
 route();

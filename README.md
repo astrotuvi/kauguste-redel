@@ -133,26 +133,44 @@ for comparison.
 
 ### Hubble law
 
-The third part has three tabs: **Sissejuhatus** (the steps), **Galaktikad**
-(the choice of relation and the galaxy table, with as many rows per page as
-fit the window) and **Hubble'i seadus** (the velocity–distance plot and H₀).
+The third part has four tabs: **Sissejuhatus** (the steps), **Galaktikad**
+(the list of galaxies on the left, and the Cepheids of the chosen one with
+the distance modulus slider on the right), **Kaugused** (the full table of the
+galaxy distances) and **Hubble'i seadus** (the velocity–distance plot and H₀).
+The tables have as many rows per page as fit the window.
 
 It uses 29 type Ia supernova host galaxies with Cepheids
 observed by *HST*. It stays hidden until you have fitted your own W_H
 period-luminosity relation in the second part, which takes at least two
-stored cluster Cepheids. Choose a relation in the menu next to **Kasuta
-seost** and press the button:
-- the relation fitted in the second part;
-- or the published relation, for comparison.
+stored cluster Cepheids. The galaxies are measured with that relation only.
 
-Only then are the galaxy distances, the Hubble diagram and H₀ derived, from
-each galaxy's Cepheids with the applied relation. Changing the menu takes
-effect when the button is pressed again.
+**Galaktikad** lists the galaxies with their number of Cepheids, velocity and
+a checkbox for the fit; ✓ marks the measured ones. Clicking a row (or Enter on
+it) shows its Cepheids beside the list, as in the **Leavitt'i seadus** tab of
+the Cepheid page: on the absolute magnitude scale with the relation as a line,
+shifted by the distance modulus μ on the slider below (W_H − μ). The slider
+starts 1.5 mag off the best fit, alternately above and below. **Kontrolli**
+accepts μ when it is within 0.15 mag (`MU_TOL`) of the best fit, and
+otherwise says which way to move it. The accepted μ is the galaxy's distance
+modulus; its error is the error of the best fit and the offset from it added
+in quadrature, so the farther off, the larger the error. **Kustuta** deletes
+the measurement of the galaxy shown. Only measured
+galaxies have a distance and go into the Hubble law and part 4. The
+measurements are kept in the browser; one counts only while it is within
+0.15 mag of the best fit with the current relation, so a changed relation in
+part 2 may ask for it again.
 
-Clicking a galaxy shows its Cepheids with the shifted relation. The
-velocity–distance plot shows a straight line through the origin fitted by
+**Kaugused** shows the number of Cepheids, the velocity, μ, the distance and
+v/d of every galaxy, with the same checkboxes and, last, the supernova used in
+part 4; clicking a row goes back to that galaxy in
+**Galaktikad**.
+
+The velocity–distance plot shows a straight line through the origin fitted by
 least squares, and its slope gives the Hubble constant H₀ and the Hubble
-time 1/H₀. Galaxies can be left out of the fit with the checkboxes.
+time 1/H₀. Galaxies can be left out of the fit with the checkboxes. **Võrdlus
+avaldatud seosega** adds the same galaxies measured automatically with the
+published relation (grey circles, dotted line) and its H₀, for viewing only:
+part 4 and the Hubble tension always use the user's own measurements.
 
 ### Type Ia supernovae
 
@@ -165,12 +183,10 @@ and the explanation sit in a column to the right of the plot.
 **Hubble'i pinge** plots published values of H₀ from the early Universe, the
 distance ladder and other methods, the same as the **Mõõtmised** view on the
 Hubble law page, with the Planck and SH0ES values as bands. It always adds
-the user's own H₀ values, whatever is chosen in the menus of parts 3 and 4,
-as soon as the period–luminosity relation of part 2 exists: part 3 with that
-relation, and part 4 with the user's own M_B. That M_B comes from the galaxy
-distances of part 3 with the relation applied there, which may be the
-published one; the column to the right then says so. The galaxies left out
-in part 3 are left out here too. The x-axis widens to fit these values. The
+the user's own H₀ values, whatever is chosen in the menu of part 4, once
+galaxies have been measured in part 3: part 3 from those galaxies, and part 4
+with the user's own M_B from their distances. The galaxies left out in part 3
+are left out here too. The x-axis widens to fit these values. The
 column to the right gives their difference from Planck and from SH0ES in
 km/s/Mpc and σ. The published values are copied from `hubble.html`.
 
@@ -471,9 +487,11 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
 - The published relation is `M_H^W = −5.914 − 3.29 (log P − 1)` (Cruz Reyes &
   Anderson 2023), with the errors of their eq. 17: ±0.017 mag in the
   intercept and ±0.015 in the slope, which they fix to the SH0ES value.
-- A galaxy distance modulus is the weighted mean of `W_H − M_H^W(P)` over its
-  Cepheids. The galaxy velocity is `v = c z_HD`, from the Pantheon+ redshift
-  of its supernova, which is corrected for peculiar velocities. H₀ is fitted
+- The best-fit distance modulus of a galaxy is the weighted mean of
+  `W_H − M_H^W(P)` over its Cepheids; the user's is accepted within 0.15 mag
+  of it, with the offset added to its error in quadrature. The galaxy velocity is `v = c z_HD`, from the Pantheon+ redshift
+  listed for its supernova, which is the redshift of the host galaxy
+  (Carr et al. 2022) corrected for peculiar velocities. H₀ is fitted
   through the origin. Its error combines the scatter about the line and the
   error of the period-luminosity relation at the mean log P of the galaxy
   Cepheids (about 1.6, far above the pivot at log P = 1), from the errors of
@@ -483,7 +501,9 @@ energy, by default H₀ = 70 km/s/Mpc and Ω_m = 0.315.
   error of 0.04 mag in the distance moduli: the page leaves out the
   metallicity term and photometric corrections that SH0ES fits, and with the
   SH0ES relation its host distance moduli are on average 0.037 mag larger
-  than those of SH0ES (`CEPH_DIST` in the Pantheon+SH0ES table).
+  than those of SH0ES (`CEPH_DIST` in the Pantheon+SH0ES table). And both
+  include the rms offset of the user's distance moduli from the best fits,
+  kept whole as the user may have shifted all the galaxies the same way.
 
 ## Data services
 
