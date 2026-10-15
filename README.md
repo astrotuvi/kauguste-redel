@@ -190,21 +190,23 @@ are left out here too. The x-axis widens to fit these values. The
 column to the right gives their difference from Planck and from SH0ES in
 km/s/Mpc and σ. The published values are copied from `hubble.html`.
 
-Its content appears once a relation has been applied in the third part. At
-first it lists only the supernova peak magnitudes. Choose the supernova
-luminosity in the menu next to **Kasuta heledust** and press the button:
+Its content appears once a relation has been applied in the third part. Each
+Cepheid galaxy hosted at least one type Ia supernova; the **Supernoovad** tab
+lists them with one row per supernova (several galaxies have two or three), in
+the columns supernova, m_B, galaxy, μ ± error and M_B ± error. Its absolute
+peak magnitude is `M_B = m_B − μ`, with μ from the third part. The error of
+M_B combines the error of μ and the measurement error of m_B. A histogram of
+M_B on the right shows the mean over the galaxies selected in the third part
+(a galaxy with several supernovae counts once) and its error. That mean is
+the supernova luminosity, applied to 166 distant supernovae
+(0.023 < z < 0.06, up to about 250 Mpc) in the **Hubble'i seadus** tab. There
+a menu chooses between:
 - your own M_B, the mean over the galaxies of the third part;
 - or the SH0ES value, M_B = −19.253 ± 0.027 (Riess et al. 2022).
 
-The button takes over the galaxy distances from the third part, derives
-M_B for each galaxy and shows the Hubble diagram of the distant supernovae
-with the applied luminosity. From then on it follows changes in the third
-part. Changing the menu takes effect when the button is pressed again. Each
-Cepheid galaxy hosted a type Ia supernova. Its absolute peak magnitude is `M_B = m_B − μ`, with μ
-from the third part. The mean over the galaxies selected there gives the
-supernova luminosity. This is then applied to 166 distant supernovae
-(0.023 < z < 0.06, up to about 250 Mpc). Their velocity–distance plot gives
-H₀, which is compared with the third part and with Planck (67.4 km/s/Mpc).
+The tab follows changes in the third part. The velocity–distance plot of the
+distant supernovae gives H₀, which is compared with the third part and with
+Planck (67.4 km/s/Mpc).
 
 Velocities are `v = cz (1 + 0.775 z)`. The small factor corrects for the
 expansion of the Universe while the light travelled, with deceleration

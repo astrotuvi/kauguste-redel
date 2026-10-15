@@ -42,7 +42,6 @@ kilometres, standardised, recognisable, neighbour. Check that this is wanted.
 | taustkiirgus | microwave background, CMB in tight places | Hubble law page |
 | Sobitusse | In the fit | part 3 |
 | Kontrolli / Kustuta | Check / Delete | part 3 |
-| Kasuta heledust | Use the luminosity | part 4 |
 
 ### Tab and view names
 
