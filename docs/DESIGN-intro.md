@@ -2,7 +2,7 @@
 
 A short animation on the home page of `index.html` that shows the idea of
 the cosmic distance ladder and what the user does in the four parts of the
-exercise. It runs for 48 s, under a limit of 60 s, with room for the
+exercise. It runs for 50 s, under a limit of 60 s, with room for the
 captions to be read. It opens with the 3D view of the parallax page,
 because parallax is where every distance on the ladder starts, and it
 zooms in on the two standard candles to show what they are: a Cepheid
@@ -31,7 +31,7 @@ When it ends, the ladder of the last frame shrinks and flies to the ladder
 figure on the page, and the window closes, so the user ends up on the home
 page as it is now, with the figure they have just seen built.
 
-- On the home page, a **Vaata tutvustust (48 s)** button sits below the
+- On the home page, a **Vaata tutvustust (50 s)** button sits below the
   ladder figure. The animation never plays by itself: users come back to
   this page many times, and a teacher may open it in front of a class.
 - **Peata / Jätka**, **Algusest** and **Jäta vahele** buttons under the
@@ -114,13 +114,13 @@ of the page (`data-l`). The captions below are drafts.
 |---|---|---|---|---|
 | 0 | 0–2 | – | Kui kaugel on galaktikad? | How far away are the galaxies? |
 | 1 | 2–9 | Parallaks · 1. osa | Parallaks annab tähtede kaugused | Parallax gives the distances of stars |
-| 2 | 9–15.2 | Parallaks · 1. osa | Gaia parallaksid annavad täheparvede kaugused | Gaia parallaxes give the distances of star clusters |
-| 3 | 15.2–23 | Tsefeiidid · 2. osa | Tsefeiid pulseerib – periood näitab tema heledust | A Cepheid pulsates – its period reveals its luminosity |
-| 4 | 23–28 | Tsefeiidid · 2. osa | Parvede tsefeiidid kalibreerivad seose | Cluster Cepheids calibrate the relation |
-| 5 | 28–33 | Tsefeiidid · 3. osa | Tsefeiidid annavad galaktikate kaugused | Cepheids give the distances of galaxies |
-| 6 | 33–40 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
-| 7 | 40–45 | Supernoovad · 4. osa | Supernoovad ulatuvad sadade megaparsekiteni | Supernovae reach hundreds of megaparsecs |
-| 8 | 45–48 | – | Redel – ronime pulkhaaval | The ladder – one rung at a time |
+| 2 | 9–17.2 | Parallaks · 1. osa | Gaia parallaksid annavad täheparvede kaugused | Gaia parallaxes give the distances of star clusters |
+| 3 | 17.2–25 | Tsefeiidid · 2. osa | Tsefeiid pulseerib – periood näitab tema heledust | A Cepheid pulsates – its period reveals its luminosity |
+| 4 | 25–30 | Tsefeiidid · 2. osa | Parvede tsefeiidid kalibreerivad seose | Cluster Cepheids calibrate the relation |
+| 5 | 30–35 | Tsefeiidid · 3. osa | Tsefeiidid annavad galaktikate kaugused | Cepheids give the distances of galaxies |
+| 6 | 35–42 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
+| 7 | 42–47 | Supernoovad · 4. osa | Supernoovad ulatuvad sadade megaparsekiteni | Supernovae reach hundreds of megaparsecs |
+| 8 | 47–50 | – | Redel – ronime pulkhaaval | The ladder – one rung at a time |
 
 ### 0. Title (0–2 s)
 
@@ -146,32 +146,44 @@ The geometry is that of the parallaks page (a star at ecliptic latitude
 nearer and its proper motion larger than there, so that the loops are
 large and apart.
 
-### 2. Gaia parallaxes of a star cluster (9–15.2 s) — part 1
+### 2. Gaia parallaxes of a star cluster (9–17.2 s) — part 1
 
 - 9–10.5 s: the camera pulls out. The orbit shrinks to a dot, which the Sun
   keeps as a dot of fixed size until the DSS2 image of the Pleiades fades in
   around it. The marker on the scale slides to the Plejaadid landmark.
-- 10.5–12 s: the image dims, and the stars in it get dots and short arrows
-  for their proper motions. The scene
-  becomes the proper-motion plot: the field stars spread out, the cluster
-  stars bunch together. A lasso is drawn round the clump, and the selected
-  stars turn `--sel` blue, as in the Joonised tab.
-- 12–13 s: the selected stars drop into a parallax histogram that peaks, and
-  a readout shows the cluster distance, **d ≈ 135 pc**. The `--sel` bar
-  grows on the scale up to ~5 kpc.
+- 10.5–10.9 s: the image dims, and the stars in it get dots and arrows for
+  their proper motions: the arrows of the cluster stars all point the same
+  way, those of the field stars every way.
+- 10.9–11.5 s: the dots fly into the proper-motion plot (**omaliikumine
+  μα\***, **μδ**, no numbers) in a panel on the left, and the arrows shrink
+  into them: the field stars spread out, the cluster stars bunch together.
+  A panel for the parallax histogram (**parallaks ϖ (mas)**, ticks 6–9)
+  comes in on the right.
+- 11.4–12.3 s: a lasso is drawn round the clump, and the selected stars
+  turn `--sel` blue, as in the Joonised tab.
+- 12.4–13.9 s: copies of the selected stars drop one after another into
+  the histogram, where they stack as blocks in their bins and make a peak,
+  slowly enough to be followed.
+- 13.9–15 s: a dashed line marks the peak, with **ϖ ≈ 7,4 mas** and
+  **d ≈ 135 pc**, and stays for a second to be read. The `--sel` bar grows
+  on the scale up to ~5 kpc at 14–15 s.
+- 15–15.3 s: the plots fade as the camera starts to pull out.
 
-- 13–14.4 s: the Pleiades have no Cepheids, so the camera moves on to
+The ten brightest Pleiades are dotted where they are in the image, from
+their coordinates; the fainter members and the field stars are schematic.
+
+- 15–16.4 s: the Pleiades have no Cepheids, so the camera moves on to
   NGC 6087 by way of the Milky Way. It pulls out, centred on the Sun,
   about 10⁴ times: the Pleiades shrink to a soft patch, and the stars of
   the Milky Way stream in from the edges until it is seen whole from
   above, about 30 kpc across, the centre up and the Sun 8.2 kpc below it.
   The caption stays: the Milky Way is full of star clusters.
-- 14.1–15.4 s: labels **Linnutee**, **Päike**, **Plejaadid** and
+- 16.1–17.4 s: labels **Linnutee**, **Päike**, **Plejaadid** and
   **NGC 6087** show, the clusters as `--sel` blue dots placed from their
   galactic longitude and distance (Pleiades l = 166.6°, 135 pc; NGC 6087
-  l = 327.7°, 0.94 kpc, towards the inner Galaxy). At 14.5–15.15 s the view
+  l = 327.7°, 0.94 kpc, towards the inner Galaxy). At 16.5–17.15 s the view
   pans the few pixels from the Sun to NGC 6087.
-- 15.2–16.2 s: the camera zooms into NGC 6087: the stars stream out past
+- 17.2–18.2 s: the camera zooms into NGC 6087: the stars stream out past
   the edges, and the DSS2 image grows out of the blue dot. The marker
   slides to NGC 6087, still inside the `--sel` bar: Gaia gives its
   distance in the same way.
@@ -187,84 +199,84 @@ are, so that a shrinking image is a soft round patch, not a rectangle, and
 an incoming image is shown at most about twice its size, where it would
 turn blocky. Scene 5 can pull out of the same Milky Way.
 
-### 3. A Cepheid pulsates (15.2–23 s) — part 2
+### 3. A Cepheid pulsates (17.2–25 s) — part 2
 
-- 16.3–17 s: the image pans to put S Nor in the centre.
-- 17–18.2 s: the camera zooms into S Nor, about 300 times. The image fades
+- 18.3–19 s: the image pans to put S Nor in the centre.
+- 19–20.2 s: the camera zooms into S Nor, about 300 times. The image fades
   as it grows, and S Nor becomes a drawn star, pulsating as on the
   tsefeiidid page: its radius changes by ±12 % (more than the real ±8 %,
   to be seen) and its colour between about 5000 and 6200 K, with a fast
   rise to maximum light and a slow decline. A cycle takes 1.5 s.
-- 18.3–21.8 s: beside the star its light curve is traced in `--cep` red,
+- 20.3–23.8 s: beside the star its light curve is traced in `--cep` red,
   brightness against time, a little over two cycles. When the second
   maximum is reached, a bracket marks the period between the two maxima,
   **P = 9,75 p** / **P = 9.75 d**.
-- 21.8–23 s: the camera zooms back out to NGC 6087, and the image pans
+- 23.8–25 s: the camera zooms back out to NGC 6087, and the image pans
   back to its centre.
 
-### 4. Period–luminosity relation (23–28 s) — part 2
+### 4. Period–luminosity relation (25–30 s) — part 2
 
-- 23.2–23.8 s: the NGC 6087 image dims, S Nor gets a red ring, and a plot
+- 25.2–25.8 s: the NGC 6087 image dims, S Nor gets a red ring, and a plot
   fades in over the image: **heledus M** (brighter up, no numbers) against
   **log P (P päevades)**, with ticks at 0,5, 1 and 1,5.
-- 23.8–24.6 s: S Nor leaves the cluster as a labelled point that flies
+- 25.8–26.6 s: S Nor leaves the cluster as a labelled point that flies
   along an arc onto the plot, at log P ≈ 1.
-- 24.7–26 s: points for the other clusters of part 2 pop in one after
+- 26.7–28 s: points for the other clusters of part 2 pop in one after
   another, 0.15 s apart, all `--cep` red.
-- 26–27 s: a line is fitted through the points, drawn from left to right,
+- 28–29 s: a line is fitted through the points, drawn from left to right,
   and labelled **sobitatud sirge** / **fitted line**.
-- 27.6–28.4 s: the plot shrinks into the lower left corner of the scene,
+- 29.6–30.4 s: the plot shrinks into the lower left corner of the scene,
   above the start of the distance scale, and stays there through scene 5
-  for its Cepheids to use, until it fades at 32.6–33 s.
+  for its Cepheids to use, until it fades at 34.6–35 s.
 
 The points are schematic: they scatter about a line with the slope of the
 V-band relation, and the M axis has no numbers, so that the plot does not
 give away the answers of part 2.
 
-### 5. Galaxies and the Hubble law (28–33 s) — part 3
+### 5. Galaxies and the Hubble law (30–35 s) — part 3
 
-- 28–29.5 s: the camera pulls out of the Milky Way, which shrinks to a small
+- 30–31.5 s: the camera pulls out of the Milky Way, which shrinks to a small
   spiral among other galaxies. The marker slides to ~20 Mpc.
-- 29.5–31 s: one of them becomes the DSS2 image of M101, with a few
+- 31.5–33 s: one of them becomes the DSS2 image of M101, with a few
   Cepheids blinking in it. Their periods go through the line from scene 4,
   and M101 gets its distance label at the M101 landmark. The `--cep` bar
   grows to ~40 Mpc.
-- 31–33 s: the galaxies become points on a plot of velocity against
+- 33–35 s: the galaxies become points on a plot of velocity against
   distance. A line through the origin is fitted, with its slope labelled
   **H₀**.
 
-### 6. A white dwarf explodes (33–40 s) — part 4
+### 6. A white dwarf explodes (35–42 s) — part 4
 
-- 33–33.8 s: the M101 image pans to put the place of SN 2011fe in the
+- 35–35.8 s: the M101 image pans to put the place of SN 2011fe in the
   centre.
-- 33.8–35 s: the camera zooms in on it, about 1000 times, to a drawn
+- 35.8–37 s: the camera zooms in on it, about 1000 times, to a drawn
   binary star as on the supernoovad page: a red giant fills its Roche
   lobe and loses gas through the inner Lagrange point, in a stream that
   flows onto the accretion disc of a white dwarf. Labels **punane hiid**
   and **valge kääbus**, with the white dwarf's mass.
-- 35–37.3 s: gas flows along the stream, and the mass grows from 1,30 to
-  1,38 M☉. At 37.2 s the white dwarf turns yellow: carbon ignites.
-- 37.6–39.6 s: the white dwarf explodes: a white-hot cloud with sparks
+- 37–39.3 s: gas flows along the stream, and the mass grows from 1,30 to
+  1,38 M☉. At 39.2 s the white dwarf turns yellow: carbon ignites.
+- 39.6–41.6 s: the white dwarf explodes: a white-hot cloud with sparks
   grows over the scene and engulfs the red giant.
-- 38.6–39.8 s: the camera zooms back out while the cloud is still growing,
+- 40.6–41.8 s: the camera zooms back out while the cloud is still growing,
   and the explosion becomes a bright point at the place of SN 2011fe in
   M101; the image pans back to its centre.
 
-### 7. Supernovae (40–45 s) — part 4
+### 7. Supernovae (42–47 s) — part 4
 
-- 40–41.5 s: SN 2011fe shines in M101 next to its Cepheids, and fades as
+- 42–43.5 s: SN 2011fe shines in M101 next to its Cepheids, and fades as
   the camera starts to pull out. The two candles in one galaxy show how
   the supernova is calibrated: its peak brightness is found from the
   Cepheid distance.
-- 41.5–43.5 s: the camera pulls out to hundreds of Mpc. Many faint galaxies,
+- 43.5–45.5 s: the camera pulls out to hundreds of Mpc. Many faint galaxies,
   and supernovae flash in them one after another, `--accent` orange. The
   marker slides to ~500 Mpc, and the `--accent` bar grows past 1 Gpc.
-- 43.5–45 s: the Hubble plot from scene 5 widens, its points crowd into the
+- 45.5–47 s: the Hubble plot from scene 5 widens, its points crowd into the
   lower left, and the supernovae add points far out along the same line.
   The readout shows **H₀ ≈ 73 km/s/Mpc**. The text says that this is what
   the user will measure, not a given answer.
 
-### 8. The ladder (45–48 s)
+### 8. The ladder (47–50 s)
 
 The scene fades, and the three bars of the distance scale turn and stack
 into the three rungs of the ladder figure, with the icons and labels of the
@@ -336,8 +348,8 @@ before. Each stage ends in a working state that can be committed.
 |---|---|---|
 | 1 | `tools/intro-images.sh` and the three images in `img/intro/` | the three images |
 | 2 | `intro.js` and `intro.css` with the window, the controls, the progress bar, the timeline, the distance scale, scenes 0, 1, 3, 4, 6 and 8 and placeholders for scenes 2, 5 and 7; the button in `index.html` | 1, 3.5, 6.5, 8.6, 9.8, 13.4, 14.8, 15.6, 15.9, 17.5, 20.5, 23.6, 24.2, 25.6, 27.4, 30.8, 34.3, 36.5, 38.3, 40.5 and 47.5 s and the end |
-| 3 | Scene 2 up to the Milky Way, in place of its placeholder | 11.5 and 12.8 s |
-| 4 | Scenes 5 and 7, in place of their placeholders | 30.5, 32.8, 41, 43 and 44.8 s |
+| 3 | Scene 2 up to the Milky Way, in place of its placeholder | 11.5, 13 and 14.5 s |
+| 4 | Scenes 5 and 7, in place of their placeholders | 32.5, 34.8, 43, 45 and 46.8 s |
 | 5 | Reduced motion, the phone layout, screen readers, the README | the nine key frames once in the dark theme and once in the light theme, and one at phone width |
 
 The placeholders of stage 2 already tell the story. Each shows its
