@@ -880,14 +880,15 @@ footer a { color: inherit; }
         <div>
           <h2><span data-l="et">Perioodi-heleduse seos</span><span data-l="en">Period–luminosity relation</span></h2>
           <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mille parve kaugus on salvestatud. Kui kahe parve kaugus on salvestatud, on joonisel ka väljatsefeiidid: hallid rombid ei ole seoses, värvilised on seosesse lisatud.
-            Parvedes on vähe pika perioodiga tsefeiide, nii et sirge tõusu määravad paremini väljatsefeiidid. Märkeruuduga „Klõps lisab väljatsefeiidi“ lisab või eemaldab klõps väljatsefeiidi seosest.
-            Katkendjoon: sinu kaalutud vähimruutude sirge, kus iga tsefeiidi kaal on 1/(σ<sup>2</sup> + 0,08<sup>2</sup>): 0,08 mag on seose enda laius, sest tsefeiidid ei asu täpselt ühel sirgel. Punktiir: avaldatud seos. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
+            Parvedes on vähe pika perioodiga tsefeiide, nii et sirge tõusu määravad paremini väljatsefeiidid. Märkeruut „Väljatsefeiidid“ näitab seosest väljas olevaid väljatsefeiide ning klõps lisab või eemaldab väljatsefeiidi seosest.
+            Katkendjoon: sinu kaalutud vähimruutude sirge, kus iga tsefeiidi kaal on 1/(σ<sup>2</sup> + 0,08<sup>2</sup>): 0,08 mag on seose enda laius, sest tsefeiidid ei asu täpselt ühel sirgel. Punktiir: avaldatud seos, mille saad märkeruuga „Avaldatud seos“ nähtavale. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
           <p class="hint" data-l="en">Each point is a Cepheid whose cluster distance is saved. Once two cluster distances are saved, the plot also shows the field Cepheids: grey diamonds are not in the relation, coloured ones have been added to it.
-            Clusters have few long-period Cepheids, so the field Cepheids pin down the slope of the line better. With the “Click adds field Cepheids” box ticked, a click adds a field Cepheid to the relation or removes it.
-            Dashed line: your weighted least-squares line, where each Cepheid has the weight 1/(σ<sup>2</sup> + 0.08<sup>2</sup>): 0.08 mag is the width of the relation itself, as Cepheids do not lie exactly on one line. Dotted line: the published relation. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
+            Clusters have few long-period Cepheids, so the field Cepheids pin down the slope of the line better. The “Field Cepheids” box shows the field Cepheids that are not in the relation, and a click then adds a field Cepheid to the relation or removes it.
+            Dashed line: your weighted least-squares line, where each Cepheid has the weight 1/(σ<sup>2</sup> + 0.08<sup>2</sup>): 0.08 mag is the width of the relation itself, as Cepheids do not lie exactly on one line. Dotted line: the published relation, which the “Published relation” box shows. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
         </div>
         <div class="tools" id="plTools" hidden>
-          <label class="toggle"><input type="checkbox" id="plClick" autocomplete="off"><span data-l="et"> Klõps lisab väljatsefeiidi</span><span data-l="en"> Click adds field Cepheids</span></label>
+          <label class="toggle" id="plFieldLbl"><input type="checkbox" id="plClick" autocomplete="off"><span data-l="et"> Väljatsefeiidid (klõps lisab)</span><span data-l="en"> Field Cepheids (click adds)</span></label>
+          <label class="toggle"><input type="checkbox" id="plPub" autocomplete="off"><span data-l="et"> Avaldatud seos</span><span data-l="en"> Published relation</span></label>
         </div>
       </div>
       <div class="plot" id="pl"></div>
@@ -2459,15 +2460,17 @@ function drawPL() {
   const fit = pts.length >= 2 ? fitPL(pts) : null;
   // with two cluster distances saved, the field Cepheids not in the relation are shown in grey
   const showField = cepheidPoints(true).length >= 2;
-  $("plTools").hidden = !showField;
-  const spare = showField ? FIELD_CEPHEIDS.filter((x) => !S.fieldOn.has(x.cep)).map((x) => cepheidPoint(x, fieldPlx(x), true)) : [];
+  $("plTools").hidden = false;
+  $("plFieldLbl").hidden = !showField;
+  const spare = showField && $("plClick").checked ? FIELD_CEPHEIDS.filter((x) => !S.fieldOn.has(x.cep)).map((x) => cepheidPoint(x, fieldPlx(x), true)) : [];
   const xs = [...pts, ...spare].map((p) => p.logP);
   const lo = Math.min(0.5, ...xs) - 0.05, hi = Math.max(1.2, ...xs) + 0.05;
   const line = (f) => [lo, hi].map((x) => f.a * (x - 1) + f.b);
-  const traces = [{
+  const traces = [];
+  if ($("plPub").checked) traces.push({
     type: "scatter", mode: "lines", x: [lo, hi], y: line(pub), hoverinfo: "skip",
     line: { color: css("--text-3"), width: 1.5, dash: "dot" },
-  }];
+  });
   if (fit) traces.push({
     type: "scatter", mode: "lines", x: [lo, hi], y: line(fit),
     hoverinfo: "skip", line: { color: css("--accent"), width: 2, dash: "dash" },
@@ -2500,12 +2503,12 @@ function drawPL() {
   const own = !fit ? `${n}. ${L("Sirge sobitamiseks on vaja vähemalt kahte tsefeiidi.", "Fitting a line needs at least two Cepheids.")}`
     : pts.length >= 3 ? `${L("Sinu seos", "Your relation")}: <b>${plFormula(fit, sub, true)}</b> · ${n}.`
     : `${L("Sinu seos", "Your relation")}: <b>${plFormula(fit, sub, false)}</b> · ${n}; ${L("vigade hindamiseks on vaja vähemalt kolme tsefeiidi.", "estimating the errors needs at least three Cepheids.")}`;
-  const tip = showField && !nf ? `<br>${L("Parvedes on vähe pika perioodiga tsefeiide. Lisa seosesse hallid väljatsefeiidid, et sirge tõus oleks täpsem.",
+  const tip = showField && !nf && $("plClick").checked ? `<br>${L("Parvedes on vähe pika perioodiga tsefeiide. Lisa seosesse hallid väljatsefeiidid, et sirge tõus oleks täpsem.",
     "Clusters have few long-period Cepheids. Add the grey field Cepheids to the relation to pin down the slope of the line.")}` : "";
   $("fit").innerHTML = `${own}${tip}<br>${pubText}`;
 }
 
-// with the "Klõps lisab väljatsefeiidi" box ticked, a click on a field Cepheid adds it to the
+// with the "Väljatsefeiidid" box ticked, a click on a field Cepheid adds it to the
 // relation or removes it (the handler is attached once; Plotly keeps it across redraws)
 function onFieldClick() {
   const gd = $("pl");
@@ -3476,6 +3479,8 @@ function toggleAllStars(id, on, x, y, text) {
 }
 $("skyImage").addEventListener("change", () => { if (S.d) drawSky(); });
 $("allSky").addEventListener("change", (e) => toggleAllStars("sky", e.target.checked, S.d && S.sky.raPlot, S.d && S.d.dec, S.d && S.hover));
+$("plClick").addEventListener("change", drawPL);
+$("plPub").addEventListener("change", drawPL);
 $("allPm").addEventListener("change", (e) => toggleAllStars("pm", e.target.checked, S.d && S.d.pmra, S.d && S.d.pmdec));
 $("allCmd").addEventListener("change", (e) => toggleAllStars("cmd", e.target.checked, S.d && S.d.bprp, S.d && S.d.g.map((g) => g + S.cmdShift)));
 $("restore").addEventListener("click", restoreSelection);
