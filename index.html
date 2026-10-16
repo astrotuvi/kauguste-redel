@@ -2036,7 +2036,7 @@ function drawPM() {
   const yr = pad(percentile(d.pmdec, 0), percentile(d.pmdec, 1));
   const traces = linkedTraces(d.pmra, d.pmdec, false, S.ceph.map((c) => c.at[2]), S.ceph.map((c) => c.at[3]), $("allPm").checked);
   traces.push(crosshairTrace("pm"));
-  return Plotly.react("pm", traces, baseLayout({
+  return react("pm", traces, baseLayout({
     dragmode: "pan",            // pan first to find the clump; the lasso is chosen from the toolbar
     xaxis: axis(`μ<sub>α*</sub> (${L("mas/a", "mas/yr")})`, { range: xr }),
     yaxis: axis(`μ<sub>δ</sub> (${L("mas/a", "mas/yr")})`, { range: yr, scaleanchor: "x", scaleratio: 1 }),
