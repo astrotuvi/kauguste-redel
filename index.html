@@ -589,11 +589,11 @@ footer a { color: inherit; }
       <li><a class="toc-part" href="#osa-3"><span data-l="et">3. osa: Hubble'i seadus</span><span data-l="en">Part 3: The Hubble law</span></a>
         <p data-l="et">Tsefeiididest leia galaktikate kaugused ja Hubble'i konstant.</p>
         <p data-l="en">From Cepheids, find the distances of galaxies and the Hubble constant.</p>
-        <div class="toc-tabs"><a href="#hubIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#galaxies"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></a><a href="#galDist"><span data-l="et">Kaugused</span><span data-l="en">Distances</span></a><a href="#hubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
+        <div class="toc-tabs"><a href="#hubIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#galaxies"><span data-l="et">Kauguste määramine</span><span data-l="en">Measuring distances</span></a><a href="#galDist"><span data-l="et">Galaktikate tabel</span><span data-l="en">Table of galaxies</span></a><a href="#hubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a></div></li>
       <li><a class="toc-part" href="#osa-4"><span data-l="et">4. osa: Ia tüüpi supernoovad</span><span data-l="en">Part 4: Type Ia supernovae</span></a>
         <p data-l="et">Supernoovadega mõõda Universumi paisumist sadade megaparsekite kaugusel.</p>
         <p data-l="en">Measure the expansion of the Universe hundreds of megaparsecs away with supernovae.</p>
-        <div class="toc-tabs"><a href="#snIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#supernovae"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></a><a href="#snHubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a><a href="#snTension"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></a></div></li>
+        <div class="toc-tabs"><a href="#snIntro"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></a><a href="#supernovae"><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova brightness</span></a><a href="#snHubble"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></a><a href="#snTension"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></a></div></li>
     </ol>
   </nav>
   </div>
@@ -902,8 +902,8 @@ footer a { color: inherit; }
       <h2 class="rung"><span data-l="et">3. osa: Hubble'i seadus</span><span data-l="en">Part 3: The Hubble law</span></h2>
       <div class="tabs" role="tablist" id="p3Tabs" aria-label="3. osa" data-en-aria-label="Part 3">
         <button type="button" role="tab" id="tabHubIntro" data-tab="hubIntro" aria-controls="paneHubIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
-        <button type="button" role="tab" id="tabGal" data-tab="galaxies" aria-controls="paneGal" aria-selected="false" tabindex="-1"><span data-l="et">Galaktikad</span><span data-l="en">Galaxies</span></button>
-        <button type="button" role="tab" id="tabGalDist" data-tab="galDist" aria-controls="paneGalDist" aria-selected="false" tabindex="-1"><span data-l="et">Kaugused</span><span data-l="en">Distances</span></button>
+        <button type="button" role="tab" id="tabGal" data-tab="galaxies" aria-controls="paneGal" aria-selected="false" tabindex="-1"><span data-l="et">Kauguste määramine</span><span data-l="en">Measuring distances</span></button>
+        <button type="button" role="tab" id="tabGalDist" data-tab="galDist" aria-controls="paneGalDist" aria-selected="false" tabindex="-1"><span data-l="et">Galaktikate tabel</span><span data-l="en">Table of galaxies</span></button>
         <button type="button" role="tab" id="tabHub" data-tab="hubble" aria-controls="paneHub" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></button>
       </div>
     </div>
@@ -915,13 +915,13 @@ footer a { color: inherit; }
       magnitude</a> from the <a href="https://en.wikipedia.org/wiki/Period-luminosity_relation" target="_blank" rel="noopener">period–luminosity relation</a>, and comparing it with the <a href="https://en.wikipedia.org/wiki/Apparent_magnitude" target="_blank" rel="noopener">apparent magnitude</a> gives the distance of the galaxy. Together with the recession velocity of the galaxy (from its <a href="https://en.wikipedia.org/wiki/Redshift" target="_blank" rel="noopener">redshift</a>) this gives the <a href="https://en.wikipedia.org/wiki/Hubble%27s_law" target="_blank" rel="noopener">Hubble constant</a>.</p>
 
     <ol class="steps" data-l="et">
-      <li><span>Vali galaktika ja nihuta selle tsefeiidid liuguriga oma perioodi-heleduse seosele: nihe on galaktika kauguse moodul. Mida täpsemalt need seosele sätid, seda väiksem on kauguse viga. <a class="go" href="#galaxies" data-go="galaxies">Galaktikad →</a></span></li>
-      <li><span>Vaata galaktikate kaugusi tabelis ja vali, millised galaktikad lähevad Hubble'i seaduse sobitusse. <a class="go" href="#galDist" data-go="galDist">Kaugused →</a></span></li>
+      <li><span>Vali galaktika ja nihuta selle tsefeiidid liuguriga oma perioodi-heleduse seosele: nihe on galaktika kaugusmoodul. Mida täpsemalt need seosele sätid, seda väiksem on kauguse viga. <a class="go" href="#galaxies" data-go="galaxies">Kauguste määramine →</a></span></li>
+      <li><span>Vaata galaktikate kaugusi tabelis ja vali, millised galaktikad lähevad Hubble'i seaduse sobitusse. <a class="go" href="#galDist" data-go="galDist">Galaktikate tabel →</a></span></li>
       <li><span>Loe kiiruse ja kauguse seosest Hubble'i konstant H<sub>0</sub>. <a class="go" href="#hubble" data-go="hubble">Hubble'i seadus →</a></span></li>
     </ol>
     <ol class="steps" data-l="en">
-      <li><span>Choose a galaxy and shift its Cepheids with the slider onto your period–luminosity relation: the shift is the distance modulus of the galaxy. The more precisely you put them on the relation, the smaller the error of the distance. <a class="go" href="#galaxies" data-go="galaxies">Galaxies →</a></span></li>
-      <li><span>Look at the distances of the galaxies in the table and choose which galaxies go into the fit of the Hubble law. <a class="go" href="#galDist" data-go="galDist">Distances →</a></span></li>
+      <li><span>Choose a galaxy and shift its Cepheids with the slider onto your period–luminosity relation: the shift is the distance modulus of the galaxy. The more precisely you put them on the relation, the smaller the error of the distance. <a class="go" href="#galaxies" data-go="galaxies">Measuring distances →</a></span></li>
+      <li><span>Look at the distances of the galaxies in the table and choose which galaxies go into the fit of the Hubble law. <a class="go" href="#galDist" data-go="galDist">Table of galaxies →</a></span></li>
       <li><span>Read off the Hubble constant H<sub>0</sub> from the relation between velocity and distance. <a class="go" href="#hubble" data-go="hubble">Hubble law →</a></span></li>
     </ol>
     <p class="hint" data-l="et">Nendes 29 galaktikas on Hubble'i kosmoseteleskoop mõõtnud kokku üle 2000 tsefeiidi.</p>
@@ -959,14 +959,14 @@ footer a { color: inherit; }
       <div class="card-head">
         <div>
           <h2 id="galFitTitle"></h2>
-          <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mida on nihutatud sinu kauguse mooduli μ võrra; joon on sinu perioodi-heleduse seos. Nihuta tsefeiidid liuguriga joonele ja vajuta „Kontrolli“.
+          <p class="hint" data-l="et">Iga punkt on üks tsefeiid, mida on nihutatud sinu kaugusmooduli μ võrra; joon on sinu perioodi-heleduse seos. Nihuta tsefeiidid liuguriga joonele ja vajuta „Kontrolli“.
             Mida rohkem sinu μ parimast sobitusest erineb, seda suurem on selle viga. <a class="more" href="tsefeiidid.html#leavitt">Loe lähemalt →</a></p>
           <p class="hint" data-l="en">Each point is a Cepheid, shifted by your distance modulus μ; the line is your period–luminosity relation. Shift the Cepheids onto the line with the slider and press “Check”.
             The more your μ differs from the best fit, the larger its error. <a class="more" href="tsefeiidid.html#leavitt">Read more →</a></p>
         </div>
       </div>
       <div class="plot" id="gpl"></div>
-      <div class="mu-row"><label for="galMuIn"><span data-l="et">Kauguse moodul μ</span><span data-l="en">Distance modulus μ</span></label>
+      <div class="mu-row"><label for="galMuIn"><span data-l="et">Kaugusmoodul μ</span><span data-l="en">Distance modulus μ</span></label>
         <input type="range" id="galMuIn" min="27" max="36" step="0.01" value="30"><output for="galMuIn" id="galMuOut"></output>
         <button type="button" class="primary" id="galCheck"><span data-l="et">Kontrolli</span><span data-l="en">Check</span></button>
         <button type="button" id="galDelete" title="Kustutab selle galaktika kauguse mõõtmise" data-en-title="Deletes the distance measurement of this galaxy"><span data-l="et">Kustuta</span><span data-l="en">Delete</span></button></div>
@@ -980,14 +980,14 @@ footer a { color: inherit; }
       <div class="card-head">
         <div>
           <h2><span data-l="et">Galaktikate kaugused</span><span data-l="en">Distances of the galaxies</span></h2>
-          <p class="hint" data-l="et">Kauguse moodulid, mille leidsid vahelehel „Galaktikad“. Klõps galaktika real viib selle juurde tagasi.</p>
-          <p class="hint" data-l="en">The distance moduli that you found in the “Galaxies” tab. A click on the row of a galaxy takes you back to it.</p>
+          <p class="hint" data-l="et">Kaugusmoodulid, mille leidsid vahelehel „Kauguste määramine“. Klõps galaktika real viib selle juurde tagasi.</p>
+          <p class="hint" data-l="en">The distance moduli that you found in the “Measuring distances” tab. A click on the row of a galaxy takes you back to it.</p>
         </div>
       </div>
       <div class="table-wrap">
         <table class="data-table">
         <thead><tr>
-          <th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas mõõdetud tsefeiidide arv" data-en-title="Number of Cepheids measured in the galaxy"><span data-l="et">Tsefeiide</span><span data-l="en">Cepheids</span></th><th title="Eemaldumiskiirus v = cz galaktika punanihkest, mis on parandatud pekuliaarse kiiruse jaoks" data-en-title="Recession velocity v = cz from the redshift of the galaxy, corrected for its peculiar velocity"><span data-l="et">Kiirus (km/s)</span><span data-l="en">Velocity (km/s)</span></th><th title="Kauguse moodul μ = m − M, mille leidsid tsefeiide seosele nihutades" data-en-title="Distance modulus μ = m − M that you found by shifting the Cepheids onto the relation">μ (mag)</th><th title="Kaugus d = 10^(μ/5 − 5) megaparsekites" data-en-title="Distance d = 10^(μ/5 − 5) in megaparsecs"><span data-l="et">Kaugus (Mpc)</span><span data-l="en">Distance (Mpc)</span></th><th title="Selle galaktika kiiruse ja kauguse suhe — üksiku galaktika hinnang Hubble'i konstandile" data-en-title="Ratio of the velocity and distance of this galaxy — the estimate of the Hubble constant from a single galaxy">v / d (km/s/Mpc)</th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses" data-en-title="Whether the galaxy is used in the fit of the Hubble law"><span data-l="et">Sobitusse</span><span data-l="en">In the fit</span></th><th title="Galaktikas plahvatanud Ia tüüpi supernoova, mida kasutatakse 4. osas" data-en-title="Type Ia supernova that exploded in the galaxy, used in part 4"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th>
+          <th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktikas mõõdetud tsefeiidide arv" data-en-title="Number of Cepheids measured in the galaxy"><span data-l="et">Tsefeiide</span><span data-l="en">Cepheids</span></th><th title="Eemaldumiskiirus v = cz galaktika punanihkest, mis on parandatud pekuliaarse kiiruse jaoks" data-en-title="Recession velocity v = cz from the redshift of the galaxy, corrected for its peculiar velocity"><span data-l="et">Kiirus (km/s)</span><span data-l="en">Velocity (km/s)</span></th><th title="Kaugusmoodul μ = m − M, mille leidsid tsefeiide seosele nihutades" data-en-title="Distance modulus μ = m − M that you found by shifting the Cepheids onto the relation">μ (mag)</th><th title="Kaugus d = 10^(μ/5 − 5) megaparsekites" data-en-title="Distance d = 10^(μ/5 − 5) in megaparsecs"><span data-l="et">Kaugus (Mpc)</span><span data-l="en">Distance (Mpc)</span></th><th title="Selle galaktika kiiruse ja kauguse suhe — üksiku galaktika hinnang Hubble'i konstandile" data-en-title="Ratio of the velocity and distance of this galaxy — the estimate of the Hubble constant from a single galaxy">v / d (km/s/Mpc)</th><th title="Kas galaktikat kasutatakse Hubble'i seaduse sobituses" data-en-title="Whether the galaxy is used in the fit of the Hubble law"><span data-l="et">Sobitusse</span><span data-l="en">In the fit</span></th><th title="Galaktikas plahvatanud Ia tüüpi supernoova, mida kasutatakse 4. osas" data-en-title="Type Ia supernova that exploded in the galaxy, used in part 4"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th>
         </tr></thead>
           <tbody id="distBody"></tbody>
         </table>
@@ -1036,7 +1036,7 @@ footer a { color: inherit; }
       <h2 class="rung"><span data-l="et">4. osa: Ia tüüpi supernoovad</span><span data-l="en">Part 4: Type Ia supernovae</span></h2>
       <div class="tabs" role="tablist" id="p4Tabs" aria-label="4. osa" data-en-aria-label="Part 4">
         <button type="button" role="tab" id="tabSnIntro" data-tab="snIntro" aria-controls="paneSnIntro" aria-selected="true"><span data-l="et">Sissejuhatus</span><span data-l="en">Introduction</span></button>
-        <button type="button" role="tab" id="tabSn" data-tab="supernovae" aria-controls="paneSn" aria-selected="false" tabindex="-1"><span data-l="et">Supernoovad</span><span data-l="en">Supernovae</span></button>
+        <button type="button" role="tab" id="tabSn" data-tab="supernovae" aria-controls="paneSn" aria-selected="false" tabindex="-1"><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova brightness</span></button>
         <button type="button" role="tab" id="tabSnHub" data-tab="snHubble" aria-controls="paneSnHub" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i seadus</span><span data-l="en">Hubble law</span></button>
         <button type="button" role="tab" id="tabSnTen" data-tab="snTension" aria-controls="paneSnTen" aria-selected="false" tabindex="-1"><span data-l="et">Hubble'i pinge</span><span data-l="en">Hubble tension</span></button>
       </div>
@@ -1052,12 +1052,12 @@ footer a { color: inherit; }
     <p class="fit" id="snInfo"></p>
 
     <ol class="steps" data-l="et">
-      <li><span>Vaata tabelist, kui heledad on supernoovad 3. osa galaktikates: galaktikate kaugused tulevad 3. osast. <a class="go" href="#supernovae" data-go="supernovae">Supernoovad →</a></span></li>
+      <li><span>Vaata tabelist, kui heledad on supernoovad 3. osa galaktikates: galaktikate kaugused tulevad 3. osast. <a class="go" href="#supernovae" data-go="supernovae">Supernoovade heledus →</a></span></li>
       <li><span>Loe kaugete supernoovade kiiruse ja kauguse seosest Hubble'i konstant ja võrdle seda 3. osa ja Plancki satelliidi väärtusega. <a class="go" href="#snHubble" data-go="snHubble">Hubble'i seadus →</a></span></li>
       <li><span>Võrdle oma 3. ja 4. osa tulemust teiste H<sub>0</sub> mõõtmistega. <a class="go" href="#snTension" data-go="snTension">Hubble'i pinge →</a></span></li>
     </ol>
     <ol class="steps" data-l="en">
-      <li><span>See in the table how bright the supernovae in the galaxies of part 3 are: the distances of the galaxies come from part 3. <a class="go" href="#supernovae" data-go="supernovae">Supernovae →</a></span></li>
+      <li><span>See in the table how bright the supernovae in the galaxies of part 3 are: the distances of the galaxies come from part 3. <a class="go" href="#supernovae" data-go="supernovae">Supernova brightness →</a></span></li>
       <li><span>Read off the Hubble constant from the velocity and distance of the distant supernovae, and compare it with the value of part 3 and that of the Planck satellite. <a class="go" href="#snHubble" data-go="snHubble">Hubble law →</a></span></li>
       <li><span>Compare your results of parts 3 and 4 with other measurements of H<sub>0</sub>. <a class="go" href="#snTension" data-go="snTension">Hubble tension →</a></span></li>
     </ol>
@@ -1068,14 +1068,14 @@ footer a { color: inherit; }
     <section class="card" id="snListCard">
       <div class="card-head">
         <div>
-          <h2><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova luminosity</span></h2>
+          <h2><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova brightness</span></h2>
           <p class="hint" data-l="et">Igas 3. osa galaktikas on plahvatanud vähemalt üks Ia tüüpi supernoova. Kui galaktika kaugus on teada, saab supernoova näivast heledusest tema tegeliku heleduse.</p>
           <p class="hint" data-l="en">In each galaxy of part 3 at least one type Ia supernova has exploded. Once the distance of the galaxy is known, the apparent brightness of the supernova gives its true luminosity.</p>
         </div>
       </div>
       <div class="table-wrap">
         <table class="data-table">
-          <thead><tr><th title="Galaktikas plahvatanud Ia tüüpi supernoova" data-en-title="Type Ia supernova that exploded in the galaxy"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th><th title="Supernoova näiv tähesuurus B-ribas heleduse maksimumis" data-en-title="Apparent magnitude of the supernova in the B band at peak brightness">m<sub>B</sub> (mag)</th><th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktika kauguse moodul 3. osast" data-en-title="Distance modulus of the galaxy from part 3">μ (mag)</th><th title="Supernoova absoluutne tähesuurus M_B = m_B − μ" data-en-title="Absolute magnitude of the supernova M_B = m_B − μ">M<sub>B</sub> (mag)</th></tr></thead>
+          <thead><tr><th title="Galaktikas plahvatanud Ia tüüpi supernoova" data-en-title="Type Ia supernova that exploded in the galaxy"><span data-l="et">Supernoova</span><span data-l="en">Supernova</span></th><th title="Supernoova näiv tähesuurus B-ribas heleduse maksimumis" data-en-title="Apparent magnitude of the supernova in the B band at peak brightness">m<sub>B</sub> (mag)</th><th title="Galaktika nimi" data-en-title="Name of the galaxy"><span data-l="et">Galaktika</span><span data-l="en">Galaxy</span></th><th title="Galaktika kaugusmoodul 3. osast" data-en-title="Distance modulus of the galaxy from part 3">μ (mag)</th><th title="Supernoova absoluutne tähesuurus M_B = m_B − μ" data-en-title="Absolute magnitude of the supernova M_B = m_B − μ">M<sub>B</sub> (mag)</th></tr></thead>
           <tbody id="snBody"></tbody>
         </table>
       </div>
@@ -1099,7 +1099,7 @@ footer a { color: inherit; }
       <div id="mb"></div>
     </section>
     </div>
-    <section class="card" id="snCalEmpty"><p class="empty"><span data-l="et">Supernoovade heledus ilmub, kui 3. osas on galaktikate kaugused leitud.</span><span data-l="en">The supernova luminosity appears once the distances of the galaxies have been found in part 3.</span></p></section>
+    <section class="card" id="snCalEmpty"><p class="empty"><span data-l="et">Supernoovade heledus ilmub, kui 3. osas on galaktikate kaugused leitud.</span><span data-l="en">The supernova brightness appears once the distances of the galaxies have been found in part 3.</span></p></section>
     </div>
 
     <div role="tabpanel" class="pane fit compact" id="paneSnHub" aria-labelledby="tabSnHub" hidden>
@@ -1119,7 +1119,7 @@ footer a { color: inherit; }
         <div class="plot" id="snHub"></div>
         <div class="side">
           <div class="side-choice">
-            <label for="snCalHub"><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova luminosity</span></label>
+            <label for="snCalHub"><span data-l="et">Supernoovade heledus</span><span data-l="en">Supernova brightness</span></label>
             <div class="calib-row">
               <select id="snCalHub" class="sn-menu">
                 <option value="own" data-en-text="My M_B (from the galaxies of part 3)">Minu M_B (3. osa galaktikatest)</option>
@@ -1142,7 +1142,7 @@ footer a { color: inherit; }
           <h2><span data-l="et">H<sub>0</sub> mõõtmised ja sinu tulemused</span><span data-l="en">Measurements of H<sub>0</sub> and your results</span></h2>
           <p class="hint" data-l="et">Iga rida on üks H<sub>0</sub> mõõtmine 1σ veaga: sinised varasest Universumist, punased kauguste redelist, hallid muude meetoditega ja oranžid sinu enda: 3. osa sinu perioodi-heleduse seosega ja 4. osa sinu supernoovade heledusega M<sub>B</sub>, sõltumata menüüdes valitust.
             Ribad on Plancki ja SH0ES-i väärtused koos veaga. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a></p>
-          <p class="hint" data-l="en">Each row is a measurement of H<sub>0</sub> with its 1σ error: blue from the early Universe, red from the distance ladder, grey with other methods and orange your own: part 3 with your period–luminosity relation and part 4 with your supernova luminosity M<sub>B</sub>, whatever is chosen in the menus.
+          <p class="hint" data-l="en">Each row is a measurement of H<sub>0</sub> with its 1σ error: blue from the early Universe, red from the distance ladder, grey with other methods and orange your own: part 3 with your period–luminosity relation and part 4 with your supernova brightness M<sub>B</sub>, whatever is chosen in the menus.
             The bands are the Planck and SH0ES values with their errors. <a class="more" href="hubble.html#pinge">Read more →</a></p>
         </div>
       </div>
@@ -1510,7 +1510,7 @@ const S = {
   page: 0,            // data table page
   pageSize: PAGE_MIN, // data table rows per page, set to what fits its tab
   hl: null,           // data row of the star last clicked in a plot
-  snChoice: "own",    // supernova luminosity chosen in the menu of the Hubble law tab of part 4
+  snChoice: "own",    // supernova brightness chosen in the menu of the Hubble law tab of part 4
   sort: { col: null, dir: 1 }, // data table sort column and direction (1 ascending, -1 descending)
   order: null,        // data rows in table order, or null for the query order
   cmdShift: 0,        // magnitude shift of the HR diagram (absolute magnitudes), for its crosshair
@@ -1826,6 +1826,7 @@ const CONFIG = {
   responsive: true,
   displaylogo: false,
   scrollZoom: true,
+  doubleClick: "reset", // always back to the first view; the default alternates with autoranging
   modeBarButtonsToRemove: ["autoScale2d", "toggleSpikelines", "hoverClosestCartesian", "hoverCompareCartesian"],
 };
 
@@ -2708,8 +2709,8 @@ function drawHubbleParts() {
   drawSupernovae(gals, cal);
   if (!fit) {
     $("h0").innerHTML = `<p class="empty">${done.length ? L("Vali sobitusse vähemalt üks galaktika.", "Choose at least one galaxy for the fit.")
-      : L("Mõõda vähemalt ühe galaktika kaugus: vali vahelehel „Galaktikad“ galaktika ja nihuta selle tsefeiidid seosele.",
-        "Measure the distance of at least one galaxy: in the “Galaxies” tab, choose a galaxy and shift its Cepheids onto the relation.")}</p>`;
+      : L("Mõõda vähemalt ühe galaktika kaugus: vali vahelehel „Kauguste määramine“ galaktika ja nihuta selle tsefeiidid seosele.",
+        "Measure the distance of at least one galaxy: in the “Measuring distances” tab, choose a galaxy and shift its Cepheids onto the relation.")}</p>`;
     return;
   }
   const [hV, hE] = valErr(fit.H, fit.e);
@@ -2723,8 +2724,8 @@ function drawHubbleParts() {
     (fit.eCal ? `, perioodi-heleduse seos (nullpunkt ja tõus) ${fmtN(fit.eCal, 1)} km/s/Mpc` : "") +
     (fit.eAlign ? `, sinu tsefeiidide nihutamine ${fmtN(fit.eAlign, 1)} km/s/Mpc` : "") + `,
     süstemaatiline viga ${fmtN(fit.eSys, 1)} km/s/Mpc, liidetud ruutudena.` +
-    (fit.eAlign ? ` Nihutamise viga tuleb sellest, kui palju sinu kauguse moodulid parimast sobitusest erinevad (ruutkeskmiselt ${fmtN(alignError(inFit), 2)} mag).` : "") +
-    ` Süstemaatiline viga (${fmtN(MU_SYS, 2)} mag kauguse moodulis) tuleb lihtsustustest:
+    (fit.eAlign ? ` Nihutamise viga tuleb sellest, kui palju sinu kaugusmoodulid parimast sobitusest erinevad (ruutkeskmiselt ${fmtN(alignError(inFit), 2)} mag).` : "") +
+    ` Süstemaatiline viga (${fmtN(MU_SYS, 2)} mag kaugusmoodulis) tuleb lihtsustustest:
     siin ei arvestata tsefeiidide metallilisuse mõju ega fotomeetria parandusi, mida SH0ES kasutab.
     Lähedaste galaktikate pekuliaarsed kiirused (mõnisada km/s) tekitavad hajuvust. Hubble'i aeg on ligikaudne Universumi vanus. <a class="more" href="hubble.html#vanus">Loe lähemalt →</a>`,
     `${fmt(fit.n)} galaxies. Error: scatter about the line ${isFinite(fit.eStat) ? fmtN(fit.eStat, 1) : "—"} km/s/Mpc` +
@@ -2754,7 +2755,7 @@ function pageRange(key, n) {
 
 // absolute peak magnitude of the supernovae from the selected Cepheid galaxies, then H0 from the
 // distant supernovae; errors are those of M_B and the scatter about the line
-// The table, the histogram and H0 follow the current results of part 3. H0 uses the supernova luminosity chosen
+// The table, the histogram and H0 follow the current results of part 3. H0 uses the supernova brightness chosen
 // in the menu of the Hubble law tab: the mean M_B of the part 3 galaxies or the SH0ES value.
 // mean absolute peak magnitude of the supernovae in the given galaxies, whose distances come from the
 // relation cal, and the scatter; null for fewer than two galaxies. The error e combines the standard error
@@ -2772,7 +2773,7 @@ function meanMB(gals, cal) {
 
 // histogram of M_B of the selected galaxies (the mean of a galaxy's supernovae), with the mean and its error
 function drawMBHist(used, own) {
-  if (!own) return emptyPlot("snHist", L("Supernoovade heledus on veel leidmata.", "The supernova luminosity has not been found yet."));
+  if (!own) return emptyPlot("snHist", L("Supernoovade heledus on veel leidmata.", "The supernova brightness has not been found yet."));
   const Ms = used.map((g) => g.mb - g.mu), w = 0.05;
   const lo = Math.floor(Math.min(...Ms, own.M - own.e) / w) * w, hi = Math.ceil(Math.max(...Ms, own.M + own.e) / w) * w;
   const bins = Array.from({ length: Math.round((hi - lo) / w) }, () => 0);
@@ -2837,7 +2838,7 @@ function drawSupernovae(gals, rel) {
   drawMBHist(used, own);
   $("snCalHubInfo").innerHTML = cal ? `${L("Kasutusel", "In use")}: M<sub>B</sub> = ${uV} ± ${uE} mag, ${whose}` : ownLine;
   if (!cal) {
-    emptyPlot("snHub", L("Supernoovade heledus on veel leidmata.", "The supernova luminosity has not been found yet."));
+    emptyPlot("snHub", L("Supernoovade heledus on veel leidmata.", "The supernova brightness has not been found yet."));
     $("snH0").innerHTML = "";
     return;
   }

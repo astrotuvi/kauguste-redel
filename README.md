@@ -133,9 +133,9 @@ for comparison.
 
 ### Hubble law
 
-The third part has four tabs: **Sissejuhatus** (the steps), **Galaktikad**
+The third part has four tabs: **Sissejuhatus** (the steps), **Kauguste määramine**
 (the list of galaxies on the left, and the Cepheids of the chosen one with
-the distance modulus slider on the right), **Kaugused** (the full table of the
+the distance modulus slider on the right), **Galaktikate tabel** (the full table of the
 galaxy distances) and **Hubble'i seadus** (the velocity–distance plot and H₀).
 The tables have as many rows per page as fit the window.
 
@@ -144,7 +144,7 @@ observed by *HST*. It stays hidden until you have fitted your own W_H
 period-luminosity relation in the second part, which takes at least two
 stored cluster Cepheids. The galaxies are measured with that relation only.
 
-**Galaktikad** lists the galaxies with their number of Cepheids, velocity and
+**Kauguste määramine** lists the galaxies with their number of Cepheids, velocity and
 a checkbox for the fit; ✓ marks the measured ones. Clicking a row (or Enter on
 it) shows its Cepheids beside the list, as in the **Leavitt'i seadus** tab of
 the Cepheid page: on the absolute magnitude scale with the relation as a line,
@@ -160,10 +160,10 @@ measurements are kept in the browser; one counts only while it is within
 0.15 mag of the best fit with the current relation, so a changed relation in
 part 2 may ask for it again.
 
-**Kaugused** shows the number of Cepheids, the velocity, μ, the distance and
+**Galaktikate tabel** shows the number of Cepheids, the velocity, μ, the distance and
 v/d of every galaxy, with the same checkboxes and, last, the supernova used in
 part 4; clicking a row goes back to that galaxy in
-**Galaktikad**.
+**Kauguste määramine**.
 
 The velocity–distance plot shows a straight line through the origin fitted by
 least squares, and its slope gives the Hubble constant H₀ and the Hubble
@@ -174,8 +174,8 @@ part 4 and the Hubble tension always use the user's own measurements.
 
 ### Type Ia supernovae
 
-The fourth part has four tabs: **Sissejuhatus** (the steps), **Supernoovad**
-(the choice of luminosity and the paged supernova table), **Hubble'i seadus**
+The fourth part has four tabs: **Sissejuhatus** (the steps), **Supernoovade heledus**
+(the choice of brightness and the paged supernova table), **Hubble'i seadus**
 (the velocity–distance plot of the distant supernovae, with H₀ to the right
 of it) and **Hubble'i pinge**. In parts 3 and 4 the H₀ and Hubble time tiles
 and the explanation sit in a column to the right of the plot.
@@ -191,14 +191,14 @@ column to the right gives their difference from Planck and from SH0ES in
 km/s/Mpc and σ. The published values are copied from `hubble.html`.
 
 Its content appears once a relation has been applied in the third part. Each
-Cepheid galaxy hosted at least one type Ia supernova; the **Supernoovad** tab
+Cepheid galaxy hosted at least one type Ia supernova; the **Supernoovade heledus** tab
 lists them with one row per supernova (several galaxies have two or three), in
 the columns supernova, m_B, galaxy, μ ± error and M_B ± error. Its absolute
 peak magnitude is `M_B = m_B − μ`, with μ from the third part. The error of
 M_B combines the error of μ and the measurement error of m_B. A histogram of
 M_B on the right shows the mean over the galaxies selected in the third part
 (a galaxy with several supernovae counts once) and its error. That mean is
-the supernova luminosity, applied to 166 distant supernovae
+the supernova brightness, applied to 166 distant supernovae
 (0.023 < z < 0.06, up to about 250 Mpc) in the **Hubble'i seadus** tab. There
 a menu chooses between:
 - your own M_B, the mean over the galaxies of the third part;
