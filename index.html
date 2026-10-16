@@ -16,6 +16,8 @@
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.1.0/plotly.min.js"></script>
+<script defer src="intro.js"></script>
+<link rel="stylesheet" href="intro.css">
 <style>
 :root {
   color-scheme: light;
@@ -533,6 +535,9 @@ footer a { color: inherit; }
         <g class="icon r3"><polygon class="fill" points="22.0,49.0 23.9,57.4 31.2,52.8 26.6,60.1 35.0,62.0 26.6,63.9 31.2,71.2 23.9,66.6 22.0,75.0 20.1,66.6 12.8,71.2 17.4,63.9 9.0,62.0 17.4,60.1 12.8,52.8 20.1,57.4"/></g>
       </a>
       </svg>
+      <div class="intro-actions">
+        <button type="button" id="introPlay">▶ <span data-l="et">Vaata tutvustust (54 s)</span><span data-l="en">Watch the introduction (54 s)</span></button>
+      </div>
     </figure>
   </div>
   <nav class="toc" aria-labelledby="tocTitle">
@@ -1168,7 +1173,7 @@ footer a { color: inherit; }
     <a href="https://gaia.ari.uni-heidelberg.de/" target="_blank" rel="noopener">ARI Heidelbergi Gaia-andmekeskus</a>,
     <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">ESA Gaia arhiiv</a>
     ja <a href="https://gaia.aip.de/" target="_blank" rel="noopener">AIP Potsdam</a>).
-    Nimed lahendatakse SIMBADi ja Sesame abil (CDS, Strasbourg), taevapildid on DSS2 värviline ülevaade (CDS hips2fits). Iga tähe parallaksi nullpunkt (sõltub tähe heledusest, värvist ja ekliptilisest laiusest) arvutatakse tööst Lindegren jt (2021), nagu Gaia paketis gaiadr3_zeropoint;
+    Nimed lahendatakse SIMBADi ja Sesame abil (CDS, Strasbourg), taevapildid, ka tutvustuses, on DSS2 värviline ülevaade (CDS hips2fits). Iga tähe parallaksi nullpunkt (sõltub tähe heledusest, värvist ja ekliptilisest laiusest) arvutatakse tööst Lindegren jt (2021), nagu Gaia paketis gaiadr3_zeropoint;
     lisatud on ~0,010 mas süstemaatiline viga, sest nurga järgi korreleeruvad parallaksivead keskmistamisel ei vähene
     (Lindegren jt 2021; Maíz Apellániz jt 2021). Absoluutse tähesuurusega HR-diagrammil on ekstinktsioon arvestamata.
     Tsefeiidide ja parvede seosed pärinevad tööst Cruz Reyes &amp; Anderson (2023; liikmesuse tõenäosus ≥ 0,5, ainult põhitoonis pulseerivad tsefeiidid);
@@ -1187,7 +1192,7 @@ footer a { color: inherit; }
     <a href="https://gaia.ari.uni-heidelberg.de/" target="_blank" rel="noopener">ARI Heidelberg Gaia data centre</a>,
     <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">ESA Gaia archive</a>
     and <a href="https://gaia.aip.de/" target="_blank" rel="noopener">AIP Potsdam</a>).
-    Names are resolved with SIMBAD and Sesame (CDS, Strasbourg), and the sky images are the DSS2 colour survey (CDS hips2fits). The parallax zero point of each star (which depends on its brightness, colour and ecliptic latitude) is computed from Lindegren et al. (2021), as in the Gaia package gaiadr3_zeropoint;
+    Names are resolved with SIMBAD and Sesame (CDS, Strasbourg), and the sky images, also in the introduction, are the DSS2 colour survey (CDS hips2fits). The parallax zero point of each star (which depends on its brightness, colour and ecliptic latitude) is computed from Lindegren et al. (2021), as in the Gaia package gaiadr3_zeropoint;
     a systematic error of ~0.010 mas is added, because parallax errors correlated over angle do not shrink with averaging
     (Lindegren et al. 2021; Maíz Apellániz et al. 2021). The HR diagram in absolute magnitudes does not account for extinction.
     The Cepheids and their clusters are from Cruz Reyes &amp; Anderson (2023; membership probability ≥ 0.5, fundamental-mode Cepheids only);

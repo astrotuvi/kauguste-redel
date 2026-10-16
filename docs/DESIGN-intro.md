@@ -2,7 +2,7 @@
 
 A short animation on the home page of `index.html` that shows the idea of
 the cosmic distance ladder and what the user does in the four parts of the
-exercise. It runs for 50 s, under a limit of 60 s, with room for the
+exercise. It runs for 54 s, under a limit of 60 s, with room for the
 captions to be read. It opens with the 3D view of the parallax page,
 because parallax is where every distance on the ladder starts, and it
 zooms in on the two standard candles to show what they are: a Cepheid
@@ -31,7 +31,7 @@ When it ends, the ladder of the last frame shrinks and flies to the ladder
 figure on the page, and the window closes, so the user ends up on the home
 page as it is now, with the figure they have just seen built.
 
-- On the home page, a **Vaata tutvustust (50 s)** button sits below the
+- On the home page, a **Vaata tutvustust (54 s)** button sits below the
   ladder figure. The animation never plays by itself: users come back to
   this page many times, and a teacher may open it in front of a class.
 - **Peata / Jätka**, **Algusest** and **Jäta vahele** buttons under the
@@ -39,8 +39,11 @@ page as it is now, with the figure they have just seen built.
   to the start of that scene. Space pauses and Esc skips.
 - **Jäta vahele**, Esc and a click outside the scene close the window.
 - On a phone the window fills the screen, and the scene keeps 16 : 9.
-- With `prefers-reduced-motion`, the button shows the six key frames as
-  still images in a row, with the same captions, instead of the animation.
+- With `prefers-reduced-motion`, each scene is shown as one still key
+  frame with its caption, for as long as the scene lasts, so the nine key
+  frames follow each other as cuts instead of the animation. The controls
+  and the progress bar work as before, and at the end the window closes
+  without the ladder flying to the page.
 
 ## One thread through the scenes: the distance scale
 
@@ -117,10 +120,10 @@ of the page (`data-l`). The captions below are drafts.
 | 2 | 9–17.2 | Parallaks · 1. osa | Gaia parallaksid annavad täheparvede kaugused | Gaia parallaxes give the distances of star clusters |
 | 3 | 17.2–25 | Tsefeiidid · 2. osa | Tsefeiid pulseerib – periood näitab tema heledust | A Cepheid pulsates – its period reveals its luminosity |
 | 4 | 25–30 | Tsefeiidid · 2. osa | Parvede tsefeiidid kalibreerivad seose | Cluster Cepheids calibrate the relation |
-| 5 | 30–35 | Tsefeiidid · 3. osa | Tsefeiidid annavad galaktikate kaugused | Cepheids give the distances of galaxies |
-| 6 | 35–42 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
-| 7 | 42–47 | Supernoovad · 4. osa | Supernoovad ulatuvad sadade megaparsekiteni | Supernovae reach hundreds of megaparsecs |
-| 8 | 47–50 | – | Redel – ronime pulkhaaval | The ladder – one rung at a time |
+| 5 | 30–37 | Tsefeiidid · 3. osa | Tsefeiidid annavad galaktikate kaugused | Cepheids give the distances of galaxies |
+| 6 | 37–44 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
+| 7 | 44–51 | Supernoovad · 4. osa | Supernoovad ulatuvad sadade megaparsekiteni | Supernovae reach hundreds of megaparsecs |
+| 8 | 51–54 | – | Redel – ronime pulkhaaval | The ladder – one rung at a time |
 
 ### 0. Title (0–2 s)
 
@@ -227,56 +230,85 @@ turn blocky. Scene 5 can pull out of the same Milky Way.
   and labelled **sobitatud sirge** / **fitted line**.
 - 29.6–30.4 s: the plot shrinks into the lower left corner of the scene,
   above the start of the distance scale, and stays there through scene 5
-  for its Cepheids to use, until it fades at 34.6–35 s.
+  for its Cepheids to use, until it fades at 36.8–37.1 s.
 
 The points are schematic: they scatter about a line with the slope of the
 V-band relation, and the M axis has no numbers, so that the plot does not
 give away the answers of part 2.
 
-### 5. Galaxies and the Hubble law (30–35 s) — part 3
+### 5. Galaxies and the Hubble law (30–37 s) — part 3
 
-- 30–31.5 s: the camera pulls out of the Milky Way, which shrinks to a small
-  spiral among other galaxies. The marker slides to ~20 Mpc.
-- 31.5–33 s: one of them becomes the DSS2 image of M101, with a few
-  Cepheids blinking in it. Their periods go through the line from scene 4,
-  and M101 gets its distance label at the M101 landmark. The `--cep` bar
-  grows to ~40 Mpc.
-- 33–35 s: the galaxies become points on a plot of velocity against
-  distance. A line through the origin is fitted, with its slope labelled
-  **H₀**.
+- 30–31.3 s: the camera pulls out of the Milky Way, which pans back to its
+  centre and shrinks to a small spiral among other galaxies, drawn as soft
+  ellipses. M101 is a larger spiral up to the right: its DSS2 image, small
+  enough to be a soft round patch. The marker slides to ~20 Mpc.
+- 31.3–31.8 s: the field pans to put M101 in the centre, and the Milky Way
+  moves aside.
+- 31.8–32.7 s: the camera zooms in until the image of M101 fills the scene.
+- 32.7–33.7 s: four Cepheids blink in its arms one after another, each in a
+  red ring, the first labelled **tsefeiid** / **Cepheid**. As each blinks,
+  a hollow point for it appears on the line of the plot in the corner: its
+  period gives its luminosity.
+- 33.3–33.8 s: the marker slides back to M101, its landmark appears, and
+  M101 gets its distance, **d ≈ 7 Mpc**. The `--cep` bar grows to ~40 Mpc
+  at 33.5–34.5 s.
+- 34.2–34.6 s: the image dims, and a plot of **kiirus** against
+  **kaugus (Mpc)** fades in, 0–25 Mpc, with ticks at 10 and 20.
+- 34.6–35.1 s: M101 flies from the centre of its image onto the plot along
+  an arc, as a labelled point.
+- 35.1–35.8 s: points for the other galaxies of part 3 pop in, 0.08 s
+  apart, `--cep` red.
+- 35.6–36.4 s: a line through the origin is drawn outwards, and labelled
+  **tõus H₀** / **slope H₀**.
+- 36.8–37.1 s: the plot and the plot in the corner fade, and the image
+  comes back.
 
-### 6. A white dwarf explodes (35–42 s) — part 4
+The velocity axis has no numbers and the points are schematic, so that the
+plot does not give away the answer of part 3. Its axes keep the line at the
+same slope on the screen at every width (80 km/s per Mpc of the axis), so
+that it can widen in scene 7.
 
-- 35–35.8 s: the M101 image pans to put the place of SN 2011fe in the
+### 6. A white dwarf explodes (37–44 s) — part 4
+
+- 37–37.8 s: the M101 image pans to put the place of SN 2011fe in the
   centre.
-- 35.8–37 s: the camera zooms in on it, about 1000 times, to a drawn
+- 37.8–39 s: the camera zooms in on it, about 1000 times, to a drawn
   binary star as on the supernoovad page: a red giant fills its Roche
   lobe and loses gas through the inner Lagrange point, in a stream that
   flows onto the accretion disc of a white dwarf. Labels **punane hiid**
   and **valge kääbus**, with the white dwarf's mass.
-- 37–39.3 s: gas flows along the stream, and the mass grows from 1,30 to
-  1,38 M☉. At 39.2 s the white dwarf turns yellow: carbon ignites.
-- 39.6–41.6 s: the white dwarf explodes: a white-hot cloud with sparks
+- 39–41.3 s: gas flows along the stream, and the mass grows from 1,30 to
+  1,38 M☉. At 41.2 s the white dwarf turns yellow: carbon ignites.
+- 41.6–43.6 s: the white dwarf explodes: a white-hot cloud with sparks
   grows over the scene and engulfs the red giant.
-- 40.6–41.8 s: the camera zooms back out while the cloud is still growing,
+- 42.6–43.8 s: the camera zooms back out while the cloud is still growing,
   and the explosion becomes a bright point at the place of SN 2011fe in
   M101; the image pans back to its centre.
 
-### 7. Supernovae (42–47 s) — part 4
+### 7. Supernovae (44–51 s) — part 4
 
-- 42–43.5 s: SN 2011fe shines in M101 next to its Cepheids, and fades as
-  the camera starts to pull out. The two candles in one galaxy show how
+- 44–45.5 s: SN 2011fe shines in M101, labelled, while the Cepheids of
+  scene 5 blink again next to it. The two candles in one galaxy show how
   the supernova is calibrated: its peak brightness is found from the
-  Cepheid distance.
-- 43.5–45.5 s: the camera pulls out to hundreds of Mpc. Many faint galaxies,
-  and supernovae flash in them one after another, `--accent` orange. The
-  marker slides to ~500 Mpc, and the `--accent` bar grows past 1 Gpc.
-- 45.5–47 s: the Hubble plot from scene 5 widens, its points crowd into the
-  lower left, and the supernovae add points far out along the same line.
-  The readout shows **H₀ ≈ 73 km/s/Mpc**. The text says that this is what
-  the user will measure, not a given answer.
+  Cepheid distance. It fades at 45.3–46.2 s, as the camera pulls out.
+- 45.5–47.5 s: the camera pulls out to hundreds of Mpc, past the galaxies
+  of scene 5, with M101 in the centre and the Milky Way to the lower left,
+  to a field of many faint galaxies. The marker slides to ~500 Mpc, and
+  the `--accent` bar grows past 1 Gpc.
+- 46.8–48.1 s: supernovae flash in twelve of the faint galaxies, one after
+  another, `--accent` orange, with a fast rise and a slow decline.
+- 48.1–48.5 s: the field dims, and the Hubble plot of scene 5 comes back as
+  it was.
+- 48.5–49.2 s: it widens from 25 to 500 Mpc: its points crowd into the
+  lower left, and the ticks every 10 Mpc give way to ticks every 100 Mpc.
+- 49–49.7 s: the supernovae add points far out along the same line,
+  0.05 s apart, `--accent` orange.
+- 49.5–51 s: the readout shows **H₀ ≈ 73 km/s/Mpc**, and below it
+  **– selle mõõdad ise 3. ja 4. osas** / **– you will measure it in parts
+  3 and 4**, so that it reads as what the user will measure, not as a
+  given answer.
 
-### 8. The ladder (47–50 s)
+### 8. The ladder (51–54 s)
 
 The scene fades, and the three bars of the distance scale turn and stack
 into the three rungs of the ladder figure, with the icons and labels of the
@@ -333,10 +365,12 @@ figure itself, and the focus returns to the **Vaata tutvustust** button.
 - Dark and light themes both work, as the colours are the page tokens. The
   sky stays dark in both.
 - When the scene is less than about 600 px wide, the plot labels in
-  scenes 1–7 are hidden, leaving only the captions.
+  scenes 1–7 and the labels of the distance scale are hidden, leaving only
+  the captions, the readouts (**d ≈ 135 pc**, **d ≈ 7 Mpc**, **H₀ ≈ 73
+  km/s/Mpc**) and the labels of the ladder.
 - The SVG has a `<title>` and a `<desc>` that tell the whole story in a few
-  sentences for screen readers, and each caption is in an `aria-live`
-  region.
+  sentences for screen readers, in the language of the page when the
+  window opens, and each caption is in an `aria-live` region.
 
 ## Build stages
 
@@ -349,7 +383,7 @@ before. Each stage ends in a working state that can be committed.
 | 1 | `tools/intro-images.sh` and the three images in `img/intro/` | the three images |
 | 2 | `intro.js` and `intro.css` with the window, the controls, the progress bar, the timeline, the distance scale, scenes 0, 1, 3, 4, 6 and 8 and placeholders for scenes 2, 5 and 7; the button in `index.html` | 1, 3.5, 6.5, 8.6, 9.8, 13.4, 14.8, 15.6, 15.9, 17.5, 20.5, 23.6, 24.2, 25.6, 27.4, 30.8, 34.3, 36.5, 38.3, 40.5 and 47.5 s and the end |
 | 3 | Scene 2 up to the Milky Way, in place of its placeholder | 11.5, 13 and 14.5 s |
-| 4 | Scenes 5 and 7, in place of their placeholders | 32.5, 34.8, 43, 45 and 46.8 s |
+| 4 | Scenes 5 and 7, in place of their placeholders | 31, 33.5, 36.4, 44.6, 46.4, 47.2, 49 and 50.3 s |
 | 5 | Reduced motion, the phone layout, screen readers, the README | the nine key frames once in the dark theme and once in the light theme, and one at phone width |
 
 The placeholders of stage 2 already tell the story. Each shows its

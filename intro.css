@@ -1,0 +1,157 @@
+/* The intro animation of the home page (intro.js, docs/DESIGN-intro.md). It uses the colour tokens of
+   index.html; its only colours of its own are the dark sky, which stays dark in both themes, the text on
+   it, and the colours of the stars, the gas and the explosion in the close-ups. */
+.intro-modal {
+  --intro-sky: #05070d;
+  --intro-sky-text: #f1f0ea;
+  --intro-sky-text-2: #b9b8b0;
+  position: fixed; inset: 0; z-index: 2000;
+  display: grid; place-items: center; padding: 16px;
+  background: color-mix(in srgb, var(--intro-sky) 72%, transparent);
+  transition: opacity 0.4s;
+}
+:root.intro-open, :root.intro-open body { overflow: hidden; }
+.intro-modal.closing { opacity: 0; pointer-events: none; }
+.intro-window {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.intro-window:focus { outline: none; }
+/* 16 : 9, as wide as the window allows with the controls below it, at most 1100 px */
+.intro-scene {
+  position: relative; container-type: inline-size; overflow: hidden; border-radius: 6px;
+  width: min(1100px, calc(100vw - 58px), calc((100vh - 150px) * 16 / 9));
+  aspect-ratio: 16 / 9; background: var(--intro-sky);
+}
+.intro-scene svg { display: block; width: 100%; height: 100%; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.intro-caption {
+  position: absolute; top: 3.2cqw; left: 0; right: 0; margin: 0; padding: 0 6cqw;
+  text-align: center; font-size: clamp(15px, 3.1cqw, 34px); font-weight: 600; line-height: 1.2;
+  color: var(--intro-sky-text); letter-spacing: -0.005em; pointer-events: none;
+}
+
+.intro-sky { fill: var(--intro-sky); }
+.intro-sky-stop { stop-color: var(--intro-sky); }
+.intro-stars circle { fill: var(--intro-sky-text); }
+/* scene 1: the 3D view of the parallax, with the rung colour for the star's path */
+.intro-par .plane { fill: var(--intro-sky-text); fill-opacity: 0.05; stroke: var(--intro-sky-text-2); stroke-opacity: 0.5; }
+.intro-par .quasar { stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
+.intro-par .orbit { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.intro-par .sight { stroke: var(--intro-sky-text-2); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.intro-par .loops { fill: none; stroke: var(--sel); stroke-width: 3; stroke-linejoin: round; }
+.intro-par .hit, .intro-par .earth { fill: var(--sel); }
+.intro-par .sun, .intro-par .star { fill: var(--intro-sky-text); }
+.intro-par text { fill: var(--intro-sky-text); font-size: 19px; }
+.intro-par text.dim { fill: var(--intro-sky-text-2); }
+
+/* the Milky Way between the Pleiades and NGC 6087 */
+.intro-mw .arms, .intro-mw .sun, .intro-mw .cluster, .intro-mw .names line { vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.intro-mw .arms { stroke: var(--intro-sky-text); }
+.intro-mw .arms.s0 { stroke-width: 1.4; stroke-opacity: 0.35; }
+.intro-mw .arms.s1 { stroke-width: 2; stroke-opacity: 0.55; }
+.intro-mw .arms.s2 { stroke-width: 2.8; stroke-opacity: 0.8; }
+.intro-mw .sun { stroke: var(--intro-sky-text); stroke-width: 6; }
+.intro-mw .cluster { stroke: var(--sel); stroke-width: 5; }
+.intro-mw .names line { stroke: var(--intro-sky-text-2); stroke-width: 1; }
+.intro-mw .names text { fill: var(--intro-sky-text); font-size: 18px; }
+.intro-mw .names text.big { font-size: 24px; font-weight: 600; fill: var(--intro-sky-text-2); }
+
+/* scene 2: the proper motions and parallaxes of the Pleiades, the selection in the colour of the parallax rung */
+.intro-pm .star { fill: var(--intro-sky-text-2); }
+.intro-pm .star.sel, .intro-pm .block { fill: var(--sel); }
+.intro-pm .block { stroke: var(--intro-sky); stroke-width: 1.5; }
+.intro-pm .arrows { fill: none; stroke: var(--intro-sky-text); stroke-opacity: 0.75; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.intro-pm .lasso { fill: var(--sel); stroke: var(--sel); stroke-width: 2.5; stroke-linejoin: round; }
+.intro-plot text.read { font-size: 30px; font-weight: 650; }
+
+/* scene 3: S Nor and its light curve, in the colour of the Cepheid rung */
+.intro-cep .axis { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
+.intro-cep .curve { fill: none; stroke: var(--cep); stroke-width: 4; stroke-linejoin: round; }
+.intro-cep .dot { fill: var(--cep); }
+.intro-cep .bracket { fill: none; stroke: var(--intro-sky-text); stroke-width: 2; }
+.intro-cep text, .intro-sn text { fill: var(--intro-sky-text); font-size: 20px; }
+.intro-cep text.name { font-size: 24px; font-weight: 600; }
+.intro-cep text.dim, .intro-sn text.dim { fill: var(--intro-sky-text-2); }
+
+/* scene 4: the period–luminosity plot over the dimmed image */
+.intro-dim { fill: var(--intro-sky); }
+.intro-plot .panel { fill: var(--intro-sky); fill-opacity: 0.88; stroke: var(--intro-sky-text-2); stroke-opacity: 0.35; }
+.intro-plot .axis { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
+.intro-plot .fit { stroke: var(--intro-sky-text); stroke-width: 3; stroke-linecap: round; }
+.intro-plot text { fill: var(--intro-sky-text); font-size: 20px; }
+.intro-plot text.dim { fill: var(--intro-sky-text-2); }
+.intro-plot .pt, .intro-plot ~ .pt { fill: var(--cep); stroke: var(--intro-sky); stroke-width: 1.5; }
+.intro-ring { fill: none; stroke: var(--cep); stroke-width: 3; }
+
+/* scenes 5 and 7: the galaxies, the Cepheids of M101 (hollow on the line of the corner plot), the Hubble plot
+   with the supernovae in the colour of their rung, and the supernovae flashing in the far galaxies */
+.intro-plot .pt.m101 { fill: var(--intro-sky); stroke: var(--cep); stroke-width: 3; }
+.intro-plot .pt.sn { fill: var(--accent); }
+.intro-gal .flash .halo { fill: var(--accent); opacity: 0.85; }
+.intro-gal .flash .core { fill: #fff6e6; }
+
+/* scene 6: the white dwarf and its companion; the gas and the white dwarf keep the colours of the
+   supernova page */
+.intro-sn .disc { fill: rgba(255, 196, 150, 0.35); stroke: rgba(255, 196, 150, 0.6); }
+.intro-sn .stream { fill: none; stroke: rgba(255, 196, 150, 0.35); stroke-width: 4; }
+.intro-sn .blob { fill: #ffd2a8; }
+.intro-sn .wd { fill: #dfe8ff; }
+.intro-sn .wd.lit { fill: #ffe6b0; }
+.intro-sn .spark { fill: #ff9a5a; }
+.intro-sn .spark.warm { fill: #ffe39a; }
+
+/* the distance scale */
+.intro-scale .axis { stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
+.intro-scale .unit { fill: var(--intro-sky-text-2); font-size: 17px; text-anchor: middle; }
+.intro-scale .landmark line { stroke: var(--intro-sky-text-2); stroke-width: 1; stroke-dasharray: 2 3; }
+.intro-scale .landmark text { fill: var(--intro-sky-text); font-size: 16px; }
+.intro-scale .marker path, .intro-scale .marker circle { fill: var(--intro-sky-text); }
+.intro-bar, .intro-halo { stroke-linecap: round; }
+.intro-bar.r1, .intro-halo.r1 { stroke: var(--sel); }
+.intro-bar.r2, .intro-halo.r2 { stroke: var(--cep); }
+.intro-bar.r3, .intro-halo.r3 { stroke: var(--accent); }
+.intro-ladder { pointer-events: none; }
+
+/* the progress bar with a mark for each part, in the colour of its rung */
+.intro-progress { position: relative; height: 26px; margin: 0 11px; }
+.intro-track { position: absolute; left: 0; right: 0; top: 7px; height: 12px; cursor: pointer; }
+.intro-track::before, .intro-fill { content: ""; position: absolute; left: 0; top: 4px; height: 4px; border-radius: 2px; }
+.intro-track::before { right: 0; background: var(--chip); }
+.intro-fill { background: var(--text-3); }
+.intro-mark {
+  position: absolute; top: 2px; width: 22px; height: 22px; margin-left: -11px; padding: 0;
+  border-radius: 50%; border: 2px solid var(--surface); color: var(--btn-text);
+  font-size: 0.75rem; font-weight: 650; line-height: 1; display: grid; place-items: center;
+}
+.intro-mark.p1 { background: var(--sel); }
+.intro-mark.p2, .intro-mark.p3 { background: var(--cep); }
+.intro-mark.p4 { background: var(--accent); }
+/* a narrow scene keeps only the captions, the readouts and the ladder: the other labels would be too small to read */
+@container (max-width: 600px) {
+  .intro-scene svg text:not(.read) { display: none; }
+  .intro-scene svg .intro-ladder text { display: inline; }
+}
+.intro-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.intro-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.intro-controls [data-act=pause] { min-width: 7.5em; }
+.intro-controls [data-act=skip] { margin-left: auto; }
+
+/* the button below the ladder figure of the page */
+.intro-actions { display: flex; margin-top: 10px; }
+.intro-actions button { font-size: 0.88rem; padding: 6px 12px; }
+
+/* the ladder of the last frame on its way to the figure of the page */
+.intro-fly { position: fixed; z-index: 2001; height: auto; transform-origin: 0 0; transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1); }
+
+/* on a phone the window fills the screen, and the scene keeps 16 : 9 */
+@media (max-width: 600px), (max-height: 500px) {
+  .intro-modal { padding: 0; }
+  .intro-window {
+    width: 100vw; height: 100vh; height: 100dvh; box-sizing: border-box;
+    border: 0; border-radius: 0; justify-content: center;
+  }
+  .intro-scene { width: min(calc(100vw - 24px), calc((100dvh - 130px) * 16 / 9)); align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-modal { transition: none; }
+}

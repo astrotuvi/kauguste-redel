@@ -580,6 +580,11 @@ Cepheids page (`tsefeiidid.html`), the type Ia supernovae page
 external dependency is [Plotly.js](https://plotly.com/javascript/), loaded
 from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 
+The intro animation of the home page, opened by the **Vaata tutvustust**
+button, is in `intro.js` and `intro.css`, which `index.html` loads. Its
+images are in `img/intro/`, made by `tools/intro-images.sh`, and its design
+is in `docs/DESIGN-intro.md`.
+
 ### TAP proxy
 
 Browsers reject the answers of the VizieR, ARI Heidelberg, ESA Gaia archive
