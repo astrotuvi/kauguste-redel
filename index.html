@@ -2881,8 +2881,8 @@ function ownH0() {
   const g3 = GALAXIES.map((g) => galaxyFit(g, own)).filter((g) => g.done && !S.galOff.has(g.name));
   const p3 = g3.length ? fitHubble(g3, own) : null, mb = meanMB(g3, own), p4 = mb && fitFarSN(mb);
   return [
-    ...(p3 ? [{ name: "Sinu 3. osa: tsefeiidid", en: "Your part 3: Cepheids", v: p3.H, e: p3.e, k: "u" }] : []),
-    ...(p4 ? [{ name: "Sinu 4. osa: supernoovad", en: "Your part 4: supernovae", v: p4.H, e: p4.eH, k: "u" }] : []),
+    ...(p3 ? [{ name: "Sinu tulemus tsefeiidide põhjal (3. osa)", en: "Your result from Cepheids (part 3)", short: "tsefeiidide põhjal (3. osa)", shortEn: "based on Cepheids (part 3)", v: p3.H, e: p3.e, k: "u" }] : []),
+    ...(p4 ? [{ name: "Sinu tulemus supernoovade põhjal (4. osa)", en: "Your result from supernovae (part 4)", short: "supernoovade põhjal (4. osa)", shortEn: "based on supernovae (part 4)", v: p4.H, e: p4.eH, k: "u" }] : []),
   ];
 }
 
@@ -2936,7 +2936,7 @@ function drawTension() {
   rows.forEach((r, k) => {
     const y = B.y0 + 20 + k * RH;
     if (r.grp) { text(svg, 8, y + 4, L(r.grp, r.en), "grp"); return; }
-    text(svg, 20, y + 4, label(r), "row");
+    text(svg, 20, y + 4, r.short ? L(r.short, r.shortEn) : label(r), "row");
     const a = r.v - (r.lo ?? r.e), b = r.v + (r.hi ?? r.e);
     const g = el("g", {}, svg);
     el("title", {}, g).textContent = `${label(r)}: H₀ = ${fmtN(r.v, r.k === "u" ? 1 : 2)} ` +
@@ -2954,7 +2954,7 @@ function drawTension() {
     `The difference between SH0ES and Planck is <b>${fmtN(d, 2)} km/s/Mpc</b>, ${fmtN(100 * d / H0_PLANCK, 1)} %, or ${fmtN(d / s, 1)}σ.`)}</p>` +
     (mine.length ? mine.map((m) => {
       const [hV, hE] = valErr(m.v, m.e);
-      return `<p class="fit">${label(m)}: <b>H<sub>0</sub> = ${hV} ± ${hE}</b>. ${L("Erinevus", "Difference from")} ${vs(m, H0_PLANCK, E_PLANCK, L("Planckist", "Planck"))}, ${vs(m, H0_SH0ES.H, H0_SH0ES.e, L("SH0ES-ist", "SH0ES"))}.${m.note ? ` ${m.note}` : ""}</p>`;
+      return `<p class="fit">${label(m)}:<br><b>H<sub>0</sub> = ${hV} ± ${hE}</b><br>${L("Erinevus", "Difference from")} ${vs(m, H0_PLANCK, E_PLANCK, L("Planckist", "Planck"))}, ${vs(m, H0_SH0ES.H, H0_SH0ES.e, L("SH0ES-ist", "SH0ES"))}.${m.note ? ` ${m.note}` : ""}</p>`;
     }).join("") : `<p class="fit">${L("Sinu tulemusi veel pole. Need tulevad sinu enda perioodi-heleduse seosest, milleks salvesta 2. osas vähemalt kahe parve kaugus, ja galaktikate kaugustest, mille mõõdad 3. osas.", "No results of yours yet. They come from your own period–luminosity relation, for which you save the distances of at least two clusters in part 2, and from the distances of the galaxies that you measure in part 3.")}</p>`) +
     `<p class="formula">${L(`Kauguste redel mõõdab H<sub>0</sub> praegu, samm-sammult nagu see harjutus. Taustkiirgus annab H<sub>0</sub>, mida kosmoloogia standardmudel ennustab 380 000 aasta vanuse Universumi järgi.
       Need erinevad umbes 8 %: see on Hubble'i pinge. <a class="more" href="hubble.html#pinge">Loe lähemalt →</a>`,
