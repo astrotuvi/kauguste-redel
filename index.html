@@ -472,6 +472,10 @@ footer a { color: inherit; }
   .sky-card { max-width: 480px; }
   .toc ol { grid-template-columns: 1fr; }
 }
+@media (max-width: 640px) {
+  /* on a phone the language switch gets a line of its own above the title or the part links */
+  .page-langs { position: static; justify-content: flex-end; margin: 0 0 8px; }
+}
 @media (max-width: 520px) {
   .tiles.four { grid-template-columns: 1fr; }
   .field.num input { width: 80px; }
