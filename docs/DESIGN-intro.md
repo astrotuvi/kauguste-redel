@@ -124,15 +124,15 @@ leads into. The part marks of the progress bar are at scenes 2, 6, 8 and 9.
 |---|---|---|---|---|
 | 0 | 0–3 | – | Kui kaugel on galaktikad? | How far away are the galaxies? |
 | 1 | 3–8 | – | Maa orbiidi raadius on üks astronoomiline ühik | The Earth's orbit has a radius of one astronomical unit |
-| 2 | 8–16 | Parallaks · 1. osa | Lähedaste tähtede kaugused saab parallaksi abil | Parallax gives the distances of nearby stars |
+| 2 | 8–16 | Parallaks · 1. osa | Lähedaste tähtede kaugused saab määrata parallaksi abil | The distances of nearby stars can be found from their parallax |
 | 3 | 16–23 | Parallaks · 1. osa | Parve tähed liiguvad taevas koos | The stars of a cluster move together |
 | 4 | 23–28 | Parallaks · 1. osa | Parve liikmed moodustavad selge peajada | The cluster members form a clear main sequence |
 | 5 | 28–34 | Parallaks · 1. osa | Keskmine parallaks annab parve kauguse | Their mean parallax gives the cluster's distance |
-| 6 | 34–41 | Tsefeiidid · 2. osa | Gaia andmetest saame tsefeiididega parvede kaugused | Gaia data give the distances of clusters with Cepheids |
+| 6 | 34–41 | Tsefeiidid · 2. osa | Gaia andmetest saame hajusparvede kaugused | Gaia data give the distances of open clusters |
 | 7 | 41–49 | Tsefeiidid · 2. osa | Tsefeiid pulseerib – periood näitab tema heledust | A Cepheid pulsates – its period reveals its luminosity |
 | 8 | 49–56 | Tsefeiidid · 3. osa | Tsefeiidid annavad galaktikate kaugused | Cepheids give the distances of galaxies |
 | 9 | 56–64 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
-| 10 | 64–77 | Supernoovad · 4. osa | Supernoovad ulatuvad sadade megaparsekiteni | Supernovae reach hundreds of megaparsecs |
+| 10 | 64–77 | Supernoovad · 4. osa | Supernoovad näitavad meile, kui kiiresti Universum paisub | Supernovae show us how fast the Universe expands |
 | 11 | 77–80 | – | Kosmiliste kauguste redel | The cosmic distance ladder |
 
 ### 0. Title (0–3 s)
