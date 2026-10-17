@@ -131,7 +131,7 @@ leads into. The part marks of the progress bar are at scenes 2, 6, 8 and 9.
 | 6 | 34–41 | Tsefeiidid · 2. osa | Gaia andmetest saame hajusparvede kaugused | Gaia data give the distances of open clusters |
 | 7 | 41–49 | Tsefeiidid · 2. osa | Tsefeiid pulseerib – periood näitab tema heledust | A Cepheid pulsates – its period reveals its luminosity |
 | 8 | 49–56 | Tsefeiidid · 3. osa | Tsefeiidide heledustest saame lähedaste galaktikate kaugused | The brightness of Cepheids gives the distances of nearby galaxies |
-| 9 | 56–64 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
+| 9 | 56–64 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab Ia tüüpi supernoovana | A white dwarf gains mass and explodes as a type Ia supernova |
 | 10 | 64–77 | Supernoovad · 4. osa | Supernoovad näitavad meile, kui kiiresti Universum paisub | Supernovae show us how fast the Universe expands |
 | 11 | 77–80 | – | Kosmiliste kauguste redel | The cosmic distance ladder |
 

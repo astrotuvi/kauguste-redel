@@ -31,7 +31,7 @@
     { start: 34, cap: [1.2, 6.8], key: 6, part: 2, et: "Gaia andmetest saame hajusparvede kaugused", en: "Gaia data give the distances of open clusters" },
     { start: 41, cap: [1.2, 7.8], key: 6.5, et: "Tsefeiid pulseerib – periood näitab tema heledust", en: "A Cepheid pulsates – its period reveals its luminosity" },
     { start: 49, cap: [1.2, 6.8], key: 6, part: 3, et: "Tsefeiidide heledustest saame lähedaste galaktikate kaugused", en: "The brightness of Cepheids gives the distances of nearby galaxies" },
-    { start: 56, cap: [1.2, 7.8], key: 3.8, part: 4, et: "Valge kääbus kogub massi ja plahvatab", en: "A white dwarf gains mass and explodes" },
+    { start: 56, cap: [1.2, 7.8], key: 3.8, part: 4, et: "Valge kääbus kogub massi ja plahvatab Ia tüüpi supernoovana", en: "A white dwarf gains mass and explodes as a type Ia supernova" },
     { start: 64, cap: [1.2, 12.8], key: 12, et: "Supernoovad näitavad meile, kui kiiresti Universum paisub", en: "Supernovae show us how fast the Universe expands" },
     { start: 77, cap: [0.6, 99], key: 2.9, et: "Kosmiliste kauguste redel", en: "The cosmic distance ladder" },
   ];
