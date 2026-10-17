@@ -40,8 +40,8 @@ When it ends, the ladder of the last frame shrinks and flies to the ladder
 figure on the page, and the window closes, so the user ends up on the home
 page as it is now, with the figure they have just seen built.
 
-- On the home page, a **Vaata tutvustust (1 min 20 s)** button sits below the
-  ladder figure. The animation never plays by itself: users come back to
+- On the home page, a **Vaata tutvustust (1 min 20 s)** button sits on the
+  left, below the intro text. The animation never plays by itself: users come back to
   this page many times, and a teacher may open it in front of a class.
 - **Peata / Jätka**, **Algusest** and **Jäta vahele** buttons under the
   scene, and a progress bar with a mark for each part. Clicking a mark jumps
@@ -130,7 +130,7 @@ leads into. The part marks of the progress bar are at scenes 2, 6, 8 and 9.
 | 5 | 28–34 | Parallaks · 1. osa | Keskmine parallaks annab parve kauguse | Their mean parallax gives the cluster's distance |
 | 6 | 34–41 | Tsefeiidid · 2. osa | Gaia andmetest saame hajusparvede kaugused | Gaia data give the distances of open clusters |
 | 7 | 41–49 | Tsefeiidid · 2. osa | Tsefeiid pulseerib – periood näitab tema heledust | A Cepheid pulsates – its period reveals its luminosity |
-| 8 | 49–56 | Tsefeiidid · 3. osa | Tsefeiidid annavad galaktikate kaugused | Cepheids give the distances of galaxies |
+| 8 | 49–56 | Tsefeiidid · 3. osa | Tsefeiidide heledustest saame lähedaste galaktikate kaugused | The brightness of Cepheids gives the distances of nearby galaxies |
 | 9 | 56–64 | Supernoovad · 4. osa | Valge kääbus kogub massi ja plahvatab | A white dwarf gains mass and explodes |
 | 10 | 64–77 | Supernoovad · 4. osa | Supernoovad näitavad meile, kui kiiresti Universum paisub | Supernovae show us how fast the Universe expands |
 | 11 | 77–80 | – | Kosmiliste kauguste redel | The cosmic distance ladder |
@@ -206,14 +206,22 @@ The same stars, with the same colours, are in all three plots.
 #### 4. Colour–magnitude diagram (23–28 s)
 
 - 23–23.8 s: the proper motions shift to the left panel, and the
-  colour–magnitude diagram comes into the right one: **G** (brighter up)
-  against **G_BP − G_RP**, no numbers, as in the Joonised tab. All the
-  stars are in it in grey: the field stars are scattered over it, as they
-  are at all distances.
-- 24–25 s: the selected stars turn `--sel` blue in it, one after another
-  from the brightest, and they lie on a narrow band.
+  colour–magnitude diagram comes into the right one: **G** (brighter up,
+  ticks 5, 10, 15) against **G_BP − G_RP** (ticks 0–3), as a Gaia diagram
+  of the field looks. All the stars are in it in grey, about 500 of them,
+  dots larger for brighter stars: the members on the sequence of the
+  Pleiades (after the Gaia DR2 HR diagrams, Babusiaux et al. 2018), a
+  fifth of them binaries just above it, and the field stars below and to
+  the right of it, main-sequence stars behind the cluster that are fainter
+  and redder for their distance and reddening, with a few red giants.
+- 24–25 s: the members turn `--sel` blue, one after another from the
+  brightest, and they lie on a narrow band above the field.
 - 25.2 s: the band is labelled **peajada** / **main sequence**: the
   selected stars are at one distance, so they are members.
+
+The diagram has more stars than the image and the proper-motion plot
+show: the faint members and the field add to the dots of scene 3, and
+the faint members turn blue with them.
 
 #### 5. Mean parallax (28–34 s)
 
@@ -233,26 +241,30 @@ check), because it is the step in the exercise that most needs explaining.
 ### 6. Clusters around the Sun (34–41 s) — part 2
 
 - 34–35 s: the slide brings in a map of the Milky Way around the Sun,
-  seen from above, about 6 kpc across and 3.4 kpc high, the Sun in the
-  centre and the direction to the centre of the Galaxy up, marked
-  **Linnutee keskme suunas** / **towards the Galactic centre**. Behind it
-  the nearby spiral arms are faint bands of stars (the Orion spur round
-  the Sun, the Sagittarius–Carina arm towards the centre and the Perseus
-  arm away from it), and faint grey dots are star clusters, many of them.
-- 35.4–37.8 s: lines are drawn out from the Sun to the clusters, one after
-  another, 0.3 s apart, each ending in a `--sel` blue dot with the name of
-  the cluster: first the Pleiades, labelled **135 pc**, then the clusters
-  of part 2 that fit in the map (NGC 6087, NGC 6067, Lynga 6, NGC 129,
-  vdBergh 1, UBC 129, UBC 130, Berkeley 84, FSR 0951 and the others),
-  placed from their galactic longitude and distance. The lines say what
-  Gaia gives: the distance to each.
+  seen from the north, about 11 kpc across and 6 kpc high, so that all
+  the clusters of part 2 fit between the caption and the distance scale.
+  The Sun is in the middle, a little above the centre of the scene, and
+  the direction to the centre of the Galaxy is up, marked by an arrow at
+  the left edge, **Linnutee keskme suunas** / **towards the Galactic
+  centre**. Behind it the nearby spiral arms are bands of stars, as
+  logarithmic spirals after Reid et al. (2019): the Orion spur just
+  beyond the Sun, the Sagittarius–Carina arm towards the centre and the
+  Perseus arm away from it. Faint grey rings, many of them and mostly
+  along the arms, are star clusters.
+- 35.4–37.9 s: lines are drawn out from the Sun to the clusters, one after
+  another, 0.2 s apart, each ending in a `--sel` blue dot with the name of
+  the cluster: first the Pleiades, labelled **135 pc**, then the eleven
+  clusters of part 2, all of which fit in the map, from the nearest out (NGC 6087,
+  UBC 129, FSR 0951, vdBergh 1, NGC 129, NGC 6067, UBC 130, Lynga 6,
+  Berkeley 84, NGC 7790, Ruprecht 79), placed from their galactic
+  longitude and the distance of their Cepheid from the period–luminosity
+  relation. The lines say what Gaia gives: the distance to each.
 - 38 s: NGC 6087 gets a `--cep` red ring and **S Nor** next to it, and its
   line the label **0,94 kpc**.
 - 38.3–39 s: the marker slides from the Plejaadid landmark to NGC 6087.
 
-The Milky Way is drawn: its stars are dots of a fixed size on the screen
-and the clusters are dots of a fixed size, so the map is sharp at any
-width. Clusters outside the map are left out.
+The Milky Way is drawn: its stars and the clusters are dots of a fixed
+size, so the map is sharp at any width.
 
 ### 7. A Cepheid pulsates (41–49 s) — part 2
 

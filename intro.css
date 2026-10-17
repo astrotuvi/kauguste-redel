@@ -29,11 +29,13 @@
   text-align: center; font-size: clamp(15px, 3.1cqw, 34px); font-weight: 600; line-height: 1.2;
   color: var(--intro-sky-text); letter-spacing: -0.005em; pointer-events: none;
 }
+/* the title of scene 0, about twice the size of the captions, in the middle of the scene */
+.intro-caption.title { top: 50%; transform: translateY(-50%); font-size: clamp(26px, 6.2cqw, 68px); font-weight: 650; }
 
 .intro-sky { fill: var(--intro-sky); }
 .intro-sky-stop { stop-color: var(--intro-sky); }
 .intro-stars circle { fill: var(--intro-sky-text); }
-/* scene 1: the 3D view of the parallax, with the rung colour for the star's path */
+/* scenes 1–2: the 3D view of the parallax, with the rung colour for the star's path; scene 6 */
 .intro-par .plane { fill: var(--intro-sky-text); fill-opacity: 0.05; stroke: var(--intro-sky-text-2); stroke-opacity: 0.5; }
 .intro-par .quasar { stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
 .intro-par .orbit { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 2; vector-effect: non-scaling-stroke; }
@@ -43,28 +45,44 @@
 .intro-par .sun, .intro-par .star { fill: var(--intro-sky-text); }
 .intro-par text { fill: var(--intro-sky-text); font-size: 19px; }
 .intro-par text.dim { fill: var(--intro-sky-text-2); }
+.intro-par line.au { stroke: var(--intro-sky-text); stroke-width: 2; }
+.intro-par text.au { font-size: 21px; font-weight: 600; }
 
-/* the Milky Way between the Pleiades and NGC 6087 */
-.intro-mw .arms, .intro-mw .sun, .intro-mw .cluster, .intro-mw .names line { vector-effect: non-scaling-stroke; stroke-linecap: round; }
+/* scene 6: the map of the clusters around the Sun, the clusters and their lines in the colour of the parallax rung */
+.intro-map .arms { stroke: var(--intro-sky-text); stroke-linecap: round; }
+.intro-map .arms.s0 { stroke-width: 1.6; stroke-opacity: 0.4; }
+.intro-map .arms.s1 { stroke-width: 2.2; stroke-opacity: 0.55; }
+.intro-map .arms.s2 { stroke-width: 2.8; stroke-opacity: 0.75; }
+.intro-map .field { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 1.5; stroke-opacity: 0.8; }
+.intro-map .line { stroke: var(--sel); stroke-width: 1.6; stroke-opacity: 0.7; }
+.intro-map .cl { fill: var(--sel); stroke: var(--intro-sky); stroke-width: 1.5; }
+.intro-map .sun { fill: var(--intro-sky-text); }
+.intro-map .gc { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.intro-map .intro-ring { stroke: var(--cep); }
+.intro-map text { fill: var(--intro-sky-text); font-size: 17px; paint-order: stroke; stroke: var(--intro-sky); stroke-width: 5; stroke-linejoin: round; }
+.intro-map text.dim { fill: var(--intro-sky-text-2); }
+.intro-map text.dist { font-size: 20px; font-weight: 650; }
+.intro-map text.cep { fill: var(--cep); font-weight: 600; }
+
+/* the Milky Way that the camera passes in scene 10 */
+.intro-mw .arms { vector-effect: non-scaling-stroke; stroke-linecap: round; }
 .intro-mw .arms { stroke: var(--intro-sky-text); }
 .intro-mw .arms.s0 { stroke-width: 1.4; stroke-opacity: 0.35; }
 .intro-mw .arms.s1 { stroke-width: 2; stroke-opacity: 0.55; }
 .intro-mw .arms.s2 { stroke-width: 2.8; stroke-opacity: 0.8; }
-.intro-mw .sun { stroke: var(--intro-sky-text); stroke-width: 6; }
-.intro-mw .cluster { stroke: var(--sel); stroke-width: 5; }
-.intro-mw .names line { stroke: var(--intro-sky-text-2); stroke-width: 1; }
-.intro-mw .names text { fill: var(--intro-sky-text); font-size: 18px; }
-.intro-mw .names text.big { font-size: 24px; font-weight: 600; fill: var(--intro-sky-text-2); }
 
-/* scene 2: the proper motions and parallaxes of the Pleiades, the selection in the colour of the parallax rung */
+/* scenes 3–5: the proper motions, colours and parallaxes of the Pleiades, the selection in the colour of the parallax rung */
 .intro-pm .star { fill: var(--intro-sky-text-2); }
 .intro-pm .star.sel, .intro-pm .block { fill: var(--sel); }
 .intro-pm .block { stroke: var(--intro-sky); stroke-width: 1.5; }
 .intro-pm .arrows { fill: none; stroke: var(--intro-sky-text); stroke-opacity: 0.75; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .intro-pm .lasso { fill: var(--sel); stroke: var(--sel); stroke-width: 2.5; stroke-linejoin: round; }
 .intro-plot text.read { font-size: 30px; font-weight: 650; }
+.intro-plot text.tick { font-size: 16px; }
+.intro-plot text.halo { stroke: var(--intro-sky); stroke-width: 6; stroke-linejoin: round; paint-order: stroke; }
+.intro-plot text .sub { font-size: 14px; }
 
-/* scene 3: S Nor and its light curve, in the colour of the Cepheid rung */
+/* scene 7: S Nor and its light curve, in the colour of the Cepheid rung */
 .intro-cep .axis { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
 .intro-cep .curve { fill: none; stroke: var(--cep); stroke-width: 4; stroke-linejoin: round; }
 .intro-cep .dot { fill: var(--cep); }
@@ -73,24 +91,30 @@
 .intro-cep text.name { font-size: 24px; font-weight: 600; }
 .intro-cep text.dim, .intro-sn text.dim { fill: var(--intro-sky-text-2); }
 
-/* scene 4: the period–luminosity plot over the dimmed image */
+/* the plots over the dimmed images */
 .intro-dim { fill: var(--intro-sky); }
 .intro-plot .panel { fill: var(--intro-sky); fill-opacity: 0.88; stroke: var(--intro-sky-text-2); stroke-opacity: 0.35; }
 .intro-plot .axis { fill: none; stroke: var(--intro-sky-text-2); stroke-width: 1.5; }
 .intro-plot .fit { stroke: var(--intro-sky-text); stroke-width: 3; stroke-linecap: round; }
 .intro-plot text { fill: var(--intro-sky-text); font-size: 20px; }
 .intro-plot text.dim { fill: var(--intro-sky-text-2); }
-.intro-plot .pt, .intro-plot ~ .pt { fill: var(--cep); stroke: var(--intro-sky); stroke-width: 1.5; }
+.intro-plot .pt { fill: var(--cep); stroke: var(--intro-sky); stroke-width: 1.5; }
 .intro-ring { fill: none; stroke: var(--cep); stroke-width: 3; }
+.intro-ring.sn { stroke: var(--accent); }
 
-/* scenes 5 and 7: the galaxies, the Cepheids of M101 (hollow on the line of the corner plot), the Hubble plot
-   with the supernovae in the colour of their rung, and the supernovae flashing in the far galaxies */
-.intro-plot .pt.m101 { fill: var(--intro-sky); stroke: var(--cep); stroke-width: 3; }
+/* scenes 7 and 9: the small image a close-up comes from, in the lower left corner */
+.intro-inset .frame { fill: none; stroke: var(--intro-sky-text-2); stroke-opacity: 0.6; stroke-width: 1.5; }
+.intro-inset .intro-ring { stroke-width: 2.5; }
+.intro-scene svg .intro-inset text { fill: var(--intro-sky-text-2); font-size: 17px; }
+.intro-cep .lead { stroke: var(--cep); stroke-width: 1.5; stroke-opacity: 0.7; }
+
+/* scenes 8 and 10: the galaxies, the Hubble plot with the supernovae in the colour of their rung, and the
+   supernovae flashing in the far galaxies */
 .intro-plot .pt.sn { fill: var(--accent); }
 .intro-gal .flash .halo { fill: var(--accent); opacity: 0.85; }
 .intro-gal .flash .core { fill: #fff6e6; }
 
-/* scene 6: the white dwarf and its companion; the gas and the white dwarf keep the colours of the
+/* scene 9: the white dwarf and its companion; the gas and the white dwarf keep the colours of the
    supernova page */
 .intro-sn .disc { fill: rgba(255, 196, 150, 0.35); stroke: rgba(255, 196, 150, 0.6); }
 .intro-sn .stream { fill: none; stroke: rgba(255, 196, 150, 0.35); stroke-width: 4; }
@@ -136,8 +160,8 @@
 .intro-controls [data-act=pause] { min-width: 7.5em; }
 .intro-controls [data-act=skip] { margin-left: auto; }
 
-/* the button below the ladder figure of the page */
-.intro-actions { display: flex; margin-top: 10px; }
+/* the button below the intro text of the page */
+.intro-actions { display: flex; margin-top: 14px; }
 .intro-actions button { font-size: 0.88rem; padding: 6px 12px; }
 
 /* the ladder of the last frame on its way to the figure of the page */

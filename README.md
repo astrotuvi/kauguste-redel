@@ -583,7 +583,9 @@ from cdnjs. The TAP proxy in `proxy/` runs separately on Cloudflare.
 The intro animation of the home page, opened by the **Vaata tutvustust**
 button, is in `intro.js` and `intro.css`, which `index.html` loads. Its
 images are in `img/intro/`, made by `tools/intro-images.sh`, and its design
-is in `docs/DESIGN-intro.md`.
+is in `docs/DESIGN-intro.md`. `index.html#intro=12.8` opens it paused at
+12.8 s, and `#intro=12.8&play` plays on from there. With
+`prefers-reduced-motion`, each scene is shown as one still key frame.
 
 ### TAP proxy
 
